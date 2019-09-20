@@ -1,5 +1,5 @@
-import Legislator from '../legislator';
-import Repository from './repository';
+import Legislator from '../../entity/Legislator';
+import Repository from './Repository';
 
 interface LegislatorRepository extends Repository<Legislator> { }
 

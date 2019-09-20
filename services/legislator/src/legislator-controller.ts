@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import LegislatorRepository from './model/repositories/legislator-repository';
+import LegislatorRepository from './entity/repositories/LegislatorRepository';
 import { TYPES } from './types';
 import { inject, injectable } from 'inversify';
 
