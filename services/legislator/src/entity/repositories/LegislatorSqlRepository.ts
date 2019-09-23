@@ -25,7 +25,9 @@ class LegislatorSqlRepository implements LegislatorRepository {
 
     async delete(id: number): Promise<boolean> {
         const connection = await this.getConnection();
-        const legislator = await connection.manager.findOne(id.toString());
+        const repository = connection.getRepository(Legislator);
+
+        const legislator = await repository.findOne(id.toString());
 
         if (!legislator)
             return false;
@@ -44,11 +46,20 @@ class LegislatorSqlRepository implements LegislatorRepository {
         return await repository.find();
     }
 
-    async insert(entity: Legislator): Promise<void> {
+    async getOne(id: number): Promise<Legislator | null> {
         const connection = await this.getConnection();
         const repository = connection.getRepository(Legislator);
 
-        await repository.save(entity);
+        const legislator = await repository.findOne(id);
+
+        return legislator != undefined ? legislator : null;
+    }
+
+    async insert(entity: Legislator): Promise<Legislator> {
+        const connection = await this.getConnection();
+        const repository = connection.getRepository(Legislator);
+
+        return await repository.save(entity);
     }
 
     async update(entity: Legislator): Promise<boolean> {

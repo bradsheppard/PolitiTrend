@@ -7,37 +7,49 @@ import { TYPES } from '../../types';
 describe('Legislator repository tests', () => {
 
     let legislatorRepository: LegislatorRepository = container.get<LegislatorRepository>(TYPES.LegislatorRepository);
-    let testLegislators: Array<Legislator>;
 
-    before(async () => {
-        const legislator1 = new Legislator();
-        legislator1.id = 1;
-        legislator1.firstName = 'bob';
-        legislator1.lastName = 'smith';
-        legislator1.age = 45;
+    const legislator1 = new Legislator();
+    legislator1.firstName = 'bob';
+    legislator1.lastName = 'smith';
+    legislator1.age = 45;
 
-        const legislator2 = new Legislator();
-        legislator2.id = 2;
-        legislator2.firstName = 'john';
-        legislator2.lastName = 'sheppard';
-        legislator2.age = 34;
-
-        testLegislators = [legislator1, legislator2];
-
-        for(let legislator of testLegislators) {
-            await legislatorRepository.insert(legislator);
-        }
-    });
-
-    after(async () => {
-        for(let legislator of testLegislators) {
-            await legislatorRepository.delete(legislator.id)
-        }
-    });
+    const legislator2 = new Legislator();
+    legislator2.firstName = 'john';
+    legislator2.lastName = 'sheppard';
+    legislator2.age = 34;
 
     it('Can get all', async () => {
-        const legislators = await legislatorRepository.get();
+        const firstInsert = await legislatorRepository.insert(legislator1);
+        const secondInsert = await legislatorRepository.insert(legislator2);
 
-        assert.deepEqual(legislators, testLegislators)
+        const legislators = await legislatorRepository.get({});
+
+        assert.includeDeepMembers(legislators, [firstInsert, secondInsert]);
     });
+
+    it('Can get', async() => {
+        const legislator = await legislatorRepository.insert(legislator1);
+
+        const legislatorInserted = await legislatorRepository.getOne(legislator.id);
+        assert.deepEqual(legislatorInserted, legislator);
+    });
+
+    it('Can delete', async () => {
+        const legislator = await legislatorRepository.insert(legislator1);
+        await legislatorRepository.delete(legislator.id);
+
+        const legislators: Array<Legislator> = await legislatorRepository.get({id: legislator.id});
+
+        assert.isEmpty(legislators);
+    });
+
+    it('Can update', async () => {
+        const legislator = await legislatorRepository.insert(legislator1);
+        legislator.firstName = 'New Name';
+        await legislatorRepository.update(legislator);
+
+        const updatedLegislator = await legislatorRepository.getOne(legislator.id);
+
+        assert.deepEqual(updatedLegislator, legislator);
+    })
 });

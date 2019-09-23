@@ -1,6 +1,7 @@
 interface Repository<T> {
     get(predicate?: {}): Promise<T[]>;
-    insert(entity: T): Promise<void>;
+    getOne(id: number): Promise<T>;
+    insert(entity: T): Promise<T>;
     update(entity: T): Promise<boolean>;
     delete(id: number): Promise<boolean>;
 }
