@@ -32,7 +32,7 @@ class LegislatorSqlRepository implements LegislatorRepository {
         if (!legislator)
             return false;
 
-        await this.connection.manager.remove(legislator);
+        await repository.remove(legislator);
 
         return true;
     }
