@@ -8,3 +8,8 @@ kubectl:
 kvm:
 	apt-get install qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
 	adduser `id -un` libvirt
+
+.PHONY: minikube
+minikube:
+	curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
+	install minikube /usr/local/bin
