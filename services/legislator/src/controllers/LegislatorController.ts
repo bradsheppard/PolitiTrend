@@ -4,6 +4,7 @@ import LegislatorRepository from '../entity/repositories/LegislatorRepository';
 import { TYPES } from '../types';
 import { inject, injectable } from 'inversify';
 import Controller from './Controller';
+import Legislator from '../entity/Legislator';
 
 @injectable()
 class LegislatorController implements Controller {
@@ -17,9 +18,15 @@ class LegislatorController implements Controller {
     }
 
     private initializeRoutes() {
+        this.router.get('/ping', LegislatorController.ping.bind(this));
         this.router.get('/', this.getAll.bind(this));
         this.router.get('/:id', this.getOne.bind(this));
         this.router.post('/', this.insert.bind(this));
+        this.router.delete('/:id', this.delete.bind(this));
+    }
+
+    private static async ping(req: Request, res: Response) {
+        res.sendStatus(200);
     }
 
     private async getAll(req: Request, res: Response) {
@@ -28,12 +35,27 @@ class LegislatorController implements Controller {
     }
 
     private async getOne(req: Request, res: Response) {
-        const legislator = await this.legislatorRepository.getOne(parseInt(req.params.id));
-        res.json(legislator);
+        const legislator: Legislator | null = await this.legislatorRepository.getOne(parseInt(req.params.id));
+
+        if (legislator)
+            res.json(legislator);
+        else
+            res.sendStatus(404);
     }
 
     private async insert(req: Request, res: Response) {
-    
+        let legislator: Legislator = req.body;
+        legislator = await this.legislatorRepository.insert(legislator);
+        res.json(legislator);
+    }
+
+    private async delete(req: Request, res: Response) {
+        const successful = await this.legislatorRepository.delete(parseInt(req.params.id));
+
+        if(successful)
+            res.sendStatus(200);
+        else
+            res.sendStatus(404);
     }
 }
 

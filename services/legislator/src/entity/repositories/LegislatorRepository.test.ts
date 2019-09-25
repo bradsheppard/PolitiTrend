@@ -6,7 +6,7 @@ import { TYPES } from '../../types';
 
 describe('Legislator repository tests', () => {
 
-    let legislatorRepository: LegislatorRepository = container.get<LegislatorRepository>(TYPES.LegislatorRepository);
+    let legislatorRepository: LegislatorRepository;
 
     const legislator1 = new Legislator();
     legislator1.firstName = 'bob';
@@ -19,6 +19,8 @@ describe('Legislator repository tests', () => {
     legislator2.age = 34;
 
     it('Can get all', async () => {
+        legislatorRepository = container.get<LegislatorRepository>(TYPES.LegislatorRepository);
+
         const firstInsert = await legislatorRepository.insert(legislator1);
         const secondInsert = await legislatorRepository.insert(legislator2);
 

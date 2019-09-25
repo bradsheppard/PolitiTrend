@@ -25,7 +25,9 @@ const connectionProvider: ConnectionProvider = () => createConnection({
 const legislatorRepository: LegislatorRepository = new LegislatorSqlRepository(connectionProvider);
 
 container.bind<LegislatorRepository>(TYPES.LegislatorRepository).toConstantValue(legislatorRepository);
+
 container.bind<Controller>(TYPES.Controller).to(LegislatorController);
+
 container.bind<App>(TYPES.App).to(App);
 
 export { container };
