@@ -13,3 +13,29 @@ kvm:
 minikube:
 	curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
 	install minikube /usr/local/bin
+
+.PHONY: minikube_start
+minikube_start:
+	minikube start --memory=16384 --cpus=4 --vm-driver=kvm2
+
+.PHONY: helm
+helm:
+	curl -LO https://get.helm.sh/helm-v3.0.0-beta.3-linux-amd64.tar.gz 
+	tar -zxvf helm-v3.0.0-beta.3-linux-amd64.tar.gz
+	mv linux-amd64/helm /usr/local/bin/helm
+
+.PHONY: helm_init
+helm_init:
+	helm init
+
+.PHONY: istio
+istio:
+	curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.0 sh -
+	kubectl create namespace istio-system
+	helm repo add istio.io https://storage.googleapis.com/istio-release/releases/1.3.0/charts/
+	helm repo update
+	helm template istio-init  istio-1.3.0/install/kubernetes/helm/istio-init --namespace istio-system | kubectl apply -f -
+	helm template istio istio-1.3.0/install/kubernetes/helm/istio --namespace istio-system | kubectl apply -f -
+
+.PHONY: k8s
+k8s: helm_init istio
