@@ -1,10 +1,14 @@
 service		:= legislator
-tag		:= latest
+tag		:= 1.0.0
 registry	?= $(DOCKER_REGISTRY)
 
 .PHONY: build
 build:
 	docker build -t $(service):$(tag) .
+
+.PHONY: deploy
+deploy:
+	helm upgrade --install --set image.tag=$(tag) $(service) ./k8s/$(service)
 
 .PHONY: localdb
 localdb:

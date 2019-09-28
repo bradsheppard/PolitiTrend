@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  repository: legislator
+  pullPolicy: Never
 
 nameOverride: ""
 fullnameOverride: ""
