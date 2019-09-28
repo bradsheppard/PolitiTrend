@@ -11,16 +11,7 @@ import Controller from './controllers/Controller';
 
 const container = new Container();
 
-const connectionProvider: ConnectionProvider = () => createConnection({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'brad',
-    password: 'pass123',
-    database: 'legislator',
-    entities: [__dirname + '/entity/*.ts'],
-    synchronize: true
-});
+const connectionProvider: ConnectionProvider = () => createConnection();
 
 const legislatorRepository: LegislatorRepository = new LegislatorSqlRepository(connectionProvider);
 
