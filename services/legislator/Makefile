@@ -9,6 +9,7 @@ build:
 .PHONY: deploy
 deploy:
 	helm upgrade --install --set image.tag=$(tag) $(service) ./k8s/$(service)
+	helm upgrade --install $(service)-db -f ./k8s/postgres/values-production.yaml stable/postgresql
 
 .PHONY: localdb
 localdb:
