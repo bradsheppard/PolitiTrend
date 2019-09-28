@@ -1,3 +1,11 @@
+service		:= legislator
+tag		:= latest
+registry	?= $(DOCKER_REGISTRY)
+
+.PHONY: build
+build:
+	docker build -t $(service):$(tag) .
+
 .PHONY: localdb
 localdb:
 	docker run --name postgres \

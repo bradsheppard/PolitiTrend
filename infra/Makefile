@@ -24,18 +24,14 @@ helm:
 	tar -zxvf helm-v3.0.0-beta.3-linux-amd64.tar.gz
 	mv linux-amd64/helm /usr/local/bin/helm
 
-.PHONY: helm_init
-helm_init:
-	helm init
+.PHONY: istioctl
+istioctl:
+	curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.0 sh -
+	mv istio-1.3.0/bin/istioctl /usr/local/bin/istioctl	
 
 .PHONY: istio
 istio:
-	curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.0 sh -
-	kubectl create namespace istio-system
-	helm repo add istio.io https://storage.googleapis.com/istio-release/releases/1.3.0/charts/
-	helm repo update
-	helm template istio-init  istio-1.3.0/install/kubernetes/helm/istio-init --namespace istio-system | kubectl apply -f -
-	helm template istio istio-1.3.0/install/kubernetes/helm/istio --namespace istio-system | kubectl apply -f -
+	istioctl experimental manifest apply
 
 .PHONY: k8s
-k8s: helm_init istio
+k8s: istio
