@@ -15,7 +15,7 @@ RUN npm install
 RUN npm run build
 
 
-FROM node:10-alpine
+FROM node:10-alpine AS tester
 
 WORKDIR /app
 
@@ -25,6 +25,29 @@ COPY --from=builder /app/node_modules node_modules
 
 COPY package.json .
 
+COPY ormconfig.json .
+
 EXPOSE 8080
+
+USER node
+
+CMD ["npm", "test"]
+
+
+FROM node:10-alpine AS runner
+
+WORKDIR /app
+
+COPY --from=builder /app/build build
+
+COPY --from=builder /app/node_modules node_modules
+
+COPY package.json .
+
+COPY ormconfig.json .
+
+EXPOSE 8080
+
+USER node
 
 CMD ["npm", "start"]

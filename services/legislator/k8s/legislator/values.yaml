@@ -6,6 +6,7 @@ replicaCount: 1
 
 image:
   repository: legislator
+  test_repository: legislator-test
   pullPolicy: Never
 
 nameOverride: ""

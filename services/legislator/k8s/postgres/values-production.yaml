@@ -15,7 +15,7 @@ global:
 image:
   registry: docker.io
   repository: bitnami/postgresql
-  tag: 11.5.0-debian-9-r34
+  tag: 11.5.0-debian-9-r26
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -107,7 +107,7 @@ postgresqlUsername: postgres
 ## PostgreSQL password
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
 ##
-# postgresqlPassword:
+postgresqlPassword: pass123
 
 ## PostgreSQL password using existing secret
 ## existingSecret: secret
@@ -118,7 +118,7 @@ postgresqlUsername: postgres
 ## Create a database
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run
 ##
-postgresqlDatabase: legislator
+# postgresqlDatabase:
 
 ## PostgreSQL data dir
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md
@@ -240,7 +240,7 @@ persistence:
 
   # storageClass: "-"
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   size: 8Gi
   annotations: {}
 
@@ -330,7 +330,7 @@ readinessProbe:
 ## Configure metrics exporter
 ##
 metrics:
-  enabled: true
+  enabled: false
   # resources: {}
   service:
     type: ClusterIP

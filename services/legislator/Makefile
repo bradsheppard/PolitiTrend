@@ -4,12 +4,21 @@ registry	?= $(DOCKER_REGISTRY)
 
 .PHONY: build
 build:
-	docker build -t $(service):$(tag) .
+	docker build --target runner -t $(service):$(tag) .
+
+.PHONY: test
+test:
+	docker build --target tester -t $(service)-test:$(tag) .
 
 .PHONY: deploy
 deploy:
-	helm upgrade --install --set image.tag=$(tag) $(service) ./k8s/$(service)
 	helm upgrade --install $(service)-db -f ./k8s/postgres/values-production.yaml stable/postgresql
+	helm upgrade --install --set image.tag=$(tag) $(service) ./k8s/$(service)
+
+.PHONY: destroy
+destroy:
+	helm uninstall $(service)-db
+	helm uninstall $(service)
 
 .PHONY: localdb
 localdb:
