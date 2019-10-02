@@ -1,6 +1,6 @@
 {
    "type": "postgres",
-   "host": "legislator-db-postgresql.default.svc.cluster.local",
+   "host": "legislator-postgresql",
    "port": 5432,
    "username": "postgres",
    "password": "pass123",
