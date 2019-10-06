@@ -4,7 +4,7 @@
    "description": "A microservice to serve information on legislators via a REST API.",
    "main": "index.js",
    "scripts": {
-      "test": "mocha --recursive build/**/*.test.js",
+      "test": "mocha --recursive 'build/**/*.test.js'",
       "build": "tsc",
       "start": "node build/index.js"
    },
@@ -22,6 +22,7 @@
       "pg": "^7.12.1",
       "reflect-metadata": "^0.1.10",
       "supertest": "^4.0.2",
+      "ts-mockito": "^2.5.0",
       "ts-node": "^8.4.1",
       "typeorm": "0.2.19"
    },

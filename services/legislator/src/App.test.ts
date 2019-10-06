@@ -14,9 +14,8 @@ describe('App tests', () => {
         app = container.get<App>(TYPES.App);
 
         testLegislator = new Legislator();
-        testLegislator.firstName = 'bob';
-        testLegislator.lastName = 'smith';
-        testLegislator.age = 50;
+        testLegislator.name = 'bob smith';
+        testLegislator.party = 'Democratic';
 
         const res = await agent(app.app).post('/').send(testLegislator);
         testLegislator = res.body;
@@ -38,9 +37,8 @@ describe('App tests', () => {
 
     it('Can insert legislator', async () => {
         const newLegislator: Legislator = new Legislator();
-        newLegislator.age = 20;
-        newLegislator.firstName = 'john';
-        newLegislator.lastName = 'anderson';
+        newLegislator.party = 'Republican';
+        newLegislator.name = 'john anderson';
 
         let res = await agent(app.app).post('/').send(newLegislator);
         const legislator: Legislator = res.body;
@@ -54,9 +52,8 @@ describe('App tests', () => {
 
     it('Can delete existing legislator', async () => {
         let newLegislator: Legislator = new Legislator();
-        newLegislator.age = 32;
-        newLegislator.firstName = 'Steve';
-        newLegislator.lastName = 'Xiao';
+        newLegislator.party = 'Democratic';
+        newLegislator.name = 'Steve Xiao';
 
         let res = await agent(app.app).post('/').send(newLegislator);
         newLegislator = res.body;

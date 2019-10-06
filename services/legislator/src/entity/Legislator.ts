@@ -6,11 +6,8 @@ export default class Legislator {
     id: number;
 
     @Column()
-    firstName: string;
+    name: string;
 
     @Column()
-    lastName: string;
-
-    @Column()
-    age: number;
+    party: string;
 }

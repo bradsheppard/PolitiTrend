@@ -1,14 +1,14 @@
 {
    "type": "postgres",
-   "host": "legislator-postgresql",
+   "host": "localhost",
    "port": 5432,
-   "username": "postgres",
+   "username": "brad",
    "password": "pass123",
-   "database": "postgres",
+   "database": "legislator",
    "synchronize": true,
    "logging": false,
    "entities": [
-      "build/entity/**/*.js"
+      "build/entity/*.js"
    ],
    "migrations": [
       "build/migration/**/*.js"

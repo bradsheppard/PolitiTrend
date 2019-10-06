@@ -1,4 +1,5 @@
 import scrapy
+from ..model.legislator import Legislator
 
 
 class LegislatorSpider(scrapy.Spider):
@@ -14,7 +15,8 @@ class LegislatorSpider(scrapy.Spider):
     def parse(self, response):
         rows = response.css('table#senators tbody tr')
         for row in rows:
-            name = row.css('th span::attr(data-sort-value)').get()
+            name = row.css('th a::text').get()
+            party = row.css('td:nth-last-child(7)').css('a::text').get()
 
-            party = row.css('td:nth-child(5)').css('a::text').get()
-            print(str(name) + ", " + str(party))
+            legislator = Legislator(name, party)
+            print(legislator)

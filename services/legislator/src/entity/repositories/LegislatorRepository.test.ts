@@ -9,14 +9,12 @@ describe('Legislator repository tests', () => {
     let legislatorRepository: LegislatorRepository;
 
     const legislator1 = new Legislator();
-    legislator1.firstName = 'bob';
-    legislator1.lastName = 'smith';
-    legislator1.age = 45;
+    legislator1.name = 'Bob Smith';
+    legislator1.party = 'Democratic';
 
     const legislator2 = new Legislator();
-    legislator2.firstName = 'john';
-    legislator2.lastName = 'sheppard';
-    legislator2.age = 34;
+    legislator2.name = 'John Shepherd';
+    legislator2.party = 'Republican';
 
     it('Can get all', async () => {
         legislatorRepository = container.get<LegislatorRepository>(TYPES.LegislatorRepository);
@@ -47,7 +45,7 @@ describe('Legislator repository tests', () => {
 
     it('Can update', async () => {
         const legislator = await legislatorRepository.insert(legislator1);
-        legislator.firstName = 'New Name';
+        legislator.name = 'New Name';
         await legislatorRepository.update(legislator);
 
         const updatedLegislator = await legislatorRepository.getOne(legislator.id);
