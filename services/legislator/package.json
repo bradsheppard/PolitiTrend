@@ -6,7 +6,9 @@
    "scripts": {
       "test": "mocha --recursive 'build/**/*.test.js'",
       "build": "tsc",
-      "start": "node build/index.js"
+      "start": "node build/index.js",
+      "migrate-up": "typeorm migration:run",
+      "migrate-down": "typeorm migration:revert"
    },
    "keywords": [
       "legislator"
