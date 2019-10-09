@@ -23,6 +23,8 @@ COPY --from=builder /app/build build
 
 COPY --from=builder /app/node_modules node_modules
 
+COPY data data
+
 COPY package.json .
 
 COPY ormconfig.json .
@@ -41,6 +43,8 @@ WORKDIR /app
 COPY --from=builder /app/build build
 
 COPY --from=builder /app/node_modules node_modules
+
+COPY data data
 
 COPY package.json .
 

@@ -2,9 +2,10 @@
    "type": "postgres",
    "host": "legislator-postgresql",
    "port": 5432,
-   "username": "brad",
+   "username": "postgres",
    "password": "pass123",
    "database": "postgres",
+   "migrationsRun": true,
    "synchronize": false,
    "logging": false,
    "entities": [
