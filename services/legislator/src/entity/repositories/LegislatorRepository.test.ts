@@ -11,10 +11,12 @@ describe('Legislator repository tests', () => {
     const legislator1 = new Legislator();
     legislator1.name = 'Bob Smith';
     legislator1.party = 'Democratic';
+    legislator1.sentiment = 1;
 
     const legislator2 = new Legislator();
     legislator2.name = 'John Shepherd';
     legislator2.party = 'Republican';
+    legislator2.sentiment = 2;
 
     it('Can get all', async () => {
         legislatorRepository = container.get<LegislatorRepository>(TYPES.LegislatorRepository);

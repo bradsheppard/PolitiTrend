@@ -10,4 +10,7 @@ export default class Legislator {
 
     @Column()
     party: string;
+
+    @Column()
+    sentiment: number;
 }

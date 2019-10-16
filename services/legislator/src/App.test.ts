@@ -16,6 +16,7 @@ describe('App tests', () => {
         testLegislator = new Legislator();
         testLegislator.name = 'bob smith';
         testLegislator.party = 'Democratic';
+        testLegislator.sentiment = 1;
 
         const res = await agent(app.app).post('/').send(testLegislator);
         testLegislator = res.body;
@@ -39,6 +40,7 @@ describe('App tests', () => {
         const newLegislator: Legislator = new Legislator();
         newLegislator.party = 'Republican';
         newLegislator.name = 'john anderson';
+        newLegislator.sentiment = 2;
 
         let res = await agent(app.app).post('/').send(newLegislator);
         const legislator: Legislator = res.body;
@@ -54,6 +56,7 @@ describe('App tests', () => {
         let newLegislator: Legislator = new Legislator();
         newLegislator.party = 'Democratic';
         newLegislator.name = 'Steve Xiao';
+        newLegislator.sentiment = 3;
 
         let res = await agent(app.app).post('/').send(newLegislator);
         newLegislator = res.body;

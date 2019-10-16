@@ -1,6 +1,7 @@
-service		:= legislator
-tag		:= 1.0.0
-registry	?= $(DOCKER_REGISTRY)
+service			:= legislator
+tag			:= 1.0.0
+registry		?= $(DOCKER_REGISTRY)
+postgres_version	:= 11
 
 .PHONY: build
 build:
@@ -22,5 +23,5 @@ destroy:
 localdb:
 	docker run --name postgres \
 		-e POSTGRES_PASSWORD=pass123 \
-		-d -p 5432:5432 postgres
+		-d -p 5432:5432 postgres:$(postgres_version)
 
