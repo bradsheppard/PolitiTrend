@@ -1,5 +1,7 @@
 import { createMuiTheme, createStyles, MuiThemeProvider, withStyles, WithStyles } from "@material-ui/core";
 import * as React from 'react';
+import Jumbotron from '../components/Jumbotron';
+import Top from '../components/Top';
 
 const styles = () => createStyles({
     root: {
@@ -28,7 +30,8 @@ class App extends React.Component<IProps> {
         return (
             <MuiThemeProvider theme={theme}>
                 <div className={classes.root}>
-
+                    <Top/>
+                    <Jumbotron/>
                 </div>
             </MuiThemeProvider>
         );
