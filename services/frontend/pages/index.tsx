@@ -1,23 +1,13 @@
-import { createMuiTheme, createStyles, MuiThemeProvider, withStyles, WithStyles } from "@material-ui/core";
+import { createStyles, withStyles, WithStyles } from "@material-ui/core";
 import * as React from 'react';
 import Jumbotron from '../components/Jumbotron';
 import Top from '../components/Top';
+import Main from '../components/Main';
+import testLegislators from '../mocks/TestLegislators';
 
 const styles = () => createStyles({
     root: {
         flexGrow: 1,
-    }
-});
-
-const theme = createMuiTheme({
-    palette: {
-        primary: { main: 'rgb(110, 110, 110)' },
-        secondary: { main: 'rgb(110, 110, 110)' }
-    },
-    typography: {
-        fontFamily: [
-            'Roboto Condensed'
-        ].join(',')
     }
 });
 
@@ -28,33 +18,13 @@ class App extends React.Component<IProps> {
         const { classes } = this.props;
 
         return (
-            <MuiThemeProvider theme={theme}>
-                <div className={classes.root}>
-                    <Top/>
-                    <Jumbotron/>
-                </div>
-            </MuiThemeProvider>
+            <div className={classes.root}>
+                <Top/>
+                <Jumbotron/>
+                <Main legislators={testLegislators} />
+            </div>
         );
     }
 }
 
 export default withStyles(styles)(App);
-
-//
-// import React from 'react'
-// import Link from 'next/link'
-//
-// export default () => (
-//     <ul>
-//         <li>
-//             <Link href="/a" as="/a">
-//                 <a>a</a>
-//             </Link>
-//         </li>
-//         <li>
-//             <Link href="/b" as="/b">
-//                 <a>b</a>
-//             </Link>
-//         </li>
-//     </ul>
-// )
