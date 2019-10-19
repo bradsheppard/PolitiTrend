@@ -6,7 +6,7 @@ import Globals from '../utils/Globals';
 
 const style = () => createStyles({
     background: {
-        background: `linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75)), url(/image2.jpg) no-repeat`,
+        background: `linear-gradient(to right, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.75)), url(/image2.jpg) no-repeat`,
         // background: `linear-gradient(to right, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.75)), no-repeat`,
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover'
