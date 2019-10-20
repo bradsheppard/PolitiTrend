@@ -1,12 +1,12 @@
-import LegislatorRepository from './LegislatorRepository';
-import Legislator from '../../entity/Legislator';
+import PoliticianRepository from './PoliticianRepository';
+import Politician from '../../entity/Politician';
 import { inject, injectable } from 'inversify';
 import { Connection } from 'typeorm';
 import ConnectionProvider from './ConnectionProvider';
 import { TYPES } from '../../types';
 
 @injectable()
-class LegislatorSqlRepository implements LegislatorRepository {
+class PoliticianSqlRepository implements PoliticianRepository {
 
     private readonly connectionProvider: ConnectionProvider;
     private connection: Connection;
@@ -25,50 +25,50 @@ class LegislatorSqlRepository implements LegislatorRepository {
 
     async delete(id: number): Promise<boolean> {
         const connection = await this.getConnection();
-        const repository = connection.getRepository(Legislator);
+        const repository = connection.getRepository(Politician);
 
-        const legislator = await repository.findOne(id.toString());
+        const politician = await repository.findOne(id.toString());
 
-        if (!legislator)
+        if (!politician)
             return false;
 
-        await repository.remove(legislator);
+        await repository.remove(politician);
 
         return true;
     }
 
-    async get(predicate?: {}): Promise<Legislator[]> {
+    async get(predicate?: {}): Promise<Politician[]> {
         const connection = await this.getConnection();
-        const repository = connection.getRepository(Legislator);
+        const repository = connection.getRepository(Politician);
 
         if (predicate)
             return await repository.find(predicate);
         return await repository.find();
     }
 
-    async getOne(id: number): Promise<Legislator | null> {
+    async getOne(id: number): Promise<Politician | null> {
         const connection = await this.getConnection();
-        const repository = connection.getRepository(Legislator);
+        const repository = connection.getRepository(Politician);
 
-        const legislator = await repository.findOne(id);
+        const politician = await repository.findOne(id);
 
-        return legislator != undefined ? legislator : null;
+        return politician != undefined ? politician : null;
     }
 
-    async insert(entity: Legislator): Promise<Legislator> {
+    async insert(entity: Politician): Promise<Politician> {
         const connection = await this.getConnection();
-        const repository = connection.getRepository(Legislator);
+        const repository = connection.getRepository(Politician);
 
         return await repository.save(entity);
     }
 
-    async update(entity: Legislator): Promise<boolean> {
+    async update(entity: Politician): Promise<boolean> {
         const connection = await this.getConnection();
-        const repository = connection.getRepository(Legislator);
+        const repository = connection.getRepository(Politician);
 
-        const legislator = repository.findOne(entity.id);
+        const politician = repository.findOne(entity.id);
 
-        if (!legislator)
+        if (!politician)
             return false;
 
         await repository.save(entity);
@@ -76,4 +76,4 @@ class LegislatorSqlRepository implements LegislatorRepository {
     }
 }
 
-export default LegislatorSqlRepository;
+export default PoliticianSqlRepository;

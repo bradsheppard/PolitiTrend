@@ -1,24 +1,24 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
-import LegislatorRepository from '../entity/repositories/LegislatorRepository';
+import PoliticianRepository from '../entity/repositories/PoliticianRepository';
 import { TYPES } from '../types';
 import { inject, injectable } from 'inversify';
 import Controller from './Controller';
-import Legislator from '../entity/Legislator';
+import Politician from '../entity/Politician';
 
 @injectable()
-class LegislatorController implements Controller {
+class PoliticianController implements Controller {
 
     public router = express.Router();
-    private readonly legislatorRepository: LegislatorRepository;
+    private readonly PoliticianRepository: PoliticianRepository;
 
-    constructor(@inject(TYPES.LegislatorRepository) legislatorRepository: LegislatorRepository) {
-        this.legislatorRepository = legislatorRepository;
+    constructor(@inject(TYPES.PoliticianRepository) PoliticianRepository: PoliticianRepository) {
+        this.PoliticianRepository = PoliticianRepository;
         this.initializeRoutes();
     }
 
     private initializeRoutes() {
-        this.router.get('/ping', LegislatorController.ping.bind(this));
+        this.router.get('/ping', PoliticianController.ping.bind(this));
         this.router.get('/', this.getAll.bind(this));
         this.router.get('/:id', this.getOne.bind(this));
         this.router.post('/', this.insert.bind(this));
@@ -30,27 +30,27 @@ class LegislatorController implements Controller {
     }
 
     private async getAll(req: Request, res: Response) {
-        const legislators = await this.legislatorRepository.get({});
-        res.json(legislators);
+        const Politicians = await this.PoliticianRepository.get({});
+        res.json(Politicians);
     }
 
     private async getOne(req: Request, res: Response) {
-        const legislator: Legislator | null = await this.legislatorRepository.getOne(parseInt(req.params.id));
+        const Politician: Politician | null = await this.PoliticianRepository.getOne(parseInt(req.params.id));
 
-        if (legislator)
-            res.json(legislator);
+        if (Politician)
+            res.json(Politician);
         else
             res.sendStatus(404);
     }
 
     private async insert(req: Request, res: Response) {
-        let legislator: Legislator = req.body;
-        legislator = await this.legislatorRepository.insert(legislator);
-        res.json(legislator);
+        let Politician: Politician = req.body;
+        Politician = await this.PoliticianRepository.insert(Politician);
+        res.json(Politician);
     }
 
     private async delete(req: Request, res: Response) {
-        const successful = await this.legislatorRepository.delete(parseInt(req.params.id));
+        const successful = await this.PoliticianRepository.delete(parseInt(req.params.id));
 
         if(successful)
             res.sendStatus(200);
@@ -59,4 +59,4 @@ class LegislatorController implements Controller {
     }
 }
 
-export default LegislatorController;
+export default PoliticianController;

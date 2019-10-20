@@ -1,7 +1,7 @@
 {
-   "name": "legislator",
+   "name": "Politician",
    "version": "1.0.0",
-   "description": "A microservice to serve information on legislators via a REST API.",
+   "description": "A microservice to serve information on Politicians via a REST API.",
    "main": "index.js",
    "scripts": {
       "test": "mocha --recursive 'build/**/*.test.js'",
@@ -10,7 +10,7 @@
       "seed": "node build/Seed.js"
    },
    "keywords": [
-      "legislator"
+      "Politician"
    ],
    "author": "Brad Sheppard",
    "license": "ISC",

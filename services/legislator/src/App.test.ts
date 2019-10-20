@@ -3,23 +3,23 @@ import { assert } from 'chai';
 import { agent } from 'supertest';
 import { TYPES } from './types';
 import App from './App';
-import Legislator from './entity/Legislator';
+import Politician from './entity/Politician';
 
 describe('App tests', () => {
 
     let app: App;
-    let testLegislator: Legislator;
+    let testPolitician: Politician;
 
     before(async () => {
         app = container.get<App>(TYPES.App);
 
-        testLegislator = new Legislator();
-        testLegislator.name = 'bob smith';
-        testLegislator.party = 'Democratic';
-        testLegislator.sentiment = 1;
+        testPolitician = new Politician();
+        testPolitician.name = 'bob smith';
+        testPolitician.party = 'Democratic';
+        testPolitician.sentiment = 1;
 
-        const res = await agent(app.app).post('/').send(testLegislator);
-        testLegislator = res.body;
+        const res = await agent(app.app).post('/').send(testPolitician);
+        testPolitician = res.body;
     });
 
     it('Can ping', async () => {
@@ -28,45 +28,45 @@ describe('App tests', () => {
         assert.equal(res.status, 200);
     });
 
-    it('Can get all legislators', async () => {
+    it('Can get all Politicians', async () => {
         const res = await agent(app.app).get('/');
-        const legislators: Array<Legislator> = res.body;
+        const politicians: Array<Politician> = res.body;
 
         assert.equal(res.status, 200);
-        assert.includeDeepMembers(legislators, [testLegislator]);
+        assert.includeDeepMembers(politicians, [testPolitician]);
     });
 
-    it('Can insert legislator', async () => {
-        const newLegislator: Legislator = new Legislator();
-        newLegislator.party = 'Republican';
-        newLegislator.name = 'john anderson';
-        newLegislator.sentiment = 2;
+    it('Can insert Politician', async () => {
+        const newPolitician: Politician = new Politician();
+        newPolitician.party = 'Republican';
+        newPolitician.name = 'john anderson';
+        newPolitician.sentiment = 2;
 
-        let res = await agent(app.app).post('/').send(newLegislator);
-        const legislator: Legislator = res.body;
-        newLegislator.id = legislator.id;
+        let res = await agent(app.app).post('/').send(newPolitician);
+        const politician: Politician = res.body;
+        newPolitician.id = politician.id;
 
-        res = await agent(app.app).get(`/${legislator.id}`);
-        const insertedLegislator: Legislator = res.body;
+        res = await agent(app.app).get(`/${politician.id}`);
+        const insertedPolitician: Politician = res.body;
 
-        assert.deepEqual(insertedLegislator, newLegislator);
+        assert.deepEqual(insertedPolitician, newPolitician);
     });
 
-    it('Can delete existing legislator', async () => {
-        let newLegislator: Legislator = new Legislator();
-        newLegislator.party = 'Democratic';
-        newLegislator.name = 'Steve Xiao';
-        newLegislator.sentiment = 3;
+    it('Can delete existing Politician', async () => {
+        let newPolitician: Politician = new Politician();
+        newPolitician.party = 'Democratic';
+        newPolitician.name = 'Steve Xiao';
+        newPolitician.sentiment = 3;
 
-        let res = await agent(app.app).post('/').send(newLegislator);
-        newLegislator = res.body;
+        let res = await agent(app.app).post('/').send(newPolitician);
+        newPolitician = res.body;
 
-        res = await agent(app.app).delete(`/${newLegislator.id}`);
+        res = await agent(app.app).delete(`/${newPolitician.id}`);
 
         assert.equal(res.status, 200);
     });
 
-    it('Cant delete nonexisting legislator', async () => {
+    it('Cant delete nonexisting Politician', async () => {
         const res = await agent(app.app).delete('/9999');
 
         assert.equal(res.status, 404);

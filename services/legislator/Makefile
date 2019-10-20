@@ -1,4 +1,4 @@
-service			:= legislator
+service			:= politician
 tag			:= 1.0.0
 registry		?= $(DOCKER_REGISTRY)
 postgres_version	:= 11
