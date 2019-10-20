@@ -3,7 +3,7 @@ import * as React from 'react';
 import Jumbotron from '../components/Jumbotron';
 import Top from '../components/Top';
 import Main from '../components/Main';
-import testLegislators from '../mocks/TestLegislators';
+import testPoliticians from '../mocks/TestPoliticians';
 
 const styles = () => createStyles({
     root: {
@@ -21,8 +21,8 @@ class App extends React.Component<IProps> {
             <div className={classes.root}>
                 <Top/>
                 <Jumbotron/>
-                <Main topLegislators={testLegislators.slice(0, testLegislators.length/2)}
-                      bottomLegislators={testLegislators.slice(testLegislators.length/2, testLegislators.length)} />
+                <Main topPoliticians={testPoliticians.slice(0, testPoliticians.length/2)}
+                      bottomPoliticians={testPoliticians.slice(testPoliticians.length/2, testPoliticians.length)} />
             </div>
         );
     }

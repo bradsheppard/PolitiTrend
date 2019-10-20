@@ -1,14 +1,17 @@
 import * as React from 'react';
-import Legislator from '../model/Legislator';
-import { Avatar, Button, Card, CardActions, CardHeader, IconButton, makeStyles, Typography } from '@material-ui/core';
+import Politician from '../model/Politician';
+import { Avatar, Button, Card, CardActions, CardHeader, makeStyles, Typography } from '@material-ui/core';
 
 interface IProps {
-    legislator: Legislator;
+    Politician: Politician;
 }
 
 const useStyles = makeStyles(() => ({
     card: {
         margin: '2em'
+    },
+    sentiment: {
+        margin: '1em'
     }
 }));
 
@@ -18,14 +21,12 @@ const Result = (props: IProps) => {
     return (
         <Card className={classes.card}>
             <CardHeader avatar={<Avatar src='/avatar.jpg' />}
-                        title={props.legislator.name}
-                        subheader={props.legislator.party}
+                        title={props.Politician.name}
+                        subheader={props.Politician.party}
                         action={
-                            <IconButton>
-                                <Typography>
-                                    {props.legislator.sentiment}
-                                </Typography>
-                            </IconButton>
+                            <Typography className={classes.sentiment} color='primary'>
+                                {props.Politician.sentiment}
+                            </Typography>
                         }
             />
             <CardActions>

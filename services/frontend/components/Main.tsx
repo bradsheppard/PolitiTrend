@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Legislator from '../model/Legislator';
+import Politician from '../model/Politician';
 import { Grid } from '@material-ui/core';
 import Result from './Result';
 
 interface IProps {
-    topLegislators: Array<Legislator>;
-    bottomLegislators: Array<Legislator>;
+    topPoliticians: Array<Politician>;
+    bottomPoliticians: Array<Politician>;
 }
 
 class Main extends React.Component<IProps> {
@@ -23,18 +23,18 @@ class Main extends React.Component<IProps> {
                     >
                         <Grid item sm={6}>
                             {
-                                this.props.topLegislators.map((legislator: Legislator, index) => {
+                                this.props.topPoliticians.map((Politician: Politician, index) => {
                                     return (
-                                        <Result legislator={legislator} key={index}/>
+                                        <Result Politician={Politician} key={index}/>
                                     )
                                 })
                             }
                         </Grid>
                         <Grid item sm={6}>
                             {
-                                this.props.bottomLegislators.map((legislator: Legislator, index) => {
+                                this.props.bottomPoliticians.map((Politician: Politician, index) => {
                                     return (
-                                        <Result legislator={legislator} key={index}/>
+                                        <Result Politician={Politician} key={index}/>
                                     )
                                 })
                             }

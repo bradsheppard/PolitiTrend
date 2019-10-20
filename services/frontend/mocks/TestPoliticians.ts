@@ -1,6 +1,6 @@
-import Legislator from '../model/Legislator';
+import Politician from '../model/Politician';
 
-const testLegislators: Array<Legislator> = [
+const testPoliticians: Array<Politician> = [
     {
         name: 'Bernie Sanders',
         party: 'Independent',
@@ -53,4 +53,4 @@ const testLegislators: Array<Legislator> = [
     }
 ];
 
-export default testLegislators;
+export default testPoliticians;

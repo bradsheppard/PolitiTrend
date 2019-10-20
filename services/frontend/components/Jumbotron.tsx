@@ -11,9 +11,9 @@ const style = () => createStyles({
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover'
     },
-    typography: {
-        paddingBottom: '2em',
-        paddingTop: '2em'
+    text: {
+        paddingBottom: '12em',
+        paddingTop: '12em'
     }
 });
 
@@ -28,9 +28,14 @@ const Jumbotron = (props: IProps) => {
         <div className={classes.background}>
             <Grid container={true}>
                 <Grid item={true} xs={12}>
-                    <Typography style={{color: 'white'}} className={classes.typography} variant='h1' align='center'>
-                        {Globals.name.toUpperCase()}
-                    </Typography>
+                    <div className={classes.text}>
+                        <Typography style={{color: 'white'}} variant='h1' align='center'>
+                            {Globals.name.toUpperCase()}
+                        </Typography>
+                        <Typography variant='h5' align='center' style={{color: 'white'}}>
+                            Sentiment analysis of politicians
+                        </Typography>
+                    </div>
                 </Grid>
             </Grid>
         </div>
