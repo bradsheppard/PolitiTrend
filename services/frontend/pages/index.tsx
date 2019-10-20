@@ -21,7 +21,8 @@ class App extends React.Component<IProps> {
             <div className={classes.root}>
                 <Top/>
                 <Jumbotron/>
-                <Main legislators={testLegislators} />
+                <Main topLegislators={testLegislators.slice(0, testLegislators.length/2)}
+                      bottomLegislators={testLegislators.slice(testLegislators.length/2, testLegislators.length)} />
             </div>
         );
     }

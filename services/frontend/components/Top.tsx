@@ -9,14 +9,14 @@ const Header = () => {
 
     return (
         <div>
-            {/*<AppBar position="fixed" color="default">
+            <AppBar position="static" color="default">
                 <Toolbar>
                     <Typography variant="h6" color="inherit">
-                        polc
+                        {Globals.name}
                     </Typography>
                 </Toolbar>
-            </AppBar>*/}
-            <AppBar position="static" color="default">
+            </AppBar>
+            <AppBar position="fixed" color="default">
                 <Toolbar>
                     <Typography variant="h6" color="inherit">
                         {Globals.name}

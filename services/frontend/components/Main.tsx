@@ -1,32 +1,45 @@
 import * as React from 'react';
 import Legislator from '../model/Legislator';
-import { Paper, Grid, ListItem, ListItemText } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import Result from './Result';
 
 interface IProps {
-    legislators: Array<Legislator>;
+    topLegislators: Array<Legislator>;
+    bottomLegislators: Array<Legislator>;
 }
 
 class Main extends React.Component<IProps> {
     render() {
         return (
-            <Grid container>
-                {
-                    this.props.legislators.map((legislator: Legislator) => {
-                        return (
-                            <Grid item xs={12} sm={6}>
-                                <ListItem divider={true}>
-                                    <ListItemText primary={legislator.name} secondary={legislator.party} />
-                                </ListItem>
-                            </Grid>
-                        )
-                    })
-                };
-
-                <Grid item xs={12} sm={6}>
-                    <Paper  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Paper />
+            <Grid container
+                  alignItems='center'
+                  direction='row'
+                  justify='center'>
+                <Grid item sm={8}>
+                    <Grid container
+                          alignItems='center'
+                          direction='row'
+                          justify='center'
+                    >
+                        <Grid item sm={6}>
+                            {
+                                this.props.topLegislators.map((legislator: Legislator, index) => {
+                                    return (
+                                        <Result legislator={legislator} key={index}/>
+                                    )
+                                })
+                            }
+                        </Grid>
+                        <Grid item sm={6}>
+                            {
+                                this.props.bottomLegislators.map((legislator: Legislator, index) => {
+                                    return (
+                                        <Result legislator={legislator} key={index}/>
+                                    )
+                                })
+                            }
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         );

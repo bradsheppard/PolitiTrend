@@ -30,6 +30,26 @@ const testLegislators: Array<Legislator> = [
         name: 'Joe Biden',
         party: 'Democratic',
         sentiment: -2
+    },
+    {
+        name: 'Kamala Harris',
+        party: 'Democratic',
+        sentiment: -1
+    },
+    {
+        name: 'Marco Rubio',
+        party: 'Republican',
+        sentiment: -2
+    },
+    {
+        name: 'Andrew Yang',
+        party: 'Democratic',
+        sentiment: 4
+    },
+    {
+        name: 'Mike Lee',
+        party: 'Republican',
+        sentiment: 2
     }
 ];
 

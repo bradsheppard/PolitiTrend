@@ -2,8 +2,8 @@ import { createMuiTheme } from '@material-ui/core';
 
 const theme = createMuiTheme({
     palette: {
-        primary: { main: 'rgb(110, 110, 110)' },
-        secondary: { main: 'rgb(110, 110, 110)' }
+        primary: { main: 'rgb(20,125,218)' },
+        secondary: { main: 'rgb(180,2,27)' }
     },
     typography: {
         fontFamily: [
