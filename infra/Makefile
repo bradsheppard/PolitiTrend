@@ -17,6 +17,7 @@ minikube:
 .PHONY: minikube_start
 minikube_start:
 	minikube start --memory=16384 --cpus=4 --vm-driver=kvm2
+	minikube addons enable ingress
 
 .PHONY: helm
 helm:

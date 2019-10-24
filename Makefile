@@ -1,22 +1,19 @@
 SUBDIRS := $(wildcard services/*)
 TARGET	?= deploy
 
-BUILD_TARGETS	:= services/politician
-DEPLOY_TARGETS	:= services/politician services/queue
+BUILD_TARGETS	:= services/politician services/frontend
+DEPLOY_TARGETS	:= services/politician services/queue services/frontend
 
 .PHONY: build_all
 build_all: $(BUILD_TARGETS)
 
 .PHONY: deploy_all
-deploy_all: $(DEPLOY_TARGETS)
+deploy_all:
+	@for f in $(DEPLOY_TARGETS); do make -C $${f} deploy; done
 
-.PHONY: $(SUBDIRS)
-$(BUILD_TARGETS):
-	$(MAKE) -C $@ build
-
-.PHONY: $(SUBDIRS)
-$(DEPLOY_TARGETS):
-	$(MAKE) -C $@ deploy
+.PHONY: build_all
+build_all:
+	@for f in $(BUILD_TARGETS); do make -C $${f} build; done
 
 destroy_all:
 	helm ls --all --short | xargs -L1 helm delete
