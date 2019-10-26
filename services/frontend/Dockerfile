@@ -12,8 +12,6 @@ COPY public public
 
 COPY tsconfig.json .
 
-COPY tsconfig.server.json .
-
 RUN npm install
 
 RUN npm run build

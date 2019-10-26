@@ -5,6 +5,8 @@ import Top from '../components/Top';
 import Main from '../components/Main';
 import Politician from '../model/Politician';
 import PoliticianApi from '../model/PoliticianApi';
+import absoluteUrl from "../utils/absoluteUrl";
+import {NextPageContext} from "next";
 
 const styles = () => createStyles({
     root: {
@@ -19,8 +21,9 @@ interface IProps extends WithStyles<typeof styles>{
 
 class App extends React.Component<IProps> {
 
-    static async getInitialProps() {
-        const politicians = await PoliticianApi.get();
+    static async getInitialProps(ctx: NextPageContext) {
+        const { origin } = absoluteUrl(ctx.req);
+        const politicians = await PoliticianApi.get(origin);
 
         return {
             topPoliticians: politicians,

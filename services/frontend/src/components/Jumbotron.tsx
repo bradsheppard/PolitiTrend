@@ -17,12 +17,11 @@ const style = () => createStyles({
     }
 });
 
-interface IProps extends WithStyles<typeof style> {
-}
+interface IProps extends WithStyles<typeof style> {}
 
 const Jumbotron = (props: IProps) => {
 
-    const {classes} = props;
+    const { classes } = props;
 
     return (
         <div className={classes.background}>
