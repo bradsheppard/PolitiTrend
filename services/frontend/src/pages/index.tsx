@@ -4,7 +4,7 @@ import Jumbotron from '../components/Jumbotron';
 import Top from '../components/Top';
 import Main from '../components/Main';
 import Politician from '../model/Politician';
-import fetch from 'isomorphic-unfetch';
+import PoliticianApi from '../model/PoliticianApi';
 
 const styles = () => createStyles({
     root: {
@@ -20,8 +20,7 @@ interface IProps extends WithStyles<typeof styles>{
 class App extends React.Component<IProps> {
 
     static async getInitialProps() {
-        const res = await fetch('http://politician');
-        const politicians = await res.json();
+        const politicians = await PoliticianApi.get();
 
         return {
             topPoliticians: politicians,
