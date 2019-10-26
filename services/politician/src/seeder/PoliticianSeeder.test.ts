@@ -22,10 +22,12 @@ describe('Politician seeder tests', () => {
         const firstPolitician = new Politician();
         firstPolitician.party = 'Republican';
         firstPolitician.name = 'Richard Shelby';
+        firstPolitician.sentiment = 1;
 
         const lastPolitician = new Politician();
         lastPolitician.party = 'Republican';
         lastPolitician.name = 'John Barrasso';
+        lastPolitician.sentiment = 3;
 
         const [firstInsertedPolitician] = capture(mockRepository.insert).first();
         const [lastInsertedPolitician] = capture(mockRepository.insert).last();

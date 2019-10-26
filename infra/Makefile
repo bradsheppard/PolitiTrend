@@ -14,10 +14,15 @@ minikube:
 	curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
 	install minikube /usr/local/bin
 
+.PHONY: kubefwd
+kubefwd:
+	curl -Lo kubefwd.deb https://github.com/txn2/kubefwd/releases/download/v1.9.2/kubefwd_amd64.deb
+	apt-get install ./kubefwd.deb
+	rm kubefwd.deb
+
 .PHONY: minikube_start
 minikube_start:
 	minikube start --memory=16384 --cpus=4 --vm-driver=kvm2
-	minikube addons enable ingress
 
 .PHONY: helm
 helm:

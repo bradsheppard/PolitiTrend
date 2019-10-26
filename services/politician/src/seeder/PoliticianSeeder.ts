@@ -38,6 +38,7 @@ class PoliticianSeeder implements Seeder {
         const politician = new Politician();
         politician.name = name;
         politician.party = party;
+        politician.sentiment = 0;
 
         return politician;
     }

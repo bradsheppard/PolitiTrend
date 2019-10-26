@@ -1,9 +1,10 @@
-import { createStyles, withStyles, WithStyles } from "@material-ui/core";
+import { createStyles, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import Jumbotron from '../components/Jumbotron';
 import Top from '../components/Top';
 import Main from '../components/Main';
-import testPoliticians from '../mocks/TestPoliticians';
+import Politician from '../model/Politician';
+import fetch from 'isomorphic-unfetch';
 
 const styles = () => createStyles({
     root: {
@@ -11,9 +12,23 @@ const styles = () => createStyles({
     }
 });
 
-interface IProps extends WithStyles<typeof styles> {}
+interface IProps extends WithStyles<typeof styles>{
+    topPoliticians: Array<Politician>;
+    bottomPoliticians: Array<Politician>;
+}
 
 class App extends React.Component<IProps> {
+
+    static async getInitialProps() {
+        const res = await fetch('http://politician');
+        const politicians = await res.json();
+
+        return {
+            topPoliticians: politicians,
+            bottomPoliticians: politicians
+        };
+    }
+
     public render() {
         const { classes } = this.props;
 
@@ -21,8 +36,8 @@ class App extends React.Component<IProps> {
             <div className={classes.root}>
                 <Top/>
                 <Jumbotron/>
-                <Main topPoliticians={testPoliticians.slice(0, testPoliticians.length/2)}
-                      bottomPoliticians={testPoliticians.slice(testPoliticians.length/2, testPoliticians.length)} />
+                <Main topPoliticians={this.props.topPoliticians}
+                      bottomPoliticians={this.props.bottomPoliticians} />
             </div>
         );
     }
