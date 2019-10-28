@@ -1,7 +1,7 @@
-import {IncomingMessage} from "http";
+import { IncomingMessage } from 'http';
 
 const absoluteUrl = (req?: IncomingMessage, setLocalhost?: string) => {
-    let protocol = 'https:';
+    let protocol = 'http:';
     let host = req ? (req.headers['x-forwarded-host'] || req.headers['host']) : window.location.host;
 
     if (host && host.indexOf('localhost') > -1) {

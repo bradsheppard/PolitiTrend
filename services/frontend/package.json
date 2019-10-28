@@ -1,5 +1,5 @@
 {
-  "name": "custom-server-typescript",
+  "name": "frontend",
   "version": "1.0.0",
   "scripts": {
     "test": "jest",
@@ -9,12 +9,13 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.5.1",
-    "inversify": "^5.0.1",
     "isomorphic-unfetch": "^3.0.0",
     "jest": "^24.9.0",
     "next": "latest",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "react-scroll-trigger": "^0.6.0",
+    "react-twitter-widgets": "^1.7.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.20",

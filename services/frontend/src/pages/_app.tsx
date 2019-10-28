@@ -21,7 +21,7 @@ export default class MyApp extends App {
         return (
             <React.Fragment>
                 <Head>
-                    <title>{Globals.name}</title>
+                    <title>{capitalize(Globals.name)}</title>
                 </Head>
                 <ThemeProvider theme={theme}>
                     {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
@@ -31,4 +31,8 @@ export default class MyApp extends App {
             </React.Fragment>
         );
     }
+}
+
+function capitalize(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
 }

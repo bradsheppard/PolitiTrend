@@ -12,14 +12,14 @@ const Header = () => {
             <AppBar position="static" color="default">
                 <Toolbar>
                     <Typography variant="h6" color="inherit">
-                        {Globals.name}
+                        {capitalize(Globals.name)}
                     </Typography>
                 </Toolbar>
             </AppBar>
             <AppBar position="fixed" color="default">
                 <Toolbar>
                     <Typography variant="h6" color="inherit">
-                        {Globals.name}
+                        {capitalize(Globals.name)}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -27,5 +27,9 @@ const Header = () => {
 
     );
 };
+
+function capitalize(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
 
 export default Header;

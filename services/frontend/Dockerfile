@@ -6,13 +6,13 @@ COPY package.json .
 
 COPY package-lock.json .
 
-COPY src src
+RUN npm install
 
 COPY public public
 
 COPY tsconfig.json .
 
-RUN npm install
+COPY src src
 
 RUN npm run build
 
@@ -20,8 +20,6 @@ RUN npm run build
 FROM node:10-alpine AS app
 
 WORKDIR /app
-
-COPY --from=builder /app/dist dist
 
 COPY --from=builder /app/.next .next
 

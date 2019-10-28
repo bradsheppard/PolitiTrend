@@ -25,7 +25,7 @@ class Main extends React.Component<IProps> {
                             {
                                 this.props.topPoliticians.map((Politician: Politician, index) => {
                                     return (
-                                        <Result Politician={Politician} key={index}/>
+                                        <Result politician={Politician} key={index}/>
                                     )
                                 })
                             }
@@ -34,7 +34,7 @@ class Main extends React.Component<IProps> {
                             {
                                 this.props.bottomPoliticians.map((Politician: Politician, index) => {
                                     return (
-                                        <Result Politician={Politician} key={index}/>
+                                        <Result politician={Politician} key={index}/>
                                     )
                                 })
                             }
