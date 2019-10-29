@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Politician from '../model/Politician';
-import { Grid } from '@material-ui/core';
+import {Grid, Paper} from '@material-ui/core';
 import Result from './Result';
 
 interface IProps {
@@ -15,31 +15,41 @@ class Main extends React.Component<IProps> {
                   alignItems='center'
                   direction='row'
                   justify='center'>
-                <Grid item sm={8}>
-                    <Grid container
-                          alignItems='center'
-                          direction='row'
-                          justify='center'
-                    >
-                        <Grid item sm={6}>
-                            {
-                                this.props.topPoliticians.map((Politician: Politician, index) => {
-                                    return (
-                                        <Result politician={Politician} key={index}/>
-                                    )
-                                })
-                            }
+                <Grid item sm={10}>
+                    <Paper elevation={15}>
+                        <Grid container
+                              alignItems='center'
+                              direction='row'
+                              justify='center'
+                        >
+                            <Grid item sm={10}>
+                                <Grid container
+                                      alignItems='center'
+                                      direction='row'
+                                      justify='center'
+                                >
+                                    <Grid item sm={6}>
+                                        {
+                                            this.props.topPoliticians.map((Politician: Politician, index) => {
+                                                return (
+                                                    <Result politician={Politician} key={index}/>
+                                                )
+                                            })
+                                        }
+                                    </Grid>
+                                    <Grid item sm={6}>
+                                        {
+                                            this.props.bottomPoliticians.map((Politician: Politician, index) => {
+                                                return (
+                                                    <Result politician={Politician} key={index}/>
+                                                )
+                                            })
+                                        }
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         </Grid>
-                        <Grid item sm={6}>
-                            {
-                                this.props.bottomPoliticians.map((Politician: Politician, index) => {
-                                    return (
-                                        <Result politician={Politician} key={index}/>
-                                    )
-                                })
-                            }
-                        </Grid>
-                    </Grid>
+                    </Paper>
                 </Grid>
             </Grid>
         );

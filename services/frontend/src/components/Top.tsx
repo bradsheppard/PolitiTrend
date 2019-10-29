@@ -11,14 +11,14 @@ const Header = () => {
         <div>
             <AppBar position="static" color="default">
                 <Toolbar>
-                    <Typography variant="h6" color="inherit">
+                    <Typography variant="h5" color="inherit">
                         {capitalize(Globals.name)}
                     </Typography>
                 </Toolbar>
             </AppBar>
             <AppBar position="fixed" color="default">
                 <Toolbar>
-                    <Typography variant="h6" color="inherit">
+                    <Typography variant="h5" color="inherit">
                         {capitalize(Globals.name)}
                     </Typography>
                 </Toolbar>

@@ -59,7 +59,7 @@ class Result extends React.Component<IProps, IState> {
             // @ts-ignore
             <ScrollTrigger onEnter={this.onEnterViewport.bind(this)} onExit={this.onExitViewport.bind(this)}>
                 <Fade in={this.state.visible} timeout={1500}>
-                    <Card className={classes.card}>
+                    <Card className={classes.card} elevation={1}>
                         <CardHeader avatar={<Avatar src='/avatar.jpg' />}
                                     title={this.props.politician.name}
                                     subheader={this.props.politician.party}
@@ -71,6 +71,9 @@ class Result extends React.Component<IProps, IState> {
                         />
                         <CardContent>
                             <Tweet
+                                options={{
+                                    align: 'center'
+                                }}
                                 tweetId={'933354946111705097'}
                             />
                         </CardContent>

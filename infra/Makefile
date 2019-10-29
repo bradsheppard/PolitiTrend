@@ -23,6 +23,7 @@ kubefwd:
 .PHONY: minikube_start
 minikube_start:
 	minikube start --memory=16384 --cpus=4 --vm-driver=kvm2
+	minikube ssh -- sudo ip link set docker0 promisc on
 
 .PHONY: helm
 helm:
