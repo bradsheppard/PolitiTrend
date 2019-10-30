@@ -1,29 +1,52 @@
 import * as React from 'react';
-
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Globals from '../utils/Globals';
+import { Slide, useScrollTrigger } from '@material-ui/core';
 
-const Header = () => {
+interface Props {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window?: () => Window;
+    children?: React.ReactElement;
+}
+
+function HideOnScroll(props: Props) {
+    const { children, window } = props;
+    const trigger = useScrollTrigger({ target: window ? window() : undefined });
 
     return (
-        <div>
-            <AppBar position="static" color="default">
-                <Toolbar>
-                    <Typography variant="h5" color="inherit">
-                        {capitalize(Globals.name)}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <AppBar position="fixed" color="default">
-                <Toolbar>
-                    <Typography variant="h5" color="inherit">
-                        {capitalize(Globals.name)}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-        </div>
+        <Slide appear={false} direction="down" in={!trigger}>
+            {children}
+        </Slide>
+    );
+}
+
+const Header = (props: Props) => {
+
+    return (
+        <React.Fragment>
+            {/*<AppBar position="static" color="secondary">*/}
+            {/*    <Toolbar>*/}
+            {/*        <Typography variant="h5">*/}
+            {/*            {capitalize(Globals.name)}*/}
+            {/*        </Typography>*/}
+            {/*    </Toolbar>*/}
+            {/*</AppBar>*/}
+            <HideOnScroll {...props}>
+                <AppBar position="fixed" color="secondary">
+                    <Toolbar>
+                        <Typography variant="h5">
+                            {capitalize(Globals.name)}
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+            </HideOnScroll>
+            <Toolbar />
+        </React.Fragment>
 
     );
 };
