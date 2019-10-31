@@ -3,7 +3,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Globals from '../utils/Globals';
-import { Slide, useScrollTrigger } from '@material-ui/core';
+import { makeStyles, Slide, useScrollTrigger } from '@material-ui/core';
+import BarItem from './BarItem';
+
+const useStyles = makeStyles(() => ({
+    title: {
+        flexGrow: 0.75
+    }
+}));
 
 interface Props {
     /**
@@ -26,6 +33,7 @@ function HideOnScroll(props: Props) {
 }
 
 const Header = (props: Props) => {
+    const classes = useStyles();
 
     return (
         <React.Fragment>
@@ -39,9 +47,18 @@ const Header = (props: Props) => {
             <HideOnScroll {...props}>
                 <AppBar position="fixed" color="secondary">
                     <Toolbar>
-                        <Typography variant="h5">
+                        <Typography variant="h5" className={classes.title}>
                             {capitalize(Globals.name)}
                         </Typography>
+                        <BarItem>
+                            Stats
+                        </BarItem>
+                        <BarItem>
+                            Politicians
+                        </BarItem>
+                        <BarItem>
+                            About
+                        </BarItem>
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>

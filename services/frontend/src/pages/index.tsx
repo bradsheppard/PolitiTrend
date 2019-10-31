@@ -1,7 +1,7 @@
 import { createStyles, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import Jumbotron from '../components/Jumbotron';
-import Top from '../components/Top';
+import Bar from '../components/Bar';
 import Main from '../components/Main';
 import Politician from '../model/Politician';
 import PoliticianApi from '../model/PoliticianApi';
@@ -34,7 +34,7 @@ class App extends React.Component<IProps> {
 
         return (
             <div className={classes.root}>
-                <Top/>
+                <Bar/>
                 <Jumbotron/>
                 <Main topPoliticians={this.props.topPoliticians}
                       bottomPoliticians={this.props.bottomPoliticians} />
