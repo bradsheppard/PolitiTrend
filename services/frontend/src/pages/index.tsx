@@ -24,8 +24,8 @@ class App extends React.Component<IProps> {
         const politicians = await PoliticianApi.get(context);
 
         return {
-            topPoliticians: politicians,
-            bottomPoliticians: politicians
+            topPoliticians: politicians.slice(0, 5),
+            bottomPoliticians: politicians.slice(0, 5)
         };
     }
 

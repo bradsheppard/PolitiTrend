@@ -7,7 +7,7 @@ import {
     CardActions,
     CardContent,
     CardHeader, createStyles,
-    Fade,
+    Fade, Theme,
     Typography, WithStyles, withStyles
 } from '@material-ui/core';
 import { Tweet } from 'react-twitter-widgets'
@@ -21,12 +21,12 @@ interface IState {
     visible: boolean;
 }
 
-const styles = () => createStyles({
+const styles = (theme: Theme) => createStyles({
     card: {
-        margin: '2em'
+        margin: theme.spacing(4)
     },
     sentiment: {
-        margin: '1em'
+        margin: theme.spacing(2)
     }
 });
 
@@ -58,7 +58,7 @@ class Result extends React.Component<IProps, IState> {
         return (
             // @ts-ignore
             <ScrollTrigger onEnter={this.onEnterViewport.bind(this)} onExit={this.onExitViewport.bind(this)}>
-                <Fade in={this.state.visible} timeout={1500}>
+                <Fade in={this.state.visible} timeout={2000}>
                     <Card className={classes.card} elevation={1}>
                         <CardHeader avatar={<Avatar src='/avatar.jpg' />}
                                     title={this.props.politician.name}
@@ -70,6 +70,18 @@ class Result extends React.Component<IProps, IState> {
                                     }
                         />
                         <CardContent>
+                            <Tweet
+                                options={{
+                                    align: 'center'
+                                }}
+                                tweetId={'933354946111705097'}
+                            />
+                            <Tweet
+                                options={{
+                                    align: 'center'
+                                }}
+                                tweetId={'933354946111705097'}
+                            />
                             <Tweet
                                 options={{
                                     align: 'center'

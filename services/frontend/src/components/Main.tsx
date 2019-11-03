@@ -3,6 +3,7 @@ import Politician from '../model/Politician';
 import { Grid } from '@material-ui/core';
 import Result from './Result';
 import ResultContainer from './ResultContainer';
+import ResultHeader from './ResultHeader';
 
 interface IProps {
     topPoliticians: Array<Politician>;
@@ -18,6 +19,9 @@ class Main extends React.Component<IProps> {
                       direction='row'
                       justify='center'>
                     <Grid item sm={6}>
+                        <ResultHeader>
+                            Most Liked
+                        </ResultHeader>
                         {
                             this.props.topPoliticians.map((Politician: Politician, index) => {
                                 return (
@@ -27,6 +31,9 @@ class Main extends React.Component<IProps> {
                         }
                     </Grid>
                     <Grid item sm={6}>
+                        <ResultHeader>
+                            Most Hated
+                        </ResultHeader>
                         {
                             this.props.bottomPoliticians.map((Politician: Politician, index) => {
                                 return (
