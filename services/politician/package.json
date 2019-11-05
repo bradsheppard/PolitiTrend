@@ -1,5 +1,5 @@
 {
-   "name": "Politician",
+   "name": "politician",
    "version": "1.0.0",
    "description": "A microservice to serve information on Politicians via a REST API.",
    "main": "index.js",
