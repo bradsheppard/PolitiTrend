@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive 'build/**/*.test.js'",
+    "build": "tsc",
+    "start": "node build/index.js"
   },
   "keywords": [
     "opinion"
@@ -12,12 +14,20 @@
   "author": "Brad Sheppard",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.2.0",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
+    "mocha": "^6.2.2",
+    "pg": "^7.12.1",
     "reflect-metadata": "^0.1.13",
+    "supertest": "^4.0.2",
     "typeorm": "^0.2.20"
   },
   "devDependencies": {
-    "@types/express": "^4.17.1"
+    "@types/chai": "^4.2.4",
+    "@types/express": "^4.17.1",
+    "@types/mocha": "^5.2.7",
+    "@types/supertest": "^2.0.8",
+    "typescript": "^3.7.2"
   }
 }
