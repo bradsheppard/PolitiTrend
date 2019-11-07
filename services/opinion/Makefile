@@ -2,6 +2,7 @@ service                 := opinion
 tag                     := 1.0.0
 registry                ?= $(DOCKER_REGISTRY)
 postgres_version        := 11
+target			?= dev
 
 .PHONY: build
 build:
@@ -13,7 +14,7 @@ test:
 
 .PHONY: deploy
 deploy:
-	helm upgrade --install --set image.tag=$(tag) $(service) ./k8s/$(service)
+	helm upgrade --install --set image.tag=$(tag) $(service) --values ./k8s/$(service)/$(target)_values.yaml ./k8s/$(service)
 
 .PHONY: destroy
 destroy:
