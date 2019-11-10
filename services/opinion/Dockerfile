@@ -1,5 +1,7 @@
 FROM node:10-alpine AS builder
 
+RUN apk add python make build-base
+
 WORKDIR /app
 
 COPY package.json .
