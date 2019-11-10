@@ -7,13 +7,20 @@ import Controller from './controllers/Controller';
 import OpinionController from './controllers/OpinionController';
 import App from './App';
 import ConnectionProvider from './entity/repositories/ConnectionProvider';
+import KafkaEventBus from './event_bus/KafkaEventBus';
+import EventBus from './event_bus/EventBus';
+import EventHandler from './event_bus/EventHandler';
+import NewOpinionEventHandler from './event_bus/NewOpinionEventHandler';
+import EventType from './event_bus/EventType';
+import Opinion from './entity/Opinion';
 
 const container = new Container();
 
-const connectionProvider: ConnectionProvider = new ConnectionProvider();
+container.bind<ConnectionProvider>(TYPES.ConnectionProvider).to(ConnectionProvider).inSingletonScope();
 
-container.bind<ConnectionProvider>(TYPES.ConnectionProvider).toConstantValue(connectionProvider);
-container.bind<OpinionRepository>(TYPES.OpinionRepository).to(OpinionSqlRepository);
+container.bind<EventBus>(TYPES.EventBus).to(KafkaEventBus);
+container.bind<EventHandler<EventType.NewOpinion, Opinion>>(TYPES.EventHandler).to(NewOpinionEventHandler);
+container.bind<OpinionRepository>(TYPES.OpinionRepository).to(OpinionSqlRepository).inSingletonScope();
 container.bind<Controller>(TYPES.Controller).to(OpinionController);
 container.bind<App>(TYPES.App).to(App);
 

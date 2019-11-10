@@ -1,10 +1,10 @@
-import Event from './Event';
 import EventHandler from './EventHandler';
+import EventType from './EventType';
 
 interface EventBus {
-    publish(event: Event<any>): Promise<void>;
+    publish(eventType: EventType, event: any): Promise<void>;
 
-    subscribe(eventHandler: EventHandler<Event<any>>);
+    subscribe(eventHandler: EventHandler<EventType, any>);
 }
 
 export default EventBus;

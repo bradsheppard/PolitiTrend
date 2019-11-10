@@ -1,50 +1,104 @@
 import EventBus from './EventBus';
-import Event from './Event';
 import EventHandler from './EventHandler';
 import { Consumer, KafkaClient, Message, Producer } from 'kafka-node';
+import { injectable, multiInject } from 'inversify';
+import { TYPES } from '../types';
+import EventType from './EventType';
 
+interface Event {
+    type: EventType;
+    data: any;
+}
+
+@injectable()
 class KafkaEventBus implements EventBus {
 
+    private ready: boolean = false;
     private static topic = 'opinion';
     private static groupId = 'opinionGroup';
     private readonly producer: Producer;
     private readonly consumer: Consumer;
-    private readonly eventHandlers: Array<EventHandler<Event<any>>>;
+    private readonly eventHandlers: Array<EventHandler<EventType, any>>;
 
-    constructor(eventHandlers: Array<EventHandler<Event<any>>>) {
+    constructor(@multiInject(TYPES.EventHandler) eventHandlers: Array<EventHandler<EventType, any>>) {
         const client = new KafkaClient({kafkaHost: 'queue-kafka:9092'});
         this.producer = new Producer(client);
         this.consumer = new Consumer(client, [{topic: KafkaEventBus.topic}], {
-            groupId: KafkaEventBus.groupId
+             groupId: KafkaEventBus.groupId
         });
-
-        this.consumer.on('message', this.processMessage);
+        this.eventHandlers = eventHandlers;
+        this.producer.on('ready', () => {
+            this.ready = true
+        });
+        this.consumer.on('message', this.processMessage.bind(this));
     }
 
     async processMessage(message: Message) {
         if (typeof message.value !== 'string')
             return;
 
-        const event: Event<any> = JSON.parse(message.value);
+        const event: Event = JSON.parse(message.value);
 
         for(let eventHandler of this.eventHandlers) {
-            if(eventHandler.getType() === event.)
+            if(eventHandler.getType().toString() === event.type) {
+                try {
+                    await eventHandler.handle(event.data);
+                }
+                catch(ex) {
+                    console.log(ex);
+                }
+            }
         }
     }
 
+    async publish(eventType: EventType, event: any) {
+        const eventPayload: Event = {
+            type: eventType,
+            data: event
+        };
 
-    async publish(event: Event<any>) {
-
-        await this.send([
-            {
-                messages: event.getData(),
-                topic: 'test'
-            }
-        ]);
+        if (!this.ready) {
+            await new Promise((resolve, reject) => {
+                this.producer.on('ready', () => {
+                    this.producer.send([
+                        {
+                            messages: JSON.stringify(eventPayload),
+                            topic: KafkaEventBus.topic
+                        }
+                    ], (err, data) => {
+                        if (err) {
+                            reject();
+                        }
+                        else {
+                            console.log(data);
+                            resolve();
+                        }
+                    });
+                })
+            });
+        }
+        else {
+            await new Promise(((resolve, reject) => {
+                this.producer.send([
+                    {
+                        messages: JSON.stringify(event),
+                        topic: KafkaEventBus.topic
+                    }
+                ], (err, data) => {
+                    if (err) {
+                        reject();
+                    } else {
+                        console.log(data);
+                        resolve();
+                    }
+                });
+            }));
+        }
     }
 
-    subscribe(eventHandler: EventHandler<Event<any>>) {
-
+    subscribe(eventHandler: EventHandler<EventType, any>) {
+        this.eventHandlers.push(eventHandler);
     }
-
 }
+
+export default KafkaEventBus;

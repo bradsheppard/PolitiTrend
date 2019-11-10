@@ -1,3 +1,5 @@
 enum EventType {
-    Opinion
+    NewOpinion = 'NewOpinion'
 }
+
+export default EventType;
