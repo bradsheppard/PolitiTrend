@@ -3,9 +3,9 @@ from kafka import KafkaConsumer, KafkaProducer
 
 class MessageBus:
 
-    def __init__(self):
-        self.consumer = KafkaConsumer('opinion', bootstrap_servers='queue-kafka:9092', group_id='opinion_group')
-        self.producer = KafkaProducer(bootstrap_servers='queue-kafka:9092')
+    def __init__(self, host, group):
+        self.consumer = KafkaConsumer('opinion', bootstrap_servers=host, group_id=group)
+        self.producer = KafkaProducer(bootstrap_servers=host)
 
     def send(self, message):
         future = self.producer.send('opinion', message)
