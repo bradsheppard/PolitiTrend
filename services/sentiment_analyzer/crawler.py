@@ -1,5 +1,5 @@
 import tweepy as tw
-from message_bus import MessageBus
+from sentiment_analyzer.message_bus import MessageBus
 
 consumer_key = '75nqFjIf1ek0bXYeeTli0tj6X'
 consumer_secret = 'C0CWq45MlpqxyoTvaRKONBCC1fVtIYLxzZpa3BD1vr0oK1G2Uy'

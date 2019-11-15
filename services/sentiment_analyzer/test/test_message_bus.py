@@ -1,5 +1,5 @@
 import time
-from message_bus import MessageBus
+from sentiment_analyzer.message_bus import MessageBus
 
 
 def test_receive_message():

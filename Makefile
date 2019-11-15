@@ -1,8 +1,8 @@
 SUBDIRS := $(wildcard services/*)
 TARGET	?= deploy
 
-BUILD_TARGETS	:= services/politician services/frontend
-DEPLOY_TARGETS	:= services/politician services/frontend
+BUILD_TARGETS	:= services/politician services/frontend services/opinion
+DEPLOY_TARGETS	:= services/politician services/frontend services/opinion services/queue
 
 .PHONY: build_all
 build_all: $(BUILD_TARGETS)
