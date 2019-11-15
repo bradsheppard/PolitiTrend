@@ -7,8 +7,8 @@ class TweetCrawler:
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
 
-        self.api = tweepy.API(auth)
+        self._api = tweepy.API(auth)
 
     def get(self, search_term):
-        tweets = tweepy.Cursor(self.api.search, q=search_term, lang='en').items(5)
+        tweets = tweepy.Cursor(self._api.search, q=search_term, lang='en').items(5)
         return [tweet.text for tweet in tweets]

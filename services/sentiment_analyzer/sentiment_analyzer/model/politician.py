@@ -4,10 +4,10 @@ import requests
 class PoliticianRepository:
 
     def __init__(self):
-        self.host = 'http://politician'
+        self._host = 'http://politician'
 
     def get_all(self):
-        res = requests.get(self.host)
+        res = requests.get(self._host)
         json = res.json()
 
         politicians = []
