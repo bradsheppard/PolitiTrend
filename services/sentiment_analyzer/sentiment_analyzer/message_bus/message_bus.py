@@ -3,7 +3,7 @@ from kafka import KafkaConsumer, KafkaProducer
 
 class MessageBus:
 
-    def __init__(self, host, group):
+    def __init__(self, host: str, group: str):
         self._consumer = KafkaConsumer('opinion', bootstrap_servers=host, group_id=group)
         self._producer = KafkaProducer(bootstrap_servers=host)
 

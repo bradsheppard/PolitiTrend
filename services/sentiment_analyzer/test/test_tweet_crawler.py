@@ -6,7 +6,7 @@ import configparser
 @pytest.fixture
 def tweet_crawler():
     config = configparser.ConfigParser()
-    config.read('../config.ini')
+    config.read('config.ini')
     twitter_config = config['twitter']
     tweet_crawler = TweetCrawler(twitter_config['consumer_key'], twitter_config['consumer_secret'],
                                  twitter_config['access_token'], twitter_config['access_token_secret'])

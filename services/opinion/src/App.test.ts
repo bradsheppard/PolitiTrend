@@ -14,7 +14,8 @@ describe('App tests', () => {
         app = container.get<App>(TYPES.App);
 
         testOpinion = new Opinion();
-        testOpinion.tweet = 1;
+        testOpinion.tweetId = 1;
+        testOpinion.tweetText = 'test text 1';
         testOpinion.sentiment = 11;
         testOpinion.politician = 111;
 
@@ -38,7 +39,8 @@ describe('App tests', () => {
 
     it('Can insert Opinion', async () => {
         const newOpinion: Opinion = new Opinion();
-        newOpinion.tweet = 2;
+        newOpinion.tweetId = 2;
+        newOpinion.tweetText = 'test text 2';
         newOpinion.sentiment = 22;
         newOpinion.politician = 222;
 
@@ -54,7 +56,8 @@ describe('App tests', () => {
 
     it('Can delete existing Opinion', async () => {
         let newOpinion: Opinion = new Opinion();
-        newOpinion.tweet = 3;
+        newOpinion.tweetId = 3;
+        newOpinion.tweetText = 'test text 3';
         newOpinion.sentiment = 33;
         newOpinion.politician = 333;
 

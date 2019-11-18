@@ -10,13 +10,15 @@ describe('Opinion repository tests', () => {
 
     const opinion1 = new Opinion();
     opinion1.politician = 1;
+    opinion1.tweetText = 'test text 1';
     opinion1.sentiment = 11;
-    opinion1.tweet = 111;
+    opinion1.tweetId = 111;
 
     const opinion2 = new Opinion();
     opinion2.politician = 2;
+    opinion2.tweetText = 'test text 2';
     opinion2.sentiment = 22;
-    opinion2.tweet = 222;
+    opinion2.tweetId = 222;
 
     it('Can get all', async () => {
         opinionRepository = container.get<OpinionRepository>(TYPES.OpinionRepository);
@@ -47,7 +49,7 @@ describe('Opinion repository tests', () => {
 
     it('Can update', async () => {
         const opinion = await opinionRepository.insert(opinion1);
-        opinion.tweet = 1234;
+        opinion.tweetId = 1234;
         await opinionRepository.update(opinion);
 
         const updatedOpinion = await opinionRepository.getOne(opinion.id);

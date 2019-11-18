@@ -11,4 +11,4 @@ class TweetCrawler:
 
     def get(self, search_term):
         tweets = tweepy.Cursor(self._api.search, q=search_term, lang='en').items(5)
-        return [tweet.text for tweet in tweets]
+        return [tweet for tweet in tweets]

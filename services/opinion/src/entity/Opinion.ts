@@ -12,5 +12,8 @@ export default class Opinion {
     sentiment: number;
 
     @Column()
-    tweet: number;
+    tweetId: number;
+
+    @Column()
+    tweetText: string;
 }
