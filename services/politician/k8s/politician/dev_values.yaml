@@ -6,8 +6,7 @@ replicaCount: 1
 
 image:
   repository: politician
-  test_repository: politician-test
-  pullPolicy: Never
+  pullPolicy: IfNotPresent
 
 nameOverride: ""
 fullnameOverride: ""

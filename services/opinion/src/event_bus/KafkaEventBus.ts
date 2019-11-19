@@ -28,8 +28,8 @@ class KafkaEventBus implements EventBus {
         });
         this.eventHandlers = eventHandlers;
         this.producer.on('ready', () => {
-            this.ready = true
-            console.log('Queue consumption ready!')
+            this.ready = true;
+            console.log('Queue consumption ready!');
         });
         this.consumer.on('message', this.processMessage.bind(this));
     }

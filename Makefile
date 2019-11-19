@@ -11,6 +11,10 @@ build_all: $(BUILD_TARGETS)
 deploy_all:
 	@for f in $(DEPLOY_TARGETS); do make -C $${f} deploy; done
 
+.PHONY: push_all
+push_all:
+	@for f in $(BUILD_TARGETS); do make -C $${f} push; done
+
 .PHONY: build_all
 build_all:
 	@for f in $(BUILD_TARGETS); do make -C $${f} build; done

@@ -1,15 +1,12 @@
 import pytest
+from sentiment_analyzer.config import config
 from sentiment_analyzer.twitter import TweetCrawler
-import configparser
 
 
 @pytest.fixture
 def tweet_crawler():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    twitter_config = config['twitter']
-    tweet_crawler = TweetCrawler(twitter_config['consumer_key'], twitter_config['consumer_secret'],
-                                 twitter_config['access_token'], twitter_config['access_token_secret'])
+    tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret,
+                                 config.twitter_access_token, config.twitter_access_token_secret)
     return tweet_crawler
 
 

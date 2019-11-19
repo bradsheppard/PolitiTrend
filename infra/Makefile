@@ -23,7 +23,9 @@ kubefwd:
 .PHONY: minikube_start
 minikube_start:
 	minikube start --memory=16384 --cpus=4 --vm-driver=kvm2
-	minikube ssh -- sudo ip link set docker0 promisc on
+	minikube ssh -- sudo ip link set docker0 promisc oni
+	kubectl create secret docker-registry regcred \
+		--docker-server=repo.treescale.com --docker-username=$(DOCKER_USERNAME) --docker-password=$(DOCKER_PASSWORD)
 
 .PHONY: helm
 helm:
