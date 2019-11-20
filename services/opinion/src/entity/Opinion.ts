@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
 @Entity()
 export default class Opinion {
@@ -11,8 +11,9 @@ export default class Opinion {
     @Column()
     sentiment: number;
 
+    @Index()
     @Column()
-    tweetId: number;
+    tweetId: string;
 
     @Column()
     tweetText: string;

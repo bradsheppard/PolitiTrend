@@ -6,8 +6,7 @@ replicaCount: 1
 
 image:
   repository: opinion
-  test_repository: opinion-test
-  pullPolicy: Never
+  pullPolicy: Always
 
 nameOverride: ""
 fullnameOverride: ""

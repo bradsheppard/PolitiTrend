@@ -24,7 +24,7 @@ describe('Event bus tests', () => {
             id: 1,
             politician: 12,
             sentiment: 123,
-            tweetId: 1234,
+            tweetId: '1234',
             tweetText: 'Test text 1'
         };
 

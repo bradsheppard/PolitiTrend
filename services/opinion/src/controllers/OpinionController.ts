@@ -30,7 +30,7 @@ class OpinionController implements Controller {
     }
 
     private async getAll(req: Request, res: Response) {
-        const opinions = await this.opinionRepository.get({});
+        const opinions = await this.opinionRepository.get(req.query);
         res.json(opinions);
     }
 

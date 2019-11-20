@@ -9,15 +9,22 @@ describe('App tests', () => {
 
     let app: App;
     let testOpinion: Opinion;
+    let testOpinion2: Opinion;
 
     before(async () => {
         app = container.get<App>(TYPES.App);
 
         testOpinion = new Opinion();
-        testOpinion.tweetId = 1;
+        testOpinion.tweetId = '1';
         testOpinion.tweetText = 'test text 1';
         testOpinion.sentiment = 11;
         testOpinion.politician = 111;
+
+        testOpinion2 = new Opinion();
+        testOpinion2.tweetId = '2';
+        testOpinion2.tweetText = 'test text 2';
+        testOpinion2.sentiment = 22;
+        testOpinion2.politician = 222;
 
         const res = await agent(app.app).post('/').send(testOpinion);
         testOpinion = res.body;
@@ -37,9 +44,20 @@ describe('App tests', () => {
         assert.includeDeepMembers(opinions, [testOpinion]);
     });
 
+    it('Can get Opinions by politician', async() => {
+        const res = await agent(app.app).get('/?politician=111');
+        const opinions: Array<Opinion> = res.body;
+
+        assert.equal(res.status, 200);
+
+        for(let opinion of opinions) {
+            assert.equal(opinion.politician, 111);
+        }
+    });
+
     it('Can insert Opinion', async () => {
         const newOpinion: Opinion = new Opinion();
-        newOpinion.tweetId = 2;
+        newOpinion.tweetId = '2';
         newOpinion.tweetText = 'test text 2';
         newOpinion.sentiment = 22;
         newOpinion.politician = 222;
@@ -56,7 +74,7 @@ describe('App tests', () => {
 
     it('Can delete existing Opinion', async () => {
         let newOpinion: Opinion = new Opinion();
-        newOpinion.tweetId = 3;
+        newOpinion.tweetId = '3';
         newOpinion.tweetText = 'test text 3';
         newOpinion.sentiment = 33;
         newOpinion.politician = 333;

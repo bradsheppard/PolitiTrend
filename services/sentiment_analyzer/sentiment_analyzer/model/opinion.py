@@ -8,7 +8,7 @@ from sentiment_analyzer.message_bus import MessageBus
 class Opinion:
     politician: int
     sentiment: int
-    tweetId: int
+    tweetId: str
     tweetText: str
 
 

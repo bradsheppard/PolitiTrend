@@ -1,4 +1,5 @@
 service                 := opinion
+test			:= $(service)-test
 tag                     := 1.0.0
 registry                ?= $(DOCKER_REGISTRY)
 postgres_version        := 11
@@ -12,6 +13,11 @@ build:
 push:
 	docker tag $(service):$(tag) $(DOCKER_REGISTRY)/$(service):$(tag)
 	docker push $(DOCKER_REGISTRY)/$(service):$(tag)
+
+.PHONY: push_test
+push_test:
+	docker tag $(test):$(tag) $(DOCKER_REGISTRY)/$(test):$(tag)
+	docker push $(DOCKER_REGISTRY)/$(test):$(tag)
 
 .PHONY: test
 test:

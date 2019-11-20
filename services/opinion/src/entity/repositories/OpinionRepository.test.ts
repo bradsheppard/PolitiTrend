@@ -12,13 +12,13 @@ describe('Opinion repository tests', () => {
     opinion1.politician = 1;
     opinion1.tweetText = 'test text 1';
     opinion1.sentiment = 11;
-    opinion1.tweetId = 111;
+    opinion1.tweetId = '111';
 
     const opinion2 = new Opinion();
     opinion2.politician = 2;
     opinion2.tweetText = 'test text 2';
     opinion2.sentiment = 22;
-    opinion2.tweetId = 222;
+    opinion2.tweetId = '222';
 
     it('Can get all', async () => {
         opinionRepository = container.get<OpinionRepository>(TYPES.OpinionRepository);
@@ -38,6 +38,16 @@ describe('Opinion repository tests', () => {
         assert.deepEqual(opinionInserted, opinion);
     });
 
+    it('Can get by politician', async() => {
+        await opinionRepository.insert(opinion1);
+
+        const politician1Opinions = await opinionRepository.get({politician: 1});
+
+        for(let politician of politician1Opinions) {
+            assert.equal(politician.politician, 1);
+        }
+    });
+
     it('Can delete', async () => {
         const opinion = await opinionRepository.insert(opinion1);
         await opinionRepository.delete(opinion.id);
@@ -49,7 +59,7 @@ describe('Opinion repository tests', () => {
 
     it('Can update', async () => {
         const opinion = await opinionRepository.insert(opinion1);
-        opinion.tweetId = 1234;
+        opinion.tweetId = '1234';
         await opinionRepository.update(opinion);
 
         const updatedOpinion = await opinionRepository.getOne(opinion.id);

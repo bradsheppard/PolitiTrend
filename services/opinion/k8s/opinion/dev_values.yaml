@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: opinion
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 nameOverride: ""
 fullnameOverride: ""
