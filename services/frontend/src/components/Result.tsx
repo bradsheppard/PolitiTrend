@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Politician from '../model/Politician';
 import {
     Avatar,
     Button,
@@ -12,9 +11,11 @@ import {
 } from '@material-ui/core';
 import { Tweet } from 'react-twitter-widgets'
 import ScrollTrigger from 'react-scroll-trigger';
+import PoliticianOpinions from '../model/PoliticianOpinions';
+import Opinion from '../model/Opinion';
 
 interface IProps extends WithStyles<typeof styles> {
-    politician: Politician;
+    politicianOpinions: PoliticianOpinions;
 }
 
 interface IState {
@@ -22,6 +23,14 @@ interface IState {
 }
 
 const styles = (theme: Theme) => createStyles({
+    tweet: {
+        '.EmbeddedTweet': {
+            'max-width': '10000px'
+        },
+        '.element': {
+            'max-width': '10000px'
+        }
+    },
     card: {
         margin: theme.spacing(4)
     },
@@ -61,33 +70,28 @@ class Result extends React.Component<IProps, IState> {
                 <Fade in={this.state.visible} timeout={2000}>
                     <Card className={classes.card} elevation={1}>
                         <CardHeader avatar={<Avatar src='/avatar.jpg' />}
-                                    title={this.props.politician.name}
-                                    subheader={this.props.politician.party}
+                                    title={this.props.politicianOpinions.politician.name}
+                                    subheader={this.props.politicianOpinions.politician.party}
                                     action={
                                         <Typography className={classes.sentiment} color='primary'>
-                                            {this.props.politician.sentiment}
+                                            {this.props.politicianOpinions.politician.sentiment}
                                         </Typography>
                                     }
                         />
                         <CardContent>
-                            <Tweet
-                                options={{
-                                    align: 'center'
-                                }}
-                                tweetId={'933354946111705097'}
-                            />
-                            <Tweet
-                                options={{
-                                    align: 'center'
-                                }}
-                                tweetId={'933354946111705097'}
-                            />
-                            <Tweet
-                                options={{
-                                    align: 'center'
-                                }}
-                                tweetId={'933354946111705097'}
-                            />
+                            {
+                                this.props.politicianOpinions.opinions.map((opinion: Opinion, index) => {
+                                    return (
+                                        <Tweet
+                                            options={{
+                                                align: 'center'
+                                            }}
+                                            tweetId={opinion.tweetId}
+                                            key={index}
+                                        />
+                                    )
+                                })
+                            }
                         </CardContent>
                         <CardActions>
                             <Button size="small" color="primary">

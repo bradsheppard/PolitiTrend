@@ -6,6 +6,9 @@ import Main from '../components/Main';
 import Politician from '../model/Politician';
 import PoliticianApi from '../model/PoliticianApi';
 import { NextPageContext } from 'next';
+import OpinionApi from '../model/OpinionApi';
+import PoliticianOpinions from '../model/PoliticianOpinions';
+import Opinion from '../model/Opinion';
 
 const styles = () => createStyles({
     root: {
@@ -14,18 +17,42 @@ const styles = () => createStyles({
 });
 
 interface IProps extends WithStyles<typeof styles>{
-    topPoliticians: Array<Politician>;
-    bottomPoliticians: Array<Politician>;
+    topPoliticians: Array<PoliticianOpinions>;
+    bottomPoliticians: Array<PoliticianOpinions>;
 }
 
 class App extends React.Component<IProps> {
 
     static async getInitialProps(context: NextPageContext) {
-        const politicians = await PoliticianApi.get(context);
+        const [ politicians, opinions ] = await Promise.all([
+            PoliticianApi.get(context),
+            OpinionApi.get(context)
+        ]);
+
+        const opinionsMap: Map<number, Array<Opinion>> = new Map();
+        opinions.forEach((opinion: Opinion) => {
+            const entry = opinionsMap.get(opinion.politician);
+            if(entry) {
+                entry.push(opinion);
+                opinionsMap.set(opinion.politician, entry);
+            }
+            else {
+                opinionsMap.set(opinion.politician, [opinion]);
+            }
+        });
+
+        const politicianOpinions: Array<PoliticianOpinions> = [];
+        politicians.forEach((politician: Politician) => {
+            const opinions = opinionsMap.get(politician.id);
+            politicianOpinions.push({
+                politician,
+                opinions: opinions ? opinions : []
+            });
+        });
 
         return {
-            topPoliticians: politicians.slice(0, 5),
-            bottomPoliticians: politicians.slice(0, 5)
+            topPoliticians: politicianOpinions.slice(0, 5),
+            bottomPoliticians: politicianOpinions.slice(0, 5)
         };
     }
 

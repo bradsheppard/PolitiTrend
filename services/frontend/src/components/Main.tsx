@@ -1,13 +1,13 @@
 import * as React from 'react';
-import Politician from '../model/Politician';
 import { Grid } from '@material-ui/core';
 import Result from './Result';
 import ResultContainer from './ResultContainer';
 import ResultHeader from './ResultHeader';
+import PoliticianOpinions from '../model/PoliticianOpinions';
 
 interface IProps {
-    topPoliticians: Array<Politician>;
-    bottomPoliticians: Array<Politician>;
+    topPoliticians: Array<PoliticianOpinions>;
+    bottomPoliticians: Array<PoliticianOpinions>;
 }
 
 class Main extends React.Component<IProps> {
@@ -23,9 +23,9 @@ class Main extends React.Component<IProps> {
                             Most Liked
                         </ResultHeader>
                         {
-                            this.props.topPoliticians.map((Politician: Politician, index) => {
+                            this.props.topPoliticians.map((politician: PoliticianOpinions, index) => {
                                 return (
-                                    <Result politician={Politician} key={index}/>
+                                    <Result politicianOpinions={politician} key={index}/>
                                 )
                             })
                         }
@@ -35,9 +35,9 @@ class Main extends React.Component<IProps> {
                             Most Hated
                         </ResultHeader>
                         {
-                            this.props.bottomPoliticians.map((Politician: Politician, index) => {
+                            this.props.bottomPoliticians.map((politician: PoliticianOpinions, index) => {
                                 return (
-                                    <Result politician={Politician} key={index}/>
+                                    <Result politicianOpinions={politician} key={index}/>
                                 )
                             })
                         }

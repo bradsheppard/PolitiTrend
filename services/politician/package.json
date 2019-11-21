@@ -4,7 +4,7 @@
    "description": "A microservice to serve information on Politicians via a REST API.",
    "main": "index.js",
    "scripts": {
-      "test": "mocha --recursive 'build/**/*.test.js'",
+      "test": "mocha --recursive --exit 'build/**/*.test.js'",
       "build": "tsc",
       "start": "node build/index.js",
       "seed": "node build/Seed.js"
