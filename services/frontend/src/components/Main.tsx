@@ -15,7 +15,6 @@ class Main extends React.Component<IProps> {
         return (
             <ResultContainer>
                 <Grid container
-                      alignItems='center'
                       direction='row'
                       justify='center'>
                     <Grid item sm={6}>

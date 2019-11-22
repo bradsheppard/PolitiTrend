@@ -37,13 +37,6 @@ const Header = (props: Props) => {
 
     return (
         <React.Fragment>
-            {/*<AppBar position="static" color="secondary">*/}
-            {/*    <Toolbar>*/}
-            {/*        <Typography variant="h5">*/}
-            {/*            {capitalize(Globals.name)}*/}
-            {/*        </Typography>*/}
-            {/*    </Toolbar>*/}
-            {/*</AppBar>*/}
             <HideOnScroll {...props}>
                 <AppBar position="fixed" color="secondary">
                     <Toolbar>

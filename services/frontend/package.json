@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.5.1",
+    "@material-ui/icons": "^4.5.1",
     "isomorphic-unfetch": "^3.0.0",
     "jest": "^24.9.0",
     "next": "latest",

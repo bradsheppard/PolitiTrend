@@ -52,7 +52,7 @@ class App extends React.Component<IProps> {
 
         return {
             topPoliticians: politicianOpinions.slice(0, 5),
-            bottomPoliticians: politicianOpinions.slice(0, 5)
+            bottomPoliticians: politicianOpinions.slice(55, 60)
         };
     }
 

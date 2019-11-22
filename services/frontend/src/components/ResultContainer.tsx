@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 class ResultContainer extends React.Component {
 
@@ -10,16 +10,14 @@ class ResultContainer extends React.Component {
                   direction='row'
                   justify='center'>
                 <Grid item sm={10}>
-                    <Paper elevation={15}>
-                        <Grid container
-                              alignItems='center'
-                              direction='row'
-                              justify='center'>
-                            <Grid item sm={10}>
-                                {this.props.children}
-                            </Grid>
+                    <Grid container
+                          alignItems='center'
+                          direction='row'
+                          justify='center'>
+                        <Grid item sm={10}>
+                            {this.props.children}
                         </Grid>
-                    </Paper>
+                    </Grid>
                 </Grid>
             </Grid>
         );

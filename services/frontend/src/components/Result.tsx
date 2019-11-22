@@ -5,14 +5,16 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader, createStyles,
-    Fade, Theme,
+    CardHeader, Collapse, createStyles,
+    Fade, IconButton, Theme,
     Typography, WithStyles, withStyles
 } from '@material-ui/core';
 import { Tweet } from 'react-twitter-widgets'
 import ScrollTrigger from 'react-scroll-trigger';
 import PoliticianOpinions from '../model/PoliticianOpinions';
 import Opinion from '../model/Opinion';
+import { ExpandMore } from '@material-ui/icons'
+import clsx from 'clsx';
 
 interface IProps extends WithStyles<typeof styles> {
     politicianOpinions: PoliticianOpinions;
@@ -20,22 +22,25 @@ interface IProps extends WithStyles<typeof styles> {
 
 interface IState {
     visible: boolean;
+    expanded: boolean;
 }
 
 const styles = (theme: Theme) => createStyles({
-    tweet: {
-        '.EmbeddedTweet': {
-            'max-width': '10000px'
-        },
-        '.element': {
-            'max-width': '10000px'
-        }
-    },
     card: {
         margin: theme.spacing(4)
     },
     sentiment: {
         margin: theme.spacing(2)
+    },
+    expand: {
+        transform: 'rotate(0deg)',
+        marginLeft: 'auto',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    expandOpen: {
+        transform: 'rotate(180deg)',
     }
 });
 
@@ -45,8 +50,15 @@ class Result extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            visible: false
+            visible: false,
+            expanded: false
         }
+    }
+
+    handleExpandClick() {
+        this.setState({
+            expanded: !this.state.expanded
+        });
     }
 
     onEnterViewport() {
@@ -80,7 +92,7 @@ class Result extends React.Component<IProps, IState> {
                         />
                         <CardContent>
                             {
-                                this.props.politicianOpinions.opinions.map((opinion: Opinion, index) => {
+                                this.props.politicianOpinions.opinions.slice(0, 1).map((opinion: Opinion, index) => {
                                     return (
                                         <Tweet
                                             options={{
@@ -93,10 +105,37 @@ class Result extends React.Component<IProps, IState> {
                                 })
                             }
                         </CardContent>
+                        <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
+                            <CardContent>
+                                {
+                                    this.props.politicianOpinions.opinions.slice(1).map((opinion: Opinion, index) => {
+                                        return (
+                                            <Tweet
+                                                options={{
+                                                    align: 'center'
+                                                }}
+                                                tweetId={opinion.tweetId}
+                                                key={index}
+                                            />
+                                        )
+                                    })
+                                }
+                            </CardContent>
+                        </Collapse>
                         <CardActions>
                             <Button size="small" color="primary">
                                 Share
                             </Button>
+                            <IconButton
+                                className={clsx(classes.expand, {
+                                    [classes.expandOpen]: this.state.expanded,
+                                })}
+                                onClick={this.handleExpandClick.bind(this)}
+                                aria-expanded={this.state.expanded}
+                                aria-label="show more"
+                            >
+                                <ExpandMore />
+                            </IconButton>
                         </CardActions>
                     </Card>
                 </Fade>
