@@ -14,6 +14,7 @@ describe('App tests', () => {
         app = container.get<App>(TYPES.App);
 
         testPolitician = new Politician();
+        testPolitician.id = 1;
         testPolitician.name = 'bob smith';
         testPolitician.party = 'Democratic';
         testPolitician.sentiment = 1;
@@ -38,6 +39,7 @@ describe('App tests', () => {
 
     it('Can insert Politician', async () => {
         const newPolitician: Politician = new Politician();
+        newPolitician.id = 2;
         newPolitician.party = 'Republican';
         newPolitician.name = 'john anderson';
         newPolitician.sentiment = 2;
@@ -54,6 +56,7 @@ describe('App tests', () => {
 
     it('Can delete existing Politician', async () => {
         let newPolitician: Politician = new Politician();
+        newPolitician.id = 3;
         newPolitician.party = 'Democratic';
         newPolitician.name = 'Steve Xiao';
         newPolitician.sentiment = 3;

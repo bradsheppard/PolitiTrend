@@ -50,7 +50,7 @@ class PoliticianController implements Controller {
     }
 
     private async delete(req: Request, res: Response) {
-        const successful = await this.PoliticianRepository.delete(parseInt(req.params.id));
+        const successful = await this.PoliticianRepository.deleteOne(parseInt(req.params.id));
 
         if(successful)
             res.sendStatus(200);

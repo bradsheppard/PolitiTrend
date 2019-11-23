@@ -7,7 +7,8 @@
       "test": "mocha --recursive --exit 'build/**/*.test.js'",
       "build": "tsc",
       "start": "node build/index.js",
-      "seed": "node build/Seed.js"
+      "seed": "node build/Seed.js",
+      "clean": "node build/Clean.js"
    },
    "keywords": [
       "Politician"

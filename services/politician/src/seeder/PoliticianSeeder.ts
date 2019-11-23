@@ -22,20 +22,23 @@ class PoliticianSeeder implements Seeder {
         const lines = fileContents.split('\n');
 
         let header = true;
+        let i = 1;
         for (let line of lines) {
             if (header) {
                 header = false;
                 continue;
             }
 
-            const Politician = PoliticianSeeder.convert(line);
+            const Politician = PoliticianSeeder.convert(line, i);
             await this.PoliticianRepository.insert(Politician);
+            i++;
         }
     }
 
-    private static convert(line: string): Politician {
+    private static convert(line: string, index: number): Politician {
         const [name, party] = line.split(',');
         const politician = new Politician();
+        politician.id = index;
         politician.name = name;
         politician.party = party;
         politician.sentiment = 0;

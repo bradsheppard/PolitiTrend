@@ -19,7 +19,7 @@ test:
 
 .PHONY: deploy
 deploy:
-	helm upgrade --install --set image.tag=$(tag) $(service) --values ./k8s/$(service)/$(target)_values.yaml \
+	helm upgrade --install --wait --set image.tag=$(tag) $(service) --values ./k8s/$(service)/$(target)_values.yaml \
                 --set image.repository=$(DOCKER_REGISTRY)/$(service) ./k8s/$(service)
 
 .PHONY: destroy

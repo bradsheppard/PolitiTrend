@@ -3,7 +3,8 @@ interface Repository<T> {
     getOne(id: number): Promise<T>;
     insert(entity: T): Promise<T>;
     update(entity: T): Promise<boolean>;
-    delete(id: number): Promise<boolean>;
+    deleteOne(id: number): Promise<boolean>;
+    delete(): Promise<void>;
 }
 
 export default Repository;

@@ -23,7 +23,7 @@ class PoliticianSqlRepository implements PoliticianRepository {
         return this.connection;
     }
 
-    async delete(id: number): Promise<boolean> {
+    async deleteOne(id: number): Promise<boolean> {
         const connection = await this.getConnection();
         const repository = connection.getRepository(Politician);
 
@@ -35,6 +35,13 @@ class PoliticianSqlRepository implements PoliticianRepository {
         await repository.remove(politician);
 
         return true;
+    }
+
+    async delete(): Promise<void> {
+        const connection = await this.getConnection();
+        const repository = connection.getRepository(Politician);
+
+        await repository.delete({});
     }
 
     async get(predicate?: {}): Promise<Politician[]> {

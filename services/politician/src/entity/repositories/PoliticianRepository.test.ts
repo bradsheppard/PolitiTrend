@@ -6,52 +6,69 @@ import { TYPES } from '../../types';
 
 describe('Politician repository tests', () => {
 
-    let PoliticianRepository: PoliticianRepository;
+    let politicianRepository: PoliticianRepository;
 
-    const Politician1 = new Politician();
-    Politician1.name = 'Bob Smith';
-    Politician1.party = 'Democratic';
-    Politician1.sentiment = 1;
+    const politician1 = new Politician();
+    politician1.id = 1;
+    politician1.name = 'Bob Smith';
+    politician1.party = 'Democratic';
+    politician1.sentiment = 1;
 
-    const Politician2 = new Politician();
-    Politician2.name = 'John Shepherd';
-    Politician2.party = 'Republican';
-    Politician2.sentiment = 2;
+    const politician2 = new Politician();
+    politician2.id = 2;
+    politician2.name = 'John Shepherd';
+    politician2.party = 'Republican';
+    politician2.sentiment = 2;
 
     it('Can get all', async () => {
-        PoliticianRepository = container.get<PoliticianRepository>(TYPES.PoliticianRepository);
+        politicianRepository = container.get<PoliticianRepository>(TYPES.PoliticianRepository);
 
-        const firstInsert = await PoliticianRepository.insert(Politician1);
-        const secondInsert = await PoliticianRepository.insert(Politician2);
+        const firstInsert = await politicianRepository.insert(politician1);
+        const secondInsert = await politicianRepository.insert(politician2);
 
-        const Politicians = await PoliticianRepository.get({});
+        const politicians = await politicianRepository.get({});
 
-        assert.includeDeepMembers(Politicians, [firstInsert, secondInsert]);
+        assert.includeDeepMembers(politicians, [firstInsert, secondInsert]);
     });
 
     it('Can get', async() => {
-        const Politician = await PoliticianRepository.insert(Politician1);
+        const politician = await politicianRepository.insert(politician1);
 
-        const PoliticianInserted = await PoliticianRepository.getOne(Politician.id);
-        assert.deepEqual(PoliticianInserted, Politician);
+        const politicianInserted = await politicianRepository.getOne(politician.id);
+        assert.deepEqual(politicianInserted, politician);
     });
 
-    it('Can delete', async () => {
-        const Politician = await PoliticianRepository.insert(Politician1);
-        await PoliticianRepository.delete(Politician.id);
+    it('Can delete one', async () => {
+        const politician = await politicianRepository.insert(politician1);
+        await politicianRepository.deleteOne(politician.id);
 
-        const Politicians: Array<Politician> = await PoliticianRepository.get({id: Politician.id});
+        const politicians: Array<Politician> = await politicianRepository.get({id: politician.id});
 
-        assert.isEmpty(Politicians);
+        assert.isEmpty(politicians);
+    });
+
+    it('Can delete all', async() => {
+        politicianRepository = container.get<PoliticianRepository>(TYPES.PoliticianRepository);
+
+        await Promise.all([
+            politicianRepository.insert(politician1),
+            politicianRepository.insert(politician2)
+        ]);
+
+        await politicianRepository.delete();
+
+        const politicians = await politicianRepository.get();
+
+        assert.isEmpty(politicians);
     });
 
     it('Can update', async () => {
-        const Politician = await PoliticianRepository.insert(Politician1);
-        Politician.name = 'New Name';
-        await PoliticianRepository.update(Politician);
+        const politician = await politicianRepository.insert(politician1);
+        politician.name = 'New Name';
+        await politicianRepository.update(politician);
 
-        const updatedPolitician = await PoliticianRepository.getOne(Politician.id);
+        const updatedPolitician = await politicianRepository.getOne(politician.id);
 
-        assert.deepEqual(updatedPolitician, Politician);
+        assert.deepEqual(updatedPolitician, politician);
     })
 });

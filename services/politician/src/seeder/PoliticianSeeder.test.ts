@@ -20,11 +20,13 @@ describe('Politician seeder tests', () => {
         await senatorSeeder.seed();
 
         const firstPolitician = new Politician();
+        firstPolitician.id = 1;
         firstPolitician.party = 'Republican';
         firstPolitician.name = 'Richard Shelby';
         firstPolitician.sentiment = 0;
 
         const lastPolitician = new Politician();
+        lastPolitician.id = 100;
         lastPolitician.party = 'Republican';
         lastPolitician.name = 'John Barrasso';
         lastPolitician.sentiment = 0;
