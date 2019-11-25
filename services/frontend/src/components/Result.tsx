@@ -81,7 +81,7 @@ class Result extends React.Component<IProps, IState> {
             <ScrollTrigger onEnter={this.onEnterViewport.bind(this)} onExit={this.onExitViewport.bind(this)}>
                 <Fade in={this.state.visible} timeout={2000}>
                     <Card className={classes.card} elevation={1}>
-                        <CardHeader avatar={<Avatar src='/avatar.jpg' />}
+                        <CardHeader avatar={<Avatar src={`/${this.props.politicianOpinions.politician.name.replace(' ', '_')}.jpg`}/>}
                                     title={this.props.politicianOpinions.politician.name}
                                     subheader={this.props.politicianOpinions.politician.party}
                                     action={

@@ -8,7 +8,8 @@ import BarItem from './BarItem';
 
 const useStyles = makeStyles(() => ({
     title: {
-        flexGrow: 0.75
+        flexGrow: 0.75,
+        color: 'white'
     }
 }));
 
@@ -43,13 +44,16 @@ const Header = (props: Props) => {
                         <Typography variant="h5" className={classes.title}>
                             {capitalize(Globals.name)}
                         </Typography>
-                        <BarItem>
-                            Stats
+                        <BarItem link='/'>
+                            Home
                         </BarItem>
-                        <BarItem>
+                        <BarItem link='/politicians'>
                             Politicians
                         </BarItem>
-                        <BarItem>
+                        <BarItem link='test'>
+                            Stats
+                        </BarItem>
+                        <BarItem link='test'>
                             About
                         </BarItem>
                     </Toolbar>

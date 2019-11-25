@@ -2,6 +2,7 @@ import attr
 
 
 @attr.s
-class Legislator:
+class Politician:
     name = attr.ib()
     party = attr.ib()
+    img = attr.ib()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for legislator_scrapper project
+# Scrapy settings for politician_scrapper project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'legislator_scrapper'
+BOT_NAME = 'politician_scrapper'
 
-SPIDER_MODULES = ['legislator_scrapper.spiders']
-NEWSPIDER_MODULE = 'legislator_scrapper.spiders'
+SPIDER_MODULES = ['politician_scrapper.spiders']
+NEWSPIDER_MODULE = 'politician_scrapper.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'legislator_scrapper (+http://www.yourdomain.com)'
+#USER_AGENT = 'politician_scrapper (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'legislator_scrapper.middlewares.LegislatorScrapperSpiderMiddleware': 543,
+#    'politician_scrapper.middlewares.PoliticianScrapperSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'legislator_scrapper.middlewares.LegislatorScrapperDownloaderMiddleware': 543,
+#    'politician_scrapper.middlewares.PoliticianScrapperDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'legislator_scrapper.pipelines.LegislatorScrapperPipeline': 300,
+#    'politician_scrapper.pipelines.PoliticianScrapperPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)

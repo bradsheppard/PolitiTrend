@@ -1,23 +1,30 @@
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, Theme } from '@material-ui/core';
-import { FunctionComponent } from 'react';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
 import { PropsWithChildren } from 'react';
+import Link from 'next/link';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const styles = (theme: Theme) => createStyles({
     menuItem: {
-        margin: theme.spacing(2)
+        margin: theme.spacing(2),
+        color: 'white'
     }
-}));
+});
 
-const BarItem: FunctionComponent = (props: PropsWithChildren<{}>) => {
-    const classes = useStyles();
+interface IProps extends WithStyles<typeof styles>, PropsWithChildren<{}> {
+    link: string;
+}
+
+const BarItem = (props: IProps) => {
+    const { classes, link } = props;
 
     return (
-        <Typography variant="h6" className={classes.menuItem}>
-            {props.children}
-        </Typography>
+        <Link href={link} passHref>
+            <Typography variant="h6" component='a' className={classes.menuItem}>
+                {props.children}
+            </Typography>
+        </Link>
     );
 };
 
-export default BarItem;
+export default withStyles(styles)(BarItem);

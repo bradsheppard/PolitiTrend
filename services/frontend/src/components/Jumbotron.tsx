@@ -28,7 +28,7 @@ const Jumbotron = (props: IProps) => {
             <Grid container={true}>
                 <Grid item={true} xs={12}>
                     <div className={classes.text}>
-                        <Typography style={{color: 'white'}} variant='h1' align='center'>
+                        <Typography variant='h1' align='center' style={{color: 'white'}}>
                             {Globals.name.toUpperCase()}
                         </Typography>
                         <Typography variant='h5' align='center' style={{color: 'white'}}>
