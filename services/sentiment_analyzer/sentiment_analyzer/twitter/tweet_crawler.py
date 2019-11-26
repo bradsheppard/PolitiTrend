@@ -10,5 +10,5 @@ class TweetCrawler:
         self._api = tweepy.API(auth)
 
     def get(self, search_term: str):
-        tweets = tweepy.Cursor(self._api.search, q=search_term, lang='en', result_type='popular').items(5)
+        tweets = tweepy.Cursor(self._api.search, q=search_term, lang='en', result_type='popular').items(20)
         return [tweet for tweet in tweets]

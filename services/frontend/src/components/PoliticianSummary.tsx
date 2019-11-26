@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { createStyles, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { createStyles, Fade, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import Politician from '../model/Politician';
+import { politicianNameToImagePath } from '../utils/ImagePath';
+import ScrollTrigger from 'react-scroll-trigger';
+import { useState } from 'react';
 
 const styles = (theme: Theme) => createStyles({
-    sentiment: {
-        margin: theme.spacing(2)
-    },
-    card: {
-        margin: theme.spacing(4)
+    container: {
+        margin: theme.spacing(4),
+        textAlign: 'center'
     }
 });
 
@@ -16,17 +17,33 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const PoliticianSummary = (props: IProps) => {
-    const { politician } = props;
+    const { politician, classes } = props;
+
+    const [visible, setVisible] = useState(false);
+
+    const onEnterViewport = () => {
+        setVisible(true);
+    };
+
+    const onExitViewport = () => {
+        setVisible(false);
+    };
 
     return (
-        <React.Fragment>
-            <Typography variant='h5' color='primary'>
-                {politician.name}
-            </Typography>
-            <Typography variant='h6' color='primary'>
-                {politician.party}
-            </Typography>
-        </React.Fragment>
+        // @ts-ignore
+        <ScrollTrigger onEnter={onEnterViewport} onExit={onExitViewport}>
+            <Fade in={visible} timeout={2000}>
+                <div className={classes.container}>
+                    <img src={politicianNameToImagePath(politician.name)} alt={politician.name} />
+                    <Typography variant='h6' color='primary'>
+                        {politician.name}
+                    </Typography>
+                    <Typography variant='subtitle1' color='primary'>
+                        {politician.party}
+                    </Typography>
+                </div>
+            </Fade>
+        </ScrollTrigger>
     );
 };
 
