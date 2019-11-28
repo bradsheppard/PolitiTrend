@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { createStyles, Fade, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { createStyles, Fade, Theme, Typography, withStyles, WithStyles, Link as MuiLink } from '@material-ui/core';
 import Politician from '../model/Politician';
 import { politicianNameToImagePath } from '../utils/ImagePath';
 import ScrollTrigger from 'react-scroll-trigger';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const styles = (theme: Theme) => createStyles({
     container: {
@@ -30,20 +31,25 @@ const PoliticianSummary = (props: IProps) => {
     };
 
     return (
-        // @ts-ignore
-        <ScrollTrigger onEnter={onEnterViewport} onExit={onExitViewport}>
-            <Fade in={visible} timeout={2000}>
-                <div className={classes.container}>
-                    <img src={politicianNameToImagePath(politician.name)} alt={politician.name} />
-                    <Typography variant='h6' color='primary'>
-                        {politician.name}
-                    </Typography>
-                    <Typography variant='subtitle1' color='primary'>
-                        {politician.party}
-                    </Typography>
-                </div>
-            </Fade>
-        </ScrollTrigger>
+        <Link href='/politicians/[id]' as={`/politicians/${politician.id}`}>
+            <MuiLink href='#'>
+                {/*
+                    // @ts-ignore */}
+                <ScrollTrigger onEnter={onEnterViewport} onExit={onExitViewport}>
+                    <Fade in={visible} timeout={2000}>
+                        <div className={classes.container}>
+                            <img src={politicianNameToImagePath(politician.name)} alt={politician.name} />
+                            <Typography variant='h6' color='primary'>
+                                {politician.name}
+                            </Typography>
+                            <Typography variant='subtitle1' color='primary'>
+                                {politician.party}
+                            </Typography>
+                        </div>
+                    </Fade>
+                </ScrollTrigger>
+            </MuiLink>
+        </Link>
     );
 };
 

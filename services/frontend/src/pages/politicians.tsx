@@ -29,9 +29,9 @@ class Politicians extends React.Component<IProps> {
                         alignItems='center'
                         justify='center'>
                         {
-                            this.props.politicians.map((politician: Politician) => {
+                            this.props.politicians.map((politician: Politician, index) => {
                                 return (
-                                    <Grid item sm={3}>
+                                    <Grid item sm={3} key={index}>
                                         <PoliticianSummary politician={politician}/>
                                     </Grid>
                                 );

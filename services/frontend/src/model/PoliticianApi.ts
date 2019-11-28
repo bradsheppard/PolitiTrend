@@ -10,6 +10,16 @@ class PoliticianApi {
         const res = await fetch(`${origin}/api/politician`);
         return await res.json();
     }
+
+    static async getOne(context: NextPageContext, id: number): Promise<Politician | null> {
+        const { origin } = absoluteUrl(context.req);
+        const res = await fetch(`${origin}/api/politician/${id}`);
+
+        if(res.status === 200)
+            return res.json();
+
+        return null;
+    }
 }
 
 export default PoliticianApi;
