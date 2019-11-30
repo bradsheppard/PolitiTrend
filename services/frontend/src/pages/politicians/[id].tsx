@@ -1,45 +1,42 @@
 import * as React from 'react';
 import { Grid, Typography } from '@material-ui/core';
-import Politician from '../../model/Politician';
-import { politicianNameToImagePath } from '../../utils/ImagePath';
+import PoliticianOpinions from '../../model/PoliticianOpinions';
+import PoliticianDetails from '../../components/PoliticianDetails';
 import { NextPageContext } from 'next';
-import PoliticianApi from '../../model/PoliticianApi';
+import PoliticianOpinionsApi from '../../model/PoliticianOpinionsApi';
 
 interface IProps {
-    politician: Politician;
+    politicianOpinions: PoliticianOpinions | null;
 }
 
 const PoliticianPage = (props: IProps) => {
-    if(!props.politician)
+    if(!props.politicianOpinions)
         return (
             <Typography>Not Found</Typography>
         );
 
     return (
         <Grid container
-            alignItems='center'
-            justify='center'>
-            <Grid item
-                sm={8}>
-                <img src={politicianNameToImagePath(props.politician.name)} alt={props.politician.name} />
-                <Typography variant='h2' color='primary'>
-                    {props.politician.name}
-                </Typography>
+              justify='center'
+              alignItems='center'>
+            <Grid item sm={10}>
+                <PoliticianDetails politicianOpinions={props.politicianOpinions} />
             </Grid>
         </Grid>
     )
 };
 
-PoliticianPage.getInitialProps = async function(context: NextPageContext) {
+PoliticianPage.getInitialProps = async function(context: NextPageContext): Promise<IProps> {
     const { id } = context.query;
-    console.log('trying ' + id);
     if (typeof id === 'string') {
-        const politician: Politician | null = await PoliticianApi.getOne(context, parseInt(id));
-        return { politician: politician };
+        const politicianOpinions: PoliticianOpinions | null = await PoliticianOpinionsApi.getOne(context, parseInt(id));
+        return {
+            politicianOpinions
+        };
     }
     else {
         return {
-            politician: null
+            politicianOpinions: null
         }
     }
 };

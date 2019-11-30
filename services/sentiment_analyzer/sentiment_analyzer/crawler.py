@@ -20,6 +20,6 @@ for politician in politicians:
         opinion.sentiment = 1
         opinion.politician = politician.num
         opinion.tweetId = tweet.id_str
-        opinion.tweetText = tweet.text
+        opinion.tweetText = tweet.full_text
 
         opinion_repository.insert(opinion)
