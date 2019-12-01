@@ -4,4 +4,4 @@ dev_build:
   stage: build
   script:
     - apk add make
-    - make build
+    - make -C services/frontend build
