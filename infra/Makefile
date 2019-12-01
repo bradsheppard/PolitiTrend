@@ -24,8 +24,11 @@ kubefwd:
 minikube_start:
 	minikube start --memory=16384 --cpus=4 --vm-driver=kvm2
 	minikube ssh -- sudo ip link set docker0 promisc on
+
+.PHONY: registry_secret
+registry_secret:
 	kubectl create secret docker-registry regcred \
-		--docker-server=$(DOCKER_SERVER) --docker-username=$(DOCKER_USERNAME) --docker-password=$(DOCKER_PASSWORD)
+                --docker-server=$(DOCKER_SERVER) --docker-username=$(DOCKER_USERNAME) --docker-password=$(DOCKER_PASSWORD)
 
 .PHONY: helm
 helm:
