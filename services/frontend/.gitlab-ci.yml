@@ -3,4 +3,5 @@ image: txn2/docker-kubectl
 dev_build:
   stage: build
   script:
+    - apk add make
     - make build
