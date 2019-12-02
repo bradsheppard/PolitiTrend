@@ -1,6 +1,19 @@
+image: docker:18.09.7
+
+services:
+  - docker:18.09.7-dind
+
+
 stages:
   - build
   - deploy
 
-include:
-  - '/services/frontend/.gitlab-ci.yml'
+dev_build:
+  stage: build
+  script:
+    - apk add make
+    - make -C services/frontend build
+  only:
+    changes:
+      - services/frontend/*
+
