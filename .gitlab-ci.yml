@@ -15,5 +15,5 @@ dev_build:
     - make -C services/frontend build
   only:
     changes:
-      - services/frontend/*
+      - services/frontend/**/*
 
