@@ -74,7 +74,7 @@ function getWordCounts(tweets: Array<string>, politicianName: string): Array<Wor
     });
 
     words.sort((a, b) => b.value - a.value);
-    return words.slice(0, Math.min(40, words.length));
+    return words.slice(0, Math.min(30, words.length));
 }
 
 export default withStyles(styles)(PoliticianDetails);
