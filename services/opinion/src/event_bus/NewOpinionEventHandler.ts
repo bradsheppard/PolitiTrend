@@ -15,7 +15,7 @@ class NewOpinionEventHandler implements EventHandler<EventType.NewOpinion, Opini
     }
 
     async handle(event: Opinion): Promise<void> {
-        await this.opinionRepository.insert(event);
+        await this.opinionRepository.upsertOnTweetId(event);
     }
 
     getType(): EventType.NewOpinion {

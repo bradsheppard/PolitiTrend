@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import Opinion from '../Opinion';
 import { TYPES } from '../../types';
 import ConnectionProvider from './ConnectionProvider';
+import { InsertResult } from 'typeorm';
 
 @injectable()
 class OpinionSqlRepository implements OpinionRepository {
@@ -13,18 +14,25 @@ class OpinionSqlRepository implements OpinionRepository {
         this.connectionProvider = connectionProvider;
     }
 
-    async delete(id: number): Promise<boolean> {
+    async deleteOne(id: number): Promise<boolean> {
         const connection = await this.connectionProvider.getConnection();
         const repository = connection.getRepository(Opinion);
 
-        const politician = await repository.findOne(id.toString());
+        const opinion = await repository.findOne(id.toString());
 
-        if (!politician)
+        if (!opinion)
             return false;
 
-        await repository.remove(politician);
+        await repository.remove(opinion);
 
         return true;
+    }
+
+    async delete(): Promise<void> {
+        const connection = await this.connectionProvider.getConnection();
+        const repository = connection.getRepository(Opinion);
+
+        await repository.clear();
     }
 
     async get(predicate?: {}): Promise<Opinion[]> {
@@ -40,9 +48,9 @@ class OpinionSqlRepository implements OpinionRepository {
         const connection = await this.connectionProvider.getConnection();
         const repository = connection.getRepository(Opinion);
 
-        const politician = await repository.findOne(id);
+        const opinion = await repository.findOne(id);
 
-        return politician != undefined ? politician : null;
+        return opinion != undefined ? opinion : null;
     }
 
     async insert(entity: Opinion): Promise<Opinion> {
@@ -56,13 +64,30 @@ class OpinionSqlRepository implements OpinionRepository {
         const connection = await this.connectionProvider.getConnection();
         const repository = connection.getRepository(Opinion);
 
-        const politician = repository.findOne(entity.id);
+        const opinion = repository.findOne(entity.id);
 
-        if (!politician)
+        if (!opinion)
             return false;
 
         await repository.save(entity);
         return true;
+    }
+
+    async upsertOnTweetId(opinion: Opinion): Promise<Opinion> {
+        const connection = await this.connectionProvider.getConnection();
+
+        const insertResult: InsertResult = await connection.createQueryBuilder()
+            .insert()
+            .into(Opinion)
+            .values(opinion)
+            .onConflict(`("tweetId") DO UPDATE SET "tweetText" = :tweetText`)
+            .setParameter('tweetText', opinion.tweetText)
+            .execute();
+
+        let insertedOpinion = Object.assign({}, opinion);
+        insertedOpinion.id = insertResult.identifiers[0].id;
+
+        return insertedOpinion;
     }
 
 }

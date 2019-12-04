@@ -8,20 +8,26 @@ describe('Opinion repository tests', () => {
 
     let opinionRepository: OpinionRepository;
 
-    const opinion1 = new Opinion();
-    opinion1.politician = 1;
-    opinion1.tweetText = 'test text 1';
-    opinion1.sentiment = 11;
-    opinion1.tweetId = '111';
+    let id = 0;
 
-    const opinion2 = new Opinion();
-    opinion2.politician = 2;
-    opinion2.tweetText = 'test text 2';
-    opinion2.sentiment = 22;
-    opinion2.tweetId = '222';
+    function createOpinion() {
+        id++;
+        return <Opinion> {
+            tweetText: `test text ${id}`,
+            sentiment: id,
+            tweetId: id.toString(),
+            politician: id
+        };
+    }
+
+    before(async () => {
+        opinionRepository = container.get<OpinionRepository>(TYPES.OpinionRepository);
+        await opinionRepository.delete();
+    });
 
     it('Can get all', async () => {
-        opinionRepository = container.get<OpinionRepository>(TYPES.OpinionRepository);
+        const opinion1 = createOpinion();
+        const opinion2 = createOpinion();
 
         const firstInsert = await opinionRepository.insert(opinion1);
         const secondInsert = await opinionRepository.insert(opinion2);
@@ -32,38 +38,64 @@ describe('Opinion repository tests', () => {
     });
 
     it('Can get', async() => {
-        const opinion = await opinionRepository.insert(opinion1);
+        const opinion = createOpinion();
+        const insertedOpinion = await opinionRepository.insert(opinion);
 
-        const opinionInserted = await opinionRepository.getOne(opinion.id);
-        assert.deepEqual(opinionInserted, opinion);
+        const retrievedOpinion = await opinionRepository.getOne(insertedOpinion.id);
+        assert.deepEqual(retrievedOpinion, opinion);
     });
 
     it('Can get by politician', async() => {
-        await opinionRepository.insert(opinion1);
+        const opinion = createOpinion();
+        const insertedOpinion = await opinionRepository.insert(opinion);
 
-        const politician1Opinions = await opinionRepository.get({politician: 1});
+        const politicianOpinions = await opinionRepository.get({politician: insertedOpinion.politician});
 
-        for(let politician of politician1Opinions) {
-            assert.equal(politician.politician, 1);
+        for(let politician of politicianOpinions) {
+            assert.equal(politician.politician, insertedOpinion.politician);
         }
     });
 
     it('Can delete', async () => {
-        const opinion = await opinionRepository.insert(opinion1);
-        await opinionRepository.delete(opinion.id);
+        const opinion = createOpinion();
+        const insertedOpinion = await opinionRepository.insert(opinion);
+        await opinionRepository.deleteOne(insertedOpinion.id);
 
-        const opinions: Array<Opinion> = await opinionRepository.get({id: opinion.id});
+        const opinions: Array<Opinion> = await opinionRepository.get({id: insertedOpinion.id});
 
         assert.isEmpty(opinions);
     });
 
     it('Can update', async () => {
-        const opinion = await opinionRepository.insert(opinion1);
-        opinion.tweetId = '1234';
+        const opinion = createOpinion();
+        const insertedOpinion = await opinionRepository.insert(opinion);
+        insertedOpinion.tweetId = '1234';
         await opinionRepository.update(opinion);
 
-        const updatedOpinion = await opinionRepository.getOne(opinion.id);
+        const updatedOpinion = await opinionRepository.getOne(insertedOpinion.id);
 
-        assert.deepEqual(updatedOpinion, opinion);
-    })
+        assert.deepEqual(updatedOpinion, insertedOpinion);
+    });
+
+    it('Can upsert on tweet Id, new tweet inserted', async () => {
+        const opinion = createOpinion();
+
+        const upsertedOpinion = await opinionRepository.upsertOnTweetId(opinion);
+
+        const retrievedOpinion = await opinionRepository.getOne(upsertedOpinion.id);
+        assert.deepEqual(retrievedOpinion, opinion);
+    });
+
+    it('Can upsert on tweet Id, existing tweet updated', async () => {
+        const opinion = createOpinion();
+
+        const insertedOpinion = await opinionRepository.insert(opinion);
+        insertedOpinion.tweetText = 'Some new text';
+
+        await opinionRepository.upsertOnTweetId(insertedOpinion);
+
+        const retrievedOpinion = await opinionRepository.getOne(insertedOpinion.id);
+        assert.deepEqual(retrievedOpinion, insertedOpinion);
+        assert.deepEqual(retrievedOpinion, opinion)
+    });
 });

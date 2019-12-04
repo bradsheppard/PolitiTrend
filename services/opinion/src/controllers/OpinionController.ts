@@ -50,7 +50,7 @@ class OpinionController implements Controller {
     }
 
     private async delete(req: Request, res: Response) {
-        const successful = await this.opinionRepository.delete(parseInt(req.params.id));
+        const successful = await this.opinionRepository.deleteOne(parseInt(req.params.id));
 
         if(successful)
             res.sendStatus(200);
