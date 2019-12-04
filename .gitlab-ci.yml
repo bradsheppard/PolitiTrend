@@ -15,7 +15,9 @@ frontend_build:
   stage: build
   script:
     - make -C services/frontend build
+    - make -C services/frontend push
   only:
     changes:
       - services/frontend/**/*
+
 
