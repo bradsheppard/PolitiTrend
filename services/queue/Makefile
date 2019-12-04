@@ -3,7 +3,7 @@ tag	:= 1.0.0
 
 .PHONY: deploy
 deploy:
-	helm upgrade --install queue bitnami/kafka
+	helm upgrade --install queue bitnami/kafka -f values-dev.yaml
 	# helm install queue bitnami/kafka -f values-production.yaml
 
 .PHONY: topics

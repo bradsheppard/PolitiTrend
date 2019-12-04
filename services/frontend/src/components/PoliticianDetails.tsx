@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStyles, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import PoliticianOpinions from '../model/PoliticianOpinions';
 import { politicianNameToImagePath } from '../utils/ImagePath';
-import ReactWordcloud from 'react-wordcloud';
+import ReactWordcloud, { MinMaxPair, Spiral } from 'react-wordcloud';
 
 const styles = (theme: Theme) => createStyles({
     container: {
@@ -15,10 +15,25 @@ interface IProps extends WithStyles<typeof styles> {
     politicianOpinions: PoliticianOpinions
 }
 
+const wordCloudOptions = {
+    colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b'],
+    enableTooltip: false,
+    deterministic: false,
+    fontFamily: 'impact',
+    fontSizes: [15, 50] as MinMaxPair,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    padding: 1,
+    rotations: 10,
+    rotationAngles: [-75, 75] as MinMaxPair,
+    spiral: Spiral.Archimedean,
+    transitionDuration: 1000,
+};
+
 const PoliticianDetails = (props: IProps) => {
     const { politicianOpinions, classes } = props;
     const { politician } = politicianOpinions;
-    const words = getWordCounts(politicianOpinions.opinions.map(opinion => opinion.tweetText));
+    const words = getWordCounts(politicianOpinions.opinions.map(opinion => opinion.tweetText), politicianOpinions.politician.name);
 
     return (
         <div className={classes.container}>
@@ -29,7 +44,7 @@ const PoliticianDetails = (props: IProps) => {
             <Typography variant='h5' color='primary'>
                 {politician.party}
             </Typography>
-            <ReactWordcloud words={words} />
+            <ReactWordcloud words={words} options={wordCloudOptions} />
         </div>
     );
 };
@@ -39,12 +54,12 @@ interface Word {
     value: number;
 }
 
-function getWordCounts(tweets: Array<string>): Array<Word> {
+function getWordCounts(tweets: Array<string>, politicianName: string): Array<Word> {
     const results: {[index: string]: number} = {};
     tweets.forEach(tweet => {
         const words = tweet.split(' ');
         words.forEach(word => {
-            if (word.length < 5)
+            if (word.length < 5 || politicianName.includes(word))
                 return;
             if(!results[word])
                 results[word] = 1;
@@ -58,7 +73,8 @@ function getWordCounts(tweets: Array<string>): Array<Word> {
         words.push({text: key, value: results[key]})
     });
 
-    return words;
+    words.sort((a, b) => b.value - a.value);
+    return words.slice(0, Math.min(40, words.length));
 }
 
 export default withStyles(styles)(PoliticianDetails);
