@@ -7,9 +7,8 @@ stages:
   - build
   - deploy
 
-pre:
-  stage: .pre
-  script:
+default:
+  before_script:
     - apk add make
 
 frontend_build:
