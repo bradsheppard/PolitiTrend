@@ -14,4 +14,4 @@ COPY crawler.py .
 
 COPY config.ini .
 
-CMD ["python", "./crawler.py"]
+CMD ["python", "-u", "./crawler.py"]
