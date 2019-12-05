@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sentiment_analyzer.fullname" . }}
+  name: {{ include "crawler.fullname" . }}
   labels:
-    {{- include "sentiment_analyzer.labels" . | nindent 4 }}
+    {{- include "crawler.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "sentiment_analyzer.selectorLabels" . | nindent 6 }}
+      {{- include "crawler.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "sentiment_analyzer.selectorLabels" . | nindent 8 }}
+        {{- include "crawler.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

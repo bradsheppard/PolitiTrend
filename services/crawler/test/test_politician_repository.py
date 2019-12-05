@@ -1,4 +1,4 @@
-from sentiment_analyzer.model import PoliticianRepository
+from crawler.model import PoliticianRepository
 
 
 def test_get_all():

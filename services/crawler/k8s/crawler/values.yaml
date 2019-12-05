@@ -1,11 +1,11 @@
-# Default values for sentiment_analyzer.
+# Default values for crawler.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: sentiment_analyzer
+  repository: crawler
   pullPolicy: Always
 
 imagePullSecrets: []

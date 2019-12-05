@@ -1,6 +1,7 @@
 /.idea
 /data
 /venv
+/env
 /.pytest_cache
 **/__pycache__
 trained_model.h5

@@ -6,7 +6,7 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY sentiment_analyzer sentiment_analyzer
+COPY crawler crawler
 
 COPY test test
 

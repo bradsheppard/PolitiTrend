@@ -1,4 +1,4 @@
-service	:= sentiment_analyzer
+service	:= crawler
 tag	:= 1.0.0
 
 .PHONY: build

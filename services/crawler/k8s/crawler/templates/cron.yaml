@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "sentiment_analyzer.fullname" . }}-cron
+  name: {{ include "crawler.fullname" . }}-cron
 spec:
   schedule: "*/1 * * * *"
   jobTemplate:
@@ -9,7 +9,7 @@ spec:
       template:
         metadata:
           labels:
-            {{- include "sentiment_analyzer.selectorLabels" . | nindent 12 }}
+            {{- include "crawler.selectorLabels" . | nindent 12 }}
         spec:
         {{- with .Values.imagePullSecrets }}
           imagePullSecrets:

@@ -1,7 +1,7 @@
 import time
 import string
 import random
-from sentiment_analyzer.model import OpinionRepository, Opinion
+from crawler.model import OpinionRepository, Opinion
 
 
 def test_insert_and_get():

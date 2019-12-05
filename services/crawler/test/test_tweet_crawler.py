@@ -1,6 +1,6 @@
 import pytest
-from sentiment_analyzer.config import config
-from sentiment_analyzer.twitter import TweetCrawler
+from crawler.config import config
+from crawler.twitter import TweetCrawler
 
 
 @pytest.fixture

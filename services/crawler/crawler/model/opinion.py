@@ -1,7 +1,7 @@
 import requests
 import json
 from dataclasses import dataclass
-from sentiment_analyzer.message_bus import MessageBus
+from crawler.message_bus import MessageBus
 
 
 @dataclass(init=False)

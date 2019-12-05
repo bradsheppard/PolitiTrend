@@ -1,7 +1,7 @@
-from sentiment_analyzer.config import config
-from sentiment_analyzer.twitter import TweetCrawler
-from sentiment_analyzer.model import PoliticianRepository, Opinion, OpinionRepository
-from sentiment_analyzer.message_bus import MessageBus
+from crawler.config import config
+from crawler.twitter import TweetCrawler
+from crawler.model import PoliticianRepository, Opinion, OpinionRepository
+from crawler.message_bus import MessageBus
 
 tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret,
                              config.twitter_access_token, config.twitter_access_token_secret)
