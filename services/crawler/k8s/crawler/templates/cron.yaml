@@ -1,9 +1,11 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "crawler.fullname" . }}-cron
+  name: {{ include "crawler.fullname" . }}
+  labels:
+    {{- include "crawler.labels" . | nindent 4 }}
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "{{ .Values.cron.schedule }}"
   jobTemplate:
     spec:
       template:
@@ -15,25 +17,10 @@ spec:
           imagePullSecrets:
             {{- toYaml . | nindent 12 }}
         {{- end }}
-          securityContext:
-            {{- toYaml .Values.podSecurityContext | nindent 12 }}
           containers:
             - name: {{ .Chart.Name }}
-              securityContext:
-                {{- toYaml .Values.securityContext | nindent 16 }}
               image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
-          {{- with .Values.nodeSelector }}
-          nodeSelector:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-        {{- with .Values.affinity }}
-          affinity:
-            {{- toYaml . | nindent 12 }}
-        {{- end }}
-        {{- with .Values.tolerations }}
-          tolerations:
-            {{- toYaml . | nindent 12 }}
-        {{- end }}
+          restartPolicy: Never
