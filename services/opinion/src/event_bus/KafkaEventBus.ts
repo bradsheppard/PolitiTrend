@@ -21,7 +21,7 @@ class KafkaEventBus implements EventBus {
     private readonly eventHandlers: Array<EventHandler<EventType, any>>;
 
     constructor(@multiInject(TYPES.EventHandler) eventHandlers: Array<EventHandler<EventType, any>>) {
-        const client = new KafkaClient({kafkaHost: 'queue-kafka:9092'});
+        const client = new KafkaClient({kafkaHost: 'queue-kafka-brokers:9092'});
         this.producer = new Producer(client);
         this.consumer = new Consumer(client, [{topic: KafkaEventBus.topic}], {
              groupId: KafkaEventBus.groupId
