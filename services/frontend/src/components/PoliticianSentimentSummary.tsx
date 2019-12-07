@@ -45,7 +45,7 @@ const styles = (theme: Theme) => createStyles({
     }
 });
 
-class Result extends React.Component<IProps, IState> {
+class PoliticianSentimentSummary extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
@@ -145,4 +145,4 @@ class Result extends React.Component<IProps, IState> {
     }
 }
 
-export default withStyles(styles)(Result);
+export default withStyles(styles)(PoliticianSentimentSummary);

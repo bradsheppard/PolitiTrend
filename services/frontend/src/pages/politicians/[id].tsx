@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import PoliticianOpinions from '../../model/PoliticianOpinions';
 import PoliticianDetails from '../../components/PoliticianDetails';
 import { NextPageContext } from 'next';
 import PoliticianOpinionsApi from '../../model/PoliticianOpinionsApi';
+import ContentContainer from '../../components/ContentContainer';
 
 interface IProps {
     politicianOpinions: PoliticianOpinions | null;
@@ -16,13 +17,9 @@ const PoliticianPage = (props: IProps) => {
         );
 
     return (
-        <Grid container
-              justify='center'
-              alignItems='center'>
-            <Grid item sm={10}>
-                <PoliticianDetails politicianOpinions={props.politicianOpinions} />
-            </Grid>
-        </Grid>
+        <ContentContainer>
+            <PoliticianDetails politicianOpinions={props.politicianOpinions} />
+        </ContentContainer>
     )
 };
 

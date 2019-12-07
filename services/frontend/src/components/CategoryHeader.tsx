@@ -10,7 +10,7 @@ const style = (theme: Theme) => createStyles({
 
 interface IProps extends WithStyles<typeof style>, PropsWithChildren<{}> {}
 
-const ResultHeader = (props: IProps) => {
+const CategoryHeader = (props: IProps) => {
     return (
         <Typography variant='h4' color='primary' className={props.classes.typography}>
             {props.children}
@@ -18,4 +18,4 @@ const ResultHeader = (props: IProps) => {
     );
 };
 
-export default withStyles(style)(ResultHeader);
+export default withStyles(style)(CategoryHeader);
