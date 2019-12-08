@@ -10,12 +10,14 @@ interface WordCount {
     value: number;
 }
 
+const ignoredWords = ['https'];
+
 function getWordCounts(sentences: Array<string>, exemptions?: Array<string>): Array<WordCount> {
     const results: {[index: string]: number} = {};
     sentences.forEach(sentence => {
         const words = extractWords(sentence);
         words.forEach(word => {
-            if (word.length < 5 || (exemptions && exemptions.includes(word)))
+            if (word.length < 5 || (exemptions && exemptions.includes(word)) || ignoredWords.includes(word))
                 return;
             if(!results[word])
                 results[word] = 1;

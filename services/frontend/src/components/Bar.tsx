@@ -5,11 +5,15 @@ import Typography from '@material-ui/core/Typography';
 import Globals from '../utils/Globals';
 import { makeStyles, Slide, useScrollTrigger } from '@material-ui/core';
 import BarItem from './BarItem';
+import Link from 'next/link';
 
 const useStyles = makeStyles(() => ({
     title: {
         flexGrow: 0.75,
-        color: 'white'
+    },
+    titleText: {
+        color: 'white',
+        textDecoration: 'none'
     }
 }));
 
@@ -41,9 +45,13 @@ const Header = (props: Props) => {
             <HideOnScroll {...props}>
                 <AppBar position="fixed" color="secondary">
                     <Toolbar>
-                        <Typography variant="h5" className={classes.title}>
-                            {capitalize(Globals.name)}
-                        </Typography>
+                        <div className={classes.title}>
+                            <Link href='/' passHref>
+                                <Typography variant="h5" component='a' className={classes.titleText}>
+                                    {capitalize(Globals.name)}
+                                </Typography>
+                            </Link>
+                        </div>
                         <BarItem link='/'>
                             Home
                         </BarItem>

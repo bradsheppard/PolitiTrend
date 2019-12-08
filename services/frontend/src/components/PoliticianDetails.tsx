@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, createStyles, Grid, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { Card, createStyles, Divider, Grid, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import PoliticianOpinions from '../model/PoliticianOpinions';
 import { politicianNameToImagePath } from '../utils/ImagePath';
 import ReactWordcloud, { MinMaxPair, Spiral } from 'react-wordcloud';
@@ -10,7 +10,12 @@ import { extractWords, getWordCounts } from '../utils/StringHelper';
 const styles = (theme: Theme) => createStyles({
     container: {
         marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(4),
         textAlign: 'center'
+    },
+    divider: {
+        marginTop: theme.spacing(6),
+        marginBottom: theme.spacing(6)
     }
 });
 
@@ -66,6 +71,7 @@ const PoliticianDetails = (props: IProps) => {
                 </Grid>
                 <Grid item
                       sm={12}>
+                    <Divider variant="middle" className={classes.divider} />
                     <Grid container
                           alignItems='flex-start'
                           direction='row'
