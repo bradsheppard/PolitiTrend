@@ -7,7 +7,7 @@ from crawler.message_bus import MessageBus
 @dataclass(init=False)
 class Opinion:
     politician: int
-    sentiment: int
+    sentiment: float
     tweetId: str
     tweetText: str
 

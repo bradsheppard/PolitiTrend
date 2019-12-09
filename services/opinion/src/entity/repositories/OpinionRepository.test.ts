@@ -14,7 +14,7 @@ describe('Opinion repository tests', () => {
         id++;
         return <Opinion> {
             tweetText: `test text ${id}`,
-            sentiment: id,
+            sentiment: id + 0.25,
             tweetId: id.toString(),
             politician: id
         };

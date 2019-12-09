@@ -10,7 +10,7 @@ def test_insert_and_get():
     opinion.politician = 1
     opinion.tweetId = 1
     opinion.tweetText = random_string()
-    opinion.sentiment = 1
+    opinion.sentiment = 2.56
 
     repository.insert(opinion)
 

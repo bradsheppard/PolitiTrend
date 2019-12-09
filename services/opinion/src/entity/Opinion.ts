@@ -10,7 +10,7 @@ export default class Opinion {
     @Column()
     politician: number;
 
-    @Column()
+    @Column({type: 'double precision'})
     sentiment: number;
 
     @Index()
