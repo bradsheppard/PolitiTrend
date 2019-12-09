@@ -3,7 +3,8 @@ import { NextPageContext } from 'next';
 import PoliticianApi from '../model/PoliticianApi';
 import Politician from '../model/Politician';
 import PoliticianSummary from '../components/PoliticianSummary';
-import { Grid } from '@material-ui/core';
+import { Card, Grid } from '@material-ui/core';
+import ContentContainer from '../components/ContentContainer';
 
 interface IProps {
     politicians: Array<Politician>;
@@ -21,10 +22,8 @@ class Politicians extends React.Component<IProps> {
 
     render() {
         return (
-            <Grid container
-                alignItems='center'
-                justify='center'>
-                <Grid item sm={6}>
+            <ContentContainer>
+                <Card>
                     <Grid container
                         alignItems='center'
                         justify='center'>
@@ -38,8 +37,8 @@ class Politicians extends React.Component<IProps> {
                             })
                         }
                     </Grid>
-                </Grid>
-            </Grid>
+                </Card>
+            </ContentContainer>
         );
     }
 }

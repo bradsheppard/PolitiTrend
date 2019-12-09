@@ -1,0 +1,26 @@
+# Default values for voyce.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+imagePullSecrets: []
+
+global:
+  registry: registry.gitlab.com/brad_1357/voyce
+
+kafka:
+  enabled: false
+  nameOverride: queue-kafka
+  fullnameOverride: queue-kafka
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 60m
+  zookeeper:
+    nameOverride: queue-zookeeper
+    fullnameOverride: queue-zookeeper
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 60m
+

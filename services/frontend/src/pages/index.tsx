@@ -1,13 +1,15 @@
-import { createStyles, withStyles, WithStyles } from '@material-ui/core';
+import { createStyles, Grid, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import Jumbotron from '../components/Jumbotron';
-import Main from '../components/Main';
 import Politician from '../model/Politician';
 import PoliticianApi from '../model/PoliticianApi';
 import { NextPageContext } from 'next';
 import OpinionApi from '../model/OpinionApi';
 import PoliticianOpinions from '../model/PoliticianOpinions';
 import Opinion from '../model/Opinion';
+import CategoryHeader from '../components/CategoryHeader';
+import PoliticianSentimentSummary from '../components/PoliticianSentimentSummary';
+import ContentContainer from '../components/ContentContainer';
 
 const styles = () => createStyles({
     root: {
@@ -61,8 +63,36 @@ class App extends React.Component<IProps> {
         return (
             <div className={classes.root}>
                 <Jumbotron/>
-                <Main topPoliticians={this.props.topPoliticians}
-                      bottomPoliticians={this.props.bottomPoliticians} />
+                <ContentContainer>
+                    <Grid container
+                          direction='row'
+                          justify='center'>
+                        <Grid item sm={6}>
+                            <CategoryHeader>
+                                Most Liked
+                            </CategoryHeader>
+                            {
+                                this.props.topPoliticians.map((politician: PoliticianOpinions, index) => {
+                                    return (
+                                        <PoliticianSentimentSummary politicianOpinions={politician} key={index}/>
+                                    )
+                                })
+                            }
+                        </Grid>
+                        <Grid item sm={6}>
+                            <CategoryHeader>
+                                Most Hated
+                            </CategoryHeader>
+                            {
+                                this.props.bottomPoliticians.map((politician: PoliticianOpinions, index) => {
+                                    return (
+                                        <PoliticianSentimentSummary politicianOpinions={politician} key={index}/>
+                                    )
+                                })
+                            }
+                        </Grid>
+                    </Grid>
+                </ContentContainer>
             </div>
         );
     }

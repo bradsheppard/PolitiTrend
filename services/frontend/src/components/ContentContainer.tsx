@@ -1,0 +1,20 @@
+import * as React from 'react';
+import { Grid } from '@material-ui/core';
+
+class ContentContainer extends React.Component {
+
+    render() {
+        return (
+            <Grid container
+                  alignItems='center'
+                  direction='row'
+                  justify='center'>
+                <Grid item sm={8}>
+                            {this.props.children}
+                </Grid>
+            </Grid>
+        );
+    }
+}
+
+export default ContentContainer;
