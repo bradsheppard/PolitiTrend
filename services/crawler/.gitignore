@@ -4,4 +4,4 @@
 /env
 /.pytest_cache
 **/__pycache__
-trained_model.h5
+crawler/sentiment_analyzer/trained_model.h5
