@@ -35,7 +35,7 @@ const PoliticianSummary = (props: IProps) => {
             <MuiLink href='#'>
                 {/*
                     // @ts-ignore */}
-                <ScrollTrigger onEnter={onEnterViewport} onExit={onExitViewport}>
+                <ScrollTrigger onEnter={onEnterViewport} onExit={onExitViewport} throttleResize={10} throttleScroll={10}>
                     <Fade in={visible} timeout={2000}>
                         <div className={classes.container}>
                             <img src={politicianNameToImagePath(politician.name)} alt={politician.name} />
