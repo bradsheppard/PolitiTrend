@@ -10,7 +10,7 @@ import {
     Typography, WithStyles, withStyles
 } from '@material-ui/core';
 import { Tweet } from 'react-twitter-widgets'
-import ScrollTrigger from 'react-scroll-trigger';
+import { Waypoint } from 'react-waypoint';
 import PoliticianOpinions from '../model/PoliticianOpinions';
 import Opinion from '../model/Opinion';
 import { ExpandMore } from '@material-ui/icons'
@@ -79,7 +79,7 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
 
         return (
             // @ts-ignore
-            <ScrollTrigger onEnter={this.onEnterViewport.bind(this)} onExit={this.onExitViewport.bind(this)}>
+            <Waypoint onEnter={this.onEnterViewport.bind(this)} onLeave={this.onExitViewport.bind(this)}>
                 <Fade in={this.state.visible} timeout={2000}>
                     <Card className={classes.card} elevation={1}>
                         <CardHeader avatar={<Avatar src={politicianNameToImagePath(this.props.politicianOpinions.politician.name)}/>}
@@ -140,7 +140,7 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
                         </CardActions>
                     </Card>
                 </Fade>
-            </ScrollTrigger>
+            </Waypoint>
         );
     }
 }

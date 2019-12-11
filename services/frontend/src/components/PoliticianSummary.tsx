@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStyles, Fade, Theme, Typography, withStyles, WithStyles, Link as MuiLink } from '@material-ui/core';
 import Politician from '../model/Politician';
 import { politicianNameToImagePath } from '../utils/ImagePath';
-import ScrollTrigger from 'react-scroll-trigger';
+import { Waypoint } from 'react-waypoint';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -35,7 +35,7 @@ const PoliticianSummary = (props: IProps) => {
             <MuiLink href='#'>
                 {/*
                     // @ts-ignore */}
-                <ScrollTrigger onEnter={onEnterViewport} onExit={onExitViewport} throttleResize={10} throttleScroll={10}>
+                <Waypoint onEnter={onEnterViewport} onLeave={onExitViewport}>
                     <Fade in={visible} timeout={2000}>
                         <div className={classes.container}>
                             <img src={politicianNameToImagePath(politician.name)} alt={politician.name} />
@@ -47,7 +47,7 @@ const PoliticianSummary = (props: IProps) => {
                             </Typography>
                         </div>
                     </Fade>
-                </ScrollTrigger>
+                </Waypoint>
             </MuiLink>
         </Link>
     );
