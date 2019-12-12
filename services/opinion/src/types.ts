@@ -4,7 +4,8 @@ const TYPES = {
     EventHandler: Symbol.for('EventHandler'),
     EventBus: Symbol.for('EventBus'),
     ConnectionProvider: Symbol.for('ConnectionProvider'),
-    OpinionRepository: Symbol.for('OpinionRepository')
+    OpinionRepository: Symbol.for('OpinionRepository'),
+    JobRepository: Symbol.for('JobRepository')
 };
 
 export { TYPES };

@@ -13,6 +13,9 @@ import EventHandler from './event_bus/EventHandler';
 import NewOpinionEventHandler from './event_bus/NewOpinionEventHandler';
 import EventType from './event_bus/EventType';
 import Opinion from './entity/Opinion';
+import JobRepository from './entity/repositories/JobRepository';
+import JobSqlRepository from './entity/repositories/JobSqlRepository';
+import JobController from './controllers/JobController';
 
 const container = new Container();
 
@@ -20,8 +23,12 @@ container.bind<ConnectionProvider>(TYPES.ConnectionProvider).to(ConnectionProvid
 
 container.bind<EventBus>(TYPES.EventBus).to(KafkaEventBus);
 container.bind<EventHandler<EventType.NewOpinion, Opinion>>(TYPES.EventHandler).to(NewOpinionEventHandler);
-container.bind<OpinionRepository>(TYPES.OpinionRepository).to(OpinionSqlRepository).inSingletonScope();
+container.bind<OpinionRepository>(TYPES.OpinionRepository).to(OpinionSqlRepository);
+container.bind<JobRepository>(TYPES.JobRepository).to(JobSqlRepository);
+
 container.bind<Controller>(TYPES.Controller).to(OpinionController);
+container.bind<Controller>(TYPES.Controller).to(JobController);
+
 container.bind<App>(TYPES.App).to(App);
 
 export { container }
