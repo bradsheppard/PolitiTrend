@@ -6,7 +6,7 @@ import App from './App';
 import Opinion from './entity/Opinion';
 import OpinionRepository from './entity/repositories/OpinionRepository';
 
-describe('App tests', () => {
+describe('Opinion API tests', () => {
 
     let app: App;
     let opinionRepository: OpinionRepository;

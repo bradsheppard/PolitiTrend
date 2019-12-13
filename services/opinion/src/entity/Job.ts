@@ -3,7 +3,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export enum JobStatus {
     NotStarted = 'NotStarted',
     InProgress = 'InProgress',
-    Completed = 'Completed'
+    Completed = 'Completed',
+    Error = 'Error'
 }
 
 export enum JobType {
