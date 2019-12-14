@@ -12,8 +12,8 @@ class OpinionController implements Controller {
     public router = express.Router();
     private readonly opinionRepository: OpinionRepository;
 
-    constructor(@inject(TYPES.OpinionRepository) OpinionRepository: OpinionRepository) {
-        this.opinionRepository = OpinionRepository;
+    constructor(@inject(TYPES.OpinionRepository) opinionRepository: OpinionRepository) {
+        this.opinionRepository = opinionRepository;
         this.initializeRoutes();
     }
 
