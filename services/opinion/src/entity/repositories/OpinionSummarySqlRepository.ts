@@ -1,9 +1,10 @@
 import ConnectionProvider from './ConnectionProvider';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { TYPES } from '../../types';
 import OpinionSummary from '../OpinionSummary';
 import OpinionSummaryRepository from './OpinionSummaryRepository';
 
+@injectable()
 class OpinionSummarySqlRepository implements OpinionSummaryRepository {
     private readonly connectionProvider: ConnectionProvider;
 

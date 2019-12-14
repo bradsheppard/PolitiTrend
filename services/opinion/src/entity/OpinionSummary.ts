@@ -1,5 +1,6 @@
-import { Column, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export default class OpinionSummary {
     @PrimaryGeneratedColumn()
     id: number;
@@ -8,6 +9,6 @@ export default class OpinionSummary {
     @Column()
     politician: number;
 
-    @Column()
+    @Column({type: 'double precision'})
     sentiment: number;
 }

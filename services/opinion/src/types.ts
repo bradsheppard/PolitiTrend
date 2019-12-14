@@ -5,6 +5,7 @@ const TYPES = {
     EventBus: Symbol.for('EventBus'),
     ConnectionProvider: Symbol.for('ConnectionProvider'),
     OpinionRepository: Symbol.for('OpinionRepository'),
+    OpinionSummaryRepository: Symbol.for('OpinionSummaryRepository'),
     JobRepository: Symbol.for('JobRepository')
 };
 
