@@ -3,6 +3,8 @@ import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import OpinionSummaryRepository from '../entity/repositories/OpinionSummaryRepository';
+import { Request, Response } from 'express';
+import OpinionSummary from '../entity/OpinionSummary';
 
 @injectable()
 class OpinionSummaryController implements Controller {
@@ -15,7 +17,19 @@ class OpinionSummaryController implements Controller {
         this.initializeRoutes();
     }
 
-    private initializeRoutes() {}
+    private initializeRoutes() {
+        this.router.get('/summary', this.getAll.bind(this));
+        this.router.get('/summary/:id', this.getOne.bind(this));
+    }
+
+    private async getAll(req: Request, res: Response) {
+        const summaries: Array<OpinionSummary> = await this.opinionSummaryRepository.get(req.query);
+        res.json(summaries);
+    }
+
+    private getOne(req: Request, res: Response) {
+
+    }
 
 }
 

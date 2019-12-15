@@ -39,10 +39,10 @@ describe('Job API tests', () => {
 
     it('Can get Job', async () => {
         const res = await agent(app.app).get(`/job/${testJob1.id}`);
-        const jobs: Array<Job> = res.body;
+        const job: Job = res.body;
 
         assert.equal(res.status, 200);
-        assert.includeDeepMembers(jobs, [testJob1]);
+        assert.deepEqual(job, testJob1);
     });
 
     it('Can insert Job', async () => {

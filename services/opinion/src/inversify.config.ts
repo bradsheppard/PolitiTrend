@@ -31,9 +31,9 @@ container.bind<OpinionRepository>(TYPES.OpinionRepository).to(OpinionSqlReposito
 container.bind<OpinionSummaryRepository>(TYPES.OpinionSummaryRepository).to(OpinionSummarySqlRepository);
 container.bind<JobRepository>(TYPES.JobRepository).to(JobSqlRepository);
 
-container.bind<Controller>(TYPES.Controller).to(OpinionController);
 container.bind<Controller>(TYPES.Controller).to(OpinionSummaryController);
 container.bind<Controller>(TYPES.Controller).to(JobController);
+container.bind<Controller>(TYPES.Controller).to(OpinionController);
 
 container.bind<App>(TYPES.App).to(App);
 
