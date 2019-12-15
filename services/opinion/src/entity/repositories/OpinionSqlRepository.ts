@@ -90,6 +90,18 @@ class OpinionSqlRepository implements OpinionRepository {
         return insertedOpinion;
     }
 
+    async getSentimentAverageForPolitician(politicianId: number): Promise<number | null> {
+        const connection = await this.connectionProvider.getConnection();
+
+        const result = await connection.createQueryBuilder()
+            .select('AVG(sentiment)', 'avg')
+            .from(Opinion, 'opinion')
+            .where('opinion.politician = :id', {id: politicianId})
+            .getRawOne();
+
+        return result.avg;
+    }
+
 }
 
 export default OpinionSqlRepository;

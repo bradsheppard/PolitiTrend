@@ -20,6 +20,16 @@ describe('Opinion repository tests', () => {
         };
     }
 
+    function createOpinionForPolitician(politicianId: number, sentiment: number) {
+        id++;
+        return <Opinion> {
+            tweetText: `test text ${id}`,
+            sentiment,
+            tweetId: id.toString(),
+            politician: politicianId
+        };
+    }
+
     before(async () => {
         opinionRepository = container.get<OpinionRepository>(TYPES.OpinionRepository);
         await opinionRepository.delete();
@@ -97,5 +107,27 @@ describe('Opinion repository tests', () => {
         const retrievedOpinion = await opinionRepository.getOne(insertedOpinion.id);
         assert.deepEqual(retrievedOpinion, insertedOpinion);
         assert.deepEqual(retrievedOpinion, opinion)
+    });
+
+    it('Can get sentiment average', async() => {
+        const testOpinion1 = createOpinionForPolitician(60, 6.5);
+        const testOpinion2 = createOpinionForPolitician(60, 9);
+
+        await opinionRepository.insert(testOpinion1);
+        await opinionRepository.insert(testOpinion2);
+
+        const averageSentiment = await opinionRepository.getSentimentAverageForPolitician(60);
+        assert.equal(averageSentiment, 7.75);
+    });
+
+    it('Can get sentiment average, nonexistent politician', async() => {
+        const testOpinion1 = createOpinionForPolitician(62, 6.5);
+        const testOpinion2 = createOpinionForPolitician(62, 9);
+
+        await opinionRepository.insert(testOpinion1);
+        await opinionRepository.insert(testOpinion2);
+
+        const averageSentiment = await opinionRepository.getSentimentAverageForPolitician(999);
+        assert.isNull(averageSentiment);
     });
 });

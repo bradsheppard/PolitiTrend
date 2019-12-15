@@ -12,7 +12,7 @@ class OpinionSummaryController implements Controller {
     public router = express.Router();
     private readonly opinionSummaryRepository: OpinionSummaryRepository;
 
-    constructor(@inject(TYPES.OpinionRepository) opinionSummaryRepository: OpinionSummaryRepository) {
+    constructor(@inject(TYPES.OpinionSummaryRepository) opinionSummaryRepository: OpinionSummaryRepository) {
         this.opinionSummaryRepository = opinionSummaryRepository;
         this.initializeRoutes();
     }
@@ -27,8 +27,13 @@ class OpinionSummaryController implements Controller {
         res.json(summaries);
     }
 
-    private getOne(req: Request, res: Response) {
+    private async getOne(req: Request, res: Response) {
+        const summary: OpinionSummary | null = await this.opinionSummaryRepository.getOne(parseInt(req.params.id));
 
+        if(summary)
+            res.json(summary);
+        else
+            res.sendStatus(404);
     }
 
 }

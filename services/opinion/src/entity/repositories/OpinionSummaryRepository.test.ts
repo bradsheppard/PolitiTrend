@@ -3,6 +3,7 @@ import OpinionSummary from '../../entity/OpinionSummary';
 import OpinionSummaryRepository from './OpinionSummaryRepository';
 import { container } from '../../inversify.config';
 import { TYPES } from '../../types';
+import Opinion from '../Opinion';
 
 describe('OpinionSummary repository tests', () => {
 
