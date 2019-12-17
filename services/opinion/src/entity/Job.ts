@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum JobStatus {
     NotStarted = 'NotStarted',
@@ -7,21 +7,9 @@ export enum JobStatus {
     Error = 'Error'
 }
 
-export enum JobType {
-    OpinionSummary = 'OpinionSummary'
-}
-
-@Entity()
-export default class Job {
+export default abstract class Job {
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column({
-        type: 'enum',
-        enum: JobType,
-        default: JobType.OpinionSummary
-    })
-    type: JobType;
 
     @Column({
         type: 'enum',

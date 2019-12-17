@@ -1,20 +1,24 @@
 import { agent } from 'supertest';
 import App from './App';
-import Job, { JobStatus, JobType } from './entity/Job';
+import Job, { JobStatus } from './entity/Job';
 import { assert } from 'chai';
 import { container } from './inversify.config';
 import { TYPES } from './types';
 import JobRepository from './entity/repositories/JobRepository';
+import OpinionSummaryJob from './entity/OpinionSummaryJob';
 
 describe('Job API tests', () => {
 
     let app: App;
     let jobRepository: JobRepository;
 
+    let id = 1;
+
     function createJob() {
-        return <Job> {
+        id++;
+        return <OpinionSummaryJob> {
             status: JobStatus.InProgress,
-            type: JobType.OpinionSummary,
+            politician: id
         }
     }
 

@@ -15,7 +15,7 @@ import EventType from './event_bus/EventType';
 import Opinion from './entity/Opinion';
 import JobRepository from './entity/repositories/JobRepository';
 import JobSqlRepository from './entity/repositories/JobSqlRepository';
-import JobController from './controllers/JobController';
+import OpinionSummaryJobController from './controllers/JobController';
 import OpinionSummaryController from './controllers/OpinionSummaryController';
 import OpinionSummaryRepository from './entity/repositories/OpinionSummaryRepository';
 import OpinionSummarySqlRepository from './entity/repositories/OpinionSummarySqlRepository';
@@ -32,7 +32,7 @@ container.bind<OpinionSummaryRepository>(TYPES.OpinionSummaryRepository).to(Opin
 container.bind<JobRepository>(TYPES.JobRepository).to(JobSqlRepository);
 
 container.bind<Controller>(TYPES.Controller).to(OpinionSummaryController);
-container.bind<Controller>(TYPES.Controller).to(JobController);
+container.bind<Controller>(TYPES.Controller).to(OpinionSummaryJobController);
 container.bind<Controller>(TYPES.Controller).to(OpinionController);
 
 container.bind<App>(TYPES.App).to(App);

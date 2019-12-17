@@ -1,17 +1,19 @@
 import * as express from 'express';
+import { Request, Response } from 'express';
 import Controller from './Controller';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import JobRepository from '../entity/repositories/JobRepository';
-import { Request } from 'express';
-import { Response } from 'express';
-import Job from '../entity/Job';
+import Job, { JobStatus } from '../entity/Job';
+import JobHandler from '../job_handler/JobHandler';
+import OpinionSummaryJob from '../entity/OpinionSummaryJob';
 
 @injectable()
-class JobController implements Controller {
+class OpinionSummaryJobController implements Controller {
     
     public router = express.Router();
     private readonly jobRepository: JobRepository;
+    private readonly opinionSummaryJobHandler: JobHandler<OpinionSummaryJob>;
 
     constructor(@inject(TYPES.JobRepository) JobRepository: JobRepository) {
         this.jobRepository = JobRepository;
@@ -19,9 +21,9 @@ class JobController implements Controller {
     }
 
     private initializeRoutes() {
-        this.router.get('/job', this.getAll.bind(this));
-        this.router.get('/job/:id', this.getOne.bind(this));
-        this.router.post('/job', this.insert.bind(this));
+        this.router.get('/job/opinionsummary', this.getAll.bind(this));
+        this.router.get('/job/opinionsummary/:id', this.getOne.bind(this));
+        this.router.post('/job/opinionsummary', this.insert.bind(this));
     }
 
     private async getAll(req: Request, res: Response) {
@@ -39,10 +41,15 @@ class JobController implements Controller {
     }
 
     private async insert(req: Request, res: Response) {
-        let job: Job = req.body;
-        job = await this.jobRepository.insert(job);
+        let job: OpinionSummaryJob = req.body;
+        await this.jobRepository.insert(job);
+
+        job.status = JobStatus.InProgress;
+
+        await this.opinionSummaryJobHandler.handle(job);
+
         res.json(job);
     }
 }
 
-export default JobController;
+export default OpinionSummaryJobController;
