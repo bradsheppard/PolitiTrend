@@ -55,7 +55,7 @@ class OpinionSummarySqlRepository implements OpinionSummaryRepository {
         const connection = await this.connectionProvider.getConnection();
         const repository = connection.getRepository(OpinionSummary);
 
-        return await repository.save(entity);
+        return await repository.save(repository.create(entity));
     }
 
     async update(entity: OpinionSummary): Promise<boolean> {

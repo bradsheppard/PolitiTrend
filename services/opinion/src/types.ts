@@ -6,7 +6,8 @@ const TYPES = {
     ConnectionProvider: Symbol.for('ConnectionProvider'),
     OpinionRepository: Symbol.for('OpinionRepository'),
     OpinionSummaryRepository: Symbol.for('OpinionSummaryRepository'),
-    JobRepository: Symbol.for('JobRepository')
+    OpinionSummaryJobRepository: Symbol.for('OpinionSummaryJobRepository'),
+    OpinionSummaryJobHandler: Symbol.for('OpinionSummaryJobHandler')
 };
 
 export { TYPES };

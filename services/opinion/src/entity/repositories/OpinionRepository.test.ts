@@ -50,9 +50,11 @@ describe('Opinion repository tests', () => {
     it('Can get', async() => {
         const opinion = createOpinion();
         const insertedOpinion = await opinionRepository.insert(opinion);
+        opinion.id = insertedOpinion.id;
 
         const retrievedOpinion = await opinionRepository.getOne(insertedOpinion.id);
-        assert.deepEqual(retrievedOpinion, opinion);
+        assert.deepEqual(retrievedOpinion, insertedOpinion);
+        assert.deepEqual(insertedOpinion, opinion);
     });
 
     it('Can get by politician', async() => {
@@ -79,8 +81,8 @@ describe('Opinion repository tests', () => {
     it('Can update', async () => {
         const opinion = createOpinion();
         const insertedOpinion = await opinionRepository.insert(opinion);
-        insertedOpinion.tweetId = '1234';
-        await opinionRepository.update(opinion);
+        insertedOpinion.tweetText = 'New tweet text';
+        await opinionRepository.update(insertedOpinion);
 
         const updatedOpinion = await opinionRepository.getOne(insertedOpinion.id);
 
@@ -106,7 +108,6 @@ describe('Opinion repository tests', () => {
 
         const retrievedOpinion = await opinionRepository.getOne(insertedOpinion.id);
         assert.deepEqual(retrievedOpinion, insertedOpinion);
-        assert.deepEqual(retrievedOpinion, opinion)
     });
 
     it('Can get sentiment average', async() => {

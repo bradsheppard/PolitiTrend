@@ -3,7 +3,6 @@ import OpinionSummary from '../../entity/OpinionSummary';
 import OpinionSummaryRepository from './OpinionSummaryRepository';
 import { container } from '../../inversify.config';
 import { TYPES } from '../../types';
-import Opinion from '../Opinion';
 
 describe('OpinionSummary repository tests', () => {
 
@@ -39,9 +38,11 @@ describe('OpinionSummary repository tests', () => {
     it('Can get', async() => {
         const opinionSummary = createOpinionSummary();
         const insertedOpinionSummary = await opinionSummaryRepository.insert(opinionSummary);
+        opinionSummary.id = insertedOpinionSummary.id;
 
         const retrievedOpinionSummary = await opinionSummaryRepository.getOne(insertedOpinionSummary.id);
         assert.deepEqual(retrievedOpinionSummary, opinionSummary);
+        assert.deepEqual(insertedOpinionSummary, retrievedOpinionSummary);
     });
 
     it('Can get by politician', async() => {
@@ -69,7 +70,7 @@ describe('OpinionSummary repository tests', () => {
         const opinionSummary = createOpinionSummary();
         const insertedOpinionSummary = await opinionSummaryRepository.insert(opinionSummary);
         insertedOpinionSummary.politician += 1;
-        await opinionSummaryRepository.update(opinionSummary);
+        await opinionSummaryRepository.update(insertedOpinionSummary);
 
         const updatedOpinionSummary = await opinionSummaryRepository.getOne(insertedOpinionSummary.id);
 

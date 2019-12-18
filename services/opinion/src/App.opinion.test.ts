@@ -24,16 +24,16 @@ describe('Opinion API tests', () => {
         };
     }
 
-    const testOpinion1 = createOpinion();
-    const testOpinion2 = createOpinion();
+    let testOpinion1 = createOpinion();
+    let testOpinion2 = createOpinion();
 
     before(async () => {
         app = container.get<App>(TYPES.App);
         opinionRepository = container.get<OpinionRepository>(TYPES.OpinionRepository);
         await opinionRepository.delete();
 
-        await opinionRepository.insert(testOpinion1);
-        await opinionRepository.insert(testOpinion2);
+        testOpinion1 = await opinionRepository.insert(testOpinion1);
+        testOpinion2 = await opinionRepository.insert(testOpinion2);
     });
 
     it('Can ping', async () => {

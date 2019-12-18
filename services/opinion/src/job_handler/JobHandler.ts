@@ -1,6 +1,4 @@
-import Job from '../entity/Job';
-
-interface JobHandler<T extends Job> {
+interface JobHandler<T> {
     handle(job: T): Promise<void>;
 }
 

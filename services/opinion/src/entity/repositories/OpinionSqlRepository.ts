@@ -57,7 +57,7 @@ class OpinionSqlRepository implements OpinionRepository {
         const connection = await this.connectionProvider.getConnection();
         const repository = connection.getRepository(Opinion);
 
-        return await repository.save(entity);
+        return await repository.save(repository.create(entity));
     }
 
     async update(entity: Opinion): Promise<boolean> {
@@ -69,7 +69,7 @@ class OpinionSqlRepository implements OpinionRepository {
         if (!opinion)
             return false;
 
-        await repository.save(entity);
+        await repository.save(repository.create(entity));
         return true;
     }
 

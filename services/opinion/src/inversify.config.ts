@@ -13,12 +13,15 @@ import EventHandler from './event_bus/EventHandler';
 import NewOpinionEventHandler from './event_bus/NewOpinionEventHandler';
 import EventType from './event_bus/EventType';
 import Opinion from './entity/Opinion';
-import JobRepository from './entity/repositories/JobRepository';
-import JobSqlRepository from './entity/repositories/JobSqlRepository';
-import OpinionSummaryJobController from './controllers/JobController';
+import OpinionSummaryJobRepository from './entity/repositories/OpinionSummaryJobRepository';
+import OpinionSummaryJobSqlRepository from './entity/repositories/OpinionSummaryJobSqlRepository';
+import OpinionSummaryJobController from './controllers/OpinionSummaryJobController';
 import OpinionSummaryController from './controllers/OpinionSummaryController';
 import OpinionSummaryRepository from './entity/repositories/OpinionSummaryRepository';
 import OpinionSummarySqlRepository from './entity/repositories/OpinionSummarySqlRepository';
+import JobHandler from './job_handler/JobHandler';
+import OpinionSummaryJob from './entity/OpinionSummaryJob';
+import OpinionSummaryJobHandler from './job_handler/OpinionSummaryJobHandler';
 
 const container = new Container();
 
@@ -29,7 +32,9 @@ container.bind<EventHandler<EventType.NewOpinion, Opinion>>(TYPES.EventHandler).
 
 container.bind<OpinionRepository>(TYPES.OpinionRepository).to(OpinionSqlRepository);
 container.bind<OpinionSummaryRepository>(TYPES.OpinionSummaryRepository).to(OpinionSummarySqlRepository);
-container.bind<JobRepository>(TYPES.JobRepository).to(JobSqlRepository);
+container.bind<OpinionSummaryJobRepository>(TYPES.OpinionSummaryJobRepository).to(OpinionSummaryJobSqlRepository);
+
+container.bind<JobHandler<OpinionSummaryJob>>(TYPES.OpinionSummaryJobHandler).to(OpinionSummaryJobHandler);
 
 container.bind<Controller>(TYPES.Controller).to(OpinionSummaryController);
 container.bind<Controller>(TYPES.Controller).to(OpinionSummaryJobController);

@@ -21,16 +21,16 @@ describe('Opinion summary API tests', () => {
         };
     }
 
-    const testOpinionSummary1 = createOpinionSummary();
-    const testOpinionSummary2 = createOpinionSummary();
+    let testOpinionSummary1 = createOpinionSummary();
+    let testOpinionSummary2 = createOpinionSummary();
 
     before(async () => {
         app = container.get<App>(TYPES.App);
         opinionSummaryRepository = container.get<OpinionSummaryRepository>(TYPES.OpinionSummaryRepository);
         await opinionSummaryRepository.delete();
 
-        await opinionSummaryRepository.insert(testOpinionSummary1);
-        await opinionSummaryRepository.insert(testOpinionSummary2);
+        testOpinionSummary1 = await opinionSummaryRepository.insert(testOpinionSummary1);
+        testOpinionSummary2 = await opinionSummaryRepository.insert(testOpinionSummary2);
     });
 
     it('Can get all Opinion Summaries', async () => {
