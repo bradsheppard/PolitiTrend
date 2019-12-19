@@ -16,10 +16,11 @@ class OpinionSummaryJobController implements Controller {
     private readonly opinionSummaryJobHandler: JobHandler<OpinionSummaryJob>;
 
     constructor(
-        @inject(TYPES.OpinionSummaryJobRepository) JobRepository: OpinionSummaryJobRepository,
-        @inject(TYPES.OpinionSummaryJobHandler) jobHandler: OpinionSummaryJobHandler)
+        @inject(TYPES.OpinionSummaryJobRepository) summaryJobRepository: OpinionSummaryJobRepository,
+        @inject(TYPES.OpinionSummaryJobHandler) opinionSummaryJobHandler: OpinionSummaryJobHandler)
     {
-        this.opinionSummaryJobRepository = JobRepository;
+        this.opinionSummaryJobRepository = summaryJobRepository;
+        this.opinionSummaryJobHandler = opinionSummaryJobHandler;
         this.initializeRoutes();
     }
 

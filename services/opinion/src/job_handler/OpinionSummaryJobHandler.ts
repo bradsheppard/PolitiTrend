@@ -32,8 +32,9 @@ class OpinionSummaryJobHandler implements JobHandler<OpinionSummaryJob> {
             politician: job.politician
         };
 
-        await this.opinionSummaryRepository.insert(opinionSummary);
+        const insertedOpinionSummary = await this.opinionSummaryRepository.insert(opinionSummary);
         job.status = JobStatus.Completed;
+        job.opinionSummary = insertedOpinionSummary.id;
         await this.opinionSummaryJobRepository.update(job);
     }
 }

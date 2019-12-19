@@ -22,4 +22,7 @@ export default class OpinionSummaryJob {
     @Index()
     @Column()
     politician: number;
+
+    @Column()
+    opinionSummary: number;
 }

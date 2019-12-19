@@ -16,6 +16,7 @@ describe('OpinionSummaryJob repository tests', () => {
         const opinionSummaryJob = new OpinionSummaryJob();
         opinionSummaryJob.status = JobStatus.InProgress;
         opinionSummaryJob.politician = id;
+        opinionSummaryJob.opinionSummary = id;
 
         return opinionSummaryJob;
     }
@@ -26,6 +27,7 @@ describe('OpinionSummaryJob repository tests', () => {
         const opinionSummaryJob = new OpinionSummaryJob();
         opinionSummaryJob.status = JobStatus.Completed;
         opinionSummaryJob.politician = id;
+        opinionSummaryJob.opinionSummary = id;
 
         return opinionSummaryJob;
     }

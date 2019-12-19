@@ -17,7 +17,8 @@ describe('Job API tests', () => {
         id++;
         return <OpinionSummaryJob> {
             status: JobStatus.InProgress,
-            politician: id
+            politician: id,
+            opinionSummary: id
         }
     }
 
@@ -52,12 +53,14 @@ describe('Job API tests', () => {
         const newJob = createJob();
 
         let res = await agent(app.app).post('/job/opinionsummary').send(newJob);
-        const job: OpinionSummaryJob = res.body;
-        newJob.id = job.id;
-
-        res = await agent(app.app).get(`/job/${job.id}`);
         const insertedJob: OpinionSummaryJob = res.body;
+        newJob.id = insertedJob.id;
+        newJob.status = JobStatus.Completed;
 
-        assert.deepEqual(insertedJob, newJob);
+        res = await agent(app.app).get(`/job/opinionsummary/${insertedJob.id}`);
+        const retrievedJob: OpinionSummaryJob = res.body;
+
+        newJob.opinionSummary = retrievedJob.opinionSummary;
+        assert.deepEqual(retrievedJob, newJob);
     });
 });
