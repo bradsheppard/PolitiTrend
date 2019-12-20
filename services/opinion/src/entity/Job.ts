@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum JobStatus {
     NotStarted = 'NotStarted',
@@ -7,7 +7,6 @@ export enum JobStatus {
     Error = 'Error'
 }
 
-@Entity()
 export default abstract class Job {
     @PrimaryGeneratedColumn()
     id: number;

@@ -8,12 +8,15 @@ import { JobStatus } from './entity/Job';
 import * as chai from 'chai';
 import { assert } from 'chai';
 import chaiExclude from 'chai-exclude';
+import OpinionRepository from './entity/repositories/OpinionRepository';
+import Opinion from './entity/Opinion';
 chai.use(chaiExclude);
 
 describe('Job API tests', () => {
 
     let app: App;
     let opinionSummaryJobRepository: OpinionSummaryJobRepository;
+    let opinionRepository: OpinionRepository;
 
     let id = 1;
 
@@ -26,12 +29,24 @@ describe('Job API tests', () => {
         return opinionSummaryJob;
     }
 
+    function createOpinion() {
+        id++;
+        return <Opinion> {
+            id,
+            tweetText: `test text ${id}`,
+            sentiment: id,
+            tweetId: id.toString(),
+            politician: id
+        };
+    }
+
     let testJob1: OpinionSummaryJob = createJob();
     let testJob2: OpinionSummaryJob = createJob();
 
     before(async () => {
         app = container.get<App>(TYPES.App);
         opinionSummaryJobRepository = container.get<OpinionSummaryJobRepository>(TYPES.OpinionSummaryJobRepository);
+        opinionRepository = container.get<OpinionRepository>(TYPES.OpinionRepository);
 
         await opinionSummaryJobRepository.delete();
 
@@ -57,8 +72,29 @@ describe('Job API tests', () => {
         assert.deepEqualExcluding(job, testJob1, '__proto__');
     });
 
-    it('Can insert Job', async () => {
+    it('Can insert Job, no opinions', async () => {
+        await opinionRepository.delete();
         const newJob = createJob();
+
+        let res = await agent(app.app).post('/job/opinionsummary').send(newJob);
+        const insertedJob: OpinionSummaryJob = res.body;
+        newJob.id = insertedJob.id;
+        newJob.status = JobStatus.Error;
+
+        res = await agent(app.app).get(`/job/opinionsummary/${insertedJob.id}`);
+        const retrievedJob: OpinionSummaryJob = res.body;
+
+        newJob.opinionSummary = retrievedJob.opinionSummary;
+        // @ts-ignore
+        assert.deepEqualExcluding(retrievedJob, newJob, '__proto__');
+    });
+
+    it('Can insert job, opinions', async() => {
+        const opinion = createOpinion();
+        await opinionRepository.insert(opinion);
+
+        const newJob = createJob();
+        newJob.politician = opinion.politician;
 
         let res = await agent(app.app).post('/job/opinionsummary').send(newJob);
         const insertedJob: OpinionSummaryJob = res.body;

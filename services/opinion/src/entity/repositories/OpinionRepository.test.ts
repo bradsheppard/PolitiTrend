@@ -131,4 +131,11 @@ describe('Opinion repository tests', () => {
         const averageSentiment = await opinionRepository.getSentimentAverageForPolitician(999);
         assert.equal(averageSentiment, null);
     });
+
+    it('Can get sentiment average when no politicians', async() => {
+        await opinionRepository.delete();
+
+        const averageSentiment = await opinionRepository.getSentimentAverageForPolitician(1);
+        assert.equal(averageSentiment, null);
+    });
 });

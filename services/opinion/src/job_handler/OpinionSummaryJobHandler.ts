@@ -28,6 +28,12 @@ class OpinionSummaryJobHandler implements JobHandler<OpinionSummaryJob> {
     async handle(job: OpinionSummaryJob): Promise<void> {
         const sentiment = await this.opinionRepository.getSentimentAverageForPolitician(job.politician);
 
+        if (!sentiment) {
+            job.status = JobStatus.Error;
+            await this.opinionSummaryJobRepository.update(job);
+            return;
+        }
+
         const opinionSummary: OpinionSummary = <OpinionSummary> {
             sentiment,
             politician: job.politician
