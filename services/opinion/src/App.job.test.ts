@@ -1,10 +1,14 @@
 import { agent } from 'supertest';
 import App from './App';
-import { assert } from 'chai';
 import { container } from './inversify.config';
 import { TYPES } from './types';
 import OpinionSummaryJobRepository from './entity/repositories/OpinionSummaryJobRepository';
-import OpinionSummaryJob, { JobStatus } from './entity/OpinionSummaryJob';
+import OpinionSummaryJob from './entity/OpinionSummaryJob';
+import { JobStatus } from './entity/Job';
+import * as chai from 'chai';
+import { assert } from 'chai';
+import chaiExclude from 'chai-exclude';
+chai.use(chaiExclude);
 
 describe('Job API tests', () => {
 
@@ -15,11 +19,11 @@ describe('Job API tests', () => {
 
     function createJob() {
         id++;
-        return <OpinionSummaryJob> {
-            status: JobStatus.InProgress,
-            politician: id,
-            opinionSummary: id
-        }
+        const opinionSummaryJob = new OpinionSummaryJob();
+        opinionSummaryJob.status = JobStatus.InProgress;
+        opinionSummaryJob.politician = id;
+        opinionSummaryJob.opinionSummary = id;
+        return opinionSummaryJob;
     }
 
     let testJob1: OpinionSummaryJob = createJob();
@@ -28,6 +32,8 @@ describe('Job API tests', () => {
     before(async () => {
         app = container.get<App>(TYPES.App);
         opinionSummaryJobRepository = container.get<OpinionSummaryJobRepository>(TYPES.OpinionSummaryJobRepository);
+
+        await opinionSummaryJobRepository.delete();
 
         testJob1 = await opinionSummaryJobRepository.insert(testJob1);
         testJob2 = await opinionSummaryJobRepository.insert(testJob2);
@@ -38,7 +44,8 @@ describe('Job API tests', () => {
         const jobs: Array<OpinionSummaryJob> = res.body;
 
         assert.equal(res.status, 200);
-        assert.includeDeepMembers(jobs, [testJob1, testJob2]);
+        // @ts-ignore
+        assert.deepEqualExcluding(jobs, [testJob1, testJob2], '__proto__');
     });
 
     it('Can get Job', async () => {
@@ -46,7 +53,8 @@ describe('Job API tests', () => {
         const job: OpinionSummaryJob = res.body;
 
         assert.equal(res.status, 200);
-        assert.deepEqual(job, testJob1);
+        // @ts-ignore
+        assert.deepEqualExcluding(job, testJob1, '__proto__');
     });
 
     it('Can insert Job', async () => {
@@ -61,6 +69,7 @@ describe('Job API tests', () => {
         const retrievedJob: OpinionSummaryJob = res.body;
 
         newJob.opinionSummary = retrievedJob.opinionSummary;
-        assert.deepEqual(retrievedJob, newJob);
+        // @ts-ignore
+        assert.deepEqualExcluding(retrievedJob, newJob, '__proto__');
     });
 });

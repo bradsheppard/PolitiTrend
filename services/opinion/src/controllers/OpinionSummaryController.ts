@@ -18,8 +18,8 @@ class OpinionSummaryController implements Controller {
     }
 
     private initializeRoutes() {
-        this.router.get('/summary', this.getAll.bind(this));
-        this.router.get('/summary/:id', this.getOne.bind(this));
+        this.router.get('/opinionsummary', this.getAll.bind(this));
+        this.router.get('/opinionsummary/:id', this.getOne.bind(this));
     }
 
     private async getAll(req: Request, res: Response) {

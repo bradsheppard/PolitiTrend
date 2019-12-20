@@ -1,24 +1,8 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum JobStatus {
-    NotStarted = 'NotStarted',
-    InProgress = 'InProgress',
-    Completed = 'Completed',
-    Error = 'Error'
-}
+import { Column, Entity, Index } from 'typeorm';
+import Job from './Job';
 
 @Entity()
-export default class OpinionSummaryJob {
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column({
-        type: 'enum',
-        enum: JobStatus,
-        default: JobStatus.NotStarted
-    })
-    status: JobStatus;
-
+export default class OpinionSummaryJob extends Job {
     @Index()
     @Column()
     politician: number;

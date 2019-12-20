@@ -5,8 +5,9 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import OpinionSummaryJobRepository from '../entity/repositories/OpinionSummaryJobRepository';
 import JobHandler from '../job_handler/JobHandler';
-import OpinionSummaryJob, { JobStatus } from '../entity/OpinionSummaryJob';
+import OpinionSummaryJob from '../entity/OpinionSummaryJob';
 import OpinionSummaryJobHandler from '../job_handler/OpinionSummaryJobHandler';
+import { JobStatus } from '../entity/Job';
 
 @injectable()
 class OpinionSummaryJobController implements Controller {

@@ -44,7 +44,7 @@ describe('Opinion repository tests', () => {
 
         const Opinions = await opinionRepository.get({});
 
-        assert.includeDeepMembers(Opinions, [firstInsert, secondInsert]);
+        assert.deepEqual(Opinions, [firstInsert, secondInsert]);
     });
 
     it('Can get', async() => {
@@ -75,7 +75,7 @@ describe('Opinion repository tests', () => {
 
         const opinions: Array<Opinion> = await opinionRepository.get({id: insertedOpinion.id});
 
-        assert.isEmpty(opinions);
+        assert.equal(opinions.length, 0);
     });
 
     it('Can update', async () => {
@@ -129,6 +129,6 @@ describe('Opinion repository tests', () => {
         await opinionRepository.insert(testOpinion2);
 
         const averageSentiment = await opinionRepository.getSentimentAverageForPolitician(999);
-        assert.isNull(averageSentiment);
+        assert.equal(averageSentiment, null);
     });
 });

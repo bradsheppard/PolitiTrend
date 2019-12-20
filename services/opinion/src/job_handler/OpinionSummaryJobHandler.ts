@@ -1,11 +1,12 @@
 import JobHandler from './JobHandler';
-import OpinionSummaryJob, { JobStatus } from '../entity/OpinionSummaryJob';
+import OpinionSummaryJob from '../entity/OpinionSummaryJob';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import OpinionRepository from '../entity/repositories/OpinionRepository';
 import OpinionSummaryRepository from '../entity/repositories/OpinionSummaryRepository';
 import OpinionSummary from '../entity/OpinionSummary';
 import OpinionSummaryJobRepository from '../entity/repositories/OpinionSummaryJobRepository';
+import { JobStatus } from '../entity/Job';
 
 @injectable()
 class OpinionSummaryJobHandler implements JobHandler<OpinionSummaryJob> {

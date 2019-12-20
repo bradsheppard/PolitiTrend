@@ -34,7 +34,7 @@ describe('Opinion summary API tests', () => {
     });
 
     it('Can get all Opinion Summaries', async () => {
-        const res = await agent(app.app).get('/summary');
+        const res = await agent(app.app).get('/opinionsummary');
         const opinionSummarys: Array<OpinionSummary> = res.body;
 
         assert.equal(res.status, 200);
@@ -42,7 +42,7 @@ describe('Opinion summary API tests', () => {
     });
 
     it('Can get Opinion Summary', async () => {
-        const res = await agent(app.app).get(`/summary/${testOpinionSummary1.id}`);
+        const res = await agent(app.app).get(`/opinionsummary/${testOpinionSummary1.id}`);
         const opinionSummary: OpinionSummary = res.body;
 
         assert.equal(res.status, 200);

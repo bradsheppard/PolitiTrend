@@ -1,8 +1,8 @@
-import { assert } from 'chai';
 import OpinionSummary from '../../entity/OpinionSummary';
 import OpinionSummaryRepository from './OpinionSummaryRepository';
 import { container } from '../../inversify.config';
 import { TYPES } from '../../types';
+import * as assert from 'assert';
 
 describe('OpinionSummary repository tests', () => {
 
@@ -32,7 +32,7 @@ describe('OpinionSummary repository tests', () => {
 
         const OpinionSummarys = await opinionSummaryRepository.get({});
 
-        assert.includeDeepMembers(OpinionSummarys, [firstInsert, secondInsert]);
+        assert.deepEqual(OpinionSummarys, [firstInsert, secondInsert]);
     });
 
     it('Can get', async() => {
@@ -63,7 +63,7 @@ describe('OpinionSummary repository tests', () => {
 
         const opinionSummarys: Array<OpinionSummary> = await opinionSummaryRepository.get({id: insertedOpinionSummary.id});
 
-        assert.isEmpty(opinionSummarys);
+        assert.equal(opinionSummarys.length, 0);
     });
 
     it('Can update', async () => {

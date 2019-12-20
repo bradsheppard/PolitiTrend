@@ -1,8 +1,9 @@
-import { assert } from 'chai';
-import OpinionSummaryJob, { JobStatus } from '../../entity/OpinionSummaryJob';
+import OpinionSummaryJob from '../../entity/OpinionSummaryJob';
 import OpinionSummaryJobRepository from './OpinionSummaryJobRepository';
 import { container } from '../../inversify.config';
 import { TYPES } from '../../types';
+import { JobStatus } from '../Job';
+import { assert } from 'chai';
 
 describe('OpinionSummaryJob repository tests', () => {
 
@@ -46,7 +47,7 @@ describe('OpinionSummaryJob repository tests', () => {
 
         const opinionSummaryJobs = await opinionSummaryJobRepository.get({});
 
-        assert.includeDeepMembers(opinionSummaryJobs, [firstInsert, secondInsert]);
+        assert.deepEqual(opinionSummaryJobs, [firstInsert, secondInsert]);
     });
 
     it('Can get', async() => {
@@ -55,7 +56,7 @@ describe('OpinionSummaryJob repository tests', () => {
         job.id = insertedOpinionSummaryJob.id;
 
         const retrievedOpinionSummaryJob = await opinionSummaryJobRepository.getOne(insertedOpinionSummaryJob.id);
-        assert.deepEqual<OpinionSummaryJob>(retrievedOpinionSummaryJob, job);
+        assert.deepEqual(retrievedOpinionSummaryJob, job);
         assert.deepEqual(insertedOpinionSummaryJob, retrievedOpinionSummaryJob);
     });
 
@@ -83,7 +84,7 @@ describe('OpinionSummaryJob repository tests', () => {
 
         const jobs: Array<OpinionSummaryJob> = await opinionSummaryJobRepository.get({id: insertedOpinionSummaryJob.id});
 
-        assert.isEmpty(jobs);
+        assert.equal(jobs.length, 0);
     });
 
     it('Can update', async () => {
