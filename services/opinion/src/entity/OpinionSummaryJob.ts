@@ -7,6 +7,6 @@ export default class OpinionSummaryJob extends Job {
     @Column()
     politician: number;
 
-    @Column()
+    @Column({nullable: true})
     opinionSummary: number;
 }
