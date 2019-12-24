@@ -1,8 +1,9 @@
 from crawler.config import config
-from crawler.twitter import TweetCrawler
-from crawler.model import PoliticianRepository, Opinion, OpinionRepository
 from crawler.message_bus import MessageBus
 from crawler.ml import SentimentAnalyzer
+from crawler.model import PoliticianRepository, Opinion, OpinionRepository, OpinionSummaryJobRepository, \
+    OpinionSummaryJob
+from crawler.twitter import TweetCrawler
 
 tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret,
                              config.twitter_access_token, config.twitter_access_token_secret)
@@ -11,6 +12,7 @@ message_bus = MessageBus('queue-kafka', 'opinion')
 politician_repository = PoliticianRepository()
 opinion_repository = OpinionRepository()
 sentiment_analyzer = SentimentAnalyzer()
+opinion_summary_job_repository = OpinionSummaryJobRepository()
 
 politicians = politician_repository.get_all()
 
@@ -27,3 +29,8 @@ for politician in politicians:
         opinion.tweetText = tweet.full_text
 
         opinion_repository.insert(opinion)
+
+    opinion_summary_job = OpinionSummaryJob()
+    opinion_summary_job.politician = politician.num
+    
+    opinion_summary_job_repository.insert(opinion_summary_job)
