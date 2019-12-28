@@ -5,21 +5,10 @@
    "username": "postgres",
    "password": "pass123",
    "database": "postgres",
-   "migrationsRun": true,
-   "synchronize": false,
+   "migrationsRun": false,
+   "synchronize": true,
    "logging": false,
-   "entities": [
-      "build/entity/*.js"
-   ],
-   "migrations": [
-      "build/migration/**/*.js"
-   ],
-   "subscribers": [
-      "build/subscriber/**/*.js"
-   ],
-   "cli": {
-      "entitiesDir": "build/entity",
-      "migrationsDir": "build/migration",
-      "subscribersDir": "build/subscriber"
-   }
+   "entities": ["dist/**/*.entity{.ts,.js}"],
+   "migrations": [],
+   "subscribers": []
 }
