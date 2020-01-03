@@ -22,7 +22,7 @@ class OpinionRepository:
 
     def __init__(self):
         self._host = 'http://opinion'
-        self._message_bus = MessageBus('queue-kafka', 'opinion')
+        self._message_bus = MessageBus('queue-kafka', 'opinion_created')
 
     def get_all(self):
         res = requests.get(self._host)
@@ -42,9 +42,5 @@ class OpinionRepository:
         return opinions
 
     def insert(self, opinion: Opinion):
-        opinion_event = OpinionEvent()
-        opinion_event.data = opinion
-        opinion_event.type = 'NewOpinion'
-
-        serialized = json.dumps(opinion_event.__dict__, default=lambda o: o.__dict__)
+        serialized = json.dumps(opinion.__dict__, default=lambda o: o.__dict__)
         self._message_bus.send(str.encode(serialized))
