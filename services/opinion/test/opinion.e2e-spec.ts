@@ -18,8 +18,6 @@ let client: ClientProxy;
 
 let id = 0;
 
-jest.setTimeout(30000);
-
 function createOpinionDto() {
 	id++;
 	return {

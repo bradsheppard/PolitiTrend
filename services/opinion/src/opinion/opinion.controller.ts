@@ -1,16 +1,17 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
 import { OpinionService } from './opinion.service';
 import { CreateOpinionDto } from './dto/create-opinion.dto';
 import { EventPattern } from '@nestjs/microservices';
 import Opinion from './opinion.entity';
+import { SearchOpinionDto } from './dto/search-opinion.dto';
 
 @Controller()
 export class OpinionController {
 	constructor(private opinionService: OpinionService) {}
 
 	@Get()
-	async findAll() {
-		return await this.opinionService.get();
+	async findAll(@Query() query: SearchOpinionDto) {
+		return await this.opinionService.get(query);
 	}
 
 	@Get(':id')
@@ -40,8 +41,6 @@ export class OpinionController {
 
 	@EventPattern('opinion_created')
 	async handleOpinionCreated(createOpinionDto: CreateOpinionDto) {
-		console.log('received');
-		console.log(createOpinionDto);
 		await this.opinionService.insert(createOpinionDto);
 	}
 }

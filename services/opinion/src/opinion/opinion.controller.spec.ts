@@ -50,7 +50,14 @@ describe('Opinion Controller', () => {
 	it('can get all', async () => {
 		const opinion = createOpinion();
 		jest.spyOn(service, 'get').mockResolvedValueOnce([opinion]);
-		expect(await controller.findAll()).toEqual([opinion]);
+		expect(await controller.findAll({})).toEqual([opinion]);
+	});
+
+	it('can get with politician', async () => {
+		const opinion = createOpinion();
+		const getSpy = jest.spyOn(service, 'get').mockResolvedValueOnce([opinion]);
+		await controller.findAll({politician: 1});
+		expect(getSpy).toBeCalledWith({politician: 1});
 	});
 
 	it('can get one when exists', async () => {
