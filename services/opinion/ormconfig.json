@@ -1,25 +1,14 @@
 {
-   "type": "postgres",
-   "host": "opinion-postgresql",
-   "port": 5432,
-   "username": "postgres",
-   "password": "pass123",
-   "database": "postgres",
-   "migrationsRun": true,
-   "synchronize": false,
-   "logging": false,
-   "entities": [
-      "build/entity/*.js"
-   ],
-   "migrations": [
-      "build/migration/**/*.js"
-   ],
-   "subscribers": [
-      "build/subscriber/**/*.js"
-   ],
-   "cli": {
-      "entitiesDir": "build/entity",
-      "migrationsDir": "build/migration",
-      "subscribersDir": "build/subscriber"
-   }
+  "type": "postgres",
+  "host": "opinion-postgresql",
+  "port": 5432,
+  "username": "postgres",
+  "password": "pass123",
+  "database": "postgres",
+  "migrationsRun": false,
+  "synchronize": true,
+  "logging": false,
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "migrations": [],
+  "subscribers": []
 }

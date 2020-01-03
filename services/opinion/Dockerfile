@@ -1,7 +1,5 @@
 FROM node:10-alpine AS builder
 
-RUN apk add python make build-base
-
 WORKDIR /app
 
 COPY package.json .
@@ -12,7 +10,11 @@ RUN npm install
 
 COPY src src
 
+COPY test test
+
 COPY tsconfig.json .
+
+COPY tsconfig.build.json .
 
 RUN npm run build
 
@@ -21,7 +23,7 @@ FROM node:10-alpine AS app
 
 WORKDIR /app
 
-COPY --from=builder /app/build build
+COPY --from=builder /app/dist dist
 
 COPY --from=builder /app/node_modules node_modules
 
@@ -29,16 +31,18 @@ COPY package.json .
 
 COPY ormconfig.json .
 
-EXPOSE 8080
+EXPOSE 3000
 
 USER node
 
 
-FROM app AS tester
+FROM builder AS tester
 
-CMD ["npm", "test"]
+COPY ormconfig.json .
+
+CMD ["npm", "run", "test:e2e"]
 
 
 FROM app AS runner
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:prod"]
