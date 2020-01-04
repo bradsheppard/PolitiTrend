@@ -1,12 +1,13 @@
-import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param, Query } from '@nestjs/common';
 import { OpinionSummaryService } from './opinion-summary.service';
+import { SearchOpinionSummaryDto } from './dto/search-opinion-summary.dto';
 
 @Controller('opinionsummary')
 export class OpinionSummaryController {
 	constructor(private opinionSummaryService: OpinionSummaryService) {}
 
 	@Get()
-	async findAll() {
+	async findAll(@Query() searchOpinionSummaryDto: SearchOpinionSummaryDto) {
 		return await this.opinionSummaryService.get();
 	}
 

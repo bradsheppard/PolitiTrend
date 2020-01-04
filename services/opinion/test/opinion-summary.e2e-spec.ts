@@ -37,6 +37,13 @@ function createOpinionSummary() {
 	} as OpinionSummary;
 }
 
+function createOpinionSummaryForPolitician(politicianId: number, sentiment: number) {
+	return {
+		politician: politicianId,
+		sentiment,
+	} as OpinionSummary;
+}
+
 describe('OpinionSummaryController (e2e)', () => {
 
 	it('/ (GET)', async () => {
@@ -78,6 +85,38 @@ describe('OpinionSummaryService (e2e)', () => {
 		expect(opinionSummaries.sort()).toEqual([firstInsert, secondInsert].sort());
 	});
 
+	it('Can get max', async () => {
+		const opinionSummary1 = createOpinionSummaryForPolitician(1, 3);
+		let opinionSummary2 = createOpinionSummaryForPolitician(1, 4);
+		let opinionSummary3 = createOpinionSummaryForPolitician(2, 5);
+
+		[, opinionSummary2, opinionSummary3] = await Promise.all([
+			service.insert(opinionSummary1),
+			service.insert(opinionSummary2),
+			service.insert(opinionSummary3),
+		]);
+
+		const opinions = await service.get({max: true});
+
+		expect(opinions).toHaveLength(2);
+		expect(opinions).toEqual(expect.arrayContaining([opinionSummary2, opinionSummary3]));
+	});
+
+	it('Can get max with politician', async () => {
+		const opinionSummary1 = createOpinionSummaryForPolitician(1, 3);
+		let opinionSummary2 = createOpinionSummaryForPolitician(1, 4);
+		const opinionSummary3 = createOpinionSummaryForPolitician(2, 5);
+
+		await service.insert(opinionSummary1);
+		opinionSummary2 = await service.insert(opinionSummary2);
+		await service.insert(opinionSummary3);
+
+		const opinions = await service.get({max: true, politician: 1});
+
+		expect(opinions).toHaveLength(1);
+		expect(opinions).toEqual(expect.arrayContaining([opinionSummary2]));
+	});
+
 	it('Can get', async () => {
 		const opinionSummary = createOpinionSummary();
 		const insertedOpinionSummary = await service.insert(opinionSummary);
@@ -104,9 +143,9 @@ describe('OpinionSummaryService (e2e)', () => {
 		const insertedOpinionSummary = await service.insert(opinionSummary);
 		await service.deleteOne(insertedOpinionSummary.id);
 
-		const opinionSummarys: OpinionSummary[] = await service.get({id: insertedOpinionSummary.id});
+		const retrievedOpinionSummary: OpinionSummary | null = await service.getOne(insertedOpinionSummary.id);
 
-		expect(opinionSummarys.length).toEqual(0);
+		expect(retrievedOpinionSummary).toBeNull();
 	});
 
 	it('Can update', async () => {
