@@ -16,7 +16,7 @@ const style = (theme: Theme) => createStyles({
 });
 
 interface IProps extends WithStyles<typeof style> {
-    politicians: Array<Politician>;
+    politicians: Politician[];
 }
 
 interface IState {

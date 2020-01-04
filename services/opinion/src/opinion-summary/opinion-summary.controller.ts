@@ -8,7 +8,7 @@ export class OpinionSummaryController {
 
 	@Get()
 	async findAll(@Query() searchOpinionSummaryDto: SearchOpinionSummaryDto) {
-		return await this.opinionSummaryService.get();
+		return await this.opinionSummaryService.get(searchOpinionSummaryDto);
 	}
 
 	@Get(':id')

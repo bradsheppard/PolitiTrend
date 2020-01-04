@@ -47,8 +47,9 @@ describe('OpinionSummary Controller', () => {
 
 	it('can get all', async () => {
 		const opinionSummary = createOpinionSummary();
-		jest.spyOn(service, 'get').mockResolvedValueOnce([opinionSummary]);
-		expect(await controller.findAll()).toEqual([opinionSummary]);
+		const getSpy = jest.spyOn(service, 'get').mockResolvedValueOnce([opinionSummary]);
+		expect(await controller.findAll({politician: 1})).toEqual([opinionSummary]);
+		expect(getSpy).toBeCalledWith({politician: 1});
 	});
 
 	it('can get one when exists', async () => {

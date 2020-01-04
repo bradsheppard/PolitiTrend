@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { Typography } from '@material-ui/core';
-import PoliticianOpinions from '../../model/PoliticianOpinions';
 import PoliticianDetails from '../../components/PoliticianDetails';
 import { NextPageContext } from 'next';
-import PoliticianOpinionsApi from '../../model/PoliticianOpinionsApi';
 import ContentContainer from '../../components/ContentContainer';
+import Politician from '../../model/Politician';
+import PoliticianApi from '../../model/PoliticianApi';
 
 interface IProps {
-    politicianOpinions: PoliticianOpinions | null;
+    politician: Politician | null;
 }
 
 const PoliticianPage = (props: IProps) => {
-    if(!props.politicianOpinions)
+    if(!props.politician)
         return (
             <Typography>Not Found</Typography>
         );
 
     return (
         <ContentContainer>
-            <PoliticianDetails politicianOpinions={props.politicianOpinions} />
+            <PoliticianDetails politician={props.politician} />
         </ContentContainer>
     )
 };
@@ -26,14 +26,14 @@ const PoliticianPage = (props: IProps) => {
 PoliticianPage.getInitialProps = async function(context: NextPageContext): Promise<IProps> {
     const { id } = context.query;
     if (typeof id === 'string') {
-        const politicianOpinions: PoliticianOpinions | null = await PoliticianOpinionsApi.getOne(context, parseInt(id));
+        const politician: Politician | null = await PoliticianApi.getOne(context, parseInt(id));
         return {
-            politicianOpinions
+            politician
         };
     }
     else {
         return {
-            politicianOpinions: null
+            politician: null
         }
     }
 };

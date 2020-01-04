@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Card, createStyles, Divider, Grid, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
-import PoliticianOpinions from '../model/PoliticianOpinions';
 import { politicianNameToImagePath } from '../utils/ImagePath';
 import ReactWordcloud, { MinMaxPair, Spiral } from 'react-wordcloud';
 import Opinion from '../model/Opinion';
 import { Tweet } from 'react-twitter-widgets'
 import { extractWords, getWordCounts } from '../utils/StringHelper';
+import Politician from '../model/Politician';
 
 const styles = (theme: Theme) => createStyles({
     container: {
@@ -20,7 +20,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 interface IProps extends WithStyles<typeof styles> {
-    politicianOpinions: PoliticianOpinions
+    politician: Politician
 }
 
 const wordCloudOptions = {
@@ -39,14 +39,13 @@ const wordCloudOptions = {
 };
 
 const PoliticianDetails = (props: IProps) => {
-    const { politicianOpinions, classes } = props;
-    const { politician } = politicianOpinions;
-    const tweets = politicianOpinions.opinions.map(opinion => opinion.tweetText);
+    const { politician, classes } = props;
+    const tweets = politician.opinions.map(opinion => opinion.tweetText);
     const words = getWordCounts(tweets, extractWords(politician.name));
 
-    const { opinions } = politicianOpinions;
-    const firstHalfTweets = politicianOpinions.opinions.slice(0, opinions.length / 2);
-    const secondHalfTweets = politicianOpinions.opinions.slice(opinions.length / 2, opinions.length);
+    const { opinions } = politician;
+    const firstHalfTweets = politician.opinions.slice(0, opinions.length / 2);
+    const secondHalfTweets = politician.opinions.slice(opinions.length / 2, opinions.length);
 
     return (
         <Card>
@@ -63,6 +62,9 @@ const PoliticianDetails = (props: IProps) => {
                     </Typography>
                     <Typography variant='h5' color='primary'>
                         {politician.party}
+                    </Typography>
+                    <Typography variant='subtitle1' color='primary'>
+                        Score: {politician.sentiment.toFixed(1)}
                     </Typography>
                 </Grid>
                 <Grid item

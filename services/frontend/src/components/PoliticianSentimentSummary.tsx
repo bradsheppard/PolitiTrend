@@ -11,14 +11,14 @@ import {
 } from '@material-ui/core';
 import { Tweet } from 'react-twitter-widgets'
 import { Waypoint } from 'react-waypoint';
-import PoliticianOpinions from '../model/PoliticianOpinions';
 import Opinion from '../model/Opinion';
 import { ExpandMore } from '@material-ui/icons'
 import clsx from 'clsx';
 import { politicianNameToImagePath } from '../utils/ImagePath';
+import Politician from '../model/Politician';
 
 interface IProps extends WithStyles<typeof styles> {
-    politicianOpinions: PoliticianOpinions;
+    politician: Politician;
 }
 
 interface IState {
@@ -82,18 +82,18 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
             <Waypoint onEnter={this.onEnterViewport.bind(this)} onLeave={this.onExitViewport.bind(this)}>
                 <Fade in={this.state.visible} timeout={2000}>
                     <Card className={classes.card} elevation={1}>
-                        <CardHeader avatar={<Avatar src={politicianNameToImagePath(this.props.politicianOpinions.politician.name)}/>}
-                                    title={this.props.politicianOpinions.politician.name}
-                                    subheader={this.props.politicianOpinions.politician.party}
+                        <CardHeader avatar={<Avatar src={politicianNameToImagePath(this.props.politician.name)}/>}
+                                    title={this.props.politician.name}
+                                    subheader={this.props.politician.party}
                                     action={
                                         <Typography className={classes.sentiment} color='primary'>
-                                            {this.props.politicianOpinions.politician.sentiment}
+                                            {this.props.politician.sentiment.toFixed(1)}
                                         </Typography>
                                     }
                         />
                         <CardContent>
                             {
-                                this.props.politicianOpinions.opinions.slice(0, 1).map((opinion: Opinion, index) => {
+                                this.props.politician.opinions.slice(0, 1).map((opinion: Opinion, index) => {
                                     return (
                                         <Tweet
                                             options={{
@@ -109,7 +109,7 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
                         <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
                             <CardContent>
                                 {
-                                    this.props.politicianOpinions.opinions.slice(1).map((opinion: Opinion, index) => {
+                                    this.props.politician.opinions.slice(1).map((opinion: Opinion, index) => {
                                         return (
                                             <Tweet
                                                 options={{
