@@ -6,7 +6,7 @@ import {
     CardActions,
     CardContent,
     CardHeader, Collapse, createStyles,
-    Fade, IconButton, Theme,
+    Fade, IconButton, Link as MuiLink, Theme,
     Typography, WithStyles, withStyles
 } from '@material-ui/core';
 import { Tweet } from 'react-twitter-widgets'
@@ -16,6 +16,7 @@ import { ExpandMore } from '@material-ui/icons'
 import clsx from 'clsx';
 import { politicianNameToImagePath } from '../utils/ImagePath';
 import Politician from '../model/Politician';
+import Link from 'next/link';
 
 interface IProps extends WithStyles<typeof styles> {
     politician: Politician;
@@ -82,15 +83,19 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
             <Waypoint onEnter={this.onEnterViewport.bind(this)} onLeave={this.onExitViewport.bind(this)}>
                 <Fade in={this.state.visible} timeout={2000}>
                     <Card className={classes.card} elevation={1}>
-                        <CardHeader avatar={<Avatar src={politicianNameToImagePath(this.props.politician.name)}/>}
-                                    title={this.props.politician.name}
-                                    subheader={this.props.politician.party}
-                                    action={
-                                        <Typography className={classes.sentiment} color='primary'>
-                                            {this.props.politician.sentiment.toFixed(1)}
-                                        </Typography>
-                                    }
-                        />
+                        <Link href='/politicians/[id]' as={`/politicians/${this.props.politician.id}`}>
+                            <MuiLink href='#' underline='none'>
+                                <CardHeader avatar={<Avatar src={politicianNameToImagePath(this.props.politician.name)}/>}
+                                            title={this.props.politician.name}
+                                            subheader={this.props.politician.party}
+                                            action={
+                                                <Typography className={classes.sentiment} color='primary'>
+                                                    {this.props.politician.sentiment.toFixed(1)}
+                                                </Typography>
+                                            }
+                                />
+                            </MuiLink>
+                        </Link>
                         <CardContent>
                             {
                                 this.props.politician.opinions.slice(0, 1).map((opinion: Opinion, index) => {

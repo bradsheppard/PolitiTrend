@@ -67,7 +67,6 @@ const Header = (props: Props) => {
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>
-
         </React.Fragment>
 
     );
