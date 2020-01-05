@@ -83,7 +83,7 @@ describe('Opinion Controller', () => {
 
 	it('can insert on event', async () => {
 		const opinion = createOpinion();
-		const insertSpy = jest.spyOn(service, 'insert').mockImplementation();
+		const insertSpy = jest.spyOn(service, 'upsertOnTweetId').mockImplementation();
 		await controller.handleOpinionCreated(opinion);
 		expect(insertSpy).toBeCalled();
 	});

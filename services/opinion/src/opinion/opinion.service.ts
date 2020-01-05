@@ -59,7 +59,7 @@ export class OpinionService {
 		return true;
 	}
 
-	async upsertOnTweetId(opinion: Opinion): Promise<Opinion> {
+	async upsertOnTweetId(opinion: CreateOpinionDto): Promise<Opinion> {
 		const insertResult: InsertResult = await this.connection.createQueryBuilder()
 			.insert()
 			.into(Opinion)
@@ -68,7 +68,7 @@ export class OpinionService {
 			.setParameter('tweetText', opinion.tweetText)
 			.execute();
 
-		const insertedOpinion = Object.assign({}, opinion);
+		const insertedOpinion: Opinion = Object.assign({}, opinion) as Opinion;
 		insertedOpinion.id = insertResult.identifiers[0].id;
 
 		return insertedOpinion;
