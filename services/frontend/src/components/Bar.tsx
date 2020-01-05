@@ -43,11 +43,11 @@ const Header = (props: Props) => {
     return (
         <React.Fragment>
             <HideOnScroll {...props}>
-                <AppBar position="fixed" color="secondary">
+                <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', boxShadow: 'none'}}>
                     <Toolbar>
                         <div className={classes.title}>
                             <Link href='/' passHref>
-                                <Typography variant="h5" component='a' className={classes.titleText}>
+                                <Typography variant="h6" component='a' className={classes.titleText}>
                                     {capitalize(Globals.name)}
                                 </Typography>
                             </Link>
@@ -67,7 +67,7 @@ const Header = (props: Props) => {
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>
-            <Toolbar />
+
         </React.Fragment>
 
     );

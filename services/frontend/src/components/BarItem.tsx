@@ -21,7 +21,7 @@ const BarItem = (props: IProps) => {
 
     return (
         <Link href={link} passHref>
-            <Typography variant="h6" component='a' className={classes.menuItem}>
+            <Typography variant="subtitle1" component='a' className={classes.menuItem}>
                 {props.children}
             </Typography>
         </Link>
