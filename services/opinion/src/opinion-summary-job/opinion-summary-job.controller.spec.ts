@@ -28,6 +28,15 @@ describe('OpinionSummaryJob Controller', () => {
 		} as OpinionSummaryJob;
 	}
 
+	function createOpinionSummary() {
+		id++;
+		return {
+			id,
+			sentiment: id,
+			politician: id,
+		} as OpinionSummary;
+	}
+
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [OpinionSummaryJobController],
@@ -89,10 +98,11 @@ describe('OpinionSummaryJob Controller', () => {
 		expect(resultingJob.status).toEqual(JobStatus.Error);
 	});
 
-	it('can create, job error when no opinions', async () => {
+	it('can create, job completed when opinions exist', async () => {
 		const opinionSummaryJob = createOpinionSummaryJob();
+		const opinionSummary = createOpinionSummary();
 		jest.spyOn(opinionService, 'getSentimentAverageForPolitician').mockResolvedValueOnce(5);
-		jest.spyOn(opinionSummaryService, 'insert').mockImplementation();
+		jest.spyOn(opinionSummaryService, 'insert').mockResolvedValueOnce(opinionSummary);
 		jest.spyOn(opinionSummaryJobService, 'insert').mockResolvedValueOnce(opinionSummaryJob);
 		jest.spyOn(opinionSummaryJobService, 'update').mockImplementation();
 

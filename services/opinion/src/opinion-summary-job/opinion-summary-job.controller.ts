@@ -45,12 +45,15 @@ export class OpinionSummaryJobController {
 			sentiment,
 		};
 
-		await this.opinionSummaryService.insert(createOpinionSummaryDto);
-		return await this.updateJobStatus(opinionSummaryJob, JobStatus.Completed);
+		const opinionSummary = await this.opinionSummaryService.insert(createOpinionSummaryDto);
+		return await this.updateJobStatus(opinionSummaryJob, JobStatus.Completed, opinionSummary.id);
 	}
 
-	private async updateJobStatus(opinionSummaryJob: OpinionSummaryJob, jobStatus: JobStatus) {
+	private async updateJobStatus(opinionSummaryJob: OpinionSummaryJob, jobStatus: JobStatus, opinionSummary?: number) {
 		opinionSummaryJob.status = jobStatus;
+		if (opinionSummary) {
+ 			opinionSummaryJob.opinionSummary = opinionSummary;
+		}
 		await this.opinionSummaryJobService.update(opinionSummaryJob);
 		return opinionSummaryJob;
 	}

@@ -91,6 +91,7 @@ describe('OpinionSummaryJobController (e2e)', () => {
 
 		expect(response.status).toEqual(201);
 		expect(insertedOpinionSummaryJob.status).toBe(JobStatus.Completed);
+		expect(insertedOpinionSummaryJob.opinionSummary).not.toBeNaN();
 	});
 
 	it('/ (POST), opinions don\'t exist for politician', async () => {
