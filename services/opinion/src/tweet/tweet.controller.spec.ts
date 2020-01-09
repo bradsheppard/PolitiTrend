@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OpinionController } from './opinion.controller';
-import { OpinionService } from './opinion.service';
+import { TweetController } from './tweet.controller';
+import { TweetService } from './tweet.service';
 import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
-import Opinion from './opinion.entity';
+import Tweet from './tweet.entity';
 import { Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
 
-describe('Opinion Controller', () => {
-	let controller: OpinionController;
-	let service: OpinionService;
+describe('Tweet Controller', () => {
+	let controller: TweetController;
+	let service: TweetService;
 
 	let id = 0;
 
@@ -20,26 +20,26 @@ describe('Opinion Controller', () => {
 			sentiment: id + 0.25,
 			tweetId: id.toString(),
 			politician: id,
-		} as Opinion;
+		} as Tweet;
 	}
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			controllers: [OpinionController],
-			providers: [OpinionService,
+			controllers: [TweetController],
+			providers: [TweetService,
 				{
 					provide: getConnectionToken(),
 					useValue: {},
 				},
 				{
-					provide: getRepositoryToken(Opinion),
+					provide: getRepositoryToken(Tweet),
 					useClass: Repository,
 				},
 			],
 		}).compile();
 
-		controller = module.get<OpinionController>(OpinionController);
-		service = module.get<OpinionService>(OpinionService);
+		controller = module.get<TweetController>(TweetController);
+		service = module.get<TweetService>(TweetService);
 	});
 
 	it('should be defined', () => {

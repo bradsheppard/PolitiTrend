@@ -1,4 +1,5 @@
-export class CreateOpinionDto {
+export class UpdateTweetDto {
+	id: number;
 	politician: number;
 	sentiment: number;
 	tweetId: string;

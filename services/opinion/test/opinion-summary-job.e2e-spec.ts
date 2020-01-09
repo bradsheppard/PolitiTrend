@@ -4,12 +4,12 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { OpinionSummaryJobService } from '../src/opinion-summary-job/opinion-summary-job.service';
 import OpinionSummaryJob, { JobStatus } from '../src/opinion-summary-job/opinion-summary-job.entity';
-import { OpinionService } from '../src/opinion/opinion.service';
-import Opinion from '../src/opinion/opinion.entity';
+import { TweetService } from '../src/tweet/tweet.service';
+import Tweet from '../src/tweet/tweet.entity';
 
 let app: INestApplication;
 let opinionSummaryJobService: OpinionSummaryJobService;
-let opinionService: OpinionService;
+let opinionService: TweetService;
 
 beforeAll(async () => {
 	const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -19,7 +19,7 @@ beforeAll(async () => {
 	app = moduleFixture.createNestApplication();
 
 	opinionSummaryJobService = moduleFixture.get<OpinionSummaryJobService>(OpinionSummaryJobService);
-	opinionService = moduleFixture.get<OpinionService>(OpinionService);
+	opinionService = moduleFixture.get<TweetService>(TweetService);
 
 	await app.init();
 });
@@ -51,7 +51,7 @@ function createOpinion() {
 		sentiment: id,
 		tweetId: id.toString(),
 		tweetText: id.toString(),
-	} as Opinion;
+	} as Tweet;
 }
 
 describe('OpinionSummaryJobController (e2e)', () => {

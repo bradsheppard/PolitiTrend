@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { OpinionSummaryJobService } from './opinion-summary-job.service';
 import { CreateOpinionSummaryJobDto } from './dto/create-opinion-summary-job.dto';
-import { OpinionService } from '../opinion/opinion.service';
+import { TweetService } from '../tweet/tweet.service';
 import OpinionSummaryJob, { JobStatus } from './opinion-summary-job.entity';
 import { OpinionSummaryService } from '../opinion-summary/opinion-summary.service';
 import { CreateOpinionSummaryDto } from '../opinion-summary/dto/create-opinion-summary.dto';
@@ -10,7 +10,7 @@ import { CreateOpinionSummaryDto } from '../opinion-summary/dto/create-opinion-s
 export class OpinionSummaryJobController {
 
 	constructor(
-		private readonly opinionService: OpinionService,
+		private readonly opinionService: TweetService,
 		private readonly opinionSummaryService: OpinionSummaryService,
 		private readonly opinionSummaryJobService: OpinionSummaryJobService,
 	) {}

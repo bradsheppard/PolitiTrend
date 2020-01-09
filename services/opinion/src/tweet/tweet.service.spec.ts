@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OpinionService } from './opinion.service';
+import { TweetService } from './tweet.service';
 import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
-import Opinion from './opinion.entity';
+import Tweet from './tweet.entity';
 import { Repository } from 'typeorm';
 
-describe('Opinion Service', () => {
-	let service: OpinionService;
-	let repository: Repository<Opinion>;
+describe('Tweet Service', () => {
+	let service: TweetService;
+	let repository: Repository<Tweet>;
 
 	let id = 0;
 
@@ -17,25 +17,25 @@ describe('Opinion Service', () => {
 			sentiment: id + 0.25,
 			tweetId: id.toString(),
 			politician: id,
-		} as Opinion;
+		} as Tweet;
 	}
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [OpinionService,
+			providers: [TweetService,
 				{
 					provide: getConnectionToken(),
 					useValue: {},
 				},
 				{
-					provide: getRepositoryToken(Opinion),
+					provide: getRepositoryToken(Tweet),
 					useClass: Repository,
 				},
 			],
 		}).compile();
 
-		service = module.get<OpinionService>(OpinionService);
-		repository = module.get<Repository<Opinion>>(getRepositoryToken(Opinion));
+		service = module.get<TweetService>(TweetService);
+		repository = module.get<Repository<Tweet>>(getRepositoryToken(Tweet));
 	});
 
 	it('should be defined', () => {

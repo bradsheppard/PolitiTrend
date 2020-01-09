@@ -5,16 +5,16 @@ import { HttpException } from '@nestjs/common';
 import { OpinionSummaryJobService } from './opinion-summary-job.service';
 import { OpinionSummaryJobController } from './opinion-summary-job.controller';
 import OpinionSummaryJob, { JobStatus } from './opinion-summary-job.entity';
-import { OpinionService } from '../opinion/opinion.service';
+import { TweetService } from '../tweet/tweet.service';
 import { OpinionSummaryService } from '../opinion-summary/opinion-summary.service';
 import OpinionSummary from '../opinion-summary/opinion-summary.entity';
-import Opinion from '../opinion/opinion.entity';
+import Tweet from '../tweet/tweet.entity';
 
 describe('OpinionSummaryJob Controller', () => {
 	let controller: OpinionSummaryJobController;
 	let opinionSummaryJobService: OpinionSummaryJobService;
 	let opinionSummaryService: OpinionSummaryService;
-	let opinionService: OpinionService;
+	let opinionService: TweetService;
 
 	let id = 0;
 
@@ -40,7 +40,7 @@ describe('OpinionSummaryJob Controller', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [OpinionSummaryJobController],
-			providers: [OpinionSummaryJobService, OpinionSummaryService, OpinionService,
+			providers: [OpinionSummaryJobService, OpinionSummaryService, TweetService,
 				{
 					provide: getConnectionToken(),
 					useValue: {},
@@ -54,7 +54,7 @@ describe('OpinionSummaryJob Controller', () => {
 					useClass: Repository,
 				},
 				{
-					provide: getRepositoryToken(Opinion),
+					provide: getRepositoryToken(Tweet),
 					useClass: Repository,
 				},
 			],
@@ -63,7 +63,7 @@ describe('OpinionSummaryJob Controller', () => {
 		controller = module.get<OpinionSummaryJobController>(OpinionSummaryJobController);
 		opinionSummaryJobService = module.get<OpinionSummaryJobService>(OpinionSummaryJobService);
 		opinionSummaryService = module.get<OpinionSummaryService>(OpinionSummaryService);
-		opinionService = module.get<OpinionService>(OpinionService);
+		opinionService = module.get<TweetService>(TweetService);
 	});
 
 	it('should be defined', () => {

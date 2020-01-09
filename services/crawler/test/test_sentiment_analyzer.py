@@ -11,10 +11,10 @@ def sentiment_analyzer(scope='module'):
 def test_analyze_postive_sentence(sentiment_analyzer):
     sentence = 'What a nice beautiful day'
     prediction = sentiment_analyzer.analyze(sentence)
-    assert prediction > 9
+    assert prediction > 7
 
 
 def test_analyze_negative_sentence(sentiment_analyzer):
     sentence = 'What a horrible day'
     prediction = sentiment_analyzer.analyze(sentence)
-    assert prediction < 1
+    assert prediction < 3

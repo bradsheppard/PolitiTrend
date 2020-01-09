@@ -1,16 +1,16 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
-import { OpinionService } from './opinion.service';
-import { CreateOpinionDto } from './dto/create-opinion.dto';
+import { TweetService } from './tweet.service';
+import { CreateTweetDto } from './dto/create-tweet.dto';
 import { EventPattern } from '@nestjs/microservices';
-import Opinion from './opinion.entity';
-import { SearchOpinionDto } from './dto/search-opinion.dto';
+import Tweet from './tweet.entity';
+import { SearchTweetDto } from './dto/search-tweet.dto';
 
-@Controller()
-export class OpinionController {
-	constructor(private opinionService: OpinionService) {}
+@Controller('tweet')
+export class TweetController {
+	constructor(private opinionService: TweetService) {}
 
 	@Get()
-	async findAll(@Query() query: SearchOpinionDto) {
+	async findAll(@Query() query: SearchTweetDto) {
 		return await this.opinionService.get(query);
 	}
 
@@ -26,7 +26,7 @@ export class OpinionController {
 	}
 
 	@Post()
-	async create(@Body() createOpinionDto: CreateOpinionDto): Promise<Opinion> {
+	async create(@Body() createOpinionDto: CreateTweetDto): Promise<Tweet> {
 		return await this.opinionService.insert(createOpinionDto);
 	}
 
@@ -40,7 +40,7 @@ export class OpinionController {
 	}
 
 	@EventPattern('opinion_created')
-	async handleOpinionCreated(createOpinionDto: CreateOpinionDto) {
+	async handleOpinionCreated(createOpinionDto: CreateTweetDto) {
 		await this.opinionService.upsertOnTweetId(createOpinionDto);
 	}
 }

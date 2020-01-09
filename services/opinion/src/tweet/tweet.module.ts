@@ -1,0 +1,13 @@
+import { Module } from '@nestjs/common';
+import { TweetController } from './tweet.controller';
+import { TweetService } from './tweet.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import Tweet from './tweet.entity';
+
+@Module({
+	controllers: [TweetController],
+	providers: [TweetService],
+	imports: [TypeOrmModule.forFeature([Tweet])],
+	exports: [TweetService],
+})
+export class TweetModule {}
