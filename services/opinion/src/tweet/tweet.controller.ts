@@ -39,8 +39,8 @@ export class TweetController {
 		}
 	}
 
-	@EventPattern('opinion_created')
-	async handleOpinionCreated(createOpinionDto: CreateTweetDto) {
+	@EventPattern('tweet_created')
+	async handleTweetCreated(createOpinionDto: CreateTweetDto) {
 		await this.opinionService.upsertOnTweetId(createOpinionDto);
 	}
 }

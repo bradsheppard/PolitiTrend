@@ -47,10 +47,14 @@ function createOpinionSummaryJob() {
 function createOpinion() {
 	id++;
 	return {
-		politician: id,
-		sentiment: id,
 		tweetId: id.toString(),
 		tweetText: id.toString(),
+		sentiments:[
+			{
+				politician: id,
+				sentiment: id
+			}
+		]
 	} as Tweet;
 }
 
@@ -81,7 +85,7 @@ describe('OpinionSummaryJobController (e2e)', () => {
 		await opinionService.insert(opinion);
 
 		const opinionSummaryJob = createOpinionSummaryJob();
-		opinionSummaryJob.politician = opinion.politician;
+		opinionSummaryJob.politician = opinion.sentiments[0].politician;
 
 		const response = await request(app.getHttpServer())
 			.post('/job/opinionsummary')

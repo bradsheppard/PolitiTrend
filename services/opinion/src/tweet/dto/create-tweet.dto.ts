@@ -1,6 +1,7 @@
+import { CreateSentimentDto } from '../../opinion/dto/create-sentiment.dto';
+
 export class CreateTweetDto {
-	politician: number;
-	sentiment: number;
+	sentiments: CreateSentimentDto[];
 	tweetId: string;
 	tweetText: string;
 }

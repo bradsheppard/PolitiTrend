@@ -21,10 +21,23 @@ let id = 0;
 function createTweetDto() {
 	id++;
 	return {
-		tweetText: `test text ${id}`,
-		sentiment: id + 0.25,
 		tweetId: id.toString(),
-		politician: id,
+		tweetText: `Test tweet ${id}`,
+		sentiments: []
+	} as CreateTweetDto;
+}
+
+function createTweetForPolitician(politicianId: number, sentiment: number) {
+	id++;
+	return {
+		tweetText: `test text ${id}`,
+		tweetId: id.toString(),
+		sentiments: [
+			{
+				politician: politicianId,
+				sentiment: sentiment
+			}
+		]
 	} as CreateTweetDto;
 }
 
@@ -139,29 +152,11 @@ describe('TweetController (e2e)', () => {
 
 describe('TweetService (e2e)', () => {
 
-	function createTweet() {
-		id++;
-		return {
-			tweetText: `test text ${id}`,
-			sentiment: id + 0.25,
-			tweetId: id.toString(),
-			politician: id,
-		} as Tweet;
-	}
 
-	function createTweetForPolitician(politicianId: number, sentiment: number) {
-		id++;
-		return {
-			tweetText: `test text ${id}`,
-			sentiment,
-			tweetId: id.toString(),
-			politician: politicianId,
-		} as Tweet;
-	}
 
 	it('Can get all', async () => {
-		const tweet1 = createTweet();
-		const tweet2 = createTweet();
+		const tweet1 = createTweetDto();
+		const tweet2 = createTweetDto();
 
 		const firstInsert = await service.insert(tweet1);
 		const secondInsert = await service.insert(tweet2);
@@ -172,7 +167,7 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can get', async () => {
-		const tweet = createTweet();
+		const tweet = createTweetDto() as Tweet;
 		const insertedTweet = await service.insert(tweet);
 		tweet.id = insertedTweet.id;
 
@@ -182,18 +177,20 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can get by politician', async () => {
-		const tweet = createTweet();
-		const insertedTweet = await service.insert(tweet);
+		const tweet1 = createTweetDto();
+		const tweet2 = createTweetDto();
+		const insertedTweet1 = await service.insert(tweet1);
+		await service.insert(tweet2);
 
-		const politicianTweets = await service.get({politician: insertedTweet.politician});
+		const politicianTweets = await service.get({politician: insertedTweet1.sentiments[0].politician});
 
-		for (const politician of politicianTweets) {
-			expect(politician.politician).toEqual(insertedTweet.politician);
+		for (const tweet of politicianTweets) {
+			expect(tweet.sentiments[0].politician).toEqual(insertedTweet1.sentiments[0].politician);
 		}
 	});
 
 	it('Can delete', async () => {
-		const tweet = createTweet();
+		const tweet = createTweetDto();
 		const insertedTweet = await service.insert(tweet);
 		await service.deleteOne(insertedTweet.id);
 
@@ -203,7 +200,7 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can update', async () => {
-		const tweet = createTweet();
+		const tweet = createTweetDto();
 		const insertedTweet = await service.insert(tweet);
 		insertedTweet.tweetText = 'New tweet text';
 		await service.update(insertedTweet);
@@ -214,7 +211,7 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can upsert on tweet Id, new tweet inserted', async () => {
-		const tweet = createTweet();
+		const tweet = createTweetDto();
 
 		const upsertedTweet = await service.upsertOnTweetId(tweet);
 
@@ -223,7 +220,7 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can upsert on tweet Id, existing tweet updated', async () => {
-		const tweet = createTweet();
+		const tweet = createTweetDto();
 
 		const insertedTweet = await service.insert(tweet);
 		insertedTweet.tweetText = 'Some new text';

@@ -12,14 +12,18 @@ describe('Tweet Controller', () => {
 
 	let id = 0;
 
-	function createOpinion() {
+	function createTweet() {
 		id++;
 		return {
 			id,
 			tweetText: `test text ${id}`,
-			sentiment: id + 0.25,
 			tweetId: id.toString(),
-			politician: id,
+			sentiments: [
+				{
+					politician: id,
+					sentiment: id
+				}
+			],
 		} as Tweet;
 	}
 
@@ -48,22 +52,22 @@ describe('Tweet Controller', () => {
 	});
 
 	it('can get all', async () => {
-		const opinion = createOpinion();
-		jest.spyOn(service, 'get').mockResolvedValueOnce([opinion]);
-		expect(await controller.findAll({})).toEqual([opinion]);
+		const tweet = createTweet();
+		jest.spyOn(service, 'get').mockResolvedValueOnce([tweet]);
+		expect(await controller.findAll({})).toEqual([tweet]);
 	});
 
 	it('can get with politician', async () => {
-		const opinion = createOpinion();
-		const getSpy = jest.spyOn(service, 'get').mockResolvedValueOnce([opinion]);
+		const tweet = createTweet();
+		const getSpy = jest.spyOn(service, 'get').mockResolvedValueOnce([tweet]);
 		await controller.findAll({politician: 1});
 		expect(getSpy).toBeCalledWith({politician: 1});
 	});
 
 	it('can get one when exists', async () => {
-		const opinion = createOpinion();
-		jest.spyOn(service, 'getOne').mockResolvedValueOnce(opinion);
-		expect(await controller.findOne(opinion.id.toString())).toEqual(opinion);
+		const tweet = createTweet();
+		jest.spyOn(service, 'getOne').mockResolvedValueOnce(tweet);
+		expect(await controller.findOne(tweet.id.toString())).toEqual(tweet);
 	});
 
 	it('cant get returns 404 when not exists', async () => {
@@ -82,9 +86,9 @@ describe('Tweet Controller', () => {
 	});
 
 	it('can insert on event', async () => {
-		const opinion = createOpinion();
+		const tweet = createTweet();
 		const insertSpy = jest.spyOn(service, 'upsertOnTweetId').mockImplementation();
-		await controller.handleOpinionCreated(opinion);
+		await controller.handleTweetCreated(tweet);
 		expect(insertSpy).toBeCalled();
 	});
 });

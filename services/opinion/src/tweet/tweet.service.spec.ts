@@ -14,9 +14,13 @@ describe('Tweet Service', () => {
 		id++;
 		return {
 			tweetText: `test text ${id}`,
-			sentiment: id + 0.25,
 			tweetId: id.toString(),
-			politician: id,
+			sentiments: [
+				{
+					politician: id,
+					sentiment: id
+				}
+			],
 		} as Tweet;
 	}
 

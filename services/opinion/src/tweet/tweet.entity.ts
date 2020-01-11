@@ -1,18 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, Index, Unique } from 'typeorm';
+import { Column, Index, Unique, ChildEntity } from 'typeorm';
+import { Opinion } from '../opinion/opinion.entity';
 
-@Entity()
+@ChildEntity()
 @Unique(['tweetId'])
-export default class Tweet {
-	@PrimaryGeneratedColumn()
-	id: number;
-
-	@Index()
-	@Column()
-	politician: number;
-
-	@Column({type: 'double precision'})
-	sentiment: number;
-
+export default class Tweet extends Opinion {
 	@Index()
 	@Column()
 	tweetId: string;
