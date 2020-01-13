@@ -2,15 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { CreateTweetDto } from '../src/tweet/dto/create-tweet.dto';
-import Tweet from '../src/tweet/tweet.entity';
-import { TweetService } from '../src/tweet/tweet.service';
+import { CreateTweetDto } from '../src/opinion/tweet/dto/create-tweet.dto';
+import Tweet from '../src/opinion/tweet/tweet.entity';
+import { TweetService } from '../src/opinion/tweet/tweet.service';
 import { ClientProxy, ClientsModule } from '@nestjs/microservices';
 import microserviceConfig from '../src/config/config.microservice';
 import { ClientProviderOptions } from '@nestjs/microservices/module/interfaces/clients-module.interface';
 import waitForExpect from 'wait-for-expect';
 waitForExpect.defaults.timeout = 20000;
-jest.setTimeout(60000);
+jest.setTimeout(30000);
 
 let app: INestApplication;
 let service: TweetService;
@@ -23,21 +23,12 @@ function createTweetDto() {
 	return {
 		tweetId: id.toString(),
 		tweetText: `Test tweet ${id}`,
-		sentiments: []
-	} as CreateTweetDto;
-}
-
-function createTweetForPolitician(politicianId: number, sentiment: number) {
-	id++;
-	return {
-		tweetText: `test text ${id}`,
-		tweetId: id.toString(),
 		sentiments: [
 			{
-				politician: politicianId,
-				sentiment: sentiment
-			}
-		]
+				politician: id,
+				value: id,
+			},
+		],
 	} as CreateTweetDto;
 }
 
@@ -71,23 +62,19 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-	await app.close();
 	await client.close();
+	await app.close();
 });
 
 beforeEach(async () => {
 	await service.delete();
 });
 
-afterEach(() => {
-	jest.resetAllMocks();
-});
-
 describe('TweetController (e2e)', () => {
 
 	it('/ (GET)', async () => {
 		const response = await request(app.getHttpServer())
-		  .get('/');
+		  .get('/tweet');
 
 		expect(response.status).toEqual(200);
 	});
@@ -95,12 +82,13 @@ describe('TweetController (e2e)', () => {
 	it('/ (POST)', async () => {
 		const tweetDto = createTweetDto();
 		const res = await request(app.getHttpServer())
-			.post('/')
+			.post('/tweet')
 			.send(tweetDto);
 
 		const resultingTweet = res.body as Tweet;
 		const insertedTweet = tweetDto as Tweet;
 		insertedTweet.id = resultingTweet.id;
+		insertedTweet.sentiments[0].id = resultingTweet.sentiments[0].id;
 
 		expect(res.status).toEqual(201);
 		expect(resultingTweet).toEqual(insertedTweet);
@@ -109,12 +97,12 @@ describe('TweetController (e2e)', () => {
 	it('/:id (GET)', async () => {
 		const tweetDto = createTweetDto();
 		const postResponse = await request(app.getHttpServer())
-			.post('/')
+			.post('/tweet')
 			.send(tweetDto);
 
 		const resultingTweet = postResponse.body as Tweet;
 		const getResponse = await request(app.getHttpServer())
-			.get(`/${resultingTweet.id}`);
+			.get(`/tweet/${resultingTweet.id}`);
 
 		expect(getResponse.status).toEqual(200);
 		expect(getResponse.body).toEqual(resultingTweet);
@@ -123,15 +111,15 @@ describe('TweetController (e2e)', () => {
 	it('/:id (DELETE)', async () => {
 		const tweetDto = createTweetDto();
 		const postResponse = await request(app.getHttpServer())
-			.post('/')
+			.post('/tweet')
 			.send(tweetDto);
 
 		const resultingTweet = postResponse.body as Tweet;
 
 		const deleteResponse = await request(app.getHttpServer())
-			.delete(`/${resultingTweet.id}`);
+			.delete(`/tweet/${resultingTweet.id}`);
 		const getResponse = await request(app.getHttpServer())
-			.get(`/${resultingTweet.id}`);
+			.get(`/tweet/${resultingTweet.id}`);
 
 		expect(deleteResponse.status).toEqual(200);
 		expect(getResponse.status).toEqual(404);
@@ -144,15 +132,13 @@ describe('TweetController (e2e)', () => {
 		expect(json[0].topicName).toEqual('tweet_created');
 
 		await waitForExpect(async () => {
-			const tweets: Tweet[] = await service.get();
+			const tweets: Tweet[] = await service.get({});
 			expect(tweets.length).toEqual(1);
 		});
 	});
 });
 
 describe('TweetService (e2e)', () => {
-
-
 
 	it('Can get all', async () => {
 		const tweet1 = createTweetDto();
@@ -161,9 +147,9 @@ describe('TweetService (e2e)', () => {
 		const firstInsert = await service.insert(tweet1);
 		const secondInsert = await service.insert(tweet2);
 
-		const Tweets = await service.get({});
+		const tweets = await service.get({});
 
-		expect(Tweets).toEqual([firstInsert, secondInsert]);
+		expect(tweets).toEqual([firstInsert, secondInsert]);
 	});
 
 	it('Can get', async () => {
@@ -184,6 +170,7 @@ describe('TweetService (e2e)', () => {
 
 		const politicianTweets = await service.get({politician: insertedTweet1.sentiments[0].politician});
 
+		expect(politicianTweets).toHaveLength(1);
 		for (const tweet of politicianTweets) {
 			expect(tweet.sentiments[0].politician).toEqual(insertedTweet1.sentiments[0].politician);
 		}
@@ -194,9 +181,9 @@ describe('TweetService (e2e)', () => {
 		const insertedTweet = await service.insert(tweet);
 		await service.deleteOne(insertedTweet.id);
 
-		const tweets: Tweet[] = await service.get({id: insertedTweet.id});
+		const retrievedTweet: Tweet | null = await service.getOne(insertedTweet.id);
 
-		expect(tweets).toHaveLength(0);
+		expect(retrievedTweet).toBeNull();
 	});
 
 	it('Can update', async () => {
@@ -216,7 +203,7 @@ describe('TweetService (e2e)', () => {
 		const upsertedTweet = await service.upsertOnTweetId(tweet);
 
 		const retrievedTweet = await service.getOne(upsertedTweet.id);
-		expect(retrievedTweet).toEqual(tweet);
+		expect(retrievedTweet).toEqual(upsertedTweet);
 	});
 
 	it('Can upsert on tweet Id, existing tweet updated', async () => {
@@ -231,32 +218,21 @@ describe('TweetService (e2e)', () => {
 		expect(retrievedTweet).toEqual(insertedTweet);
 	});
 
-	it('Can get sentiment average', async () => {
-		const testTweet1 = createTweetForPolitician(60, 6.5);
-		const testTweet2 = createTweetForPolitician(60, 9);
+	it('Can upsert on tweetId, sentiments updated', async () => {
+		const tweet = createTweetDto();
 
-		await service.insert(testTweet1);
-		await service.insert(testTweet2);
+		const insertedTweet = await service.insert(tweet);
+		tweet.sentiments = [
+			{
+				politician: 45,
+				value: 4.5,
+			},
+		];
 
-		const averageSentiment = await service.getSentimentAverageForPolitician(60);
-		expect(averageSentiment).toEqual(7.75);
-	});
+		await service.upsertOnTweetId(tweet);
 
-	it('Can get sentiment average, nonexistent politician', async () => {
-		const testTweet1 = createTweetForPolitician(62, 6.5);
-		const testTweet2 = createTweetForPolitician(62, 9);
-
-		await service.insert(testTweet1);
-		await service.insert(testTweet2);
-
-		const averageSentiment = await service.getSentimentAverageForPolitician(999);
-		expect(averageSentiment).toBeNull();
-	});
-
-	it('Can get sentiment average when no politicians', async () => {
-		await service.delete();
-
-		const averageSentiment = await service.getSentimentAverageForPolitician(1);
-		expect(averageSentiment).toBeNull();
+		const retrievedTweet = await service.getOne(insertedTweet.id);
+		expect(retrievedTweet.tweetText).toEqual(tweet.tweetText);
+		expect(retrievedTweet.sentiments).toEqual(tweet.sentiments);
 	});
 });

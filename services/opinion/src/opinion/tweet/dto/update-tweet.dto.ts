@@ -1,4 +1,4 @@
-import { CreateSentimentDto } from '../../opinion/dto/create-sentiment.dto';
+import { CreateSentimentDto } from '../../../sentiment/dto/create-sentiment.dto';
 
 export class UpdateTweetDto {
 	id: number;

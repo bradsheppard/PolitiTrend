@@ -5,16 +5,16 @@ import { HttpException } from '@nestjs/common';
 import { OpinionSummaryJobService } from './opinion-summary-job.service';
 import { OpinionSummaryJobController } from './opinion-summary-job.controller';
 import OpinionSummaryJob, { JobStatus } from './opinion-summary-job.entity';
-import { TweetService } from '../tweet/tweet.service';
 import { OpinionSummaryService } from '../opinion-summary/opinion-summary.service';
 import OpinionSummary from '../opinion-summary/opinion-summary.entity';
-import Tweet from '../tweet/tweet.entity';
+import { SentimentService } from '../sentiment/sentiment.service';
+import { Sentiment } from '../sentiment/sentiment.entity';
 
 describe('OpinionSummaryJob Controller', () => {
 	let controller: OpinionSummaryJobController;
 	let opinionSummaryJobService: OpinionSummaryJobService;
 	let opinionSummaryService: OpinionSummaryService;
-	let opinionService: TweetService;
+	let sentimentService: SentimentService;
 
 	let id = 0;
 
@@ -40,7 +40,7 @@ describe('OpinionSummaryJob Controller', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [OpinionSummaryJobController],
-			providers: [OpinionSummaryJobService, OpinionSummaryService, TweetService,
+			providers: [OpinionSummaryJobService, OpinionSummaryService, SentimentService,
 				{
 					provide: getConnectionToken(),
 					useValue: {},
@@ -54,7 +54,7 @@ describe('OpinionSummaryJob Controller', () => {
 					useClass: Repository,
 				},
 				{
-					provide: getRepositoryToken(Tweet),
+					provide: getRepositoryToken(Sentiment),
 					useClass: Repository,
 				},
 			],
@@ -63,7 +63,7 @@ describe('OpinionSummaryJob Controller', () => {
 		controller = module.get<OpinionSummaryJobController>(OpinionSummaryJobController);
 		opinionSummaryJobService = module.get<OpinionSummaryJobService>(OpinionSummaryJobService);
 		opinionSummaryService = module.get<OpinionSummaryService>(OpinionSummaryService);
-		opinionService = module.get<TweetService>(TweetService);
+		sentimentService = module.get<SentimentService>(SentimentService);
 	});
 
 	it('should be defined', () => {
@@ -90,7 +90,7 @@ describe('OpinionSummaryJob Controller', () => {
 
 	it('can create, job error when no opinions', async () => {
 		const opinionSummaryJob = createOpinionSummaryJob();
-		jest.spyOn(opinionService, 'getSentimentAverageForPolitician').mockResolvedValueOnce(null);
+		jest.spyOn(sentimentService, 'getSentimentAverageForPolitician').mockResolvedValueOnce(null);
 		jest.spyOn(opinionSummaryJobService, 'insert').mockResolvedValueOnce(opinionSummaryJob);
 		jest.spyOn(opinionSummaryJobService, 'update').mockImplementation();
 
@@ -101,7 +101,7 @@ describe('OpinionSummaryJob Controller', () => {
 	it('can create, job completed when opinions exist', async () => {
 		const opinionSummaryJob = createOpinionSummaryJob();
 		const opinionSummary = createOpinionSummary();
-		jest.spyOn(opinionService, 'getSentimentAverageForPolitician').mockResolvedValueOnce(5);
+		jest.spyOn(sentimentService, 'getSentimentAverageForPolitician').mockResolvedValueOnce(5);
 		jest.spyOn(opinionSummaryService, 'insert').mockResolvedValueOnce(opinionSummary);
 		jest.spyOn(opinionSummaryJobService, 'insert').mockResolvedValueOnce(opinionSummaryJob);
 		jest.spyOn(opinionSummaryJobService, 'update').mockImplementation();

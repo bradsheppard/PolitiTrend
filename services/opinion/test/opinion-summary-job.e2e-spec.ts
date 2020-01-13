@@ -4,8 +4,8 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { OpinionSummaryJobService } from '../src/opinion-summary-job/opinion-summary-job.service';
 import OpinionSummaryJob, { JobStatus } from '../src/opinion-summary-job/opinion-summary-job.entity';
-import { TweetService } from '../src/tweet/tweet.service';
-import Tweet from '../src/tweet/tweet.entity';
+import { TweetService } from '../src/opinion/tweet/tweet.service';
+import Tweet from '../src/opinion/tweet/tweet.entity';
 
 let app: INestApplication;
 let opinionSummaryJobService: OpinionSummaryJobService;
@@ -49,12 +49,12 @@ function createOpinion() {
 	return {
 		tweetId: id.toString(),
 		tweetText: id.toString(),
-		sentiments:[
+		sentiments: [
 			{
 				politician: id,
-				sentiment: id
-			}
-		]
+				value: id,
+			},
+		],
 	} as Tweet;
 }
 

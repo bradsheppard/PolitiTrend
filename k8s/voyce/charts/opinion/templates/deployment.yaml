@@ -28,12 +28,12 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /tweet
               port: http
             initialDelaySeconds: 30
           readinessProbe:
             httpGet:
-              path: /
+              path: /tweet
               port: http
             initialDelaySeconds: 30
           resources:

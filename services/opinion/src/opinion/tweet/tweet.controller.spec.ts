@@ -5,6 +5,7 @@ import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import Tweet from './tweet.entity';
 import { Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
+import { Sentiment } from '../../sentiment/sentiment.entity';
 
 describe('Tweet Controller', () => {
 	let controller: TweetController;
@@ -21,8 +22,8 @@ describe('Tweet Controller', () => {
 			sentiments: [
 				{
 					politician: id,
-					sentiment: id
-				}
+					value: id,
+				},
 			],
 		} as Tweet;
 	}
@@ -37,6 +38,10 @@ describe('Tweet Controller', () => {
 				},
 				{
 					provide: getRepositoryToken(Tweet),
+					useClass: Repository,
+				},
+				{
+					provide: getRepositoryToken(Sentiment),
 					useClass: Repository,
 				},
 			],

@@ -1,12 +1,12 @@
 import { Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
-import { OpinionSentiment } from './opinion-sentiment.entity';
+import { Sentiment } from '../sentiment/sentiment.entity';
 
 @Entity()
 @TableInheritance({column: {type: 'varchar', name: 'type'}})
 export abstract class Opinion {
-    @PrimaryGeneratedColumn()
-    id: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-    @OneToMany(type => OpinionSentiment, sentiment => sentiment.opinion)
-    sentiments: OpinionSentiment[];
+	@OneToMany(type => Sentiment, sentiment => sentiment.opinion, {cascade: true, eager: true})
+	sentiments: Sentiment[];
 }

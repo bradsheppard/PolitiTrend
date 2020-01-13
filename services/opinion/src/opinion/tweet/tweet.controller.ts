@@ -7,16 +7,16 @@ import { SearchTweetDto } from './dto/search-tweet.dto';
 
 @Controller('tweet')
 export class TweetController {
-	constructor(private opinionService: TweetService) {}
+	constructor(private tweetService: TweetService) {}
 
 	@Get()
 	async findAll(@Query() query: SearchTweetDto) {
-		return await this.opinionService.get(query);
+		return await this.tweetService.get(query);
 	}
 
 	@Get(':id')
 	async findOne(@Param('id') id: string) {
-		const opinion = await this.opinionService.getOne(parseInt(id, 10));
+		const opinion = await this.tweetService.getOne(parseInt(id, 10));
 
 		if (!opinion) {
 			throw new HttpException('Not found', HttpStatus.NOT_FOUND);
@@ -27,12 +27,12 @@ export class TweetController {
 
 	@Post()
 	async create(@Body() createOpinionDto: CreateTweetDto): Promise<Tweet> {
-		return await this.opinionService.insert(createOpinionDto);
+		return await this.tweetService.insert(createOpinionDto);
 	}
 
 	@Delete(':id')
 	async delete(@Param('id') id: string) {
-		const successful = await this.opinionService.deleteOne(parseInt(id, 10));
+		const successful = await this.tweetService.deleteOne(parseInt(id, 10));
 
 		if (!successful) {
 			throw new HttpException('Not found', HttpStatus.NOT_FOUND);
@@ -41,6 +41,6 @@ export class TweetController {
 
 	@EventPattern('tweet_created')
 	async handleTweetCreated(createOpinionDto: CreateTweetDto) {
-		await this.opinionService.upsertOnTweetId(createOpinionDto);
+		await this.tweetService.upsertOnTweetId(createOpinionDto);
 	}
 }

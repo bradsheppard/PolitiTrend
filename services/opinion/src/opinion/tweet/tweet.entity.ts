@@ -1,5 +1,5 @@
 import { Column, Index, Unique, ChildEntity } from 'typeorm';
-import { Opinion } from '../opinion/opinion.entity';
+import { Opinion } from '../opinion.entity';
 
 @ChildEntity()
 @Unique(['tweetId'])

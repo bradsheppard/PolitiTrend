@@ -1,5 +1,6 @@
-from crawler.ml.sentiment_analyzer import SentimentAnalyzer
+from crawler.ml.sentiment_analyzer import SentimentAnalyzer, AnalysisResult
 
 __all__ = [
-    SentimentAnalyzer
+    SentimentAnalyzer,
+    AnalysisResult
 ]
