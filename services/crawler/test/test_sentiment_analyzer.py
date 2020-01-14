@@ -27,3 +27,11 @@ def test_analyze_subject_results(sentiment_analyzer):
     john_score = prediction.subjectResults['John Smith']
     assert bob_score > 7
     assert john_score < 3
+
+
+def test_analyze_non_specific_subject(sentiment_analyzer):
+    sentence = 'I\'m awesome'
+    prediction: AnalysisResult = sentiment_analyzer.analyze(sentence)
+    assert prediction.sentiment > 7
+    assert 'Bob Young' not in prediction.subjectResults
+    assert 'John Smith' not in prediction.subjectResults
