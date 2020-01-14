@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from crawler.config import config
 from crawler.ml import SentimentAnalyzer, AnalysisResult
@@ -19,6 +19,10 @@ def get_politician_name(pol: Politician):
     return pol.name
 
 
+def politician_to_id(politician_name: str) -> Union[int, None]:
+    return next((x.num for x in politicians if x.name == politician_name), None)
+
+
 politicians: List[Politician] = politician_repository.get_all()
 
 sentiment_analyzer = SentimentAnalyzer(list(map(get_politician_name, politicians)))
@@ -33,7 +37,7 @@ for politician in politicians:
 
         for subject_result in analysis_result.subjectResults.keys():
             sentiment = Sentiment()
-            sentiment.politician = subject_result
+            sentiment.politician = politician_to_id(subject_result)
             sentiment.value = analysis_result.subjectResults[subject_result]
             tweet_to_insert.sentiments.append(sentiment)
 
