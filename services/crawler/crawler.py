@@ -15,18 +15,14 @@ tweet_repository = TweetRepository()
 opinion_summary_job_repository = OpinionSummaryJobRepository()
 
 
-def get_politician_name(pol: Politician):
-    return pol.name
-
-
 def politician_to_id(politician_name: str) -> Union[int, None]:
     return next((x.num for x in politicians if x.name == politician_name), None)
 
 
 politicians: List[Politician] = politician_repository.get_all()
 
-sentiment_analyzer = SentimentAnalyzer(list(map(get_politician_name, politicians)))
-for politician in politicians:
+sentiment_analyzer = SentimentAnalyzer(list(map(lambda pol: pol.name, politicians)))
+for politician in politicians[20:-1]:
     print('Obtaining tweets for politician ' + politician.name)
     tweets = tweet_crawler.get(politician.name)
     for tweet in tweets:
