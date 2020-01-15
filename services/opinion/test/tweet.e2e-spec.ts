@@ -125,6 +125,24 @@ describe('TweetController (e2e)', () => {
 		expect(getResponse.status).toEqual(404);
 	});
 
+	it('/ (DELETE)', async () => {
+		const tweet1 = createTweetDto();
+		const tweet2 = createTweetDto();
+		await Promise.all([
+			request(app.getHttpServer()).post('/tweet').send(tweet1),
+			request(app.getHttpServer()).post('/tweet').send(tweet2)
+		]);
+
+		const deleteResponse = await request(app.getHttpServer()).delete('/tweet');
+		const getResponse = await request(app.getHttpServer()).get('/tweet');
+
+		const tweets = getResponse.body as Tweet[];
+
+		expect(deleteResponse.status).toEqual(200);
+		expect(getResponse.status).toEqual(200);
+		expect(tweets).toHaveLength(0);
+	});
+
 	it('handle tweet created', async () => {
 		const tweetDto = createTweetDto();
 		const json = await client.emit('tweet_created', tweetDto).toPromise();
@@ -176,7 +194,7 @@ describe('TweetService (e2e)', () => {
 		}
 	});
 
-	it('Can delete', async () => {
+	it('Can delete one', async () => {
 		const tweet = createTweetDto();
 		const insertedTweet = await service.insert(tweet);
 		await service.deleteOne(insertedTweet.id);
@@ -184,6 +202,20 @@ describe('TweetService (e2e)', () => {
 		const retrievedTweet: Tweet | null = await service.getOne(insertedTweet.id);
 
 		expect(retrievedTweet).toBeNull();
+	});
+
+	it('Can delete all', async() => {
+		const tweet1 = createTweetDto();
+		const tweet2 = createTweetDto();
+		await Promise.all([
+			service.insert(tweet1),
+			service.insert(tweet2)
+		]);
+
+		await service.delete();
+
+		const allTweets = await service.get();
+		expect(allTweets).toHaveLength(0);
 	});
 
 	it('Can update', async () => {

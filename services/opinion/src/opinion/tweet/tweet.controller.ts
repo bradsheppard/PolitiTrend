@@ -31,12 +31,17 @@ export class TweetController {
 	}
 
 	@Delete(':id')
-	async delete(@Param('id') id: string) {
+	async deleteOne(@Param('id') id: string) {
 		const successful = await this.tweetService.deleteOne(parseInt(id, 10));
 
 		if (!successful) {
 			throw new HttpException('Not found', HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@Delete()
+	async delete() {
+		await this.tweetService.delete();
 	}
 
 	@EventPattern('tweet_created')

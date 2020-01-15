@@ -80,14 +80,20 @@ describe('Tweet Controller', () => {
 		await expect(controller.findOne('1')).rejects.toThrowError(new HttpException('Not found', 404));
 	});
 
-	it('delete when exists', async () => {
+	it('delete one when exists', async () => {
 		jest.spyOn(service, 'deleteOne').mockResolvedValueOnce(true);
-		await expect(controller.delete('1')).resolves.not.toThrow();
+		await expect(controller.deleteOne('1')).resolves.not.toThrow();
 	});
 
-	it('delete returns 404 when not exists', async () => {
+	it('delete one returns 404 when not exists', async () => {
 		jest.spyOn(service, 'deleteOne').mockResolvedValueOnce(false);
-		await expect(controller.delete('1')).rejects.toThrowError(new HttpException('Not found', 404));
+		await expect(controller.deleteOne('1')).rejects.toThrowError(new HttpException('Not found', 404));
+	});
+
+	it('delete all', async () => {
+		const deleteSpy = jest.spyOn(service, 'delete').mockImplementation();
+		await controller.delete();
+		expect(deleteSpy).toBeCalled();
 	});
 
 	it('can insert on event', async () => {

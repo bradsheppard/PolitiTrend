@@ -5,12 +5,6 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 @dataclass(init=False)
-class SubjectResult:
-    subject: str
-    sentiment: float
-
-
-@dataclass(init=False)
 class AnalysisResult:
     sentiment: float
     subjectResults: Dict[str, float]
@@ -51,6 +45,8 @@ class SentimentAnalyzer:
             return None
 
         for subject in self._subjects:
-            if sentence_subject.lower() in subject.lower():
-                return subject
+            subject_words = subject.split()
+            for subject_word in subject_words:
+                if sentence_subject.lower() == subject_word.lower():
+                    return subject
         return None
