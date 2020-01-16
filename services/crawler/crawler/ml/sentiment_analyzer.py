@@ -10,6 +10,13 @@ class AnalysisResult:
     subjectResults: Dict[str, float]
 
 
+@dataclass()
+class SubjectResult:
+    sentiment: float
+    subject: str
+    pos: str
+
+
 class SentimentAnalyzer:
 
     def __init__(self, subjects: List[str] = None):
@@ -17,22 +24,28 @@ class SentimentAnalyzer:
         self._nlp = spacy.load('en')
         self._subjects = subjects
 
-    def analyze(self, sentence: str) -> AnalysisResult:
+    def analyze(self, statement: str) -> AnalysisResult:
         analysis_result = AnalysisResult()
-        scores = self._analyzer.polarity_scores(sentence)
+        scores = self._analyzer.polarity_scores(statement)
         analysis_result.sentiment = self._normalize_score(scores['compound'])
         analysis_result.subjectResults = {}
 
-        doc = self._nlp(sentence)
+        subject_results = {}
+        doc = self._nlp(statement)
         for token in doc:
-            if token.dep_ == 'nsubj':
-                subject = self._lookup_subject(token.text)
-                if subject is None:
-                    continue
-                scores = self._analyzer.polarity_scores(token.sent.text)
-                score = scores['compound']
-                adjusted_score = self._normalize_score(score)
-                analysis_result.subjectResults[subject] = adjusted_score
+            subject = self._lookup_subject(token.text)
+            if subject is None:
+                continue
+            scores = self._analyzer.polarity_scores(token.sent.text)
+            score = scores['compound']
+            adjusted_score = self._normalize_score(score)
+            subject_result = SubjectResult(sentiment=adjusted_score, subject=subject, pos=token.dep_)
+            subject_results[token.sent.start].append(subject_result)
+
+            analysis_result.subjectResults[subject] = adjusted_score
+
+        for key in subject_results.keys():
+            subject_results =
 
         return analysis_result
 
