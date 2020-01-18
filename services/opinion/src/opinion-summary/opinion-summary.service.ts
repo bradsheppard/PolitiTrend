@@ -46,7 +46,9 @@ export class OpinionSummaryService {
 	}
 
 	async insert(createOpinionSummaryDto: CreateOpinionSummaryDto): Promise<OpinionSummary> {
-		return await this.opinionSummaryRepository.save(this.opinionSummaryRepository.create(createOpinionSummaryDto));
+		const opinionSummary: OpinionSummary = Object.create(createOpinionSummaryDto) as OpinionSummary;
+		opinionSummary.dateTime = new Date();
+		return await this.opinionSummaryRepository.save(this.opinionSummaryRepository.create(opinionSummary));
 	}
 
 	async delete() {

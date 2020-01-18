@@ -18,6 +18,7 @@ describe('OpinionSummary Controller', () => {
 			id,
 			politician: id,
 			sentiment: id,
+			dateTime: new Date(),
 		} as OpinionSummary;
 	}
 

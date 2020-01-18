@@ -63,7 +63,9 @@ describe('OpinionSummaryController (e2e)', () => {
 		const retrievedOpinionSummary = response.body as OpinionSummary;
 
 		expect(response.status).toEqual(200);
-		expect(retrievedOpinionSummary).toEqual(insertedOpinionSummary);
+		expect(retrievedOpinionSummary.sentiment).toEqual(insertedOpinionSummary.sentiment);
+		expect(retrievedOpinionSummary.politician).toEqual(insertedOpinionSummary.politician);
+		expect(retrievedOpinionSummary.dateTime).not.toBeNull();
 	});
 });
 
@@ -123,7 +125,11 @@ describe('OpinionSummaryService (e2e)', () => {
 		opinionSummary.id = insertedOpinionSummary.id;
 
 		const retrievedOpinionSummary = await service.getOne(insertedOpinionSummary.id);
-		expect(retrievedOpinionSummary).toEqual(opinionSummary);
+
+		expect(retrievedOpinionSummary.politician).toEqual(opinionSummary.politician);
+		expect(retrievedOpinionSummary.sentiment).toEqual(opinionSummary.sentiment);
+		expect(retrievedOpinionSummary.dateTime).not.toBeNull();
+
 		expect(insertedOpinionSummary).toEqual(retrievedOpinionSummary);
 	});
 

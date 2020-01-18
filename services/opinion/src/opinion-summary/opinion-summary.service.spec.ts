@@ -3,6 +3,7 @@ import { OpinionSummaryService } from './opinion-summary.service';
 import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import OpinionSummary from './opinion-summary.entity';
+import { CreateOpinionSummaryDto } from './dto/create-opinion-summary.dto';
 
 describe('OpinionSummaryService', () => {
 	let service: OpinionSummaryService;
@@ -15,7 +16,16 @@ describe('OpinionSummaryService', () => {
 		return {
 			politician: id,
 			sentiment: id,
+			dateTime: new Date(),
 		} as OpinionSummary;
+	}
+
+	function createOpinionSummaryDto() {
+		id++;
+		return {
+			politician: id,
+			sentiment: id,
+		} as CreateOpinionSummaryDto;
 	}
 
 	beforeEach(async () => {
@@ -60,12 +70,12 @@ describe('OpinionSummaryService', () => {
 	});
 
 	it('can insert', async () => {
-		const opinionSummary = createOpinionSummary();
+		const opinionSummaryDto = createOpinionSummaryDto();
 		const insertSpy = jest.spyOn(repository, 'save').mockImplementation();
 		const createSpy = jest.spyOn(repository, 'create').mockImplementation();
 
-		await service.insert(opinionSummary);
+		await service.insert(opinionSummaryDto);
 		expect(insertSpy).toBeCalled();
-		expect(createSpy).toBeCalledWith(opinionSummary);
+		expect(createSpy).toBeCalled();
 	});
 });
