@@ -65,7 +65,7 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext): Promi
             name: politicianDto.name,
             party: politicianDto.party,
             tweets: tweetsDto,
-            sentiment: opinionSummaryDtos[0].sentiment,
+            sentiment: opinionSummaryDtos.sort((a, b) => b.id - a.id)[0].sentiment,
             sentimentHistory: opinionSummaryDtos
         };
 
