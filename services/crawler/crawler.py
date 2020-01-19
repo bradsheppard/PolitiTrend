@@ -22,7 +22,7 @@ def politician_to_id(politician_name: str) -> Union[int, None]:
 politicians: List[Politician] = politician_repository.get_all()
 
 sentiment_analyzer = SentimentAnalyzer(list(map(lambda pol: pol.name, politicians)))
-for politician in politicians[20:-1]:
+for politician in politicians:
     print('Obtaining tweets for politician ' + politician.name)
     tweets = tweet_crawler.get(politician.name)
     for tweet in tweets:
