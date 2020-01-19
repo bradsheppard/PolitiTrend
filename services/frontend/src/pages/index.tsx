@@ -1,28 +1,62 @@
-import { createStyles, Grid, withStyles, WithStyles } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import * as React from 'react';
 import Jumbotron from '../components/Jumbotron';
-import PoliticianApi from '../model/PoliticianApi';
+import PoliticianApi from '../apis/PoliticianApi';
 import { NextPageContext } from 'next';
 import CategoryHeader from '../components/CategoryHeader';
 import PoliticianSentimentSummary from '../components/PoliticianSentimentSummary';
 import ContentContainer from '../components/ContentContainer';
-import Politician from '../model/Politician';
+import Bar from '../components/Bar';
+import PoliticianDto from '../apis/PoliticianDto';
+import TweetApi from '../apis/TweetApi';
+import TweetDto from '../apis/TweetDto';
+import OpinionSummaryDto from '../apis/OpinionSummaryDto';
+import OpinionSummaryApi from '../apis/OpinionSummaryApi';
 
-const styles = () => createStyles({
-    root: {
-        flexGrow: 1,
-    }
-});
-
-interface IProps extends WithStyles<typeof styles>{
+interface IProps {
     topPoliticians: Politician[];
     bottomPoliticians: Politician[];
+}
+
+interface Tweet {
+    tweetId: string;
+    tweetText: string;
+}
+
+interface Politician {
+    id: number;
+    name: string;
+    party: string;
+    sentiment: number;
+    tweets: Tweet[];
 }
 
 class App extends React.Component<IProps> {
 
     static async getInitialProps(context: NextPageContext) {
-        let politicians: Politician[] = await PoliticianApi.get(context);
+        let politicianDtos: PoliticianDto[] = await PoliticianApi.get(context);
+        let tweetDtos: TweetDto[] = await TweetApi.get(context);
+        let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get(context);
+
+        let politicians: Politician[] = [];
+
+        politicianDtos.forEach((politicianDto: PoliticianDto) => {
+            const politician = {
+                id: politicianDto.id,
+                party: politicianDto.party,
+                name: politicianDto.name
+            } as Politician;
+
+            const summary: OpinionSummaryDto | undefined = opinionSummaryDtos.find(x => x.politician === politicianDto.id);
+            politician.tweets = tweetDtos.filter(x => x.sentiments.filter(y => y.politician == politicianDto.id).length > 0);
+
+            if (!summary)
+                return;
+
+            politician.sentiment = summary.sentiment;
+            politicians.push(politician);
+        });
+
         politicians = politicians.sort((a, b) => b.sentiment - a.sentiment);
 
         return {
@@ -32,10 +66,9 @@ class App extends React.Component<IProps> {
     }
 
     public render() {
-        const { classes } = this.props;
-
         return (
-            <div className={classes.root}>
+            <React.Fragment>
+                <Bar overlay={true}/>
                 <Jumbotron/>
                 <ContentContainer>
                     <Grid container
@@ -67,9 +100,9 @@ class App extends React.Component<IProps> {
                         </Grid>
                     </Grid>
                 </ContentContainer>
-            </div>
+            </React.Fragment>
         );
     }
 }
 
-export default withStyles(styles)(App);
+export default App;

@@ -24,6 +24,7 @@ interface Props {
      */
     window?: () => Window;
     children?: React.ReactElement;
+    overlay?: boolean;
 }
 
 function HideOnScroll(props: Props) {
@@ -43,7 +44,7 @@ const Header = (props: Props) => {
     return (
         <React.Fragment>
             <HideOnScroll {...props}>
-                <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', boxShadow: 'none'}}>
+                <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', boxShadow: 'none'}}>
                     <Toolbar>
                         <div className={classes.title}>
                             <Link href='/' passHref>
@@ -67,6 +68,9 @@ const Header = (props: Props) => {
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>
+            {
+                !props.overlay ? <Toolbar/> : null
+            }
         </React.Fragment>
 
     );

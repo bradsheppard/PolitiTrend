@@ -9,13 +9,11 @@ import {
     Fade, IconButton, Link as MuiLink, Theme,
     Typography, WithStyles, withStyles
 } from '@material-ui/core';
-import { Tweet } from 'react-twitter-widgets'
+import { Tweet as TweetWidget } from 'react-twitter-widgets'
 import { Waypoint } from 'react-waypoint';
-import Opinion from '../model/Opinion';
 import { ExpandMore } from '@material-ui/icons'
 import clsx from 'clsx';
 import { politicianNameToImagePath } from '../utils/ImagePath';
-import Politician from '../model/Politician';
 import Link from 'next/link';
 
 interface IProps extends WithStyles<typeof styles> {
@@ -25,6 +23,19 @@ interface IProps extends WithStyles<typeof styles> {
 interface IState {
     visible: boolean;
     expanded: boolean;
+}
+
+interface Politician {
+    id: number;
+    name: string;
+    party: string;
+    sentiment: number;
+    tweets: Tweet[];
+}
+
+interface Tweet {
+    tweetId: string;
+    tweetText: string;
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -98,13 +109,13 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
                         </Link>
                         <CardContent>
                             {
-                                this.props.politician.opinions.slice(0, 1).map((opinion: Opinion, index) => {
+                                this.props.politician.tweets.slice(0, 1).map((tweet: Tweet, index) => {
                                     return (
-                                        <Tweet
+                                        <TweetWidget
                                             options={{
                                                 align: 'center'
                                             }}
-                                            tweetId={opinion.tweetId}
+                                            tweetId={tweet.tweetId}
                                             key={index}
                                         />
                                     )
@@ -114,13 +125,13 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
                         <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
                             <CardContent>
                                 {
-                                    this.props.politician.opinions.slice(1).map((opinion: Opinion, index) => {
+                                    this.props.politician.tweets.slice(1).map((tweet: Tweet, index) => {
                                         return (
-                                            <Tweet
+                                            <TweetWidget
                                                 options={{
                                                     align: 'center'
                                                 }}
-                                                tweetId={opinion.tweetId}
+                                                tweetId={tweet.tweetId}
                                                 key={index}
                                             />
                                         )

@@ -2,10 +2,9 @@ import * as React from 'react';
 import { Card, createStyles, Divider, Grid, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { politicianNameToImagePath } from '../utils/ImagePath';
 import ReactWordcloud, { MinMaxPair, Spiral } from 'react-wordcloud';
-import Opinion from '../model/Opinion';
-import { Tweet } from 'react-twitter-widgets'
+import { Tweet as TweetWidget } from 'react-twitter-widgets'
 import { extractWords, getWordCounts } from '../utils/StringHelper';
-import Politician from '../model/Politician';
+import { Chart } from 'react-google-charts';
 
 const styles = (theme: Theme) => createStyles({
     container: {
@@ -18,6 +17,24 @@ const styles = (theme: Theme) => createStyles({
         marginBottom: theme.spacing(6)
     }
 });
+
+interface Politician {
+    name: string;
+    party: string;
+    sentiment: number;
+    tweets: Tweet[];
+    sentimentHistory: OpinionSummary[];
+}
+
+interface Tweet {
+    tweetId: string;
+    tweetText: string;
+}
+
+interface OpinionSummary {
+    sentiment: number;
+    dateTime: string;
+}
 
 interface IProps extends WithStyles<typeof styles> {
     politician: Politician
@@ -40,12 +57,16 @@ const wordCloudOptions = {
 
 const PoliticianDetails = (props: IProps) => {
     const { politician, classes } = props;
-    const tweets = politician.opinions.map(opinion => opinion.tweetText);
-    const words = getWordCounts(tweets, extractWords(politician.name));
+    const tweetTexts = politician.tweets.map(tweet => tweet.tweetText);
+    const words = getWordCounts(tweetTexts, extractWords(politician.name));
 
-    const { opinions } = politician;
-    const firstHalfTweets = politician.opinions.slice(0, opinions.length / 2);
-    const secondHalfTweets = politician.opinions.slice(opinions.length / 2, opinions.length);
+    const { tweets } = politician;
+    const firstHalfTweets = politician.tweets.slice(0, tweets.length / 2);
+    const secondHalfTweets = politician.tweets.slice(tweets.length / 2, tweets.length);
+
+    const lineChartData = politician.sentimentHistory.map((opinionSummary: OpinionSummary) => {
+        return [new Date(opinionSummary.dateTime), opinionSummary.sentiment]
+    });
 
     return (
         <Card>
@@ -72,6 +93,24 @@ const PoliticianDetails = (props: IProps) => {
                     <ReactWordcloud words={words} options={wordCloudOptions} />
                 </Grid>
                 <Grid item
+                    sm={12}>
+                    <Chart chartType="LineChart"
+                           data={[
+                               ['x', politician.name],
+                               ...lineChartData
+                           ]}
+                           width="100%"
+                           height='500px'
+                           options={{
+                               hAxis: {
+                                   title: 'Time',
+                               },
+                               vAxis: {
+                                   title: 'Popularity',
+                               },
+                           }}/>
+                </Grid>
+                <Grid item
                       sm={12}>
                     <Divider variant="middle" className={classes.divider} />
                     <Grid container
@@ -80,9 +119,9 @@ const PoliticianDetails = (props: IProps) => {
                           justify='center'>
                         <Grid item sm={6}>
                             {
-                                firstHalfTweets.map((opinion: Opinion, index) => {
+                                firstHalfTweets.map((opinion: Tweet, index) => {
                                     return (
-                                        <Tweet
+                                        <TweetWidget
                                             options={{
                                                 align: 'center'
                                             }}
@@ -95,9 +134,9 @@ const PoliticianDetails = (props: IProps) => {
                         </Grid>
                         <Grid item sm={6}>
                             {
-                                secondHalfTweets.map((opinion: Opinion, index) => {
+                                secondHalfTweets.map((opinion: Tweet, index) => {
                                     return (
-                                        <Tweet
+                                        <TweetWidget
                                             options={{
                                                 align: 'center'
                                             }}

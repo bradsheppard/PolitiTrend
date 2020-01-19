@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { NextPageContext } from 'next';
-import PoliticianApi from '../model/PoliticianApi';
-import Politician from '../model/Politician';
+import PoliticianApi from '../apis/PoliticianApi';
 import PoliticianSummary from '../components/PoliticianSummary';
 import { Card, createStyles, Grid, TextField, Theme, withStyles, WithStyles } from '@material-ui/core';
 import ContentContainer from '../components/ContentContainer';
 import _ from 'lodash';
+import Bar from '../components/Bar';
 
 const style = (theme: Theme) => createStyles({
     search: {
@@ -14,6 +14,12 @@ const style = (theme: Theme) => createStyles({
         marginBottom: theme.spacing(6)
     },
 });
+
+interface Politician {
+    id: number;
+    name: string;
+    party: string;
+}
 
 interface IProps extends WithStyles<typeof style> {
     politicians: Politician[];
@@ -56,33 +62,36 @@ class Politicians extends React.Component<IProps, IState> {
         const { classes } = this.props;
 
         return (
-            <ContentContainer>
-                <Card>
-                    <Grid container
-                        alignItems='center'
-                        justify='center'>
-                        <Grid item sm={12}>
-                            <Grid container
-                                alignItems='center'
-                                justify='center'>
-                                <Grid item sm={8}>
-                                    <TextField className={classes.search} label="Name" variant="outlined" onChange={this.handleSearchChange.bind(this)} />
+            <React.Fragment>
+                <Bar/>
+                <ContentContainer>
+                    <Card>
+                        <Grid container
+                            alignItems='center'
+                            justify='center'>
+                            <Grid item sm={12}>
+                                <Grid container
+                                    alignItems='center'
+                                    justify='center'>
+                                    <Grid item sm={8}>
+                                        <TextField className={classes.search} label="Name" variant="outlined" onChange={this.handleSearchChange.bind(this)} />
+                                    </Grid>
                                 </Grid>
                             </Grid>
+                            {
+                                this.props.politicians.map((politician: Politician, index) => {
+                                    if(politician.name.includes(this.state.search))
+                                        return (
+                                            <Grid item sm={3} key={index}>
+                                                <PoliticianSummary politician={politician}/>
+                                            </Grid>
+                                        );
+                                })
+                            }
                         </Grid>
-                        {
-                            this.props.politicians.map((politician: Politician, index) => {
-                                if(politician.name.includes(this.state.search))
-                                    return (
-                                        <Grid item sm={3} key={index}>
-                                            <PoliticianSummary politician={politician}/>
-                                        </Grid>
-                                    );
-                            })
-                        }
-                    </Grid>
-                </Card>
-            </ContentContainer>
+                    </Card>
+                </ContentContainer>
+            </React.Fragment>
         );
     }
 }

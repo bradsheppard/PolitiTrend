@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createStyles, Fade, Theme, Typography, withStyles, WithStyles, Link as MuiLink } from '@material-ui/core';
-import Politician from '../model/Politician';
 import { politicianNameToImagePath } from '../utils/ImagePath';
 import { Waypoint } from 'react-waypoint';
 import { useState } from 'react';
@@ -12,6 +11,12 @@ const styles = (theme: Theme) => createStyles({
         textAlign: 'center'
     }
 });
+
+interface Politician {
+    id: number;
+    name: string;
+    party: string;
+}
 
 interface IProps extends WithStyles<typeof styles> {
     politician: Politician;
