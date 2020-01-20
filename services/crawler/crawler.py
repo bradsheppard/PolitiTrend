@@ -39,6 +39,7 @@ for politician in politicians:
 
         tweet_to_insert.tweetId = tweet.id_str
         tweet_to_insert.tweetText = tweet.full_text
+        tweet_to_insert.date = tweet.created_at
 
         tweet_repository.insert(tweet_to_insert)
 

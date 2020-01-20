@@ -1,3 +1,4 @@
+import datetime
 import time
 import string
 import random
@@ -10,10 +11,12 @@ def test_insert_and_get():
     sentiment = Sentiment()
     sentiment.politician = 1
     sentiment.value = 1
+
     tweet.politician = 1
     tweet.tweetId = 1
     tweet.tweetText = random_string()
     tweet.sentiments = [sentiment]
+    tweet.date = datetime.datetime.now().isoformat(' ', 'seconds')
 
     repository.insert(tweet)
 
@@ -22,13 +25,8 @@ def test_insert_and_get():
 
     assert len(inserted_tweets) > 0
 
-    match = False
-
     for inserted_tweet in inserted_tweets:
-        if inserted_tweet.tweetText == tweet.tweetText:
-            match = True
-
-    assert match
+        assert inserted_tweet == tweet
 
 
 def random_string(string_length=10):
