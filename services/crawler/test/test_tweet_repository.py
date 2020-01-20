@@ -3,6 +3,7 @@ import time
 import string
 import random
 from crawler.model import TweetRepository, Tweet, Sentiment
+from dateutil import parser
 
 
 def test_insert_and_get():
@@ -16,7 +17,7 @@ def test_insert_and_get():
     tweet.tweetId = 1
     tweet.tweetText = random_string()
     tweet.sentiments = [sentiment]
-    tweet.date = datetime.datetime.now().isoformat(' ', 'seconds')
+    tweet.dateTime = datetime.datetime.now().isoformat(' ', 'seconds')
 
     repository.insert(tweet)
 
@@ -25,8 +26,19 @@ def test_insert_and_get():
 
     assert len(inserted_tweets) > 0
 
+    match = False
+
     for inserted_tweet in inserted_tweets:
-        assert inserted_tweet == tweet
+        if (
+                inserted_tweet.tweetText == tweet.tweetText and
+                inserted_tweet.sentiments[0]['value'] == tweet.sentiments[0].value and
+                inserted_tweet.sentiments[0]['politician'] == tweet.sentiments[0].politician and
+                parser.parse(inserted_tweet.dateTime).replace(tzinfo=None).isoformat(' ', 'seconds') ==
+                parser.parse(tweet.dateTime).replace(tzinfo=None).isoformat(' ', 'seconds')
+        ):
+            match = True
+
+    assert match
 
 
 def random_string(string_length=10):

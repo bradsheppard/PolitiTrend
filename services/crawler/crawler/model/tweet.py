@@ -16,7 +16,7 @@ class Tweet:
     tweetId: str
     tweetText: str
     sentiments: List[Sentiment]
-    date: str
+    dateTime: str
 
 
 class TweetRepository:
@@ -36,7 +36,7 @@ class TweetRepository:
             tweet.sentiments = entry['sentiments']
             tweet.tweetText = entry['tweetText']
             tweet.tweetId = entry['tweetId']
-            tweet.date = entry['dateTime']
+            tweet.dateTime = entry['dateTime']
 
             tweets.append(tweet)
 
