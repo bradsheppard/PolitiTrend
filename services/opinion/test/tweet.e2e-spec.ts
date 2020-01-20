@@ -9,6 +9,7 @@ import { ClientProxy, ClientsModule } from '@nestjs/microservices';
 import microserviceConfig from '../src/config/config.microservice';
 import { ClientProviderOptions } from '@nestjs/microservices/module/interfaces/clients-module.interface';
 import waitForExpect from 'wait-for-expect';
+import { UpdateTweetDto } from '../src/opinion/tweet/dto/update-tweet.dto';
 waitForExpect.defaults.timeout = 20000;
 jest.setTimeout(30000);
 
@@ -23,6 +24,7 @@ function createTweetDto() {
 	return {
 		tweetId: id.toString(),
 		tweetText: `Test tweet ${id}`,
+		dateTime: new Date().toUTCString(),
 		sentiments: [
 			{
 				politician: id,
@@ -130,7 +132,7 @@ describe('TweetController (e2e)', () => {
 		const tweet2 = createTweetDto();
 		await Promise.all([
 			request(app.getHttpServer()).post('/tweet').send(tweet1),
-			request(app.getHttpServer()).post('/tweet').send(tweet2)
+			request(app.getHttpServer()).post('/tweet').send(tweet2),
 		]);
 
 		const deleteResponse = await request(app.getHttpServer()).delete('/tweet');
@@ -171,13 +173,11 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can get', async () => {
-		const tweet = createTweetDto() as Tweet;
+		const tweet = createTweetDto();
 		const insertedTweet = await service.insert(tweet);
-		tweet.id = insertedTweet.id;
 
 		const retrievedTweet = await service.getOne(insertedTweet.id);
 		expect(retrievedTweet).toEqual(insertedTweet);
-		expect(insertedTweet).toEqual(tweet);
 	});
 
 	it('Can get by politician', async () => {
@@ -204,12 +204,12 @@ describe('TweetService (e2e)', () => {
 		expect(retrievedTweet).toBeNull();
 	});
 
-	it('Can delete all', async() => {
+	it('Can delete all', async () => {
 		const tweet1 = createTweetDto();
 		const tweet2 = createTweetDto();
 		await Promise.all([
 			service.insert(tweet1),
-			service.insert(tweet2)
+			service.insert(tweet2),
 		]);
 
 		await service.delete();
@@ -219,9 +219,10 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can update', async () => {
-		const tweet = createTweetDto();
-		const insertedTweet = await service.insert(tweet);
+		const tweetDto = createTweetDto();
+		const insertedTweet = (await service.insert(tweetDto)) as UpdateTweetDto;
 		insertedTweet.tweetText = 'New tweet text';
+
 		await service.update(insertedTweet);
 
 		const updatedTweet = await service.getOne(insertedTweet.id);
@@ -241,13 +242,13 @@ describe('TweetService (e2e)', () => {
 	it('Can upsert on tweet Id, existing tweet updated', async () => {
 		const tweet = createTweetDto();
 
-		const insertedTweet = await service.insert(tweet);
-		insertedTweet.tweetText = 'Some new text';
+		const updateTweetDto = await service.insert(tweet) as UpdateTweetDto;
+		updateTweetDto.tweetText = 'Some new text';
 
-		await service.upsertOnTweetId(insertedTweet);
+		await service.upsertOnTweetId(updateTweetDto);
 
-		const retrievedTweet = await service.getOne(insertedTweet.id);
-		expect(retrievedTweet).toEqual(insertedTweet);
+		const retrievedTweet = await service.getOne(updateTweetDto.id);
+		expect(retrievedTweet).toEqual(updateTweetDto);
 	});
 
 	it('Can upsert on tweetId, sentiments updated', async () => {

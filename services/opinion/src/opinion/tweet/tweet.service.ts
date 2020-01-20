@@ -106,6 +106,7 @@ export class TweetService {
 
 		updateTweetDto.sentiments = sentiments;
 
-		return await this.tweetRepository.save(this.tweetRepository.create(updateTweetDto));
+		const result = await this.tweetRepository.save(this.tweetRepository.create(updateTweetDto));
+		return await this.tweetRepository.findOne(result.id);
 	}
 }

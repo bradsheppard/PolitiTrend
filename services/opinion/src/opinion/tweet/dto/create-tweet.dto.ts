@@ -4,4 +4,5 @@ export class CreateTweetDto {
 	sentiments: CreateSentimentDto[];
 	tweetId: string;
 	tweetText: string;
+	dateTime: string;
 }

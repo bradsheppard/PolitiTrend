@@ -22,6 +22,7 @@ function createTweetForPolitician(politicianId: number, sentiment: number) {
 				value: sentiment,
 			},
 		],
+		dateTime: new Date().toUTCString(),
 	} as CreateTweetDto;
 }
 
@@ -43,13 +44,13 @@ afterAll(async () => {
 
 describe('SentimentService (e2e)', () => {
 	it('Can get value average', async () => {
-		const testTweet1 = createTweetForPolitician(60, 6.5);
-		const testTweet2 = createTweetForPolitician(60, 9);
+		const testTweet1 = createTweetForPolitician(160, 6.5);
+		const testTweet2 = createTweetForPolitician(160, 9);
 
 		await tweetService.insert(testTweet1);
 		await tweetService.insert(testTweet2);
 
-		const averageSentiment = await sentimentService.getSentimentAverageForPolitician(60);
+		const averageSentiment = await sentimentService.getSentimentAverageForPolitician(160);
 		expect(averageSentiment).toEqual(7.75);
 	});
 

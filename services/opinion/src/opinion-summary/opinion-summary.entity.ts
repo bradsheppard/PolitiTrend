@@ -12,6 +12,7 @@ export default class OpinionSummary {
 	@Column({type: 'double precision'})
 	sentiment: number;
 
+	@Index()
 	@Column('timestamp')
 	dateTime: Date;
 }
