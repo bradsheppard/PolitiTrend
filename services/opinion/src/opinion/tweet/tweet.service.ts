@@ -49,6 +49,14 @@ export class TweetService {
 				query.andWhere('tweet.tweetId = :tweetId', { tweetId: searchTweetDto.tweetId });
 			}
 
+			if (searchTweetDto.limit) {
+				query.limit(searchTweetDto.limit);
+			}
+
+			if (searchTweetDto.offset) {
+				query.offset(searchTweetDto.offset);
+			}
+
 			return await query.getMany();
 		}
 		return await this.tweetRepository.find();

@@ -10,6 +10,7 @@ import microserviceConfig from '../src/config/config.microservice';
 import { ClientProviderOptions } from '@nestjs/microservices/module/interfaces/clients-module.interface';
 import waitForExpect from 'wait-for-expect';
 import { UpdateTweetDto } from '../src/opinion/tweet/dto/update-tweet.dto';
+import { create } from 'ts-node';
 waitForExpect.defaults.timeout = 20000;
 jest.setTimeout(30000);
 
@@ -192,6 +193,28 @@ describe('TweetService (e2e)', () => {
 		for (const tweet of politicianTweets) {
 			expect(tweet.sentiments[0].politician).toEqual(insertedTweet1.sentiments[0].politician);
 		}
+	});
+
+	it('Can get with limit and offset', async () => {
+		const tweet1 = createTweetDto();
+		const tweet2 = createTweetDto();
+		const tweet3 = createTweetDto();
+
+		await service.insert(tweet1);
+
+		await Promise.all([
+			service.insert(tweet2),
+			service.insert(tweet3),
+		]);
+
+		const tweets = await service.get({limit: 2, offset: 1});
+		expect(tweets).toHaveLength(2);
+
+		expect(tweets[0].tweetId).toEqual(tweet2.tweetId);
+		expect(tweets[0].tweetText).toEqual(tweet2.tweetText);
+
+		expect(tweets[1].tweetId).toEqual(tweet3.tweetId);
+		expect(tweets[1].tweetText).toEqual(tweet3.tweetText);
 	});
 
 	it('Can delete one', async () => {
