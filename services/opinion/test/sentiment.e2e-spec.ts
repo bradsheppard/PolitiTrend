@@ -26,6 +26,21 @@ function createTweetForPolitician(politicianId: number, sentiment: number) {
 	} as CreateTweetDto;
 }
 
+function createTweetForPoliticianWithDate(politicianId: number, sentiment: number, dateTime: Date) {
+	id++;
+	return {
+		tweetText: `test text ${id}`,
+		tweetId: id.toString(),
+		sentiments: [
+			{
+				politician: politicianId,
+				value: sentiment,
+			},
+		],
+		dateTime: dateTime.toUTCString(),
+	} as CreateTweetDto;
+}
+
 beforeAll(async () => {
 	const moduleFixture: TestingModule = await Test.createTestingModule({
 		imports: [AppModule],
@@ -47,19 +62,39 @@ describe('SentimentService (e2e)', () => {
 		const testTweet1 = createTweetForPolitician(160, 6.5);
 		const testTweet2 = createTweetForPolitician(160, 9);
 
-		await tweetService.insert(testTweet1);
-		await tweetService.insert(testTweet2);
+		await Promise.all([
+			tweetService.insert(testTweet1),
+			tweetService.insert(testTweet2),
+		]);
 
 		const averageSentiment = await sentimentService.getSentimentAverageForPolitician(160);
 		expect(averageSentiment).toEqual(7.75);
+	});
+
+	it('Can get average, one sentiment out of range', async () => {
+		const currentDate = new Date();
+		const fiveDaysAgo = new Date().setDate(currentDate.getDate() - 5);
+
+		const testTweet1 = createTweetForPoliticianWithDate(161, 6.5, new Date());
+		const testTweet2 = createTweetForPoliticianWithDate(161, 4, new Date(fiveDaysAgo));
+
+		await Promise.all([
+			tweetService.insert(testTweet1),
+			tweetService.insert(testTweet2),
+		]);
+
+		const averageSentiment = await sentimentService.getSentimentAverageForPolitician(161);
+		expect(averageSentiment).toEqual(6.5);
 	});
 
 	it('Can get value average, nonexistent politician', async () => {
 		const testTweet1 = createTweetForPolitician(62, 6.5);
 		const testTweet2 = createTweetForPolitician(62, 9);
 
-		await tweetService.insert(testTweet1);
-		await tweetService.insert(testTweet2);
+		await Promise.all([
+			tweetService.insert(testTweet1),
+			tweetService.insert(testTweet2),
+		]);
 
 		const averageSentiment = await sentimentService.getSentimentAverageForPolitician(999);
 		expect(averageSentiment).toBeNull();

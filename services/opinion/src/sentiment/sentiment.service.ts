@@ -11,10 +11,16 @@ export class SentimentService {
 	) {}
 
 	async getSentimentAverageForPolitician(politicianId: number): Promise<number | null> {
+		const currentDateTime = new Date();
+		currentDateTime.setDate(currentDateTime.getDate() - 1);
+
 		const result = await this.connection.createQueryBuilder()
 			.select('AVG(sentiment.value)', 'avg')
 			.from(Sentiment, 'sentiment')
+			.innerJoin('sentiment.opinion', 'opinion')
 			.where('sentiment.politician = :id', {id: politicianId})
+			.andWhere('sentiment.value != 5')
+			.andWhere('opinion.dateTime >= :dateTime', {dateTime: currentDateTime.toUTCString()})
 			.getRawOne();
 
 		return result.avg;

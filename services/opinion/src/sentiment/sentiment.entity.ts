@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Opinion } from '../opinion/opinion.entity';
 
 @Entity()
@@ -6,6 +6,7 @@ export class Sentiment {
 	@PrimaryGeneratedColumn()
 	id: number;
 
+	@Index()
 	@Column()
 	politician: number;
 
