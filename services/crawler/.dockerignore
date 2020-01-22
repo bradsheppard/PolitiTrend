@@ -1,4 +1,6 @@
 /venv
+/data
+/.ipynb_checkpoints
 /env
 /.idea
 /.pytest_cache
