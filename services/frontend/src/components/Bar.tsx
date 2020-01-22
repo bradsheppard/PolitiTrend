@@ -44,7 +44,7 @@ const Header = (props: Props) => {
     return (
         <React.Fragment>
             <HideOnScroll {...props}>
-                <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', boxShadow: 'none'}}>
+                <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)', boxShadow: 'none'}}>
                     <Toolbar>
                         <div className={classes.title}>
                             <Link href='/' passHref>
