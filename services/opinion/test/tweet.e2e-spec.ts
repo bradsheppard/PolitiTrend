@@ -265,13 +265,14 @@ describe('TweetService (e2e)', () => {
 	it('Can upsert on tweet Id, existing tweet updated', async () => {
 		const tweet = createTweetDto();
 
-		const updateTweetDto = await service.insert(tweet) as UpdateTweetDto;
-		updateTweetDto.tweetText = 'Some new text';
+		await service.insert(tweet);
+		const updatedTweet = createTweetDto();
+		updatedTweet.tweetId = tweet.tweetId;
 
-		await service.upsertOnTweetId(updateTweetDto);
+		const resultingTweet = await service.upsertOnTweetId(updatedTweet);
 
-		const retrievedTweet = await service.getOne(updateTweetDto.id);
-		expect(retrievedTweet).toEqual(updateTweetDto);
+		const retrievedTweet = await service.getOne(resultingTweet.id);
+		expect(retrievedTweet.tweetText).toEqual(updatedTweet.tweetText);
 	});
 
 	it('Can upsert on tweetId, sentiments updated', async () => {
