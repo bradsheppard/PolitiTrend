@@ -11,6 +11,7 @@ class TweetCrawler:
 
     def get(self, search_term: str):
         tweets = tweepy\
-            .Cursor(self._api.search, q=search_term, lang='en', result_type='popular', tweet_mode='extended')\
-            .items(10)
+            .Cursor(self._api.search, q=search_term, lang='en', result_type='mixed',
+                    tweet_mode='extended') \
+            .items(100)
         return [tweet for tweet in tweets]
