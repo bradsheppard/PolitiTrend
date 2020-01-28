@@ -40,7 +40,7 @@ export class TweetService {
 			const query = await this.connection.createQueryBuilder()
 				.select('tweet')
 				.from(Tweet, 'tweet')
-				.innerJoinAndSelect('tweet.sentiments', 'sentiment');
+				.leftJoinAndSelect('tweet.sentiments', 'sentiment');
 
 			if (searchTweetDto.politician) {
 				query.andWhere('sentiment.politician = :politician', { politician: searchTweetDto.politician });
@@ -99,7 +99,7 @@ export class TweetService {
 	}
 
 	async upsertOnTweetId(createTweetDto: CreateTweetDto): Promise<Tweet> {
-		const updateTweetDto = createTweetDto as UpdateTweetDto;
+		const updateTweetDto = Object.assign({}, createTweetDto) as UpdateTweetDto;
 
 		const previousTweets = await this.get({tweetId: createTweetDto.tweetId});
 		if (previousTweets.length > 0) {

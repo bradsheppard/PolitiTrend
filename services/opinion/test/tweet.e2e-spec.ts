@@ -265,20 +265,22 @@ describe('TweetService (e2e)', () => {
 	it('Can upsert on tweet Id, existing tweet updated', async () => {
 		const tweet = createTweetDto();
 
-		await service.insert(tweet);
-		const updatedTweet = createTweetDto();
+		await service.upsertOnTweetId(tweet);
+		const updatedTweet = createTweetDto() as any;
 		updatedTweet.tweetId = tweet.tweetId;
 
 		const resultingTweet = await service.upsertOnTweetId(updatedTweet);
+		updatedTweet.id = resultingTweet.id;
+		updatedTweet.sentiments[0].id = resultingTweet.sentiments[0].id;
 
 		const retrievedTweet = await service.getOne(resultingTweet.id);
-		expect(retrievedTweet.tweetText).toEqual(updatedTweet.tweetText);
+		expect(retrievedTweet).toEqual(updatedTweet);
 	});
 
 	it('Can upsert on tweetId, sentiments updated', async () => {
-		const tweet = createTweetDto();
+		const tweet = createTweetDto() as any;
 
-		const insertedTweet = await service.insert(tweet);
+		const insertedTweet = await service.upsertOnTweetId(tweet);
 		tweet.sentiments = [
 			{
 				politician: 45,
@@ -289,7 +291,29 @@ describe('TweetService (e2e)', () => {
 		await service.upsertOnTweetId(tweet);
 
 		const retrievedTweet = await service.getOne(insertedTweet.id);
+		tweet.sentiments[0].id = retrievedTweet.sentiments[0].id;
+
 		expect(retrievedTweet.tweetText).toEqual(tweet.tweetText);
 		expect(retrievedTweet.sentiments).toEqual(tweet.sentiments);
+	});
+
+	it('Can upsert on tweetId, nothing changed', async () => {
+		const tweet = createTweetDto();
+
+		await service.upsertOnTweetId(tweet);
+		const resultingTweet = await service.upsertOnTweetId(tweet);
+
+		expect(resultingTweet.tweetText).toEqual(tweet.tweetText);
+		expect(resultingTweet.tweetId).toEqual(tweet.tweetId);
+	});
+
+	it('Can upsert with no sentiments, no exceptions', async () => {
+		const tweet = createTweetDto();
+		tweet.sentiments = [];
+
+		await service.upsertOnTweetId(tweet);
+		const resultingTweet = await service.upsertOnTweetId(tweet);
+
+		expect(resultingTweet.sentiments).toHaveLength(0);
 	});
 });
