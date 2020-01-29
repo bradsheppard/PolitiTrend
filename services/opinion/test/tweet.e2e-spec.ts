@@ -168,9 +168,15 @@ describe('TweetService (e2e)', () => {
 		const firstInsert = await service.insert(tweet1);
 		const secondInsert = await service.insert(tweet2);
 
-		const tweets = await service.get({});
+		const tweets = await service.get();
 
 		expect(tweets).toEqual([firstInsert, secondInsert]);
+	});
+
+	it('Can get when nothing exists', async () => {
+		const tweets = await service.get();
+
+		expect(tweets).toHaveLength(0);
 	});
 
 	it('Can get', async () => {
