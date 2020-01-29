@@ -13,6 +13,7 @@ export class Sentiment {
 	@Column({ type: 'double precision' })
 	value: number;
 
+	@Index()
 	@ManyToOne(type => Opinion, opinion => opinion.sentiments, { onDelete: 'CASCADE'})
 	opinion: Opinion;
 }
