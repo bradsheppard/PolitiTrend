@@ -23,9 +23,14 @@ class TweetApi {
 		return null;
 	}
 
-	static async getForPolitician(context: NextPageContext, politicianId: number): Promise<TweetDto[]> {
+	static async getForPolitician(context: NextPageContext, politicianId: number, limit: number): Promise<TweetDto[]> {
 		const axiosInstance = this.createAxiosInstance(context);
-		const res = await axiosInstance.get<TweetDto[]>('', {params: {politician: politicianId}});
+		const res = await axiosInstance.get<TweetDto[]>('', {
+			params: {
+				politician: politicianId,
+				limit
+			}
+		});
 
 		return res.data;
 	}

@@ -53,8 +53,9 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext): Promi
     const { id } = context.query;
     if (typeof id === 'string') {
         const politicianDto: PoliticianDto | null = await PoliticianApi.getOne(context, parseInt(id));
-        const tweetsDto: TweetDto[] = await TweetApi.getForPolitician(context, parseInt(id));
+        const tweetsDto: TweetDto[] = await TweetApi.getForPolitician(context, parseInt(id), 10);
         const opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.getForPolitician(context, parseInt(id));
+        opinionSummaryDtos.sort((a, b) => b.id - a.id);
 
         if(!politicianDto)
             return {
@@ -65,7 +66,7 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext): Promi
             name: politicianDto.name,
             party: politicianDto.party,
             tweets: tweetsDto,
-            sentiment: opinionSummaryDtos.sort((a, b) => b.id - a.id)[0].sentiment,
+            sentiment: opinionSummaryDtos.length > 0 ? opinionSummaryDtos[0].sentiment : 5,
             sentimentHistory: opinionSummaryDtos
         };
 
