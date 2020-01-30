@@ -92,24 +92,28 @@ const PoliticianDetails = (props: IProps) => {
                     sm={6}>
                     <ReactWordcloud words={words} options={wordCloudOptions} />
                 </Grid>
-                <Grid item
-                    sm={12}>
-                    <Chart chartType="LineChart"
-                           data={[
-                               ['x', politician.name],
-                               ...lineChartData
-                           ]}
-                           width="100%"
-                           height='500px'
-                           options={{
-                               hAxis: {
-                                   title: 'Time',
-                               },
-                               vAxis: {
-                                   title: 'Popularity',
-                               },
-                           }}/>
-                </Grid>
+                { lineChartData.length > 0 ?
+                    (
+                        <Grid item
+                              sm={12}>
+                            <Chart chartType="LineChart"
+                                   data={[
+                                       ['x', politician.name],
+                                       ...lineChartData
+                                   ]}
+                                   width="100%"
+                                   height='500px'
+                                   options={{
+                                       hAxis: {
+                                           title: 'Time',
+                                       },
+                                       vAxis: {
+                                           title: 'Popularity',
+                                       },
+                                   }}/>
+                        </Grid>
+                    ) : null
+                }
                 <Grid item
                       sm={12}>
                     <Divider variant="middle" className={classes.divider} />
