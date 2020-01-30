@@ -65,8 +65,8 @@ describe('Tweet Controller', () => {
 	it('can get with politician', async () => {
 		const tweet = createTweet();
 		const getSpy = jest.spyOn(service, 'get').mockResolvedValueOnce([tweet]);
-		await controller.findAll({politician: 1});
-		expect(getSpy).toBeCalledWith({politician: 1});
+		await controller.findAll({politicians: [1]});
+		expect(getSpy).toBeCalledWith({politicians: [1]});
 	});
 
 	it('can get one when exists', async () => {

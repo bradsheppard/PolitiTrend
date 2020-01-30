@@ -1,6 +1,6 @@
 export class SearchTweetDto {
 	tweetId?: string;
-	politician?: number;
+	politicians?: number[];
 	limit?: number;
 	offset?: number;
 }

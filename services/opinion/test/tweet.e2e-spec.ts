@@ -10,7 +10,7 @@ import microserviceConfig from '../src/config/config.microservice';
 import { ClientProviderOptions } from '@nestjs/microservices/module/interfaces/clients-module.interface';
 import waitForExpect from 'wait-for-expect';
 import { UpdateTweetDto } from '../src/opinion/tweet/dto/update-tweet.dto';
-import { create } from 'ts-node';
+
 waitForExpect.defaults.timeout = 20000;
 jest.setTimeout(30000);
 
@@ -193,7 +193,7 @@ describe('TweetService (e2e)', () => {
 		const insertedTweet1 = await service.insert(tweet1);
 		await service.insert(tweet2);
 
-		const politicianTweets = await service.get({politician: insertedTweet1.sentiments[0].politician});
+		const politicianTweets = await service.get({politicians: [insertedTweet1.sentiments[0].politician]});
 
 		expect(politicianTweets).toHaveLength(1);
 		for (const tweet of politicianTweets) {

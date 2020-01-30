@@ -42,8 +42,8 @@ export class TweetService {
 				.from(Tweet, 'tweet')
 				.leftJoinAndSelect('tweet.sentiments', 'sentiment');
 
-			if (searchTweetDto.politician) {
-				query.andWhere('sentiment.politician = :politician', { politician: searchTweetDto.politician });
+			if (searchTweetDto.politicians) {
+				query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchTweetDto.politicians });
 			}
 			if (searchTweetDto.tweetId) {
 				query.andWhere('tweet.tweetId = :tweetId', { tweetId: searchTweetDto.tweetId });
