@@ -28,12 +28,12 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /tweet?limit=1
+              path: /health
               port: http
             initialDelaySeconds: 30
           readinessProbe:
             httpGet:
-              path: /tweet?limit=1
+              path: /health
               port: http
           resources:
 {{ toYaml .Values.resources | indent 12 }}

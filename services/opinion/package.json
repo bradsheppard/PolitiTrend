@@ -20,10 +20,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json --runInBand --forceExit"
   },
   "dependencies": {
+    "@godaddy/terminus": "^4.3.1",
     "@nestjs/common": "^6.7.2",
     "@nestjs/core": "^6.7.2",
     "@nestjs/microservices": "^6.10.13",
     "@nestjs/platform-express": "^6.7.2",
+    "@nestjs/terminus": "^6.5.5",
     "@nestjs/typeorm": "^6.2.0",
     "kafkajs": "^1.11.0",
     "mysql": "^2.17.1",
