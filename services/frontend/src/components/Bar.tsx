@@ -62,7 +62,7 @@ const Header = (props: Props) => {
                         <BarItem link='test'>
                             Stats
                         </BarItem>
-                        <BarItem link='test'>
+                        <BarItem link='/about'>
                             About
                         </BarItem>
                     </Toolbar>

@@ -1,15 +1,16 @@
 import axios, { AxiosInstance } from 'axios';
 import { NextPageContext } from 'next';
-import absoluteUrl from '../utils/absoluteUrl';
+import absoluteUrl from '../../utils/absoluteUrl';
 import TweetDto from './TweetDto';
+import SearchTweetDto from './SearchTweetDto';
 
 class TweetApi {
 
 	private static baseUrl = '/api/opinions/tweets';
 
-	static async get(context: NextPageContext): Promise<TweetDto[]> {
+	static async get(context: NextPageContext, searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
 		const axiosInstance = this.createAxiosInstance(context);
-		const res = await axiosInstance.get<TweetDto[]>('');
+		const res = await axiosInstance.get<TweetDto[]>('', {params: searchTweetDto});
 		return res.data;
 	}
 
@@ -27,7 +28,7 @@ class TweetApi {
 		const axiosInstance = this.createAxiosInstance(context);
 		const res = await axiosInstance.get<TweetDto[]>('', {
 			params: {
-				politician: politicianId,
+				politicians: [politicianId],
 				limit
 			}
 		});

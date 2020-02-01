@@ -3,13 +3,13 @@ import { Typography } from '@material-ui/core';
 import PoliticianDetails from '../../components/PoliticianDetails';
 import { NextPageContext } from 'next';
 import ContentContainer from '../../components/ContentContainer';
-import PoliticianApi from '../../apis/PoliticianApi';
+import PoliticianApi from '../../apis/politician/PoliticianApi';
 import Bar from '../../components/Bar';
-import PoliticianDto from '../../apis/PoliticianDto';
-import TweetApi from '../../apis/TweetApi';
-import TweetDto from '../../apis/TweetDto';
-import OpinionSummaryDto from '../../apis/OpinionSummaryDto';
-import OpinionSummaryApi from '../../apis/OpinionSummaryApi';
+import PoliticianDto from '../../apis/politician/PoliticianDto';
+import TweetApi from '../../apis/tweet/TweetApi';
+import TweetDto from '../../apis/tweet/TweetDto';
+import OpinionSummaryDto from '../../apis/opinion-summary/OpinionSummaryDto';
+import OpinionSummaryApi from '../../apis/opinion-summary/OpinionSummaryApi';
 
 interface Tweet {
     tweetId: string;

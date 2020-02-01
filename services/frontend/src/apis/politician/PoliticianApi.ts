@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { NextPageContext } from 'next';
-import absoluteUrl from '../utils/absoluteUrl';
+import absoluteUrl from '../../utils/absoluteUrl';
 import PoliticianDto from './PoliticianDto';
 
 class PoliticianApi {

@@ -1,8 +1,7 @@
 import { createStyles, withStyles, WithStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
-import Globals from '../utils/Globals';
+import { PropsWithChildren } from 'react';
 
 const style = () => createStyles({
     background: {
@@ -17,9 +16,9 @@ const style = () => createStyles({
     }
 });
 
-interface IProps extends WithStyles<typeof style> {}
+interface IProps extends WithStyles<typeof style>, PropsWithChildren<{}> {}
 
-const Jumbotron = (props: IProps) => {
+const TransparentJumbo = (props: IProps) => {
 
     const { classes } = props;
 
@@ -28,12 +27,7 @@ const Jumbotron = (props: IProps) => {
             <Grid container={true}>
                 <Grid item={true} xs={12}>
                     <div className={classes.text}>
-                        <Typography variant='h1' align='center' style={{color: 'white'}}>
-                            {Globals.name.toUpperCase()}
-                        </Typography>
-                        <Typography variant='h5' align='center' style={{color: 'white'}}>
-                            Sentiment analysis of politicians
-                        </Typography>
+                        {props.children}
                     </div>
                 </Grid>
             </Grid>
@@ -41,5 +35,5 @@ const Jumbotron = (props: IProps) => {
     );
 };
 
-export default withStyles(style)(Jumbotron);
+export default withStyles(style)(TransparentJumbo);
 

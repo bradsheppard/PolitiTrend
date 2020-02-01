@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NextPageContext } from 'next';
-import PoliticianApi from '../apis/PoliticianApi';
+import PoliticianApi from '../apis/politician/PoliticianApi';
 import PoliticianSummary from '../components/PoliticianSummary';
 import { Card, createStyles, Grid, TextField, Theme, withStyles, WithStyles } from '@material-ui/core';
 import ContentContainer from '../components/ContentContainer';

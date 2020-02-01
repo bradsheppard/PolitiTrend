@@ -1,17 +1,19 @@
 import { Grid } from '@material-ui/core';
 import * as React from 'react';
-import Jumbotron from '../components/Jumbotron';
-import PoliticianApi from '../apis/PoliticianApi';
+import PoliticianApi from '../apis/politician/PoliticianApi';
 import { NextPageContext } from 'next';
 import CategoryHeader from '../components/CategoryHeader';
 import PoliticianSentimentSummary from '../components/PoliticianSentimentSummary';
 import ContentContainer from '../components/ContentContainer';
 import Bar from '../components/Bar';
-import PoliticianDto from '../apis/PoliticianDto';
-import TweetApi from '../apis/TweetApi';
-import TweetDto from '../apis/TweetDto';
-import OpinionSummaryDto from '../apis/OpinionSummaryDto';
-import OpinionSummaryApi from '../apis/OpinionSummaryApi';
+import PoliticianDto from '../apis/politician/PoliticianDto';
+import TweetApi from '../apis/tweet/TweetApi';
+import TweetDto from '../apis/tweet/TweetDto';
+import OpinionSummaryDto from '../apis/opinion-summary/OpinionSummaryDto';
+import OpinionSummaryApi from '../apis/opinion-summary/OpinionSummaryApi';
+import TransparentJumbo from '../components/TransparentJumbo';
+import Typography from '@material-ui/core/Typography';
+import Globals from '../utils/Globals';
 
 interface IProps {
     topPoliticians: Politician[];
@@ -35,6 +37,7 @@ class App extends React.Component<IProps> {
 
     static async getInitialProps(context: NextPageContext) {
         let politicianDtos: PoliticianDto[] = await PoliticianApi.get(context);
+        //let politicianIds = politicianDtos.map(x => x.id);
         let tweetDtos: TweetDto[] = await TweetApi.get(context);
         let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get(context);
 
@@ -69,7 +72,14 @@ class App extends React.Component<IProps> {
         return (
             <React.Fragment>
                 <Bar overlay={true}/>
-                <Jumbotron/>
+                <TransparentJumbo>
+                    <Typography variant='h1' align='center' style={{color: 'white'}}>
+                        {Globals.name.toUpperCase()}
+                    </Typography>
+                    <Typography variant='h5' align='center' style={{color: 'white'}}>
+                        Sentiment analysis of politicians
+                    </Typography>
+                </TransparentJumbo>
                 <ContentContainer>
                     <Grid container
                           direction='row'
