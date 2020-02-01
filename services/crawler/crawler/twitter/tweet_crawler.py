@@ -13,5 +13,5 @@ class TweetCrawler:
         tweets = tweepy\
             .Cursor(self._api.search, q=search_term, lang='en', result_type='mixed',
                     tweet_mode='extended') \
-            .items(100)
+            .items(25)
         return [tweet for tweet in tweets]
