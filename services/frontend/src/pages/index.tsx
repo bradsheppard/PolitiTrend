@@ -37,7 +37,6 @@ class App extends React.Component<IProps> {
 
     static async getInitialProps(context: NextPageContext) {
         let politicianDtos: PoliticianDto[] = await PoliticianApi.get(context);
-        //let politicianIds = politicianDtos.map(x => x.id);
         let tweetDtos: TweetDto[] = await TweetApi.get(context);
         let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get(context);
 

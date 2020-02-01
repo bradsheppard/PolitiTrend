@@ -1,8 +1,8 @@
-import attr
+from dataclasses import dataclass
 
 
-@attr.s
+@dataclass
 class Politician:
-    name = attr.ib()
-    party = attr.ib()
-    img = attr.ib()
+    name: str
+    party: str
+    img: str

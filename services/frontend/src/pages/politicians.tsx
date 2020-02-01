@@ -1,11 +1,22 @@
 import * as React from 'react';
 import { NextPageContext } from 'next';
 import PoliticianApi from '../apis/politician/PoliticianApi';
-import PoliticianSummary from '../components/PoliticianSummary';
-import { Card, createStyles, Grid, TextField, Theme, withStyles, WithStyles } from '@material-ui/core';
+import {
+    Card,
+    createStyles,
+    Grid,
+    GridList,
+    GridListTile, GridListTileBar, Link as MuiLink,
+    TextField,
+    Theme,
+    withStyles,
+    WithStyles
+} from '@material-ui/core';
 import ContentContainer from '../components/ContentContainer';
 import _ from 'lodash';
 import Bar from '../components/Bar';
+import { politicianNameToImagePath } from '../utils/ImagePath';
+import Link from 'next/link';
 
 const style = (theme: Theme) => createStyles({
     search: {
@@ -13,6 +24,10 @@ const style = (theme: Theme) => createStyles({
         marginTop: theme.spacing(6),
         marginBottom: theme.spacing(6)
     },
+    img: {
+        width: '100%',
+        height: 'auto'
+    }
 });
 
 interface Politician {
@@ -78,16 +93,22 @@ class Politicians extends React.Component<IProps, IState> {
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            {
-                                this.props.politicians.map((politician: Politician, index) => {
-                                    if(politician.name.includes(this.state.search))
-                                        return (
-                                            <Grid item sm={3} key={index}>
-                                                <PoliticianSummary politician={politician}/>
-                                            </Grid>
-                                        );
-                                })
-                            }
+
+                            <GridList cellHeight={500} cols={3}>
+                                {this.props.politicians.map(politician => (
+                                    <GridListTile key={politician.id}>
+                                        <Link href='/politicians/[id]' as={`/politicians/${politician.id}`}>
+                                            <MuiLink href='#'>
+                                                <img src={politicianNameToImagePath(politician.name)} alt={politician.name} className={classes.img} />
+                                            </MuiLink>
+                                        </Link>
+                                        <GridListTileBar
+                                            title={politician.name}
+                                            subtitle={<span>{politician.party}</span>}
+                                        />
+                                    </GridListTile>
+                                ))}
+                            </GridList>
                         </Grid>
                     </Card>
                 </ContentContainer>
