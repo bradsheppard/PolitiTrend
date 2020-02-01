@@ -12,7 +12,22 @@ const theme = createMuiTheme({
     typography: {
         fontFamily: [
             'Lato'
-        ].join(',')
+        ].join(','),
+        h1: {
+            fontFamily: [
+                'Roboto Condensed'
+            ].join(',')
+        },
+        h2: {
+            fontFamily: [
+                'Roboto Condensed'
+            ].join(',')
+        },
+        h3: {
+            fontFamily: [
+                'Roboto Condensed'
+            ].join(',')
+        }
     }
 });
 

@@ -69,7 +69,12 @@ class About extends React.Component<IProps> {
 						<Grid item sm={4}>
 							<CardDisplay className={classes.menuItem}
 										 header='Realtime'
-										 body='New content is monitor near realtime and automatically updated'/>
+										 body='News Articles / Tweets are monitored in near realtime. See trends as soon as they happen.'/>
+						</Grid>
+						<Grid item sm={4}>
+							<CardDisplay className={classes.menuItem}
+										 header='No Political Bias'
+										 body='Our algorithms are designed without political bias / preference. Conservative and liberal opinions are equally valued and weighted.'/>
 						</Grid>
 					</Grid>
 				</ContentContainer>
