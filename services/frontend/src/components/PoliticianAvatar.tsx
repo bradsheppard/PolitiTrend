@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { politicianNameToImagePath } from '../utils/ImagePath';
-import { Avatar, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Avatar, createStyles, makeStyles, Theme } from '@material-ui/core';
 
 interface Politician {
 	name: string;
@@ -27,19 +27,8 @@ const PoliticianAvatar = (props: IProps) => {
 	const classes = useStyles();
 
 	return (
-		<React.Fragment>
-			<Avatar alt={politician.name} src={politicianNameToImagePath(politician.name)} className={classes.large} />
-			<Typography variant='h5' color='primary'>
-				{politician.name}
-			</Typography>
-			<Typography variant='h6' color='primary'>
-				{politician.party}
-			</Typography>
-			<Typography variant='subtitle1' color='primary'>
-				Score: {politician.sentiment.toFixed(1)}
-			</Typography>
-		</React.Fragment>
-	)
+		<Avatar alt={politician.name} src={politicianNameToImagePath(politician.name)} className={classes.large} />
+	);
 };
 
 export default PoliticianAvatar;

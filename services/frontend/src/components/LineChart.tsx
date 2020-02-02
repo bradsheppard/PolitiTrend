@@ -17,22 +17,23 @@ const LineChart = (props: IProps) => {
 
 	return (
 		<Chart chartType="LineChart"
-			   data={[
-				   ['x', 'y'],
-				   ...lineChartData
-			   ]}
-			   width="100%"
-			   height='500px'
-			   options={{
-				   hAxis: {
-					   title: props.xAxis,
-				   },
-				   vAxis: {
-					   title: props.yAxis,
-					   viewWindow: { min: 0, max: 10 }
-				   },
-				   legend: 'none'
-			   }}/>
+			data={[
+			   ['x', 'y'],
+			   ...lineChartData
+			]}
+			width="100%"
+			height='400px'
+			options={{
+				backgroundColor: 'transparent',
+				hAxis: {
+					title: props.xAxis,
+				},
+				vAxis: {
+					title: props.yAxis,
+					viewWindow: { min: 0, max: 10 }
+				},
+				legend: 'none'
+			}}/>
 	)
 };
 
