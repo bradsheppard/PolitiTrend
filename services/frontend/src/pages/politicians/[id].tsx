@@ -101,26 +101,28 @@ const PoliticianPage = (props: IProps) => {
                         </Card>
                     </Grid>
                     <Grid item sm={8} className={classes.content}>
-                        <Grid container
-                              alignItems='flex-start'
-                              direction='row'
-                              justify='center'>
-                            <Grid item sm={12}>
-                                {
-                                    tweets.map((opinion: Tweet, index) => {
-                                        return (
-                                            <TweetWidget
-                                                options={{
-                                                    align: 'center'
-                                                }}
-                                                tweetId={opinion.tweetId}
-                                                key={index}
-                                            />
-                                        )
-                                    })
-                                }
+                        <Card>
+                            <Grid container
+                                  alignItems='flex-start'
+                                  direction='row'
+                                  justify='center'>
+                                <Grid item sm={12}>
+                                    {
+                                        tweets.map((opinion: Tweet, index) => {
+                                            return (
+                                                <TweetWidget
+                                                    options={{
+                                                        align: 'center'
+                                                    }}
+                                                    tweetId={opinion.tweetId}
+                                                    key={index}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        </Card>
                     </Grid>
                 </Grid>
             </ContentContainer>
