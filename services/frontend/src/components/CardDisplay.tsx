@@ -15,7 +15,7 @@ const style = (theme: Theme) => createStyles({
 
 const CardDisplay = (props: IProps) => {
 	return (
-		<Card className={props.className} elevation={16}>
+		<Card className={props.className} raised={true}>
 			<CardContent>
 				<Typography variant='h5' align='center' className={props.classes.typography}>
 					{props.header}

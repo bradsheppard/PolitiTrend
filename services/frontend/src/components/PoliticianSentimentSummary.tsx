@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
     Avatar,
     Button,
-    Card,
     CardActions,
     CardContent,
     CardHeader, Collapse, createStyles,
@@ -15,6 +14,7 @@ import { ExpandMore } from '@material-ui/icons'
 import clsx from 'clsx';
 import { politicianNameToImagePath } from '../utils/ImagePath';
 import Link from 'next/link';
+import Card from './Card';
 
 interface IProps extends WithStyles<typeof styles> {
     politician: Politician;
@@ -93,7 +93,7 @@ class PoliticianSentimentSummary extends React.Component<IProps, IState> {
             // @ts-ignore
             <Waypoint onEnter={this.onEnterViewport.bind(this)} onLeave={this.onExitViewport.bind(this)}>
                 <Fade in={this.state.visible} timeout={2000}>
-                    <Card className={classes.card} elevation={1}>
+                    <Card className={classes.card}>
                         <Link href='/politicians/[id]' as={`/politicians/${this.props.politician.id}`}>
                             <MuiLink href='#' underline='none'>
                                 <CardHeader avatar={<Avatar src={politicianNameToImagePath(this.props.politician.name)}/>}

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { NextPageContext } from 'next';
 import PoliticianApi from '../apis/politician/PoliticianApi';
 import {
-    Card,
     createStyles,
     Grid,
     TextField,
@@ -14,6 +13,7 @@ import ContentContainer from '../components/ContentContainer';
 import _ from 'lodash';
 import Bar from '../components/Bar';
 import PoliticianGridList from '../components/PoliticianGridList';
+import Card from '../components/Card';
 
 const style = (theme: Theme) => createStyles({
     search: {

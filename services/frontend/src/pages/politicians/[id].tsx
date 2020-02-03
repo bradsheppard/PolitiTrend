@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, createStyles, Grid, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { createStyles, Grid, Tab, Tabs, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { NextPageContext } from 'next';
 import { Tweet as TweetWidget } from 'react-twitter-widgets'
 import ContentContainer from '../../components/ContentContainer';
@@ -12,6 +12,7 @@ import OpinionSummaryDto from '../../apis/opinion-summary/OpinionSummaryDto';
 import OpinionSummaryApi from '../../apis/opinion-summary/OpinionSummaryApi';
 import PoliticianAvatar from '../../components/PoliticianAvatar';
 import LineChart from '../../components/LineChart';
+import Card from '../../components/Card';
 
 const styles = (theme: Theme) => createStyles({
     profile: {
@@ -51,6 +52,7 @@ interface Politician {
 
 interface IProps extends WithStyles<typeof styles> {
     politician: Politician | null;
+    tabValue: string;
 }
 
 const PoliticianPage = (props: IProps) => {
@@ -59,12 +61,18 @@ const PoliticianPage = (props: IProps) => {
             <Typography>Not Found</Typography>
         );
 
+    const [tabValue, setTabValue] = React.useState(0);
+
     const { politician, classes } = props;
     const { tweets } = politician;
 
     const lineChartData = politician.sentimentHistory.map((opinionSummary: OpinionSummary) => {
         return {date: new Date(opinionSummary.dateTime), value: opinionSummary.sentiment}
     });
+
+    const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
+        setTabValue(newValue);
+    };
 
     return (
         <React.Fragment>
@@ -102,26 +110,29 @@ const PoliticianPage = (props: IProps) => {
                     </Grid>
                     <Grid item sm={8} className={classes.content}>
                         <Card>
-                            <Grid container
-                                  alignItems='flex-start'
-                                  direction='row'
-                                  justify='center'>
-                                <Grid item sm={12}>
-                                    {
-                                        tweets.map((opinion: Tweet, index) => {
-                                            return (
-                                                <TweetWidget
-                                                    options={{
-                                                        align: 'center'
-                                                    }}
-                                                    tweetId={opinion.tweetId}
-                                                    key={index}
-                                                />
-                                            )
-                                        })
-                                    }
-                                </Grid>
-                            </Grid>
+                            <Tabs
+                                value={tabValue}
+                                indicatorColor='primary'
+                                textColor='primary'
+                                onChange={handleTabChange}
+                                centered
+                            >
+                                <Tab label='Tweets' />
+                                <Tab label='News Articles' />
+                            </Tabs>
+                            {
+                                tweets.map((opinion: Tweet, index) => {
+                                    return (
+                                        <TweetWidget
+                                            options={{
+                                                align: 'center'
+                                            }}
+                                            tweetId={opinion.tweetId}
+                                            key={index}
+                                        />
+                                    )
+                                })
+                            }
                         </Card>
                     </Grid>
                 </Grid>
