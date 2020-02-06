@@ -35,6 +35,21 @@ function createTweetDto() {
 	} as CreateTweetDto;
 }
 
+function createTweetDtoForPolitician(politicianId: number) {
+	id++;
+	return {
+		tweetId: id.toString(),
+		tweetText: `Test tweet ${id}`,
+		dateTime: new Date().toUTCString(),
+		sentiments: [
+			{
+				politician: politicianId,
+				value: id,
+			},
+		],
+	} as CreateTweetDto;
+}
+
 beforeAll(async () => {
 	const name = {
 		name: 'TWEET_SERVICE',
@@ -221,6 +236,34 @@ describe('TweetService (e2e)', () => {
 
 		expect(tweets[1].tweetId).toEqual(tweet3.tweetId);
 		expect(tweets[1].tweetText).toEqual(tweet3.tweetText);
+	});
+
+	it('Can get with limit per politician', async () => {
+		const tweet1Politician1 = createTweetDtoForPolitician(1);
+		const tweet2Politician1 = createTweetDtoForPolitician(1);
+		const tweet3Politician1 = createTweetDtoForPolitician(1);
+
+		const tweet1Politician2 = createTweetDtoForPolitician(2);
+		const tweet2Politician2 = createTweetDtoForPolitician(2);
+		const tweet3Politician2 = createTweetDtoForPolitician(2);
+
+		await Promise.all([
+			service.insert(tweet1Politician1),
+			service.insert(tweet2Politician1),
+			service.insert(tweet3Politician1),
+
+			service.insert(tweet1Politician2),
+			service.insert(tweet2Politician2),
+			service.insert(tweet3Politician2),
+		]);
+
+		const tweets = await service.get({limitPerPolitician: 2});
+
+		const politician1Tweets = tweets.filter(x => x.sentiments[0].politician === 1);
+		const politician2Tweets = tweets.filter(x => x.sentiments[0].politician === 2);
+
+		expect(politician1Tweets).toHaveLength(2);
+		expect(politician2Tweets).toHaveLength(2);
 	});
 
 	it('Can delete one', async () => {

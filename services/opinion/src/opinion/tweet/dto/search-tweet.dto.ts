@@ -3,4 +3,5 @@ export class SearchTweetDto {
 	politicians?: number[];
 	limit?: number;
 	offset?: number;
+	limitPerPolitician?: number;
 }

@@ -38,7 +38,7 @@ export class TweetService {
 	async get(searchTweetDto?: SearchTweetDto): Promise<Tweet[]> {
 		if (searchTweetDto) {
 			const query = await this.connection.createQueryBuilder()
-				.select('tweet')
+				.addSelect('tweet')
 				.from(Tweet, 'tweet')
 				.leftJoinAndSelect('tweet.sentiments', 'sentiment');
 
@@ -57,6 +57,13 @@ export class TweetService {
 				query.offset(searchTweetDto.offset);
 			}
 
+			if (searchTweetDto.limitPerPolitician) {
+				query.addSelect('ROW_NUMBER() OVER (PARTITION BY sentiment.politician ORDER BY sentiment.id)', 'row');
+				query.having('"row" <= :limitPerPolitician', { limitPerPolitician: searchTweetDto.limitPerPolitician });
+			}
+
+			const results = await query.getRawMany();
+			const stringResult = query.getQuery();
 			return await query.getMany();
 		}
 		return await this.tweetRepository.find();
