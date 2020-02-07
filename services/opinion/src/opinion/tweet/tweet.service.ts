@@ -37,7 +37,7 @@ export class TweetService {
 
 	async get(searchTweetDto?: SearchTweetDto): Promise<Tweet[]> {
 		if (searchTweetDto) {
-			const query = await this.connection.createQueryBuilder()
+			const query = this.connection.createQueryBuilder()
 				.addSelect('tweet')
 				.from(Tweet, 'tweet')
 				.leftJoinAndSelect('tweet.sentiments', 'sentiment');
@@ -45,6 +45,7 @@ export class TweetService {
 			if (searchTweetDto.politicians) {
 				query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchTweetDto.politicians });
 			}
+
 			if (searchTweetDto.tweetId) {
 				query.andWhere('tweet.tweetId = :tweetId', { tweetId: searchTweetDto.tweetId });
 			}
@@ -58,12 +59,18 @@ export class TweetService {
 			}
 
 			if (searchTweetDto.limitPerPolitician) {
-				query.addSelect('ROW_NUMBER() OVER (PARTITION BY sentiment.politician ORDER BY sentiment.id)', 'row');
-				query.having('"row" <= :limitPerPolitician', { limitPerPolitician: searchTweetDto.limitPerPolitician });
+				const mainQuery = await this.connection.query(`SELECT * FROM (${query.getSql()}) result`, query.getParameters());
+				// query.addSelect('ROW_NUMBER() OVER (PARTITION BY sentiment.politician ORDER BY sentiment.id)', 'row');
+				// const mainQuery = await this.connection.createQueryBuilder()
+				// 	.addSelect()
+				// 	.addFrom(() => query, 'result');
+				// mainQuery.having('"row" <= :limitPerPolitician', { limitPerPolitician: searchTweetDto.limitPerPolitician });
+
+				const str = mainQuery.getSql();
+				return await mainQuery.getRawMany() as Tweet[];
 			}
 
-			const results = await query.getRawMany();
-			const stringResult = query.getQuery();
+			const str = query.getQueryAndParameters();
 			return await query.getMany();
 		}
 		return await this.tweetRepository.find();
