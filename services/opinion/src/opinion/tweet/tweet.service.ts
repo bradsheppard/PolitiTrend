@@ -43,7 +43,7 @@ export class TweetService {
 				const mainQuery = this.connection.createQueryBuilder()
 					.addSelect('*')
 					.from(cb => TweetService.generateQuery(cb, searchTweetDto)
-						.addSelect('ROW_NUMBER() OVER (PARTITION BY sentiment.politician ORDER BY sentiment.id)', 'row'), 'result')
+						.addSelect('ROW_NUMBER() OVER (PARTITION BY sentiment.politician)', 'row'), 'result')
 					.where('row <= :limitPerPolitician', { limitPerPolitician: searchTweetDto.limitPerPolitician });
 
 				const result = await mainQuery.getRawMany();

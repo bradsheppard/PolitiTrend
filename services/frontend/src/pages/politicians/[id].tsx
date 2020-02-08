@@ -145,8 +145,8 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext) {
     const { id } = context.query;
     if (typeof id === 'string') {
         const politicianDto: PoliticianDto | null = await PoliticianApi.getOne(context, parseInt(id));
-        const tweetsDto: TweetDto[] = await TweetApi.getForPolitician(context, parseInt(id), 10);
-        const opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.getForPolitician(context, parseInt(id));
+        const tweetsDto: TweetDto[] = await TweetApi.get(context, {politicians: [parseInt(id)], limit: 10});
+        const opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get(context, { politician: parseInt(id) });
         opinionSummaryDtos.sort((a, b) => b.id - a.id);
 
         if(!politicianDto)

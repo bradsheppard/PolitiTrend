@@ -24,18 +24,6 @@ class TweetApi {
 		return null;
 	}
 
-	static async getForPolitician(context: NextPageContext, politicianId: number, limit: number): Promise<TweetDto[]> {
-		const axiosInstance = this.createAxiosInstance(context);
-		const res = await axiosInstance.get<TweetDto[]>('', {
-			params: {
-				politicians: [politicianId],
-				limit
-			}
-		});
-
-		return res.data;
-	}
-
 	private static createAxiosInstance(context: NextPageContext): AxiosInstance {
 		const { origin } = absoluteUrl(context.req);
 		const prefix = `${origin}${this.baseUrl}`;

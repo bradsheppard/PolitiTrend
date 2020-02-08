@@ -2,14 +2,15 @@ import axios, { AxiosInstance } from 'axios';
 import { NextPageContext } from 'next';
 import absoluteUrl from '../../utils/absoluteUrl';
 import OpinionSummaryDto from './OpinionSummaryDto';
+import SearchOpinionSummaryDto from './SearchOpinionSummaryDto';
 
 class OpinionSummaryApi {
 
 	private static baseUrl = '/api/opinions/opinionsummarys';
 
-	static async get(context: NextPageContext): Promise<OpinionSummaryDto[]> {
+	static async get(context: NextPageContext, searchOpinionSummaryDto?: SearchOpinionSummaryDto): Promise<OpinionSummaryDto[]> {
 		const axiosInstance = this.createAxiosInstance(context);
-		const res = await axiosInstance.get('');
+		const res = await axiosInstance.get('', {params: searchOpinionSummaryDto});
 		return res.data;
 	}
 
@@ -21,24 +22,6 @@ class OpinionSummaryApi {
 			return res.data;
 
 		return null;
-	}
-
-	static async getMaxForPolitician(context: NextPageContext, politicianId: number): Promise<OpinionSummaryDto | null> {
-		const axiosInstance = this.createAxiosInstance(context);
-		const res = await axiosInstance.get<OpinionSummaryDto[]>('', {params: {max: true, politician: politicianId}});
-
-		const opinionSummarys: OpinionSummaryDto[] = res.data;
-		if(opinionSummarys.length > 0)
-			return opinionSummarys[0];
-
-		return null;
-	}
-
-	static async getForPolitician(context: NextPageContext, politicianId: number): Promise<OpinionSummaryDto[]> {
-		const axiosInstance = this.createAxiosInstance(context);
-		const res = await axiosInstance.get<OpinionSummaryDto[]>('', {params: {politician: politicianId}});
-
-		return res.data;
 	}
 
 	private static createAxiosInstance(context: NextPageContext): AxiosInstance {
