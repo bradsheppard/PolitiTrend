@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Connection, Repository, SelectQueryBuilder } from 'typeorm';
 import Tweet from './tweet.entity';
 import { CreateTweetDto } from './dto/create-tweet.dto';
 import { UpdateTweetDto } from './dto/update-tweet.dto';
@@ -37,43 +37,73 @@ export class TweetService {
 
 	async get(searchTweetDto?: SearchTweetDto): Promise<Tweet[]> {
 		if (searchTweetDto) {
-			const query = this.connection.createQueryBuilder()
-				.addSelect('tweet')
-				.from(Tweet, 'tweet')
-				.leftJoinAndSelect('tweet.sentiments', 'sentiment');
-
-			if (searchTweetDto.politicians) {
-				query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchTweetDto.politicians });
-			}
-
-			if (searchTweetDto.tweetId) {
-				query.andWhere('tweet.tweetId = :tweetId', { tweetId: searchTweetDto.tweetId });
-			}
-
-			if (searchTweetDto.limit) {
-				query.limit(searchTweetDto.limit);
-			}
-
-			if (searchTweetDto.offset) {
-				query.offset(searchTweetDto.offset);
-			}
+			const query = TweetService.generateQuery(this.connection.createQueryBuilder(), searchTweetDto);
 
 			if (searchTweetDto.limitPerPolitician) {
-				const mainQuery = await this.connection.query(`SELECT * FROM (${query.getSql()}) result`, query.getParameters());
-				// query.addSelect('ROW_NUMBER() OVER (PARTITION BY sentiment.politician ORDER BY sentiment.id)', 'row');
-				// const mainQuery = await this.connection.createQueryBuilder()
-				// 	.addSelect()
-				// 	.addFrom(() => query, 'result');
-				// mainQuery.having('"row" <= :limitPerPolitician', { limitPerPolitician: searchTweetDto.limitPerPolitician });
+				const mainQuery = this.connection.createQueryBuilder()
+					.addSelect('*')
+					.from(cb => TweetService.generateQuery(cb, searchTweetDto)
+						.addSelect('ROW_NUMBER() OVER (PARTITION BY sentiment.politician ORDER BY sentiment.id)', 'row'), 'result')
+					.where('row <= :limitPerPolitician', { limitPerPolitician: searchTweetDto.limitPerPolitician });
 
-				const str = mainQuery.getSql();
-				return await mainQuery.getRawMany() as Tweet[];
+				const result = await mainQuery.getRawMany();
+				return this.toEntities(result);
 			}
 
-			const str = query.getQueryAndParameters();
 			return await query.getMany();
 		}
 		return await this.tweetRepository.find();
+	}
+
+	private toEntities(rawResults: any[]): Tweet[] {
+		const results: {[key: string]: Tweet} = {};
+
+		for (const rawResult of rawResults) {
+			const sentiment: Sentiment = this.sentimentRepository.create({
+				politician: rawResult.sentiment_politician,
+				value: rawResult.sentiment_value,
+				id: rawResult.sentiment_id,
+				opinion: rawResult.tweet_id,
+			});
+
+			if (results[rawResult.tweet_id]) {
+				results[rawResult.tweet_id].sentiments.push(sentiment);
+				continue;
+			}
+			results[rawResult.tweet_id] = this.tweetRepository.create({
+				id: rawResult.tweet_id,
+				dateTime: rawResult.tweet_dateTime,
+				tweetId: rawResult.tweet_tweetId,
+				tweetText: rawResult.tweet_tweetText,
+				sentiments: [sentiment],
+			});
+		}
+
+		return Object.values(results);
+	}
+
+	private static generateQuery(query: SelectQueryBuilder<any>, searchTweetDto: SearchTweetDto) {
+		query.addSelect('tweet')
+			.from(Tweet, 'tweet')
+			.leftJoinAndSelect('tweet.sentiments', 'sentiment');
+
+		if (searchTweetDto.politicians) {
+			query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchTweetDto.politicians });
+		}
+
+		if (searchTweetDto.tweetId) {
+			query.andWhere('tweet.tweetId = :tweetId', { tweetId: searchTweetDto.tweetId });
+		}
+
+		if (searchTweetDto.limit) {
+			query.limit(searchTweetDto.limit);
+		}
+
+		if (searchTweetDto.offset) {
+			query.offset(searchTweetDto.offset);
+		}
+
+		return query;
 	}
 
 	async getOne(id: number): Promise<Tweet | null> {
