@@ -1,7 +1,7 @@
 export class SearchNewsArticleDto {
-	id: number;
+	id?: number;
 	politicians?: number[];
 	limit?: number;
 	offset?: number;
-	limitPerPolitician?: number;
+	source: string;
 }
