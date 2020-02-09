@@ -3,6 +3,7 @@ import configparser
 config_parser = configparser.ConfigParser()
 config_parser.read('config.ini')
 twitter_config = config_parser['twitter']
+contextual_web_config = config_parser['contextual_web']
 
 
 class Config:
@@ -12,6 +13,7 @@ class Config:
         self.twitter_consumer_secret = None
         self.twitter_access_token = None
         self.twitter_access_token_secret = None
+        self.contextual_web_api_key = None
 
     @property
     def twitter_consumer_key(self):
@@ -45,9 +47,20 @@ class Config:
     def twitter_access_token_secret(self, value):
         self._twitter_access_token_secret = value
 
+    @property
+    def contextual_web_api_key(self):
+        return self._contextual_web_api_key
+
+    @contextual_web_api_key.setter
+    def contextual_web_api_key(self, value):
+        self._contextual_web_api_key = value
+
 
 config = Config()
+
 config.twitter_consumer_key = twitter_config['consumer_key']
 config.twitter_consumer_secret = twitter_config['consumer_secret']
 config.twitter_access_token = twitter_config['access_token']
 config.twitter_access_token_secret = twitter_config['access_token_secret']
+
+config.contextual_web_api_key = contextual_web_config['api_key']
