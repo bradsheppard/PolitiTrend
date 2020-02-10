@@ -6,6 +6,7 @@ import { OpinionSummaryJobModule } from './opinion-summary-job/opinion-summary-j
 import { SentimentModule } from './sentiment/sentiment.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { TerminusOptionsService } from './terminus-options/terminus-options.service';
+import { NewsArticleModule } from './opinion/news-article/news-article.module';
 
 @Module({
 	imports: [
@@ -14,6 +15,7 @@ import { TerminusOptionsService } from './terminus-options/terminus-options.serv
 		OpinionSummaryJobModule,
 		SentimentModule,
 		TweetModule,
+		NewsArticleModule,
 		TerminusModule.forRootAsync({
 			useClass: TerminusOptionsService,
 		}),
