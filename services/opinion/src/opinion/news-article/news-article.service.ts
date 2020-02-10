@@ -5,7 +5,7 @@ import { Connection, Repository } from 'typeorm';
 import { Sentiment } from '../../sentiment/sentiment.entity';
 import { Injectable } from '@nestjs/common';
 import { CreateNewsArticleDto } from './dto/create-news-article.dto';
-import { UpdateTweetDto } from '../tweet/dto/update-tweet.dto';
+import { UpdateNewsArticleDto } from './dto/update-news-article.dto';
 
 @Injectable()
 export class NewsArticleService {
@@ -63,11 +63,11 @@ export class NewsArticleService {
 	}
 
 	async upsertOnSource(createNewsArticleDto: CreateNewsArticleDto) {
-		const updateNewsArticleDto = Object.assign({}, createNewsArticleDto) as UpdateTweetDto;
+		const updateNewsArticleDto = Object.assign({}, createNewsArticleDto) as UpdateNewsArticleDto;
 
-		const previousTweets = await this.get({source: createNewsArticleDto.source});
-		if (previousTweets.length > 0) {
-			updateNewsArticleDto.id = previousTweets[0].id;
+		const previousNewsArticles = await this.get({source: createNewsArticleDto.source});
+		if (previousNewsArticles.length > 0) {
+			updateNewsArticleDto.id = previousNewsArticles[0].id;
 		}
 
 		const sentiments = [];

@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpException, HttpStatus, Param, Query } from '@nestjs/common';
+import { Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
 import { NewsArticleService } from './news-article.service';
 import { SearchNewsArticleDto } from './dto/search-news-article.dto';
 import { EventPattern } from '@nestjs/microservices';
@@ -15,13 +15,18 @@ export class NewsArticleController {
 
 	@Get(':id')
 	async findOne(@Param('id') id: string) {
-		const newsArticle = this.newsArticleService.getOne(parseInt(id, 10));
+		const newsArticle = await this.newsArticleService.getOne(parseInt(id, 10));
 
 		if (!newsArticle) {
 			throw new HttpException('Not found', HttpStatus.NOT_FOUND);
 		}
 
 		return newsArticle;
+	}
+
+	@Post()
+	async create(createNewsArticleDto: CreateNewsArticleDto) {
+		return await this.newsArticleService.upsertOnSource(createNewsArticleDto);
 	}
 
 	@Delete()
@@ -40,6 +45,6 @@ export class NewsArticleController {
 
 	@EventPattern('news_article_created')
 	async handleNewsArticleCreated(createNewsArticleDto: CreateNewsArticleDto) {
-		await this.newsArticleService.
+		await this.newsArticleService.upsertOnSource(createNewsArticleDto);
 	}
 }
