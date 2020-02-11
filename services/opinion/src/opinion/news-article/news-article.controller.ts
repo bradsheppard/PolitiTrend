@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
 import { NewsArticleService } from './news-article.service';
 import { SearchNewsArticleDto } from './dto/search-news-article.dto';
 import { EventPattern } from '@nestjs/microservices';
@@ -25,7 +25,7 @@ export class NewsArticleController {
 	}
 
 	@Post()
-	async create(createNewsArticleDto: CreateNewsArticleDto) {
+	async create(@Body() createNewsArticleDto: CreateNewsArticleDto) {
 		return await this.newsArticleService.upsertOnSource(createNewsArticleDto);
 	}
 
