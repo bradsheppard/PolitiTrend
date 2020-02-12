@@ -20,7 +20,7 @@ export class NewsArticleService {
 	) {}
 
 	async getOne(id: number): Promise<NewsArticle | null> {
-		const newsArticle = this.newsArticleRepository.findOne(id);
+		const newsArticle = await this.newsArticleRepository.findOne(id);
 
 		return newsArticle !== undefined ? newsArticle : null;
 	}
@@ -37,6 +37,10 @@ export class NewsArticleService {
 
 		if (searchDto.politicians) {
 			query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchDto.politicians });
+		}
+
+		if (searchDto.source) {
+			query.andWhere('newsarticle.source = :source', { source: searchDto.source });
 		}
 
 		if (searchDto.limit) {
