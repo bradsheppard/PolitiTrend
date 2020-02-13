@@ -5,6 +5,18 @@
 
 imagePullSecrets: []
 
+crawler:
+  enabled: false
+
+politician:
+  enabled: true
+
+opinion:
+  enabled: true
+
+frontend:
+  enabled: false
+
 global:
   registry: registry.gitlab.com/brad_1357/voyce
 

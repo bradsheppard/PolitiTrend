@@ -21,6 +21,14 @@ version: 0.1.0
 appVersion: 1.0.0
 
 dependencies:
+  - name: politician
+    condition: politician.enabled
+  - name: opinion
+    condition: opinion.enabled
+  - name: crawler
+    condition: crawler.enabled
+  - name: frontend
+    condition: frontend.enabled
   - name: kafka
     version: 7.0.4
     repository: https://charts.bitnami.com/bitnami
