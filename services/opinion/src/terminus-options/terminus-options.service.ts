@@ -12,7 +12,7 @@ export class TerminusOptionsService implements TerminusOptionsFactory {
 		const healthEndpoint: TerminusEndpoint = {
 			url: '/health',
 			healthIndicators: [
-				async () => this.typeOrmHealthIndicator.pingCheck('database', { timeout: 300 }),
+				async () => this.typeOrmHealthIndicator.pingCheck('database', { timeout: 1000 }),
 			],
 		};
 		return {
