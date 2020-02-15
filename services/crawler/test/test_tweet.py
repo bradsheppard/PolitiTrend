@@ -35,12 +35,6 @@ def test_insert_and_get():
         sentiments=[sentiment]
     )
 
-    tweet.politician = 1
-    tweet.tweetId = 1
-    tweet.tweetText = random_string()
-    tweet.sentiments = [sentiment]
-    tweet.dateTime = datetime.datetime.now().isoformat(' ', 'seconds')
-
     repository.insert(tweet)
 
     time.sleep(2)
@@ -53,8 +47,8 @@ def test_insert_and_get():
     for inserted_tweet in inserted_tweets:
         if (
                 inserted_tweet.tweetText == tweet.tweetText and
-                inserted_tweet.sentiments[0].value == tweet.sentiments[0].value and
-                inserted_tweet.sentiments[0].politician == tweet.sentiments[0].politician and
+                inserted_tweet.sentiments[0]['value'] == tweet.sentiments[0].value and
+                inserted_tweet.sentiments[0]['politician'] == tweet.sentiments[0].politician and
                 parser.parse(inserted_tweet.dateTime).replace(tzinfo=None).isoformat(' ', 'seconds') ==
                 parser.parse(tweet.dateTime).replace(tzinfo=None).isoformat(' ', 'seconds')
         ):

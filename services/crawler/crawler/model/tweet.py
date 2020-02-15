@@ -57,7 +57,7 @@ class TweetRepository(Repository[Tweet]):
 
         for entry in body:
             tweet = Tweet(
-                sentiments=[],
+                sentiments=entry['sentiments'],
                 tweetText=entry['tweetText'],
                 tweetId=entry['tweetId'],
                 dateTime=entry['dateTime'])

@@ -1,5 +1,5 @@
 import time
-
+import datetime
 from crawler.model import OpinionSummaryRepository, TweetRepository, Tweet, Sentiment
 from crawler.model import OpinionSummaryJob, OpinionSummaryJobRepository
 
@@ -19,14 +19,18 @@ def test_insert_and_get():
 
 def test_insert_and_summary_generated():
     tweet_repository = TweetRepository()
-    tweet = Tweet()
-    sentiment = Sentiment()
-    sentiment.politician = 1
-    sentiment.value = 1
-    tweet.politician = 1
-    tweet.tweetId = 1
-    tweet.tweetText = 'Test tweet'
-    tweet.sentiments = [sentiment]
+
+    sentiment = Sentiment(
+        politician=1,
+        value=1
+    )
+
+    tweet = Tweet(
+        tweetId='1',
+        tweetText='Test tweet',
+        sentiments=[sentiment],
+        dateTime=datetime.datetime.now().isoformat(' ', 'seconds')
+    )
 
     tweet_repository.insert(tweet)
 
