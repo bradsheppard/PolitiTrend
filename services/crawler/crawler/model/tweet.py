@@ -4,9 +4,11 @@ import json
 import tweepy
 from dataclasses import dataclass
 from crawler.message_bus import MessageBus
+from crawler.model.crawler import Crawler
+from crawler.model.repository import Repository
 
 
-@dataclass(init=False)
+@dataclass
 class Sentiment:
     politician: int
     value: float
@@ -20,7 +22,7 @@ class Tweet:
     dateTime: str
 
 
-class TweetCrawler:
+class TweetCrawler(Crawler[Tweet]):
 
     def __init__(self, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -41,7 +43,7 @@ class TweetCrawler:
             sentiments=[]) for result in results]
 
 
-class TweetRepository:
+class TweetRepository(Repository[Tweet]):
 
     def __init__(self):
         self._host = 'http://opinion/tweet'
