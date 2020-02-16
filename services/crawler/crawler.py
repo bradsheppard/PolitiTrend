@@ -1,19 +1,22 @@
 from typing import List, Union
-
 from crawler.config import config
 from crawler.ml import SentimentAnalyzer, AnalysisResult
 from crawler.model import PoliticianRepository, Tweet, TweetRepository, OpinionSummaryJobRepository, \
     OpinionSummaryJob, Sentiment
 from crawler.model.politician import Politician
 from crawler.model import TweetCrawler
+from crawler.orchestrator import CrawlerConfiguration, Orchestrator
 
 tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret,
                              config.twitter_access_token, config.twitter_access_token_secret)
+tweet_repository = TweetRepository()
 
 politician_repository = PoliticianRepository()
-tweet_repository = TweetRepository()
 opinion_summary_job_repository = OpinionSummaryJobRepository()
 
+crawler_config = CrawlerConfiguration(crawler=tweet_crawler, repository=tweet_repository)
+
+orchestrator = Orchestrator([crawler_config])
 
 def politician_to_id(politician_name: str) -> Union[int, None]:
     return next((x.num for x in politicians if x.name == politician_name), None)

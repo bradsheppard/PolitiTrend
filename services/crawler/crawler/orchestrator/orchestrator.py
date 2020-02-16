@@ -17,4 +17,5 @@ class Orchestrator:
     def crawl_all(self, search_term: str):
         for configuration in self._crawler_configurations:
             results = configuration.crawler.get(search_term)
-            configuration.repository.insert()
+            for result in results:
+                configuration.repository.insert(result)
