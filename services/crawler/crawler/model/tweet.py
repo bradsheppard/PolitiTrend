@@ -1,25 +1,18 @@
-from typing import List
-import requests
 import json
-import tweepy
 from dataclasses import dataclass
+from typing import List
+
+import requests
+import tweepy
+
 from crawler.message_bus import MessageBus
-from crawler.model.crawler import Crawler
-from crawler.model.repository import Repository
+from crawler.model import Opinion, Crawler, Repository
 
 
 @dataclass
-class Sentiment:
-    politician: int
-    value: float
-
-
-@dataclass
-class Tweet:
+class Tweet(Opinion):
     tweetId: str
     tweetText: str
-    sentiments: List[Sentiment]
-    dateTime: str
 
 
 class TweetCrawler(Crawler[Tweet]):

@@ -26,10 +26,10 @@ def test_insert_and_summary_generated():
     )
 
     tweet = Tweet(
-        tweetId='1',
-        tweetText='Test tweet',
         sentiments=[sentiment],
-        dateTime=datetime.datetime.now().isoformat(' ', 'seconds')
+        dateTime=datetime.datetime.now().isoformat(' ', 'seconds'),
+        tweetId='1',
+        tweetText='Test tweet'
     )
 
     tweet_repository.insert(tweet)

@@ -5,7 +5,8 @@ import string
 import random
 from dateutil import parser
 from crawler.config import config
-from crawler.model import TweetRepository, Tweet, Sentiment, TweetCrawler
+from crawler.model import TweetRepository, Tweet, TweetCrawler
+from crawler.model.opinion import Sentiment
 
 
 @pytest.fixture
