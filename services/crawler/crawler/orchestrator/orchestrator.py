@@ -23,12 +23,13 @@ class Orchestrator:
         for configuration in self._crawler_configurations:
             results = configuration.crawler.get(search_term)
             for result in results:
-                analysis_result = self._sentiment_analyzer.analyze(result[configuration.property_of_interest])
+                analysis_result = self._sentiment_analyzer.analyze(getattr(result, configuration.property_of_interest))
                 for subject_result in analysis_result.subjectResults.keys():
                     sentiment = Sentiment(
                         politician=self._lookup_politician_id(subject_result),
                         value=analysis_result.subjectResults[subject_result])
                     result.sentiments.append(sentiment)
+                configuration.repository.insert(result)
 
     def _lookup_politician_id(self, name) -> int:
         politician = list(filter(lambda x: x.name == name, self._politicians))
