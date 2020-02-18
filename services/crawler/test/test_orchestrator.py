@@ -1,7 +1,7 @@
 import datetime
 from dataclasses import dataclass
 from unittest.mock import Mock
-from crawler.model import Opinion, Sentiment
+from crawler.model import Opinion
 from crawler.model.politician import Politician
 from crawler.orchestrator import Orchestrator, CrawlerConfiguration
 
