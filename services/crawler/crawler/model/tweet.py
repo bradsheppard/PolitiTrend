@@ -6,7 +6,9 @@ import requests
 import tweepy
 
 from crawler.message_bus import MessageBus
-from crawler.model import Opinion, Crawler, Repository
+from crawler.model.crawler import Crawler
+from crawler.model.opinion import Opinion
+from crawler.model.repository import Repository
 
 
 @dataclass

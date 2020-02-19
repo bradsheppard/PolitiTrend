@@ -1,4 +1,4 @@
-from crawler.model import PoliticianRepository
+from crawler.model.politician import PoliticianRepository
 
 
 def test_get_all():

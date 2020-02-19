@@ -1,8 +1,10 @@
 from typing import List
 from dataclasses import dataclass
 from crawler.ml import SentimentAnalyzer
-from crawler.model import Crawler, Repository, Sentiment
+from crawler.model.crawler import Crawler
+from crawler.model.opinion import Sentiment
 from crawler.model.politician import Politician
+from crawler.model.repository import Repository
 
 
 @dataclass

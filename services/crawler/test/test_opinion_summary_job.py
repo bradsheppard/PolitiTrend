@@ -1,7 +1,10 @@
 import time
 import datetime
-from crawler.model import OpinionSummaryRepository, TweetRepository, Tweet, Sentiment
-from crawler.model import OpinionSummaryJob, OpinionSummaryJobRepository
+
+from crawler.model.opinion_summary import OpinionSummaryRepository
+from crawler.model.tweet import TweetRepository, Tweet
+from crawler.model.opinion import Sentiment
+from crawler.model.opinion_summary_job import OpinionSummaryJob, OpinionSummaryJobRepository
 
 
 def test_insert_and_get():
