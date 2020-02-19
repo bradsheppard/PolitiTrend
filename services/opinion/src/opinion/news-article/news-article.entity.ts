@@ -2,18 +2,15 @@ import { Opinion } from '../opinion.entity';
 import { ChildEntity, Column, Index, Unique } from 'typeorm';
 
 @ChildEntity()
-@Unique(['source'])
+@Unique(['url'])
 export default class NewsArticle extends Opinion {
 	@Index()
 	@Column()
-	source: string;
+	url: string;
 
 	@Column()
 	image: string;
 
 	@Column()
 	title: string;
-
-	@Column()
-	url: string;
 }

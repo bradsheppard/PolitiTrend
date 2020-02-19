@@ -17,7 +17,6 @@ describe('NewsArticle Service', () => {
 		return {
 			id,
 			image: `image_${id}`,
-			source: `source_${id}`,
 			title: `title_${id}`,
 			dateTime: new Date().toUTCString(),
 			url: `url_${id}`,

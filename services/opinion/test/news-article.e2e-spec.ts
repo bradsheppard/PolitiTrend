@@ -25,7 +25,6 @@ function createNewsArticleDto() {
 	return {
 		id,
 		image: `image_${id}`,
-		source: `source_${id}`,
 		title: `title_${id}`,
 		dateTime: new Date().toUTCString(),
 		url: `url_${id}`,
@@ -168,8 +167,8 @@ describe('NewsArticleService (e2e)', () => {
 		const newsArticle1 = createNewsArticleDto();
 		const newsArticle2 = createNewsArticleDto();
 
-		const firstInsert = await service.upsertOnSource(newsArticle1);
-		const secondInsert = await service.upsertOnSource(newsArticle2);
+		const firstInsert = await service.upsertOnUrl(newsArticle1);
+		const secondInsert = await service.upsertOnUrl(newsArticle2);
 
 		const newsArticles = await service.get();
 
@@ -184,7 +183,7 @@ describe('NewsArticleService (e2e)', () => {
 
 	it('Can get', async () => {
 		const newsArticle = createNewsArticleDto();
-		const insertedNewsArticle = await service.upsertOnSource(newsArticle);
+		const insertedNewsArticle = await service.upsertOnUrl(newsArticle);
 
 		const retrievedNewsArticle = await service.getOne(insertedNewsArticle.id);
 		expect(retrievedNewsArticle).toEqual(insertedNewsArticle);
@@ -193,8 +192,8 @@ describe('NewsArticleService (e2e)', () => {
 	it('Can get by politician', async () => {
 		const newsArticle1 = createNewsArticleDto();
 		const newsArticle2 = createNewsArticleDto();
-		const insertedNewsArticle1 = await service.upsertOnSource(newsArticle1);
-		await service.upsertOnSource(newsArticle2);
+		const insertedNewsArticle1 = await service.upsertOnUrl(newsArticle1);
+		await service.upsertOnUrl(newsArticle2);
 
 		const politicianNewsArticles = await service.get({politicians: [insertedNewsArticle1.sentiments[0].politician]});
 
@@ -209,26 +208,26 @@ describe('NewsArticleService (e2e)', () => {
 		const newsArticle2 = createNewsArticleDto();
 		const newsArticle3 = createNewsArticleDto();
 
-		await service.upsertOnSource(newsArticle1);
+		await service.upsertOnUrl(newsArticle1);
 
 		await Promise.all([
-			service.upsertOnSource(newsArticle2),
-			service.upsertOnSource(newsArticle3),
+			service.upsertOnUrl(newsArticle2),
+			service.upsertOnUrl(newsArticle3),
 		]);
 
 		const newsArticles = await service.get({limit: 2, offset: 1});
 		expect(newsArticles).toHaveLength(2);
 
-		expect(newsArticles[0].source).toEqual(newsArticle2.source);
+		expect(newsArticles[0].url).toEqual(newsArticle2.url);
 		expect(newsArticles[0].image).toEqual(newsArticle2.image);
 
-		expect(newsArticles[1].source).toEqual(newsArticle3.source);
+		expect(newsArticles[1].url).toEqual(newsArticle3.url);
 		expect(newsArticles[1].image).toEqual(newsArticle3.image);
 	});
 
 	it('Can delete one', async () => {
 		const newsArticle = createNewsArticleDto();
-		const insertedNewsArticle = await service.upsertOnSource(newsArticle);
+		const insertedNewsArticle = await service.upsertOnUrl(newsArticle);
 		await service.deleteOne(insertedNewsArticle.id);
 
 		const retrievedNewsArticle: NewsArticle | null = await service.getOne(insertedNewsArticle.id);
@@ -240,8 +239,8 @@ describe('NewsArticleService (e2e)', () => {
 		const newsArticle1 = createNewsArticleDto();
 		const newsArticle2 = createNewsArticleDto();
 		await Promise.all([
-			service.upsertOnSource(newsArticle1),
-			service.upsertOnSource(newsArticle2),
+			service.upsertOnUrl(newsArticle1),
+			service.upsertOnUrl(newsArticle2),
 		]);
 
 		await service.delete();
@@ -252,10 +251,10 @@ describe('NewsArticleService (e2e)', () => {
 
 	it('Can update', async () => {
 		const newsArticleDto = createNewsArticleDto();
-		const insertedNewsArticle = (await service.upsertOnSource(newsArticleDto)) as UpdateNewsArticleDto;
+		const insertedNewsArticle = (await service.upsertOnUrl(newsArticleDto)) as UpdateNewsArticleDto;
 		insertedNewsArticle.image = 'New newsArticle text';
 
-		await service.upsertOnSource(insertedNewsArticle);
+		await service.upsertOnUrl(insertedNewsArticle);
 
 		const updatedNewsArticle = await service.getOne(insertedNewsArticle.id);
 
@@ -265,7 +264,7 @@ describe('NewsArticleService (e2e)', () => {
 	it('Can upsert on newsArticle Id, new newsArticle inserted', async () => {
 		const newsArticle = createNewsArticleDto();
 
-		const upsertedNewsArticle = await service.upsertOnSource(newsArticle);
+		const upsertedNewsArticle = await service.upsertOnUrl(newsArticle);
 
 		const retrievedNewsArticle = await service.getOne(upsertedNewsArticle.id);
 		expect(retrievedNewsArticle).toEqual(upsertedNewsArticle);
@@ -274,11 +273,11 @@ describe('NewsArticleService (e2e)', () => {
 	it('Can upsert on newsArticle Id, existing newsArticle updated', async () => {
 		const newsArticle = createNewsArticleDto();
 
-		await service.upsertOnSource(newsArticle);
+		await service.upsertOnUrl(newsArticle);
 		const updatedNewsArticle = createNewsArticleDto() as any;
-		updatedNewsArticle.source = newsArticle.source;
+		updatedNewsArticle.url = newsArticle.url;
 
-		const resultingNewsArticle = await service.upsertOnSource(updatedNewsArticle);
+		const resultingNewsArticle = await service.upsertOnUrl(updatedNewsArticle);
 		updatedNewsArticle.id = resultingNewsArticle.id;
 		updatedNewsArticle.sentiments[0].id = resultingNewsArticle.sentiments[0].id;
 
@@ -289,7 +288,7 @@ describe('NewsArticleService (e2e)', () => {
 	it('Can upsert on newsArticleId, sentiments updated', async () => {
 		const newsArticle = createNewsArticleDto() as any;
 
-		const insertedNewsArticle = await service.upsertOnSource(newsArticle);
+		const insertedNewsArticle = await service.upsertOnUrl(newsArticle);
 		newsArticle.sentiments = [
 			{
 				politician: 45,
@@ -297,7 +296,7 @@ describe('NewsArticleService (e2e)', () => {
 			},
 		];
 
-		await service.upsertOnSource(newsArticle);
+		await service.upsertOnUrl(newsArticle);
 
 		const retrievedNewsArticle = await service.getOne(insertedNewsArticle.id);
 		newsArticle.sentiments[0].id = retrievedNewsArticle.sentiments[0].id;
@@ -309,19 +308,19 @@ describe('NewsArticleService (e2e)', () => {
 	it('Can upsert on newsArticleId, nothing changed', async () => {
 		const newsArticle = createNewsArticleDto();
 
-		await service.upsertOnSource(newsArticle);
-		const resultingNewsArticle = await service.upsertOnSource(newsArticle);
+		await service.upsertOnUrl(newsArticle);
+		const resultingNewsArticle = await service.upsertOnUrl(newsArticle);
 
 		expect(resultingNewsArticle.image).toEqual(newsArticle.image);
-		expect(resultingNewsArticle.source).toEqual(newsArticle.source);
+		expect(resultingNewsArticle.url).toEqual(newsArticle.url);
 	});
 
 	it('Can upsert with no sentiments, no exceptions', async () => {
 		const newsArticle = createNewsArticleDto();
 		newsArticle.sentiments = [];
 
-		await service.upsertOnSource(newsArticle);
-		const resultingNewsArticle = await service.upsertOnSource(newsArticle);
+		await service.upsertOnUrl(newsArticle);
+		const resultingNewsArticle = await service.upsertOnUrl(newsArticle);
 
 		expect(resultingNewsArticle.sentiments).toHaveLength(0);
 	});

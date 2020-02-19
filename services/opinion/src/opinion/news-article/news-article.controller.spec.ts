@@ -18,7 +18,6 @@ describe('NewsArticle Controller', () => {
 		return {
 			id,
 			image: `image_${id}`,
-			source: `source_${id}`,
 			title: `title_${id}`,
 			dateTime: new Date().toUTCString(),
 			url: `url_${id}`,
@@ -101,7 +100,7 @@ describe('NewsArticle Controller', () => {
 
 	it('can insert on event', async () => {
 		const newsArticle = createNewsArticle();
-		const insertSpy = jest.spyOn(service, 'upsertOnSource').mockImplementation();
+		const insertSpy = jest.spyOn(service, 'upsertOnUrl').mockImplementation();
 		await controller.handleNewsArticleCreated(newsArticle);
 		expect(insertSpy).toBeCalled();
 	});

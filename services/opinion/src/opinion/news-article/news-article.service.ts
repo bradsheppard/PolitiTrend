@@ -39,8 +39,12 @@ export class NewsArticleService {
 			query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchDto.politicians });
 		}
 
-		if (searchDto.source) {
-			query.andWhere('newsarticle.source = :source', { source: searchDto.source });
+		if (searchDto.url) {
+			query.andWhere('newsarticle.url = :url', { url: searchDto.url });
+		}
+
+		if (searchDto.title) {
+			query.andWhere('newsarticle.title like %:title%', { title: searchDto.title });
 		}
 
 		if (searchDto.limit) {
@@ -66,10 +70,10 @@ export class NewsArticleService {
 		return true;
 	}
 
-	async upsertOnSource(createNewsArticleDto: CreateNewsArticleDto) {
+	async upsertOnUrl(createNewsArticleDto: CreateNewsArticleDto) {
 		const updateNewsArticleDto = Object.assign({}, createNewsArticleDto) as UpdateNewsArticleDto;
 
-		const previousNewsArticles = await this.get({source: createNewsArticleDto.source});
+		const previousNewsArticles = await this.get({url: createNewsArticleDto.url});
 		if (previousNewsArticles.length > 0) {
 			updateNewsArticleDto.id = previousNewsArticles[0].id;
 		}

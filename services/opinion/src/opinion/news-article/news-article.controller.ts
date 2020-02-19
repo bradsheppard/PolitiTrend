@@ -26,7 +26,7 @@ export class NewsArticleController {
 
 	@Post()
 	async create(@Body() createNewsArticleDto: CreateNewsArticleDto) {
-		return await this.newsArticleService.upsertOnSource(createNewsArticleDto);
+		return await this.newsArticleService.upsertOnUrl(createNewsArticleDto);
 	}
 
 	@Delete()
@@ -45,6 +45,6 @@ export class NewsArticleController {
 
 	@EventPattern('news_article_created')
 	async handleNewsArticleCreated(createNewsArticleDto: CreateNewsArticleDto) {
-		await this.newsArticleService.upsertOnSource(createNewsArticleDto);
+		await this.newsArticleService.upsertOnUrl(createNewsArticleDto);
 	}
 }
