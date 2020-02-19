@@ -22,6 +22,7 @@ class NewsArticleRepository(Repository[NewsArticle]):
         self._message_bus = MessageBus('queue-kafka', 'news_article_created')
 
     def insert(self, news_article: NewsArticle):
+        print('Sending news queue message')
         serialized = json.dumps(news_article.__dict__, default=lambda o: o.__dict__)
         self._message_bus.send(str.encode(serialized))
 

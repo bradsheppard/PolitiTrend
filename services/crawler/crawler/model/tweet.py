@@ -62,5 +62,6 @@ class TweetRepository(Repository[Tweet]):
         return tweets
 
     def insert(self, tweet: Tweet):
+        print('Sending tweet queue message')
         serialized = json.dumps(tweet.__dict__, default=lambda o: o.__dict__)
         self._message_bus.send(str.encode(serialized))
