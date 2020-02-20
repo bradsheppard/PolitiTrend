@@ -13,7 +13,7 @@ const style = (theme: Theme) => createStyles({
 	}
 });
 
-const CardDisplay = (props: IProps) => {
+const HeadlineCard = (props: IProps) => {
 	return (
 		<Card className={props.className} raised={true}>
 			<CardContent>
@@ -28,4 +28,4 @@ const CardDisplay = (props: IProps) => {
 	)
 };
 
-export default withStyles(style)(CardDisplay);
+export default withStyles(style)(HeadlineCard);

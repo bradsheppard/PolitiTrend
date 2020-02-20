@@ -2,7 +2,7 @@ import * as React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Globals from '../utils/Globals';
+import Globals from '../../utils/Globals';
 import { makeStyles, Slide, useScrollTrigger } from '@material-ui/core';
 import BarItem from './BarItem';
 import Link from 'next/link';

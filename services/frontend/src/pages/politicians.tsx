@@ -9,11 +9,11 @@ import {
     withStyles,
     WithStyles
 } from '@material-ui/core';
-import ContentContainer from '../components/ContentContainer';
+import ContentContainer from '../components/common/ContentContainer';
 import _ from 'lodash';
-import Bar from '../components/Bar';
-import PoliticianGridList from '../components/PoliticianGridList';
-import Card from '../components/Card';
+import Bar from '../components/bar/Bar';
+import PoliticianGridList from '../components/politician/PoliticianGridList';
+import Card from '../components/common/Card';
 
 const style = (theme: Theme) => createStyles({
     search: {

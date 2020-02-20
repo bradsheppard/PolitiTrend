@@ -2,17 +2,16 @@ import * as React from 'react';
 import { createStyles, Grid, Tab, Tabs, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import { NextPageContext } from 'next';
 import { Tweet as TweetWidget } from 'react-twitter-widgets'
-import ContentContainer from '../../components/ContentContainer';
+import ContentContainer from '../../components/common/ContentContainer';
 import PoliticianApi from '../../apis/politician/PoliticianApi';
-import Bar from '../../components/Bar';
+import Bar from '../../components/bar/Bar';
 import PoliticianDto from '../../apis/politician/PoliticianDto';
 import TweetApi from '../../apis/tweet/TweetApi';
 import TweetDto from '../../apis/tweet/TweetDto';
 import OpinionSummaryDto from '../../apis/opinion-summary/OpinionSummaryDto';
 import OpinionSummaryApi from '../../apis/opinion-summary/OpinionSummaryApi';
-import PoliticianAvatar from '../../components/PoliticianAvatar';
-import LineChart from '../../components/LineChart';
-import Card from '../../components/Card';
+import Card from '../../components/common/Card';
+import PoliticianHeader from '../../components/politician/PoliticianHeader';
 
 const styles = (theme: Theme) => createStyles({
     profile: {
@@ -66,10 +65,6 @@ const PoliticianPage = (props: IProps) => {
     const { politician, classes } = props;
     const { tweets } = politician;
 
-    const lineChartData = politician.sentimentHistory.map((opinionSummary: OpinionSummary) => {
-        return {date: new Date(opinionSummary.dateTime), value: opinionSummary.sentiment}
-    });
-
     const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
         setTabValue(newValue);
     };
@@ -83,30 +78,7 @@ const PoliticianPage = (props: IProps) => {
                       direction='row'
                       justify='center'>
                     <Grid item sm={4}>
-                        <Card className={classes.profileCard}>
-                            <Grid item sm={12}>
-                                <PoliticianAvatar politician={politician} />
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Typography variant='h5' color='primary' className={classes.profileParagraph}>
-                                    {politician.name}
-                                </Typography>
-                                <Typography variant='subtitle1' color='primary' className={classes.profileParagraph}>
-                                    {politician.party}
-                                </Typography>
-                                <Typography variant='subtitle1' color='primary' className={classes.profileParagraph}>
-                                    Popularity: {politician.sentiment.toFixed(1)}
-                                </Typography>
-                            </Grid>
-                            { lineChartData.length > 0 ?
-                                (
-                                    <Grid item
-                                          sm={12}>
-                                        <LineChart data={lineChartData} xAxis='Time' yAxis='Popularity'/>
-                                    </Grid>
-                                ) : null
-                            }
-                        </Card>
+                        <PoliticianHeader politician={politician}/>
                     </Grid>
                     <Grid item sm={8} className={classes.content}>
                         <Card>

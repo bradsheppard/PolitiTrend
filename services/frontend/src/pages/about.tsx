@@ -1,17 +1,18 @@
 import * as React from 'react';
-import Bar from '../components/Bar';
-import ContentContainer from '../components/ContentContainer';
-import ParagraphHeader from '../components/ParagraphHeader';
-import Paragraph from '../components/Paragraph';
+import Bar from '../components/bar/Bar';
+import ContentContainer from '../components/common/ContentContainer';
 import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core';
-import CardDisplay from '../components/CardDisplay';
-import TransparentJumbo from '../components/TransparentJumbo';
+import CardDisplay from '../components/common/HeadlineCard';
+import TransparentJumbo from '../components/common/TransparentJumbo';
 import Typography from '@material-ui/core/Typography';
 import Globals from '../utils/Globals';
 
 const styles = (theme: Theme) => createStyles({
 	menuItem: {
 		margin: theme.spacing(3)
+	},
+	typography: {
+		margin: theme.spacing(4)
 	}
 });
 
@@ -39,14 +40,14 @@ class About extends React.Component<IProps> {
 					</Typography>
 				</TransparentJumbo>
 				<ContentContainer>
-					<ParagraphHeader>
+					<Typography variant='h2' color='secondary' className={classes.typography} align='center'>
 						About
-					</ParagraphHeader>
-					<Paragraph>
+					</Typography>
+					<Typography variant='body1' color='secondary' className={classes.typography} align='center'>
 						This web app provides opinion mining of politicians from a variety of different sources
 						(Twitter, News Articles, Blogs, etc.). Through this we are able to determine
 						trends, likability, and popularity using advanced machine learning analytics.
-					</Paragraph>
+					</Typography>
 					<Grid container
 						  alignItems='center'
 						  direction='row'

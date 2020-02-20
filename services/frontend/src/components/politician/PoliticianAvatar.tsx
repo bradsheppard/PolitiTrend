@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { politicianNameToImagePath } from '../utils/ImagePath';
+import { politicianNameToImagePath } from '../../utils/ImagePath';
 import { Avatar, createStyles, makeStyles, Theme } from '@material-ui/core';
 
 interface Politician {

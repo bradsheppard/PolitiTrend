@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridList, GridListTile, GridListTileBar, Link as MuiLink, makeStyles } from '@material-ui/core';
 import Link from 'next/link';
-import { politicianNameToImagePath } from '../utils/ImagePath';
+import { politicianNameToImagePath } from '../../utils/ImagePath';
 
 interface IProps {
     politicians: Politician[]

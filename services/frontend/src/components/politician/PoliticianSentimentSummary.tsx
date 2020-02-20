@@ -12,9 +12,9 @@ import { Tweet as TweetWidget } from 'react-twitter-widgets'
 import { Waypoint } from 'react-waypoint';
 import { ExpandMore } from '@material-ui/icons'
 import clsx from 'clsx';
-import { politicianNameToImagePath } from '../utils/ImagePath';
+import { politicianNameToImagePath } from '../../utils/ImagePath';
 import Link from 'next/link';
-import Card from './Card';
+import Card from '../common/Card';
 
 interface IProps extends WithStyles<typeof styles> {
     politician: Politician;
