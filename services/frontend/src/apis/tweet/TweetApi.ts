@@ -7,9 +7,16 @@ import SearchTweetDto from './SearchTweetDto';
 class TweetApi {
 
 	private static baseUrl = '/api/opinions/tweets';
+	private static protocol = 'http://';
 
 	static async get(context: NextPageContext, searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
 		const axiosInstance = this.createAxiosInstance(context);
+		const res = await axiosInstance.get<TweetDto[]>('', {params: searchTweetDto});
+		return res.data;
+	}
+
+	static async getNew(searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
+		const axiosInstance = axios.create({baseURL: `${this.protocol}${window.location.host}${this.baseUrl}`});
 		const res = await axiosInstance.get<TweetDto[]>('', {params: searchTweetDto});
 		return res.data;
 	}
