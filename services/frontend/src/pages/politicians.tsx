@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { NextPageContext } from 'next';
 import PoliticianApi from '../apis/politician/PoliticianApi';
 import {
     createStyles,
@@ -47,8 +46,8 @@ class Politicians extends React.Component<IProps, IState> {
         }
     }
 
-    static async getInitialProps(context: NextPageContext) {
-        const politicians = await PoliticianApi.get(context);
+    static async getInitialProps() {
+        const politicians = await PoliticianApi.get();
 
         return {
             politicians

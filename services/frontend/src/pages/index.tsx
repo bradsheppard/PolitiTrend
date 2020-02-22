@@ -1,7 +1,6 @@
 import { Grid } from '@material-ui/core';
 import * as React from 'react';
 import PoliticianApi from '../apis/politician/PoliticianApi';
-import { NextPageContext } from 'next';
 import CategoryHeader from '../components/common/CategoryHeader';
 import PoliticianSentimentSummary from '../components/politician/PoliticianSentimentSummary';
 import ContentContainer from '../components/common/ContentContainer';
@@ -35,9 +34,9 @@ interface Politician {
 
 class App extends React.Component<IProps> {
 
-    static async getInitialProps(context: NextPageContext) {
-        let politicianDtos: PoliticianDto[] = await PoliticianApi.get(context);
-        let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get(context, { max: true });
+    static async getInitialProps() {
+        let politicianDtos: PoliticianDto[] = await PoliticianApi.get();
+        let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get({ max: true });
         opinionSummaryDtos = opinionSummaryDtos.sort((a, b) => b.sentiment - a.sentiment);
 
         const topSummaries = opinionSummaryDtos.slice(0, 5);
@@ -45,7 +44,7 @@ class App extends React.Component<IProps> {
         let politiciansOfInterest = topSummaries.map(x => x.politician);
         politiciansOfInterest = politiciansOfInterest.concat(bottomSummaries.map(x => x.politician));
 
-        const tweetDtos: TweetDto[] = await TweetApi.get(context, { politicians: politiciansOfInterest, limitPerPolitician: 3 });
+        const tweetDtos: TweetDto[] = await TweetApi.get({ politicians: politiciansOfInterest, limitPerPolitician: 3 });
 
         let politicians: Politician[] = [];
 

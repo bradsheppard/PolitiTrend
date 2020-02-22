@@ -10,6 +10,7 @@ interface Tweet {
 
 interface IProps {
     politician: number;
+    hidden?: boolean;
 }
 
 interface IState {
@@ -26,7 +27,7 @@ class PoliticianTweetFeed extends React.Component<IProps, IState> {
     }
 
     async componentDidMount() {
-        const tweetDtos: TweetDto[] = await TweetApi.getNew({politicians: [this.props.politician], limit: 10});
+        const tweetDtos: TweetDto[] = await TweetApi.get({politicians: [this.props.politician], limit: 10});
         const tweets = tweetDtos.map(x => { return {tweetId: x.tweetId} as Tweet });
         this.setState({
             tweets
@@ -34,6 +35,10 @@ class PoliticianTweetFeed extends React.Component<IProps, IState> {
     }
 
     render() {
+
+        if (this.props.hidden)
+            return null;
+
         return (
             <React.Fragment>
                 {

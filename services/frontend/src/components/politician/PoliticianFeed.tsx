@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Tab, Tabs } from '@material-ui/core';
 import Card from '../common/Card';
 import PoliticianTweetFeed from './PoliticianTweetFeed';
+import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed';
 
 interface IProps {
     politician: number;
@@ -28,7 +29,8 @@ const PoliticianFeed = (props: IProps) => {
                 <Tab label='Tweets' />
                 <Tab label='News Articles' />
             </Tabs>
-            <PoliticianTweetFeed politician={politician} />
+            <PoliticianNewsArticleFeed politician={politician} hidden={tabValue === 0} />
+            <PoliticianTweetFeed politician={politician} hidden={tabValue === 1} />
         </Card>
     );
 };

@@ -1,28 +1,20 @@
 import axios, { AxiosInstance } from 'axios';
-import { NextPageContext } from 'next';
-import absoluteUrl from '../../utils/absoluteUrl';
 import TweetDto from './TweetDto';
 import SearchTweetDto from './SearchTweetDto';
+import { url } from '../Utils';
 
 class TweetApi {
 
-	private static baseUrl = '/api/opinions/tweets';
-	private static protocol = 'http://';
+	private static url = `http://${url}/api/opinions/tweets`;
 
-	static async get(context: NextPageContext, searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
-		const axiosInstance = this.createAxiosInstance(context);
+	static async get(searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
+		const axiosInstance = this.createAxiosInstance();
 		const res = await axiosInstance.get<TweetDto[]>('', {params: searchTweetDto});
 		return res.data;
 	}
 
-	static async getNew(searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
-		const axiosInstance = axios.create({baseURL: `${this.protocol}${window.location.host}${this.baseUrl}`});
-		const res = await axiosInstance.get<TweetDto[]>('', {params: searchTweetDto});
-		return res.data;
-	}
-
-	static async getOne(context: NextPageContext, id: number): Promise<TweetDto | null> {
-		const axiosInstance = this.createAxiosInstance(context);
+	static async getOne(id: number): Promise<TweetDto | null> {
+		const axiosInstance = this.createAxiosInstance();
 		const res = await axiosInstance.get<TweetDto>(`/${id}`);
 
 		if(res.status === 200)
@@ -31,11 +23,8 @@ class TweetApi {
 		return null;
 	}
 
-	private static createAxiosInstance(context: NextPageContext): AxiosInstance {
-		const { origin } = absoluteUrl(context.req);
-		const prefix = `${origin}${this.baseUrl}`;
-
-		return axios.create({baseURL: prefix});
+	private static createAxiosInstance(): AxiosInstance {
+		return axios.create({baseURL: this.url});
 	}
 }
 
