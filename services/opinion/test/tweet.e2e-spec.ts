@@ -223,10 +223,8 @@ describe('TweetService (e2e)', () => {
 
 		await service.insert(tweet1);
 
-		await Promise.all([
-			service.insert(tweet2),
-			service.insert(tweet3),
-		]);
+		await service.insert(tweet2);
+		await service.insert(tweet3);
 
 		const tweets = await service.get({limit: 2, offset: 1});
 		expect(tweets).toHaveLength(2);
