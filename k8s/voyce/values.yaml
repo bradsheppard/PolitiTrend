@@ -11,7 +11,10 @@ crawler:
 politician:
   enabled: true
 
-opinion:
+tweet:
+  enabled: true
+
+news-article:
   enabled: true
 
 frontend:

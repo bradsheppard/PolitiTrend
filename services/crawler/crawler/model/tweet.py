@@ -41,7 +41,7 @@ class TweetCrawler(Crawler[Tweet]):
 class TweetRepository(Repository[Tweet]):
 
     def __init__(self):
-        self._host = 'http://opinion/tweet'
+        self._host = 'http://tweet'
         self._message_bus = MessageBus('queue-kafka', 'tweet_created')
 
     def get_all(self):

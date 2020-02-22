@@ -18,7 +18,7 @@ class NewsArticle(Opinion):
 class NewsArticleRepository(Repository[NewsArticle]):
 
     def __init__(self):
-        self._host = 'http://opinion/newsarticle'
+        self._host = 'http:///newsarticle'
         self._message_bus = MessageBus('queue-kafka', 'news_article_created')
 
     def insert(self, news_article: NewsArticle):

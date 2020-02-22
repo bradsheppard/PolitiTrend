@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "opinion.fullname" . }}
+  name: {{ template "tweet.fullname" . }}
   labels:
-{{ include "opinion.labels" . | indent 4 }}
+{{ include "tweet.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,5 +12,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "opinion.name" . }}
+    app.kubernetes.io/name: {{ include "tweet.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
