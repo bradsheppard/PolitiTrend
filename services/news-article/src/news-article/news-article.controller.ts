@@ -4,7 +4,7 @@ import { SearchNewsArticleDto } from './dto/search-news-article.dto';
 import { EventPattern } from '@nestjs/microservices';
 import { CreateNewsArticleDto } from './dto/create-news-article.dto';
 
-@Controller('newsarticle')
+@Controller()
 export class NewsArticleController {
 	constructor(private newsArticleService: NewsArticleService) {}
 

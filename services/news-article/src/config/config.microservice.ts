@@ -7,6 +7,9 @@ const microserviceConfig: MicroserviceOptions = {
 		client: {
 			brokers: ['queue-kafka:9092'],
 		},
+		consumer: {
+			groupId: 'news-article-consumer'
+		},
 		deserializer: new KafkaDeserializer(),
 	},
 };

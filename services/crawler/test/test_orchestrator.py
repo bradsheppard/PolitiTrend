@@ -1,15 +1,18 @@
 import datetime
 from dataclasses import dataclass
+from typing import List
 from unittest.mock import Mock
 
-from crawler.model.opinion import Opinion
 from crawler.model.politician import Politician
+from crawler.model.tweet import Sentiment
 from crawler.orchestrator import Orchestrator, CrawlerConfiguration
 
 
 def test_crawl_all():
     @dataclass
-    class TestOpinionType(Opinion):
+    class TestOpinionType:
+        sentiments: List[Sentiment]
+        datetime: str
         text: str
 
     mock_repository = Mock()
@@ -19,7 +22,7 @@ def test_crawl_all():
     crawler_result: TestOpinionType = TestOpinionType(
         [],
         datetime.datetime.now().isoformat(' ', 'seconds'),
-        'Test text')
+        text='Test text')
 
     mock_crawler.get = Mock(return_value=[crawler_result])
 

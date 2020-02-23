@@ -3,7 +3,6 @@ from typing import List
 from crawler.config import config
 from crawler.ml import SentimentAnalyzer
 from crawler.model.news_article import NewsArticleCrawler, NewsArticleRepository
-from crawler.model.opinion_summary_job import OpinionSummaryJobRepository, OpinionSummaryJob
 from crawler.model.politician import Politician, PoliticianRepository
 from crawler.model.tweet import TweetCrawler, TweetRepository
 from crawler.orchestrator import CrawlerConfiguration, Orchestrator
@@ -21,7 +20,6 @@ news_article_repository = NewsArticleRepository()
 news_article_config = CrawlerConfiguration(crawler=news_article_crawler, repository=news_article_repository,
                                            property_of_interest='title')
 
-opinion_summary_job_repository = OpinionSummaryJobRepository()
 sentiment_analyzer = SentimentAnalyzer(list(map(lambda pol: pol.name, politicians)))
 
 
@@ -30,6 +28,3 @@ orchestrator = Orchestrator([tweet_config, news_article_config], politicians)
 for politician in politicians:
     print('Crawling for ' + politician.name)
     orchestrator.crawl_all(politician.name)
-    opinion_summary_job = OpinionSummaryJob()
-    opinion_summary_job.politician = politician.num
-    opinion_summary_job_repository.insert(opinion_summary_job)

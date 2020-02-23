@@ -1,15 +1,19 @@
 import json
 from dataclasses import dataclass
 from typing import List
+
 import requests
+
 from crawler.message_bus import MessageBus
 from crawler.model.crawler import Crawler
-from crawler.model.opinion import Opinion
 from crawler.model.repository import Repository
+from crawler.model.sentiment import Sentiment
 
 
 @dataclass
-class NewsArticle(Opinion):
+class NewsArticle:
+    sentiments: List[Sentiment]
+    dateTime: str
     image: str
     title: str
     url: str
@@ -18,7 +22,7 @@ class NewsArticle(Opinion):
 class NewsArticleRepository(Repository[NewsArticle]):
 
     def __init__(self):
-        self._host = 'http:///newsarticle'
+        self._host = 'http://news-article'
         self._message_bus = MessageBus('queue-kafka', 'news_article_created')
 
     def insert(self, news_article: NewsArticle):

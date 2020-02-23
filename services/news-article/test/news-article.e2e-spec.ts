@@ -79,7 +79,7 @@ describe('NewsArticleController (e2e)', () => {
 
 	it('/ (GET)', async () => {
 		const response = await request(app.getHttpServer())
-			.get('/newsarticle');
+			.get('/');
 
 		expect(response.status).toEqual(200);
 	});
@@ -87,7 +87,7 @@ describe('NewsArticleController (e2e)', () => {
 	it('/ (POST)', async () => {
 		const newsArticleDto = createNewsArticleDto();
 		const res = await request(app.getHttpServer())
-			.post('/newsarticle')
+			.post('/')
 			.send(newsArticleDto);
 
 		const resultingNewsArticle = res.body as NewsArticle;
@@ -102,12 +102,12 @@ describe('NewsArticleController (e2e)', () => {
 	it('/:id (GET)', async () => {
 		const newsArticleDto = createNewsArticleDto();
 		const postResponse = await request(app.getHttpServer())
-			.post('/newsarticle')
+			.post('/')
 			.send(newsArticleDto);
 
 		const resultingNewsArticle = postResponse.body as NewsArticle;
 		const getResponse = await request(app.getHttpServer())
-			.get(`/newsarticle/${resultingNewsArticle.id}`);
+			.get(`/${resultingNewsArticle.id}`);
 
 		expect(getResponse.status).toEqual(200);
 		expect(getResponse.body).toEqual(resultingNewsArticle);
@@ -116,15 +116,15 @@ describe('NewsArticleController (e2e)', () => {
 	it('/:id (DELETE)', async () => {
 		const newsArticleDto = createNewsArticleDto();
 		const postResponse = await request(app.getHttpServer())
-			.post('/newsarticle')
+			.post('/')
 			.send(newsArticleDto);
 
 		const resultingNewsArticle = postResponse.body as NewsArticle;
 
 		const deleteResponse = await request(app.getHttpServer())
-			.delete(`/newsarticle/${resultingNewsArticle.id}`);
+			.delete(`/${resultingNewsArticle.id}`);
 		const getResponse = await request(app.getHttpServer())
-			.get(`/newsarticle/${resultingNewsArticle.id}`);
+			.get(`/${resultingNewsArticle.id}`);
 
 		expect(deleteResponse.status).toEqual(200);
 		expect(getResponse.status).toEqual(404);
@@ -134,12 +134,12 @@ describe('NewsArticleController (e2e)', () => {
 		const newsArticle1 = createNewsArticleDto();
 		const newsArticle2 = createNewsArticleDto();
 		await Promise.all([
-			request(app.getHttpServer()).post('/newsarticle').send(newsArticle1),
-			request(app.getHttpServer()).post('/newsarticle').send(newsArticle2),
+			request(app.getHttpServer()).post('/').send(newsArticle1),
+			request(app.getHttpServer()).post('/').send(newsArticle2),
 		]);
 
-		const deleteResponse = await request(app.getHttpServer()).delete('/newsarticle');
-		const getResponse = await request(app.getHttpServer()).get('/newsarticle');
+		const deleteResponse = await request(app.getHttpServer()).delete('/');
+		const getResponse = await request(app.getHttpServer()).get('/');
 
 		const newsArticles = getResponse.body as NewsArticle[];
 

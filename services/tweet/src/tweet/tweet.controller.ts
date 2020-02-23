@@ -5,7 +5,7 @@ import { EventPattern } from '@nestjs/microservices';
 import Tweet from './tweet.entity';
 import { SearchTweetDto } from './dto/search-tweet.dto';
 
-@Controller('tweet')
+@Controller()
 export class TweetController {
 	constructor(private tweetService: TweetService) {}
 

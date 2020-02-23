@@ -7,12 +7,14 @@ import tweepy
 
 from crawler.message_bus import MessageBus
 from crawler.model.crawler import Crawler
-from crawler.model.opinion import Opinion
 from crawler.model.repository import Repository
+from crawler.model.sentiment import Sentiment
 
 
 @dataclass
-class Tweet(Opinion):
+class Tweet:
+    sentiments: List[Sentiment]
+    dateTime: str
     tweetId: str
     tweetText: str
 

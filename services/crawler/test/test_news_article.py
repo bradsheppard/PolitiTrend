@@ -7,8 +7,7 @@ import pytest
 from dateutil import parser
 
 from crawler.config import config
-from crawler.model.news_article import NewsArticleCrawler, NewsArticleRepository, NewsArticle
-from crawler.model.opinion import Sentiment
+from crawler.model.news_article import NewsArticleCrawler, NewsArticleRepository, NewsArticle, Sentiment
 
 
 @pytest.fixture

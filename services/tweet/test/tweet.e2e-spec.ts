@@ -92,7 +92,7 @@ describe('TweetController (e2e)', () => {
 
 	it('/ (GET)', async () => {
 		const response = await request(app.getHttpServer())
-		  .get('/tweet');
+		  .get('/');
 
 		expect(response.status).toEqual(200);
 	});
@@ -100,7 +100,7 @@ describe('TweetController (e2e)', () => {
 	it('/ (POST)', async () => {
 		const tweetDto = createTweetDto();
 		const res = await request(app.getHttpServer())
-			.post('/tweet')
+			.post('/')
 			.send(tweetDto);
 
 		const resultingTweet = res.body as Tweet;
@@ -115,12 +115,12 @@ describe('TweetController (e2e)', () => {
 	it('/:id (GET)', async () => {
 		const tweetDto = createTweetDto();
 		const postResponse = await request(app.getHttpServer())
-			.post('/tweet')
+			.post('/')
 			.send(tweetDto);
 
 		const resultingTweet = postResponse.body as Tweet;
 		const getResponse = await request(app.getHttpServer())
-			.get(`/tweet/${resultingTweet.id}`);
+			.get(`/${resultingTweet.id}`);
 
 		expect(getResponse.status).toEqual(200);
 		expect(getResponse.body).toEqual(resultingTweet);
@@ -129,15 +129,15 @@ describe('TweetController (e2e)', () => {
 	it('/:id (DELETE)', async () => {
 		const tweetDto = createTweetDto();
 		const postResponse = await request(app.getHttpServer())
-			.post('/tweet')
+			.post('/')
 			.send(tweetDto);
 
 		const resultingTweet = postResponse.body as Tweet;
 
 		const deleteResponse = await request(app.getHttpServer())
-			.delete(`/tweet/${resultingTweet.id}`);
+			.delete(`/${resultingTweet.id}`);
 		const getResponse = await request(app.getHttpServer())
-			.get(`/tweet/${resultingTweet.id}`);
+			.get(`/${resultingTweet.id}`);
 
 		expect(deleteResponse.status).toEqual(200);
 		expect(getResponse.status).toEqual(404);
@@ -147,12 +147,12 @@ describe('TweetController (e2e)', () => {
 		const tweet1 = createTweetDto();
 		const tweet2 = createTweetDto();
 		await Promise.all([
-			request(app.getHttpServer()).post('/tweet').send(tweet1),
-			request(app.getHttpServer()).post('/tweet').send(tweet2),
+			request(app.getHttpServer()).post('/').send(tweet1),
+			request(app.getHttpServer()).post('/').send(tweet2),
 		]);
 
-		const deleteResponse = await request(app.getHttpServer()).delete('/tweet');
-		const getResponse = await request(app.getHttpServer()).get('/tweet');
+		const deleteResponse = await request(app.getHttpServer()).delete('/');
+		const getResponse = await request(app.getHttpServer()).get('/');
 
 		const tweets = getResponse.body as Tweet[];
 
