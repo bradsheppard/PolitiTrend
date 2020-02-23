@@ -23,14 +23,22 @@ appVersion: 1.0.0
 dependencies:
   - name: politician
     condition: politician.enabled
+    version: 1.0.0
   - name: tweet
     condition: tweet.enabled
+    version: 1.0.0
   - name: news-article
     condition: news-article.enabled
+    version: 1.0.0
   - name: crawler
     condition: crawler.enabled
+    version: 1.0.0
   - name: frontend
     condition: frontend.enabled
+    version: 1.0.0
   - name: kafka
     version: 7.0.4
     repository: https://charts.bitnami.com/bitnami
+  - name: minio
+    version: 5.0.11
+    repository: https://kubernetes-charts.storage.googleapis.com

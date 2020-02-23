@@ -39,3 +39,12 @@ kafka:
         memory: 64Mi
         cpu: 60m
 
+minio:
+  accessKey: brad1234
+  secretKey: brad1234
+  nameOverride: minio
+  fullnameOverride: minio
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 60m

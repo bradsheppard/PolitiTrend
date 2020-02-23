@@ -1,6 +1,24 @@
 dependencies:
+- name: politician
+  repository: ""
+  version: 1.0.0
+- name: tweet
+  repository: ""
+  version: 1.0.0
+- name: news-article
+  repository: ""
+  version: 1.0.0
+- name: crawler
+  repository: ""
+  version: 1.0.0
+- name: frontend
+  repository: ""
+  version: 1.0.0
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 7.0.4
-digest: sha256:9fe223bf87c8f2f8ca442770005e6f36171e553199b93fd953ae8248d096ac33
-generated: "2019-12-06T20:59:28.242455682-03:30"
+- name: minio
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 5.0.11
+digest: sha256:4f53308f4c053e67a3575907430c83e05a02b5faa117f29cca2d95d82827ee25
+generated: "2020-02-23T17:30:53.427502305-03:30"
