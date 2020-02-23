@@ -1,15 +1,15 @@
 import { Grid } from '@material-ui/core';
 import * as React from 'react';
-import PoliticianApi from '../apis/politician/PoliticianApi';
+// import PoliticianApi from '../apis/politician/PoliticianApi';
 import CategoryHeader from '../components/common/CategoryHeader';
 import PoliticianSentimentSummary from '../components/politician/PoliticianSentimentSummary';
 import ContentContainer from '../components/common/ContentContainer';
 import Bar from '../components/bar/Bar';
-import PoliticianDto from '../apis/politician/PoliticianDto';
-import TweetApi from '../apis/tweet/TweetApi';
-import TweetDto from '../apis/tweet/TweetDto';
-import OpinionSummaryDto from '../apis/opinion-summary/OpinionSummaryDto';
-import OpinionSummaryApi from '../apis/opinion-summary/OpinionSummaryApi';
+// import PoliticianDto from '../apis/politician/PoliticianDto';
+// import TweetApi from '../apis/tweet/TweetApi';
+// import TweetDto from '../apis/tweet/TweetDto';
+// import OpinionSummaryDto from '../apis/opinion-summary/OpinionSummaryDto';
+// import OpinionSummaryApi from '../apis/opinion-summary/OpinionSummaryApi';
 import TransparentJumbo from '../components/common/TransparentJumbo';
 import Typography from '@material-ui/core/Typography';
 import Globals from '../utils/Globals';
@@ -35,41 +35,41 @@ interface Politician {
 class App extends React.Component<IProps> {
 
     static async getInitialProps() {
-        let politicianDtos: PoliticianDto[] = await PoliticianApi.get();
-        let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get({ max: true });
-        opinionSummaryDtos = opinionSummaryDtos.sort((a, b) => b.sentiment - a.sentiment);
-
-        const topSummaries = opinionSummaryDtos.slice(0, 5);
-        const bottomSummaries = opinionSummaryDtos.slice(opinionSummaryDtos.length - 5, opinionSummaryDtos.length);
-        let politiciansOfInterest = topSummaries.map(x => x.politician);
-        politiciansOfInterest = politiciansOfInterest.concat(bottomSummaries.map(x => x.politician));
-
-        const tweetDtos: TweetDto[] = await TweetApi.get({ politicians: politiciansOfInterest, limitPerPolitician: 3 });
-
-        let politicians: Politician[] = [];
-
-        politicianDtos.forEach((politicianDto: PoliticianDto) => {
-            const politician = {
-                id: politicianDto.id,
-                party: politicianDto.party,
-                name: politicianDto.name
-            } as Politician;
-
-            const summary: OpinionSummaryDto | undefined = opinionSummaryDtos.find(x => x.politician === politicianDto.id);
-            politician.tweets = tweetDtos.filter(x => x.sentiments.filter(y => y.politician == politicianDto.id).length > 0);
-
-            if (!summary)
-                return;
-
-            politician.sentiment = summary.sentiment;
-            politicians.push(politician);
-        });
-
-        politicians = politicians.sort((a, b) => b.sentiment - a.sentiment);
+        // let politicianDtos: PoliticianDto[] = await PoliticianApi.get();
+        // let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get({ max: true });
+        // opinionSummaryDtos = opinionSummaryDtos.sort((a, b) => b.sentiment - a.sentiment);
+        //
+        // const topSummaries = opinionSummaryDtos.slice(0, 5);
+        // const bottomSummaries = opinionSummaryDtos.slice(opinionSummaryDtos.length - 5, opinionSummaryDtos.length);
+        // let politiciansOfInterest = topSummaries.map(x => x.politician);
+        // politiciansOfInterest = politiciansOfInterest.concat(bottomSummaries.map(x => x.politician));
+        //
+        // const tweetDtos: TweetDto[] = await TweetApi.get({ politicians: politiciansOfInterest, limitPerPolitician: 3 });
+        //
+        // let politicians: Politician[] = [];
+        //
+        // politicianDtos.forEach((politicianDto: PoliticianDto) => {
+        //     const politician = {
+        //         id: politicianDto.id,
+        //         party: politicianDto.party,
+        //         name: politicianDto.name
+        //     } as Politician;
+        //
+        //     const summary: OpinionSummaryDto | undefined = opinionSummaryDtos.find(x => x.politician === politicianDto.id);
+        //     politician.tweets = tweetDtos.filter(x => x.sentiments.filter(y => y.politician == politicianDto.id).length > 0);
+        //
+        //     if (!summary)
+        //         return;
+        //
+        //     politician.sentiment = summary.sentiment;
+        //     politicians.push(politician);
+        // });
+        //
+        // politicians = politicians.sort((a, b) => b.sentiment - a.sentiment);
 
         return {
-            topPoliticians: politicians.slice(0, 5),
-            bottomPoliticians: politicians.slice(politicians.length - 5, politicians.length)
+            topPoliticians: [],
+            bottomPoliticians: []
         };
     }
 

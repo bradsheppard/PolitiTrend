@@ -5,7 +5,7 @@ import { url } from '../Utils';
 
 class TweetApi {
 
-	private static url = `http://${url}/api/opinions/tweets`;
+	private static url = `http://${url}/api/tweets`;
 
 	static async get(searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
 		const axiosInstance = this.createAxiosInstance();

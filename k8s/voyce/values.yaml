@@ -6,7 +6,7 @@
 imagePullSecrets: []
 
 crawler:
-  enabled: false
+  enabled: true
 
 politician:
   enabled: true

@@ -5,7 +5,7 @@ import SearchNewsArticleDto from './SearchNewsArticleDto';
 
 class NewsArticleApi {
 
-    private static url = `http://${url}/api/opinions/newsarticles`;
+    private static url = `http://${url}/api/newsarticles`;
 
     static async get(searchNewsArticleDto?: SearchNewsArticleDto): Promise<NewsArticleDto[]> {
         const axiosInstance = this.createAxiosInstance();

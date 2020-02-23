@@ -5,8 +5,6 @@ import ContentContainer from '../../components/common/ContentContainer';
 import PoliticianApi from '../../apis/politician/PoliticianApi';
 import Bar from '../../components/bar/Bar';
 import PoliticianDto from '../../apis/politician/PoliticianDto';
-import OpinionSummaryDto from '../../apis/opinion-summary/OpinionSummaryDto';
-import OpinionSummaryApi from '../../apis/opinion-summary/OpinionSummaryApi';
 import PoliticianHeader from '../../components/politician/PoliticianHeader';
 import PoliticianFeed from '../../components/politician/PoliticianFeed';
 
@@ -70,8 +68,6 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext) {
     const { id } = context.query;
     if (typeof id === 'string') {
         const politicianDto: PoliticianDto | null = await PoliticianApi.getOne(parseInt(id));
-        const opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get({ politician: parseInt(id) });
-        opinionSummaryDtos.sort((a, b) => b.id - a.id);
 
         if(!politicianDto)
             return {
@@ -82,8 +78,8 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext) {
             id: politicianDto.id,
             name: politicianDto.name,
             party: politicianDto.party,
-            sentiment: opinionSummaryDtos.length > 0 ? opinionSummaryDtos[0].sentiment : 5,
-            sentimentHistory: opinionSummaryDtos
+            sentiment: 5,
+            sentimentHistory: []
         };
 
         return {
