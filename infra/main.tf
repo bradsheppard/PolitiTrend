@@ -102,14 +102,14 @@ resource "google_container_cluster" "primary" {
 resource "google_container_node_pool" "primary_preemptible_nodes" {
     name       = "${var.project}-node-pool"
     cluster    = google_container_cluster.primary.name
-    node_count = 3
+    node_count = 2
 
     location = var.zone
     project = google_project.project.project_id
 
     node_config {
         preemptible  = true
-        machine_type = "n1-standard-1"
+        machine_type = "n1-standard-2"
         metadata = {
             disable-legacy-endpoints = "true"
         }

@@ -20,6 +20,10 @@ news-article:
 frontend:
   enabled: false
 
+sparkoperator:
+  enabled: true
+  sparkJobNamespace: default
+
 global:
   registry: registry.gitlab.com/brad_1357/voyce
 
