@@ -46,3 +46,6 @@ dependencies:
     condition: sparkoperator.enabled
     version: 0.6.6
     repository: http://storage.googleapis.com/kubernetes-charts-incubator
+  - name: cp-kafka-connect
+    condition: cp-kafka-connect.enabled
+    version: 0.1.0
