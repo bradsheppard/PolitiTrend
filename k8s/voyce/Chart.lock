@@ -23,5 +23,8 @@ dependencies:
 - name: sparkoperator
   repository: http://storage.googleapis.com/kubernetes-charts-incubator
   version: 0.6.6
-digest: sha256:5dce699ef593f49971a36e480b841359cd5324241434878fd4b71dd4e036a823
-generated: "2020-02-24T19:21:02.442526195-03:30"
+- name: cp-kafka-connect
+  repository: ""
+  version: 0.1.0
+digest: sha256:4625f6d890ee36f7c023e768c51d56f2adb704e65beebbe8f003526586c835c9
+generated: "2020-02-26T21:47:01.686228962-03:30"
