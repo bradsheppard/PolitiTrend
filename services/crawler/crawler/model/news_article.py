@@ -72,7 +72,7 @@ class NewsArticleCrawler(Crawler[NewsArticle]):
             news_article = NewsArticle(
                 title=article['title'],
                 url=article['url'],
-                image=article['image'],
+                image=article['image']['url'],
                 sentiments=[],
                 dateTime=article['datePublished']
             )
