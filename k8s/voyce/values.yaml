@@ -25,7 +25,7 @@ sparkoperator:
   sparkJobNamespace: default
 
 cp-kafka-connect:
-  enabled: true
+  enabled: false
 
 global:
   registry: registry.gitlab.com/brad_1357/voyce
