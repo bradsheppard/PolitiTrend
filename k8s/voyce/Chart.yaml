@@ -40,6 +40,7 @@ dependencies:
     version: 7.0.4
     repository: https://charts.bitnami.com/bitnami
   - name: minio
+    condition: minio.enabled
     version: 5.0.11
     repository: https://kubernetes-charts.storage.googleapis.com
   - name: sparkoperator

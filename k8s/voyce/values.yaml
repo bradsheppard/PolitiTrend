@@ -47,6 +47,7 @@ kafka:
         cpu: 60m
 
 minio:
+  enabled: true
   accessKey: brad1234
   secretKey: brad1234
   nameOverride: minio
