@@ -1,13 +1,12 @@
 import * as React from 'react';
 import NewsArticleApi from '../../apis/news-article/NewsArticleApi';
 import NewsArticleDto from '../../apis/news-article/NewsArticleDto';
-// import Card from '../common/Card';
-import { Typography } from '@material-ui/core';
-import Card from '../common/Card';
+import NewsArticleComponent from '../common/NewsArticle';
 
 interface NewsArticle {
     title: string;
     url: string;
+    image: string;
 }
 
 interface IProps {
@@ -30,7 +29,7 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
 
     async componentDidMount() {
         const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({politicians: [this.props.politician], limit: 10});
-        const newsArticles = newsArticleDtos.map(x => { return {title: x.title, url: x.url} as NewsArticle });
+        const newsArticles = newsArticleDtos.map(x => { return {title: x.title, url: x.url, image: x.image} as NewsArticle });
         this.setState({
             newsArticles
         });
@@ -45,9 +44,7 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
                 {
                     this.state.newsArticles.map((newsArticle: NewsArticle) => {
                         return (
-                            <Card>
-                                <Typography variant='h5' align='center'>{newsArticle.title}</Typography>
-                            </Card>
+                            <NewsArticleComponent newsArticle={newsArticle} />
                         );
                     })
                 }
