@@ -2,6 +2,16 @@ import * as React from 'react';
 import NewsArticleApi from '../../apis/news-article/NewsArticleApi';
 import NewsArticleDto from '../../apis/news-article/NewsArticleDto';
 import NewsArticleComponent from '../common/NewsArticle';
+import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
+
+const styles = (theme: Theme) => createStyles({
+    content: {
+        paddingLeft: theme.spacing(8),
+        paddingRight: theme.spacing(8),
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2)
+    },
+});
 
 interface NewsArticle {
     title: string;
@@ -9,7 +19,7 @@ interface NewsArticle {
     image: string;
 }
 
-interface IProps {
+interface IProps extends WithStyles<typeof styles> {
     politician: number;
     hidden?: boolean;
 }
@@ -44,7 +54,9 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
                 {
                     this.state.newsArticles.map((newsArticle: NewsArticle) => {
                         return (
-                            <NewsArticleComponent newsArticle={newsArticle} />
+                            <div className={this.props.classes.content}>
+                                <NewsArticleComponent newsArticle={newsArticle} />
+                            </div>
                         );
                     })
                 }
@@ -54,4 +66,4 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
 
 }
 
-export default PoliticianNewsArticleFeed;
+export default withStyles(styles)(PoliticianNewsArticleFeed);
