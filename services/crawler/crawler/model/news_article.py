@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import List
 
 import requests
+import re
 
 from crawler.message_bus import MessageBus
 from crawler.model.crawler import Crawler
@@ -70,7 +71,7 @@ class NewsArticleCrawler(Crawler[NewsArticle]):
 
         for article in articles:
             news_article = NewsArticle(
-                title=article['title'],
+                title=NewsArticleCrawler._stip_html_tags(article['title']),
                 url=article['url'],
                 image=article['image']['url'],
                 sentiments=[],
@@ -79,3 +80,7 @@ class NewsArticleCrawler(Crawler[NewsArticle]):
             results.append(news_article)
 
         return results
+
+    @staticmethod
+    def _stip_html_tags(value: str):
+        return re.sub('<[^<]+?>', '', value)
