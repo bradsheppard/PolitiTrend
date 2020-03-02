@@ -38,4 +38,10 @@ export default class NewsArticle {
 
 	@Column()
 	title: string;
+
+	@Column()
+	description: string;
+
+	@Column()
+	source: string;
 }

@@ -47,6 +47,10 @@ export class NewsArticleService {
 			query.andWhere('newsarticle.title like %:title%', { title: searchDto.title });
 		}
 
+		if (searchDto.source) {
+			query.andWhere('newsarticle.source like %:source%', { source: searchDto.source });
+		}
+
 		if (searchDto.limit) {
 			query.limit(searchDto.limit);
 		}

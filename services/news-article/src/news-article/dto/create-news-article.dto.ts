@@ -6,4 +6,6 @@ export class CreateNewsArticleDto {
 	image: string;
 	title: string;
 	url: string;
+	source: string;
+	description: string;
 }

@@ -28,6 +28,8 @@ function createNewsArticleDto() {
 		title: `title_${id}`,
 		dateTime: new Date().toUTCString(),
 		url: `url_${id}`,
+		source: `source_${id}`,
+		description: `source_${id}`,
 		sentiments: [
 			{
 				politician: id,
