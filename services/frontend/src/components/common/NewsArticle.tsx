@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Card from './Card';
-import { CardContent, CardMedia, makeStyles, Typography } from '@material-ui/core';
+import { CardContent, CardMedia, Link as MuiLink, makeStyles, Typography } from '@material-ui/core';
 
 interface NewsArticle {
     image: string;
@@ -14,7 +14,7 @@ interface IProps {
 
 const useStyles = makeStyles({
     media: {
-        height: 200
+        height: 250
     }
 });
 
@@ -23,14 +23,19 @@ const NewsArticle = (props: IProps) => {
 
     return (
         <Card>
-            <CardMedia
-                className={classes.media}
-                image={props.newsArticle.image}
-                title={props.newsArticle.title} />
+            {
+                props.newsArticle.image &&
+                <CardMedia
+                    className={classes.media}
+                    image={props.newsArticle.image}
+                    title={props.newsArticle.title} />
+            }
             <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                    {props.newsArticle.title}
-                </Typography>
+                <MuiLink href={props.newsArticle.url} underline='none'>
+                    <Typography variant='h6'>
+                        {props.newsArticle.title}
+                    </Typography>
+                </MuiLink>
             </CardContent>
         </Card>
     );
