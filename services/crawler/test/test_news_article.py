@@ -34,7 +34,9 @@ def test_insert_and_get():
         title=random_string(),
         url=random_string(),
         dateTime=datetime.datetime.now().isoformat(' ', 'seconds'),
-        sentiments=[sentiment]
+        sentiments=[sentiment],
+        source=random_string(),
+        description=random_string()
     )
 
     repository.insert(news_article)

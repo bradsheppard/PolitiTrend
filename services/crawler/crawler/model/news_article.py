@@ -18,6 +18,8 @@ class NewsArticle:
     image: str
     title: str
     url: str
+    source: str
+    description: str
 
 
 class NewsArticleRepository(Repository[NewsArticle]):
@@ -42,7 +44,9 @@ class NewsArticleRepository(Repository[NewsArticle]):
                 url=entry['url'],
                 image=entry['image'],
                 sentiments=entry['sentiments'],
-                dateTime=entry['dateTime']
+                dateTime=entry['dateTime'],
+                description=entry['description'],
+                source=entry['source']
             )
 
             news_articles.append(news_article)
@@ -75,7 +79,9 @@ class NewsArticleCrawler(Crawler[NewsArticle]):
                 url=article['url'],
                 image=article['image']['url'],
                 sentiments=[],
-                dateTime=article['datePublished']
+                dateTime=article['datePublished'],
+                source=article['provider']['name'],
+                description=NewsArticleCrawler._stip_html_tags(article['description'])
             )
             results.append(news_article)
 
