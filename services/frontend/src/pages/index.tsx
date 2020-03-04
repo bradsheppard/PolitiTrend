@@ -1,117 +1,73 @@
-import { Grid } from '@material-ui/core';
+import {
+    createStyles,
+    Grid, GridList,
+    GridListTile,
+    Theme,
+    WithStyles,
+    withStyles
+} from '@material-ui/core';
 import * as React from 'react';
-// import PoliticianApi from '../apis/politician/PoliticianApi';
-import CategoryHeader from '../components/common/CategoryHeader';
-import PoliticianSentimentSummary from '../components/politician/PoliticianSentimentSummary';
 import ContentContainer from '../components/common/ContentContainer';
 import Bar from '../components/bar/Bar';
-// import PoliticianDto from '../apis/politician/PoliticianDto';
-// import TweetApi from '../apis/tweet/TweetApi';
-// import TweetDto from '../apis/tweet/TweetDto';
-// import OpinionSummaryDto from '../apis/opinion-summary/OpinionSummaryDto';
-// import OpinionSummaryApi from '../apis/opinion-summary/OpinionSummaryApi';
-import TransparentJumbo from '../components/common/TransparentJumbo';
-import Typography from '@material-ui/core/Typography';
-import Globals from '../utils/Globals';
+import NewsArticleDto from '../apis/news-article/NewsArticleDto';
+import NewsArticleApi from '../apis/news-article/NewsArticleApi';
+import NewsArticleComponent from '../components/common/NewsArticle';
 
-interface IProps {
-    topPoliticians: Politician[];
-    bottomPoliticians: Politician[];
+interface NewsArticle {
+    image: string;
+    title: string;
+    url: string;
+    source: string;
+    description: string;
 }
 
-interface Tweet {
-    tweetId: string;
-    tweetText: string;
-}
+const styles = (theme: Theme) => createStyles({
+    newsArticle: {
+        paddingTop: theme.spacing(2)
+    }
+});
 
-interface Politician {
-    id: number;
-    name: string;
-    party: string;
-    sentiment: number;
-    tweets: Tweet[];
+interface IProps extends WithStyles<typeof styles> {
+    newsArticles: NewsArticle[]
 }
 
 class App extends React.Component<IProps> {
 
     static async getInitialProps() {
-        // let politicianDtos: PoliticianDto[] = await PoliticianApi.get();
-        // let opinionSummaryDtos: OpinionSummaryDto[] = await OpinionSummaryApi.get({ max: true });
-        // opinionSummaryDtos = opinionSummaryDtos.sort((a, b) => b.sentiment - a.sentiment);
-        //
-        // const topSummaries = opinionSummaryDtos.slice(0, 5);
-        // const bottomSummaries = opinionSummaryDtos.slice(opinionSummaryDtos.length - 5, opinionSummaryDtos.length);
-        // let politiciansOfInterest = topSummaries.map(x => x.politician);
-        // politiciansOfInterest = politiciansOfInterest.concat(bottomSummaries.map(x => x.politician));
-        //
-        // const tweetDtos: TweetDto[] = await TweetApi.get({ politicians: politiciansOfInterest, limitPerPolitician: 3 });
-        //
-        // let politicians: Politician[] = [];
-        //
-        // politicianDtos.forEach((politicianDto: PoliticianDto) => {
-        //     const politician = {
-        //         id: politicianDto.id,
-        //         party: politicianDto.party,
-        //         name: politicianDto.name
-        //     } as Politician;
-        //
-        //     const summary: OpinionSummaryDto | undefined = opinionSummaryDtos.find(x => x.politician === politicianDto.id);
-        //     politician.tweets = tweetDtos.filter(x => x.sentiments.filter(y => y.politician == politicianDto.id).length > 0);
-        //
-        //     if (!summary)
-        //         return;
-        //
-        //     politician.sentiment = summary.sentiment;
-        //     politicians.push(politician);
-        // });
-        //
-        // politicians = politicians.sort((a, b) => b.sentiment - a.sentiment);
+        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({limit: 6});
 
         return {
-            topPoliticians: [],
-            bottomPoliticians: []
+            newsArticles: newsArticleDtos
         };
     }
 
-    public render() {
+    render() {
+        //const { classes } = this.props;
+
         return (
             <React.Fragment>
-                <Bar overlay={true}/>
-                <TransparentJumbo>
-                    <Typography variant='h1' align='center' style={{color: 'white'}}>
-                        {Globals.name.toUpperCase()}
-                    </Typography>
-                    <Typography variant='h5' align='center' style={{color: 'white'}}>
-                        Sentiment analysis of politicians
-                    </Typography>
-                </TransparentJumbo>
+                <Bar />
+                {/*<TransparentJumbo>*/}
+                {/*    <Typography variant='h1' align='center' style={{color: 'white'}}>*/}
+                {/*        {Globals.name.toUpperCase()}*/}
+                {/*    </Typography>*/}
+                {/*</TransparentJumbo>*/}
                 <ContentContainer>
                     <Grid container
                           direction='row'
                           justify='center'>
-                        <Grid item sm={6}>
-                            <CategoryHeader>
-                                Most Liked
-                            </CategoryHeader>
-                            {
-                                this.props.topPoliticians.map((politician: Politician, index) => {
-                                    return (
-                                        <PoliticianSentimentSummary politician={politician} key={index}/>
-                                    )
-                                })
-                            }
-                        </Grid>
-                        <Grid item sm={6}>
-                            <CategoryHeader>
-                                Most Hated
-                            </CategoryHeader>
-                            {
-                                this.props.bottomPoliticians.map((politician: Politician, index) => {
-                                    return (
-                                        <PoliticianSentimentSummary politician={politician} key={index}/>
-                                    )
-                                })
-                            }
+                        <Grid item xs={10}>
+                            <GridList cellHeight={500} cols={3}>
+                                {
+                                    this.props.newsArticles.map(newsArticle => {
+                                        return (
+                                            <GridListTile>
+                                                <NewsArticleComponent newsArticle={newsArticle} />
+                                            </GridListTile>
+                                        );
+                                    })
+                                }
+                            </GridList>
                         </Grid>
                     </Grid>
                 </ContentContainer>
@@ -120,4 +76,4 @@ class App extends React.Component<IProps> {
     }
 }
 
-export default App;
+export default withStyles(styles)(App);

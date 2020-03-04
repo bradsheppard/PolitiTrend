@@ -17,6 +17,8 @@ interface NewsArticle {
     title: string;
     url: string;
     image: string;
+    source: string;
+    description: string;
 }
 
 interface IProps extends WithStyles<typeof styles> {
@@ -39,7 +41,15 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
 
     async componentDidMount() {
         const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({politicians: [this.props.politician], limit: 10});
-        const newsArticles = newsArticleDtos.map(x => { return {title: x.title, url: x.url, image: x.image} as NewsArticle });
+        const newsArticles = newsArticleDtos.map(x => {
+            return {
+                title: x.title,
+                url: x.url,
+                image: x.image,
+                source: x.source,
+                description: x.description
+            } as NewsArticle
+        });
         this.setState({
             newsArticles
         });

@@ -3,7 +3,6 @@ import PoliticianApi from '../apis/politician/PoliticianApi';
 import {
     createStyles,
     Grid,
-    TextField,
     Theme,
     withStyles,
     WithStyles
@@ -66,7 +65,7 @@ class Politicians extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { classes } = this.props;
+        // const { classes } = this.props;
 
         return (
             <React.Fragment>
@@ -76,15 +75,15 @@ class Politicians extends React.Component<IProps, IState> {
                         <Grid container
                             alignItems='center'
                             justify='center'>
-                            <Grid item sm={12}>
-                                <Grid container
-                                    alignItems='center'
-                                    justify='center'>
-                                    <Grid item sm={8}>
-                                        <TextField className={classes.search} label="Name" variant="outlined" onChange={this.handleSearchChange.bind(this)} />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
+                            {/*<Grid item sm={12}>*/}
+                            {/*    <Grid container*/}
+                            {/*        alignItems='center'*/}
+                            {/*        justify='center'>*/}
+                            {/*        <Grid item sm={8}>*/}
+                            {/*            <TextField className={classes.search} label="Name" variant="outlined" onChange={this.handleSearchChange.bind(this)} />*/}
+                            {/*        </Grid>*/}
+                            {/*    </Grid>*/}
+                            {/*</Grid>*/}
                             <Grid item sm={12}>
                                 <PoliticianGridList politicians={this.props.politicians}/>
                             </Grid>

@@ -11,8 +11,8 @@ const style = () => createStyles({
         backgroundSize: 'cover'
     },
     text: {
-        paddingBottom: '20em',
-        paddingTop: '20em'
+        paddingBottom: '6em',
+        paddingTop: '7em'
     }
 });
 

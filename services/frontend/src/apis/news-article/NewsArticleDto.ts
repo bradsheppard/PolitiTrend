@@ -5,6 +5,8 @@ interface NewsArticleDto {
     image: string;
     title: string;
     url: string;
+    source: string;
+    description: string;
     sentiments: SentimentDto[];
 }
 
