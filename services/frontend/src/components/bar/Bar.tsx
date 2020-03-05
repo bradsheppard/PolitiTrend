@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
         flexGrow: 0.75,
     },
     titleText: {
-        color: 'black',
+        color: 'white',
         textDecoration: 'none'
     }
 }));
@@ -44,7 +44,7 @@ const Header = (props: Props) => {
     return (
         <React.Fragment>
             <HideOnScroll {...props}>
-                <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgb(255,255,255,0.9)'}} variant='outlined'>
+                <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgba(0,0,0,0.9)'}}>
                     <Toolbar>
                         <div className={classes.title}>
                             <Link href='/' passHref>

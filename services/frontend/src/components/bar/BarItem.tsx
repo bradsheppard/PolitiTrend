@@ -7,7 +7,7 @@ import Link from 'next/link';
 const styles = (theme: Theme) => createStyles({
     menuItem: {
         margin: theme.spacing(2),
-        color: 'black',
+        color: 'white',
         textDecoration: 'none'
     }
 });

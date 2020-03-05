@@ -1,6 +1,13 @@
 import * as React from 'react';
-import Card from './Card';
-import { CardContent, CardMedia, Link as MuiLink, makeStyles, Typography } from '@material-ui/core';
+import {
+    Box,
+    Card,
+    CardContent,
+    CardMedia,
+    Link as MuiLink,
+    makeStyles,
+    Typography
+} from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 
 interface NewsArticle {
@@ -23,14 +30,28 @@ const useStyles = makeStyles({
     avatar: {
         backgroundColor: red[500],
     },
+    card: {
+        background: 'none'
+    }
 });
 
-const NewsArticle = (props: IProps) => {
+const HomeNewsArticle = (props: IProps) => {
     const classes = useStyles(props);
+
 
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
-            <Card>
+            <Card elevation={0} className={classes.card}>
+                <CardContent>
+                    <Typography gutterBottom variant='h3'>
+                        <Box fontWeight='fontWeightBold'>
+                            {props.newsArticle.title}
+                        </Box>
+                    </Typography>
+                    <Typography variant='subtitle1' color='textSecondary' component="p">
+                        {props.newsArticle.description}
+                    </Typography>
+                </CardContent>
                 {
                     props.newsArticle.image &&
                     <CardMedia
@@ -38,17 +59,9 @@ const NewsArticle = (props: IProps) => {
                         image={props.newsArticle.image}
                         title={props.newsArticle.title} />
                 }
-                <CardContent>
-                    <Typography gutterBottom variant='h6'>
-                        {props.newsArticle.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {props.newsArticle.description}
-                    </Typography>
-                </CardContent>
             </Card>
         </MuiLink>
     );
 };
 
-export default NewsArticle;
+export default HomeNewsArticle;
