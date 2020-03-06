@@ -1,6 +1,6 @@
 import {
     createStyles, Grid,
-    Theme, WithStyles,
+    Theme, Typography, WithStyles,
     withStyles
 } from '@material-ui/core';
 import * as React from 'react';
@@ -12,6 +12,8 @@ import HomeNewsArticle from '../components/home/HomeNewsArticle';
 import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
 import { Tweet as TweetWidget } from 'react-twitter-widgets'
+import TransparentJumbo from '../components/common/TransparentJumbo';
+import Globals from '../utils/Globals';
 
 interface NewsArticle {
     image: string;
@@ -55,11 +57,11 @@ class App extends React.Component<IProps> {
         return (
             <React.Fragment>
                 <Bar />
-                {/*<TransparentJumbo>*/}
-                {/*    <Typography variant='h1' align='center' style={{color: 'white'}}>*/}
-                {/*        {Globals.name.toUpperCase()}*/}
-                {/*    </Typography>*/}
-                {/*</TransparentJumbo>*/}
+                <TransparentJumbo>
+                    <Typography variant='h1' align='center' style={{color: 'white'}}>
+                        {Globals.name.toUpperCase()}
+                    </Typography>
+                </TransparentJumbo>
                 <ContentContainer>
                     <Grid container
                         direction='row'

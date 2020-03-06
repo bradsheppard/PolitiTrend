@@ -52,10 +52,10 @@ const PoliticianPage = (props: IProps) => {
                       className={classes.profile}
                       direction='row'
                       justify='center'>
-                    <Grid item sm={4}>
+                    <Grid item sm={3}>
                         <PoliticianHeader politician={politician}/>
                     </Grid>
-                    <Grid item sm={8} className={classes.content}>
+                    <Grid item sm={9} className={classes.content}>
                         <PoliticianFeed politician={politician.id} />
                     </Grid>
                 </Grid>

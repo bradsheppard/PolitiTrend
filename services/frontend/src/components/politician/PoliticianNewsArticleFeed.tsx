@@ -1,15 +1,14 @@
 import * as React from 'react';
 import NewsArticleApi from '../../apis/news-article/NewsArticleApi';
 import NewsArticleDto from '../../apis/news-article/NewsArticleDto';
-import NewsArticleComponent from '../common/NewsArticle';
+import NewsArticleComponent from './PoliticianNewsArticle';
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 
 const styles = (theme: Theme) => createStyles({
     content: {
         paddingLeft: theme.spacing(8),
         paddingRight: theme.spacing(8),
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2)
+        paddingBottom: theme.spacing(10)
     },
 });
 
