@@ -7,6 +7,7 @@ import Bar from '../../components/bar/Bar';
 import PoliticianDto from '../../apis/politician/PoliticianDto';
 import PoliticianHeader from '../../components/politician/PoliticianHeader';
 import PoliticianFeed from '../../components/politician/PoliticianFeed';
+import TransparentJumbo from '../../components/common/TransparentJumbo';
 
 const styles = (theme: Theme) => createStyles({
     profile: {
@@ -46,7 +47,8 @@ const PoliticianPage = (props: IProps) => {
 
     return (
         <React.Fragment>
-            <Bar/>
+            <Bar overlay/>
+            <TransparentJumbo />
             <ContentContainer>
                 <Grid container
                       className={classes.profile}

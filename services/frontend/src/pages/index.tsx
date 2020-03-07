@@ -1,6 +1,6 @@
 import {
-    createStyles, Grid,
-    Theme, Typography, WithStyles,
+    createStyles, Fade, Grid,
+    Theme, WithStyles,
     withStyles
 } from '@material-ui/core';
 import * as React from 'react';
@@ -13,7 +13,7 @@ import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
 import { Tweet as TweetWidget } from 'react-twitter-widgets'
 import TransparentJumbo from '../components/common/TransparentJumbo';
-import Globals from '../utils/Globals';
+import { Waypoint } from 'react-waypoint';
 
 interface NewsArticle {
     image: string;
@@ -25,12 +25,12 @@ interface NewsArticle {
 
 const styles = (theme: Theme) => createStyles({
     newsArticle: {
-        paddingLeft: theme.spacing(2),
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2)
+        marginLeft: theme.spacing(2),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(8)
     },
     tweet: {
-        paddingTop: theme.spacing(2)
+        marginTop: theme.spacing(2)
     }
 });
 
@@ -39,7 +39,18 @@ interface IProps extends WithStyles<typeof styles> {
     tweets: string[];
 }
 
-class App extends React.Component<IProps> {
+interface IState {
+    visibility: boolean[];
+}
+
+class App extends React.Component<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            visibility: Array(props.newsArticles.length).fill(false)
+        }
+    }
 
     static async getInitialProps() {
         const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({limit: 4, politicians: [95]});
@@ -51,17 +62,26 @@ class App extends React.Component<IProps> {
         };
     }
 
+    onEnter(index: number) {
+        const state = this.state;
+        this.state.visibility[index] = true;
+        this.setState(state);
+    }
+
+    onExit(index: number) {
+        const state = this.state;
+        state.visibility[index] = false;
+        this.setState(state);
+    }
+
     render() {
         const { classes } = this.props;
+        const { visibility } = this.state;
 
         return (
             <React.Fragment>
-                <Bar />
-                <TransparentJumbo>
-                    <Typography variant='h1' align='center' style={{color: 'white'}}>
-                        {Globals.name.toUpperCase()}
-                    </Typography>
-                </TransparentJumbo>
+                <Bar overlay />
+                <TransparentJumbo />
                 <ContentContainer>
                     <Grid container
                         direction='row'
@@ -69,11 +89,15 @@ class App extends React.Component<IProps> {
                         <Grid item
                             xs={12}>
                             {
-                                this.props.newsArticles.map(newsArticle => {
+                                this.props.newsArticles.map((newsArticle, index) => {
                                     return (
-                                        <div className={classes.newsArticle}>
-                                            <HomeNewsArticle newsArticle={newsArticle} height={400} />
-                                        </div>
+                                        <Waypoint onEnter={() => this.onEnter(index)} onLeave={() => this.onExit(index)}>
+                                            <Fade in={visibility[index]} timeout={2000}>
+                                                <div className={classes.newsArticle}>
+                                                    <HomeNewsArticle newsArticle={newsArticle} height={400} />
+                                                </div>
+                                            </Fade>
+                                        </Waypoint>
                                     )
                                 })
                             }
