@@ -67,7 +67,19 @@ class App extends React.Component<IProps> {
                         direction='row'
                         justify='center'>
                         <Grid item
-                            xs={3}>
+                            xs={12}>
+                            {
+                                this.props.newsArticles.map(newsArticle => {
+                                    return (
+                                        <div className={classes.newsArticle}>
+                                            <HomeNewsArticle newsArticle={newsArticle} height={400} />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </Grid>
+                        <Grid item
+                              xs={3}>
                             {
                                 this.props.tweets.map((tweet, index) => {
                                     return (
@@ -79,18 +91,6 @@ class App extends React.Component<IProps> {
                                                 tweetId={tweet}
                                                 key={index}
                                             />
-                                        </div>
-                                    )
-                                })
-                            }
-                        </Grid>
-                        <Grid item
-                            xs={9}>
-                            {
-                                this.props.newsArticles.map(newsArticle => {
-                                    return (
-                                        <div className={classes.newsArticle}>
-                                            <HomeNewsArticle newsArticle={newsArticle} height={400} />
                                         </div>
                                     )
                                 })

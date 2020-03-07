@@ -1,44 +1,40 @@
 import * as React from 'react';
-import { Card, Tab, Tabs } from '@material-ui/core';
-import PoliticianTweetFeed from './PoliticianTweetFeed';
+import { Tab, Tabs } from '@material-ui/core';
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed';
-import { makeStyles } from '@material-ui/styles';
+import PoliticianTweetFeed from './PoliticianTweetFeed';
 
 interface IProps {
     politician: number;
 }
-
-const useStyles = makeStyles({
-    card: {
-        background: 'none'
-    }
-});
-
 const PoliticianFeed = (props: IProps) => {
     const [tabValue, setTabValue] = React.useState(0);
 
     const { politician } = props;
-    const classes = useStyles();
 
     const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
         setTabValue(newValue);
     };
 
+    function a11yProps(index: any) {
+        return {
+            id: `simple-tab-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`,
+        };
+    }
+
     return (
-        <Card elevation={0} className={classes.card}>
+        <React.Fragment>
             <Tabs
                 value={tabValue}
-                indicatorColor='primary'
-                textColor='primary'
                 onChange={handleTabChange}
                 centered
             >
-                <Tab label='Tweets' />
-                <Tab label='News Articles' />
+                <Tab label='News Articles' {...a11yProps(0)} />
+                <Tab label='Tweets' {...a11yProps(1)} />
             </Tabs>
-            <PoliticianNewsArticleFeed politician={politician} hidden={tabValue === 0} />
-            <PoliticianTweetFeed politician={politician} hidden={tabValue === 1} />
-        </Card>
+            <PoliticianNewsArticleFeed politician={politician} hidden={tabValue === 1} />
+            <PoliticianTweetFeed politician={politician} hidden={tabValue === 0} />
+        </React.Fragment>
     );
 };
 
