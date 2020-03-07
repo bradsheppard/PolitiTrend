@@ -59,6 +59,8 @@ export class NewsArticleService {
 			query.offset(searchDto.offset);
 		}
 
+		query.orderBy('newsarticle.id', 'DESC');
+
 		return await query.getMany();
 	}
 

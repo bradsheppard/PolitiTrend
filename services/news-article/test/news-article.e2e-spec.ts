@@ -211,18 +211,17 @@ describe('NewsArticleService (e2e)', () => {
 		const newsArticle3 = createNewsArticleDto();
 
 		await service.upsertOnUrl(newsArticle1);
-
 		await service.upsertOnUrl(newsArticle2);
 		await service.upsertOnUrl(newsArticle3);
 
 		const newsArticles = await service.get({limit: 2, offset: 1});
 		expect(newsArticles).toHaveLength(2);
 
+		expect(newsArticles[1].url).toEqual(newsArticle1.url);
+		expect(newsArticles[1].image).toEqual(newsArticle1.image);
+
 		expect(newsArticles[0].url).toEqual(newsArticle2.url);
 		expect(newsArticles[0].image).toEqual(newsArticle2.image);
-
-		expect(newsArticles[1].url).toEqual(newsArticle3.url);
-		expect(newsArticles[1].image).toEqual(newsArticle3.image);
 	});
 
 	it('Can delete one', async () => {
