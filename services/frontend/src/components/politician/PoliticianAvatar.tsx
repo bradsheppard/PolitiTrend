@@ -27,7 +27,11 @@ const PoliticianAvatar = (props: IProps) => {
 	const classes = useStyles();
 
 	return (
-		<Avatar alt={politician.name} src={politicianNameToImagePath(politician.name)} className={classes.large} />
+		<Avatar
+			variant='circle'
+			alt={politician.name}
+			src={politicianNameToImagePath(politician.name)}
+			className={classes.large} />
 	);
 };
 

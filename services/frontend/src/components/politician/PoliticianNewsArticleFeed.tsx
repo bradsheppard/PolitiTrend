@@ -2,13 +2,13 @@ import * as React from 'react';
 import NewsArticleApi from '../../apis/news-article/NewsArticleApi';
 import NewsArticleDto from '../../apis/news-article/NewsArticleDto';
 import NewsArticleComponent from './PoliticianNewsArticle';
-import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
+import { createStyles, Fade, Theme, WithStyles, withStyles } from '@material-ui/core';
+import { Waypoint } from 'react-waypoint';
 
 const styles = (theme: Theme) => createStyles({
     content: {
-        paddingLeft: theme.spacing(8),
-        paddingRight: theme.spacing(8),
-        paddingBottom: theme.spacing(10)
+        marginBottom: theme.spacing(6),
+        marginTop: theme.spacing(2)
     },
 });
 
@@ -27,6 +27,7 @@ interface IProps extends WithStyles<typeof styles> {
 
 interface IState {
     newsArticles: NewsArticle[];
+    visibility: boolean[];
 }
 
 class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
@@ -34,7 +35,8 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            newsArticles: []
+            newsArticles: [],
+            visibility: []
         };
     }
 
@@ -50,22 +52,41 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
             } as NewsArticle
         });
         this.setState({
-            newsArticles
+            newsArticles,
+            visibility: Array(newsArticles.length).fill(false)
         });
+    }
+
+    onEnter(index: number) {
+        const state = this.state;
+        state.visibility[index] = true;
+        this.setState(state);
+    }
+
+    onExit(index: number) {
+        const state = this.state;
+        state.visibility[index] = false;
+        this.setState(state);
     }
 
     render() {
         if(this.props.hidden)
             return null;
 
+        const { visibility } = this.state;
+
         return (
             <React.Fragment>
                 {
-                    this.state.newsArticles.map((newsArticle: NewsArticle) => {
+                    this.state.newsArticles.map((newsArticle: NewsArticle, index: number) => {
                         return (
-                            <div className={this.props.classes.content}>
-                                <NewsArticleComponent newsArticle={newsArticle} />
-                            </div>
+                            <Waypoint onEnter={() => this.onEnter(index)} onLeave={() => this.onExit(index)}>
+                                <Fade in={visibility[index]} timeout={2000}>
+                                    <div className={this.props.classes.content}>
+                                        <NewsArticleComponent newsArticle={newsArticle} />
+                                    </div>
+                                </Fade>
+                            </Waypoint>
                         );
                     })
                 }

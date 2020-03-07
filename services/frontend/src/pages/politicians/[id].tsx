@@ -15,9 +15,13 @@ const styles = (theme: Theme) => createStyles({
         textAlign: 'center'
     },
     content: {
-        paddingLeft: theme.spacing(4),
-        paddingRight: theme.spacing(4)
+        paddingLeft: theme.spacing(8),
+        paddingRight: theme.spacing(8)
     },
+    feed: {
+        marginLeft: theme.spacing(4),
+        marginRight: theme.spacing(4)
+    }
 });
 
 interface OpinionSummary {

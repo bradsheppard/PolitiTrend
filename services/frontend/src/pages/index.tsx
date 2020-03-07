@@ -27,7 +27,7 @@ const styles = (theme: Theme) => createStyles({
     newsArticle: {
         marginLeft: theme.spacing(2),
         marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(8)
+        marginBottom: theme.spacing(6)
     },
     tweet: {
         marginTop: theme.spacing(2)
