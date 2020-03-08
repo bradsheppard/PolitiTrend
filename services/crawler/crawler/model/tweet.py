@@ -44,7 +44,7 @@ class TweetRepository(Repository[Tweet]):
 
     def __init__(self):
         self._host = 'http://tweet'
-        self._message_bus = MessageBus('queue-kafka', 'tweet-created')
+        self._message_bus = MessageBus('queue-kafka-bootstrap', 'tweet-created')
 
     def get_all(self):
         res = requests.get(self._host)
