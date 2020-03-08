@@ -26,7 +26,7 @@ class NewsArticleRepository(Repository[NewsArticle]):
 
     def __init__(self):
         self._host = 'http://news-article'
-        self._message_bus = MessageBus('queue-kafka', 'news_article_created')
+        self._message_bus = MessageBus('queue-kafka', 'news-article-created')
 
     def insert(self, news_article: NewsArticle):
         serialized = json.dumps(news_article.__dict__, default=lambda o: o.__dict__)

@@ -14,17 +14,14 @@ dependencies:
 - name: frontend
   repository: ""
   version: 1.0.0
-- name: kafka
-  repository: https://charts.bitnami.com/bitnami
-  version: 7.0.4
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 5.0.11
 - name: sparkoperator
   repository: http://storage.googleapis.com/kubernetes-charts-incubator
   version: 0.6.6
-- name: cp-kafka-connect
+- name: kafka
   repository: ""
-  version: 0.1.0
-digest: sha256:4625f6d890ee36f7c023e768c51d56f2adb704e65beebbe8f003526586c835c9
-generated: "2020-02-26T21:47:01.686228962-03:30"
+  version: 1.0.0
+digest: sha256:a11bd85ae1bd8ca5fbc4b1761c56211111b05e5ab7740862bd660cc096cd22c1
+generated: "2020-03-08T14:49:01.053265649-02:30"

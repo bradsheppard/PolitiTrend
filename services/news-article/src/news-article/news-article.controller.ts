@@ -43,7 +43,7 @@ export class NewsArticleController {
 		}
 	}
 
-	@EventPattern('news_article_created')
+	@EventPattern('news-article-created')
 	async handleNewsArticleCreated(createNewsArticleDto: CreateNewsArticleDto) {
 		await this.newsArticleService.upsertOnUrl(createNewsArticleDto);
 	}

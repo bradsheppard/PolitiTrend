@@ -152,9 +152,9 @@ describe('NewsArticleController (e2e)', () => {
 
 	it('handle newsArticle created', async () => {
 		const newsArticleDto = createNewsArticleDto();
-		const json = await client.emit('news_article_created', newsArticleDto).toPromise();
+		const json = await client.emit('news-article-created', newsArticleDto).toPromise();
 
-		expect(json[0].topicName).toEqual('news_article_created');
+		expect(json[0].topicName).toEqual('news-article-created');
 
 		await waitForExpect(async () => {
 			const newsArticles: NewsArticle[] = await service.get({});

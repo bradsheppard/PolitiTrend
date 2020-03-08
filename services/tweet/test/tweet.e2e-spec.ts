@@ -163,9 +163,9 @@ describe('TweetController (e2e)', () => {
 
 	it('handle tweet created', async () => {
 		const tweetDto = createTweetDto();
-		const json = await client.emit('tweet_created', tweetDto).toPromise();
+		const json = await client.emit('tweet-created', tweetDto).toPromise();
 
-		expect(json[0].topicName).toEqual('tweet_created');
+		expect(json[0].topicName).toEqual('tweet-created');
 
 		await waitForExpect(async () => {
 			const tweets: Tweet[] = await service.get({});

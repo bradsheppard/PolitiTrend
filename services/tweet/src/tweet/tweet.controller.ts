@@ -44,7 +44,7 @@ export class TweetController {
 		await this.tweetService.delete();
 	}
 
-	@EventPattern('tweet_created')
+	@EventPattern('tweet-created')
 	async handleTweetCreated(createOpinionDto: CreateTweetDto) {
 		await this.tweetService.upsertOnTweetId(createOpinionDto);
 	}

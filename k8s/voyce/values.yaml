@@ -18,33 +18,17 @@ news-article:
   enabled: true
 
 frontend:
-  enabled: false
+  enabled: true
 
 sparkoperator:
   enabled: true
   sparkJobNamespace: default
 
-cp-kafka-connect:
-  enabled: false
+kafka:
+  enabled: true
 
 global:
   registry: registry.gitlab.com/brad_1357/voyce
-
-kafka:
-  enabled: false
-  nameOverride: queue-kafka
-  fullnameOverride: queue-kafka
-  resources:
-    requests:
-      memory: 64Mi
-      cpu: 60m
-  zookeeper:
-    nameOverride: queue-zookeeper
-    fullnameOverride: queue-zookeeper
-    resources:
-      requests:
-        memory: 64Mi
-        cpu: 60m
 
 minio:
   enabled: true
