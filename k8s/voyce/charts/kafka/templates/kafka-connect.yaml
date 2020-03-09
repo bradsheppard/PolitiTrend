@@ -7,10 +7,10 @@ metadata:
   # to use KafkaConnector resources to avoid
   # needing to call the Connect REST API directly
     strimzi.io/use-connector-resources: "true"
-    "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "-5"
 spec:
-  image: imranpochi/strmzi-kafka-connect-with-s3-plugin
+#  imagePullSecrets:
+#    - name: regcred
+#  image: "{{ .Values.global.registry }}/{{ .Values.kafkaConnect.image.repository }}:{{ .Values.kafkaConnect.version }}"
   version: 2.4.0
   replicas: 1
   bootstrapServers: queue-kafka-bootstrap:9092

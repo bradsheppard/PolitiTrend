@@ -2,9 +2,6 @@ apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
   name: news-article-created
-  annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "-5"
   labels:
     strimzi.io/cluster: queue
 spec:

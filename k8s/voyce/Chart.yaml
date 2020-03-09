@@ -21,6 +21,10 @@ version: 0.1.0
 appVersion: 1.0.0
 
 dependencies:
+  - name: strimzi-kafka-operator
+    condition: strimzi-kafka-operator.enabled
+    version: '>=0.1.0'
+    repository: https://strimzi.io/charts
   - name: politician
     condition: politician.enabled
     version: 1.0.0

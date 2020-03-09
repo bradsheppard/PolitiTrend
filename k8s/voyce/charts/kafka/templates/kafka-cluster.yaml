@@ -2,9 +2,6 @@ apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
   name: queue
-  annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "-5"
 spec:
   kafka:
     version: 2.4.0

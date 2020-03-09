@@ -1,4 +1,7 @@
 dependencies:
+- name: strimzi-kafka-operator
+  repository: https://strimzi.io/charts
+  version: 0.16.2
 - name: politician
   repository: ""
   version: 1.0.0
@@ -23,5 +26,5 @@ dependencies:
 - name: kafka
   repository: ""
   version: 1.0.0
-digest: sha256:a11bd85ae1bd8ca5fbc4b1761c56211111b05e5ab7740862bd660cc096cd22c1
-generated: "2020-03-08T14:49:01.053265649-02:30"
+digest: sha256:10fdc7352990461c950fa686e89631edc5d5a90dff908c0d1098bd2e94f68f7d
+generated: "2020-03-08T22:36:44.606580788-02:30"

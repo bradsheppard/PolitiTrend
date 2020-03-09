@@ -21,6 +21,12 @@ tolerations: []
 
 affinity: {}
 
+kafkaConnect:
+  version: 1.0.0
+  image:
+    repository: kafka-connect
+    pullPolicy: Always
+
 strimzi-kafka-operator:
   resources:
     limits:
