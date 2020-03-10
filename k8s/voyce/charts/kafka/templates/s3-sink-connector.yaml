@@ -9,16 +9,20 @@
 #    # set to true.
 #    strimzi.io/cluster: kafka-connect-cluster
 #spec:
-#  class: com.spredfast.kafka.connect.s3.sink.S3SinkConnector
+#  class: io.confluent.connect.s3.S3SinkConnector
 #  tasksMax: 2
 #  config:
-#    tasks.max: 1,
-#    topics: tweet-created,
-#    s3.bucket.name: tweets,
-#    s3.part.size: 5242880,
-#    flush.size: 6,
-#    store.url: http://minio:9000,
-#    storage.class: io.confluent.connect.s3.storage.S3Storage,
-#    format.class: io.confluent.connect.s3.format.json.JsonFormat,
-#    partitioner.class: io.confluent.connect.storage.partitioner.DefaultPartitioner,
+#    format.class: io.confluent.connect.s3.format.json.JsonFormat
+#    flush.size: 6
+#    tasks.max: 1
+#    topics: tweet-created
+#    s3.part.size: 5242880
+#    partitioner.class: io.confluent.connect.storage.partitioner.HourlyPartitioner
 #    value.converter.schemas.enable: false
+#    name: s3-sink-connector
+#    store.url: http://minio:9000
+#    storage.class: io.confluent.connect.s3.storage.S3Storage
+#    s3.bucket.name: tweets
+#    locale: en-US
+#    timezone: UTC
+#    timestamp.extractor: Wallclock

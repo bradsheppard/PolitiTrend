@@ -1,11 +1,20 @@
-# Default values for kafka.
+# Default values for cluster.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-kafkaConnect:
-  image:
-    repository: kafka-connect
-    pullPolicy: Always
+
+strimzi-kafka-operator:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+sparkoperator:
+  enabled: true
+  sparkJobNamespace: default
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
