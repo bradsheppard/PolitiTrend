@@ -1,26 +1,38 @@
-#apiVersion: kafka.strimzi.io/v1beta1
-#kind: KafkaConnect
-#metadata:
-#  name: kafka-connect-cluster
-#  annotations:
-#  # use-connector-resources configures this KafkaConnect
-#  # to use KafkaConnector resources to avoid
-#  # needing to call the Connect REST API directly
-#    strimzi.io/use-connector-resources: "true"
-#spec:
-#  template:
-#    pod:
-#      imagePullSecrets:
-#        - name: regcred
-#  image: "{{ .Values.global.registry }}/{{ .Values.kafkaConnect.image.repository }}:{{ .Chart.AppVersion }}"
-#  version: 2.4.0
-#  replicas: 1
-#  bootstrapServers: queue-kafka-bootstrap:9092
-#  config:
-#    group.id: connect-cluster
-#    offset.storage.topic: connect-cluster-offsets
-#    config.storage.topic: connect-cluster-configs
-#    status.storage.topic: connect-cluster-status
-#    config.storage.replication.factor: 1
-#    offset.storage.replication.factor: 1
-#    status.storage.replication.factor: 1
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  name: kafka-connect-cluster
+  annotations:
+  # use-connector-resources configures this KafkaConnect
+  # to use KafkaConnector resources to avoid
+  # needing to call the Connect REST API directly
+    strimzi.io/use-connector-resources: "true"
+spec:
+  externalConfiguration:
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: minio-pass
+            key: aws_access_key_id
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: minio-pass
+            key: aws_secret_access_key
+  template:
+    pod:
+      imagePullSecrets:
+        - name: regcred
+  image: "{{ .Values.global.registry }}/{{ .Values.kafkaConnect.image.repository }}:{{ .Chart.AppVersion }}"
+  version: 2.4.0
+  replicas: 1
+  bootstrapServers: queue-kafka-bootstrap:9092
+  config:
+    group.id: connect-cluster
+    offset.storage.topic: connect-cluster-offsets
+    config.storage.topic: connect-cluster-configs
+    status.storage.topic: connect-cluster-status
+    config.storage.replication.factor: 1
+    offset.storage.replication.factor: 1
+    status.storage.replication.factor: 1
