@@ -6,6 +6,9 @@ Base = declarative_base()
 
 
 class Job(Base):
+
+    __tablename__ = 'Job'
+
     id = Column(Integer, primary_key=True)
     minTweetId = Column(String)
     maxTweetId = Column(String)
@@ -14,7 +17,7 @@ class Job(Base):
 class JobRepository:
 
     def __init__(self, username, password):
-        self._engine = create_engine('', echo=True)
+        self._engine = create_engine('postgresql://postgres:pass123@tweet-crawler-postgresql:3306/postgres', echo=True)
 
     def insert(self, job: Job):
         session = sessionmaker(bind=self._engine)
