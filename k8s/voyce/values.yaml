@@ -5,20 +5,23 @@
 
 imagePullSecrets: []
 
-crawler:
-  enabled: false
-
 politician:
   enabled: true
 
 tweet:
   enabled: true
 
+tweet-crawler:
+  enabled: true
+
 news-article:
   enabled: true
 
+news-article-crawler:
+  enabled: false
+
 frontend:
-  enabled: true
+  enabled: false
 
 kafka:
   enabled: true
@@ -27,7 +30,7 @@ global:
   registry: registry.gitlab.com/brad_1357/voyce
 
 minio:
-  enabled: true
+  enabled: false
   accessKey: brad1234
   secretKey: brad1234
   nameOverride: minio

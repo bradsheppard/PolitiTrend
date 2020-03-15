@@ -27,6 +27,9 @@ dependencies:
   - name: tweet
     condition: tweet.enabled
     version: 1.0.0
+  - name: tweet-crawler
+    condition: tweet-crawler.enabled
+    version: 1.0.0
   - name: news-article
     condition: news-article.enabled
     version: 1.0.0
