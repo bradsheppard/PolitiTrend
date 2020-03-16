@@ -6,7 +6,6 @@ import requests
 import tweepy
 
 from crawler.message_bus import MessageBus
-from crawler.model.crawler import Crawler
 from crawler.model.sentiment import Sentiment
 
 
@@ -18,7 +17,7 @@ class Tweet:
     tweetText: str
 
 
-class TweetCrawler(Crawler[Tweet]):
+class TweetCrawler:
 
     def __init__(self, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -26,10 +25,11 @@ class TweetCrawler(Crawler[Tweet]):
 
         self._api = tweepy.API(auth)
 
-    def get(self, search_term: str) -> List[Tweet]:
+    def get(self, search_term: str, **kwargs) -> List[Tweet]:
         results = tweepy\
             .Cursor(self._api.search, q=search_term, lang='en', result_type='mixed',
-                    tweet_mode='extended', count=100) \
+                    tweet_mode='extended', count=100,
+                    since_id=kwargs.get('min_tweet_id'), max_id=kwargs.get('max_tweet_id')) \
             .items(100)
 
         return [Tweet(

@@ -1,6 +1,5 @@
-from crawler.orchestrator.orchestrator import Orchestrator, CrawlerConfiguration
+from crawler.orchestrator.orchestrator import Orchestrator
 
 __all__ = [
-    Orchestrator,
-    CrawlerConfiguration
+    Orchestrator
 ]
