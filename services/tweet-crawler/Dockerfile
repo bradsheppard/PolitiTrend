@@ -12,12 +12,12 @@ RUN pip install -r requirements.txt
 
 RUN python -m spacy download en
 
-COPY crawler crawler
+COPY alembic alembic
 
 COPY test test
 
-COPY crawler.py .
+COPY crawler crawler
 
-COPY config.ini .
+COPY crawler.py start.sh config.ini alembic.ini ./
 
-CMD ["python", "-u", "./crawler.py"]
+CMD ["./start.sh"]
