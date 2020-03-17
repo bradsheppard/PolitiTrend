@@ -10,7 +10,4 @@ export default class Politician {
 
 	@Column()
 	party: string;
-
-	@Column()
-	sentiment: number;
 }

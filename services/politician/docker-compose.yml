@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+
+  dps:
+    image: defreitas/dns-proxy-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/resolv.conf:/etc/resolv.conf
+    environment:
+      - MG_LOG_LEVEL=ERROR
+    hostname: dns.mageddo
+    networks:
+      dps:
+        ipv4_address: 172.0.0.10
+
+  politician-postgresql:
+    image: postgres:11
+    restart: always
+    dns:
+      - 172.0.0.10
+    environment:
+      - POSTGRES_PASSWORD=pass123
+      - HOSTNAMES=politician-postgresql
+
+  adminer:
+    image: adminer
+    dns:
+      - 172.0.0.10
+    restart: always
+    ports:
+      - 8080:8080
+
+networks:
+  dps:
+    ipam:
+      config:
+        - subnet: 172.0.0.0/24

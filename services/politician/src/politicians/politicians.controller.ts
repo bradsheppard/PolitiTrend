@@ -22,8 +22,7 @@ export class PoliticiansController {
 		const politician: Politician = {
 			id: createPoliticianDto.id,
 			name: createPoliticianDto.name,
-			party: createPoliticianDto.party,
-			sentiment: 0,
+			party: createPoliticianDto.party
 		};
 		await this.politicianService.insert(politician);
 	}

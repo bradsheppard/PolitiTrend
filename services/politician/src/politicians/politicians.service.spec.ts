@@ -10,7 +10,6 @@ describe('PoliticiansService', () => {
 	function createPolitician(): Politician {
 		return {
 			party: 'republican',
-			sentiment: id,
 			id,
 			name: `Test ${id}`
 		}

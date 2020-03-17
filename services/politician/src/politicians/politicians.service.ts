@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import Politician from './politicians.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreatePoliticianDto } from './dto/create-politician.dto';
 
 @Injectable()
 export class PoliticiansService {
@@ -24,7 +25,11 @@ export class PoliticiansService {
 		return politician !== undefined ? politician : null;
 	}
 
-	async insert(entity: Politician): Promise<Politician> {
-		return await this.repository.save(entity);
+	async insert(createPoliticianDto: CreatePoliticianDto): Promise<Politician> {
+		return await this.repository.save(createPoliticianDto);
+	}
+
+	async delete(): Promise<void> {
+		await this.repository.delete({});
 	}
 }
