@@ -1,17 +1,17 @@
 dependencies:
-- name: strimzi-kafka-operator
-  repository: https://strimzi.io/charts
-  version: 0.16.2
 - name: politician
   repository: ""
   version: 1.0.0
 - name: tweet
   repository: ""
   version: 1.0.0
+- name: tweet-crawler
+  repository: ""
+  version: 1.0.0
 - name: news-article
   repository: ""
   version: 1.0.0
-- name: crawler
+- name: news-article-crawler
   repository: ""
   version: 1.0.0
 - name: frontend
@@ -19,12 +19,9 @@ dependencies:
   version: 1.0.0
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
-  version: 5.0.11
-- name: sparkoperator
-  repository: http://storage.googleapis.com/kubernetes-charts-incubator
-  version: 0.6.6
+  version: 5.0.16
 - name: kafka
   repository: ""
   version: 1.0.0
-digest: sha256:10fdc7352990461c950fa686e89631edc5d5a90dff908c0d1098bd2e94f68f7d
-generated: "2020-03-08T22:36:44.606580788-02:30"
+digest: sha256:fcb9540febd55e30fbe2627f4ee1fb822b486012c60e5f02590143ec582876e8
+generated: "2020-03-16T19:48:28.959429394-02:30"
