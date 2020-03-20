@@ -88,7 +88,7 @@ export class TweetService {
 			.leftJoinAndSelect('tweet.sentiments', 'sentiment');
 
 		if (searchTweetDto.politicians) {
-			query.andWhere('sentiment.politician in (:...polkvs845@mun.cakvs845@mun.caiticians)', { politicians: searchTweetDto.politicians });
+			query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchTweetDto.politicians });
 		}
 
 		if (searchTweetDto.tweetId) {
