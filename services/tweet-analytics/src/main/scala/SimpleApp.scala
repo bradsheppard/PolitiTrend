@@ -9,6 +9,7 @@ object SimpleApp {
       .getOrCreate()
 
     val sc = spark.sparkContext
+
     sc.hadoopConfiguration.set("fs.s3a.access.key", "brad1234")
     sc.hadoopConfiguration.set("fs.s3a.secret.key", "brad1234")
     sc.hadoopConfiguration.set("fs.s3a.path.style.access", "true")
@@ -17,11 +18,25 @@ object SimpleApp {
 
     val dataframe = spark.read.json("s3a://tweets/topics/tweet-created/year=2020/month=03/day=17/hour=14")
 
-    dataframe.withColumn("word", explode(split(dataframe.col("tweetText"), " ")))
-        .groupBy("word")
-        .count()
-        .sort(desc("count"))
-        .show()
+    var wordDataFrame = dataframe.withColumn("word", explode(split(dataframe.col("tweetText"), " ")))
+    wordDataFrame = wordDataFrame.filter(length(wordDataFrame("word")) >= 5)
+    wordDataFrame = wordDataFrame.withColumn("politician", explode(wordDataFrame("sentiments")))
+
+    wordDataFrame.show()
+
+    wordDataFrame.groupBy("word")
+      .count()
+      .sort(desc("count"))
+      .show()
+
+
+
+//    result.selectExpr("CAST(count AS STRING) as value")
+//      .write
+//      .format("kafka")
+//      .option("kafka.bootstrap.servers", "queue-kafka-bootstrap:9092")
+//      .option("topic", "news-article-created")
+//      .save()
 
     spark.stop()
   }
