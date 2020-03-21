@@ -1,12 +1,15 @@
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 
-object SimpleApp {
+object TweetWordCount {
   def main(args: Array[String]) {
     val spark = SparkSession.builder
       .master("local[*]")
       .appName("Tweet Word Count")
       .getOrCreate()
+
+    import spark.implicits._
 
     val sc = spark.sparkContext
 
@@ -16,20 +19,27 @@ object SimpleApp {
     sc.hadoopConfiguration.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
     sc.hadoopConfiguration.set("fs.s3a.endpoint", "http://minio:9000")
 
-    val dataframe = spark.read.json("s3a://tweets/topics/tweet-created/year=2020/month=03/day=17/hour=14")
+    val dataframe = spark.read.json("s3a://tweets/topics/tweet-created/year=2020/month=03/day=21/hour=01")
 
-    var wordDataFrame = dataframe.withColumn("word", explode(split(dataframe.col("tweetText"), " ")))
-    wordDataFrame = wordDataFrame.filter(length(wordDataFrame("word")) >= 5)
-    wordDataFrame = wordDataFrame.withColumn("politician", explode(wordDataFrame("sentiments")))
+    val w = Window.partitionBy($"politician").orderBy($"count".desc)
 
-    wordDataFrame.show()
+    val wordCountDataFrame = dataframe
+        .withColumn("word", explode(split($"tweetText", "\\s+")))
+        .withColumn("politician", explode($"sentiments.politician"))
+        .filter(length($"word") >= 5)
+        .groupBy("word", "politician")
+        .count()
+        .withColumn("row_number", row_number.over(w))
+        .where($"row_number" <= 3)
 
-    wordDataFrame.groupBy("word")
-      .count()
-      .sort(desc("count"))
-      .show()
+    wordCountDataFrame.coalesce(1)
+      .write
+      .option("header","true")
+      .option("sep",",")
+      .mode("overwrite")
+      .csv("results")
 
-
+    wordCountDataFrame.show()
 
 //    result.selectExpr("CAST(count AS STRING) as value")
 //      .write
