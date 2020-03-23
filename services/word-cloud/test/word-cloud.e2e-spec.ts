@@ -3,7 +3,7 @@ import { AppModule } from '../src/app.module';
 import { ClientProxy, ClientsModule } from '@nestjs/microservices';
 import microserviceConfig from '../src/config/config.microservice';
 import { ClientProviderOptions } from '@nestjs/microservices/module/interfaces/clients-module.interface';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { WordCloudService } from '../src/word-cloud/word-cloud.service';
 import * as request from 'supertest';
 import { WordCloud } from '../src/word-cloud/interfaces/word-cloud.interface';
@@ -34,6 +34,7 @@ beforeAll(async () => {
 	}).compile();
 
 	app = moduleFixture.createNestApplication();
+	app.useGlobalPipes(new ValidationPipe({transform: true, skipMissingProperties: true}));
 	app.connectMicroservice(microserviceConfig);
 
 	service = moduleFixture.get<WordCloudService>(WordCloudService);
@@ -112,6 +113,34 @@ describe('WordCloudController (e2e)', () => {
 
 		const resultingWordCloud = res.body as WordCloud;
 		equals(resultingWordCloud, createDto);
+	});
+
+	it('/?limit=1 (GET)', async() => {
+		const createDto1 = createWordCloud();
+		const createDto2 = createWordCloud();
+
+		await service.create(createDto1);
+		await service.create(createDto2);
+
+		const response = await request(app.getHttpServer())
+			.get('/?limit=1');
+
+		expect(response.status).toEqual(200);
+		equals(response.body[0], createDto2);
+	});
+
+	it('/?limit=1&offset=1 (GET)', async() => {
+		const createDto1 = createWordCloud();
+		const createDto2 = createWordCloud();
+
+		await service.create(createDto1);
+		await service.create(createDto2);
+
+		const response = await request(app.getHttpServer())
+			.get('/?limit=1&offset=1');
+
+		expect(response.status).toEqual(200);
+		equals(response.body[0], createDto1);
 	});
 
 	it('handle word cloud created', async () => {

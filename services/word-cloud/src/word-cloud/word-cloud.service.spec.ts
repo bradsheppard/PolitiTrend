@@ -23,13 +23,17 @@ describe('WordCloudService', () => {
 		save() {return;}
 	}
 
+	class MockDocumentQuery {
+		constructor(private readonly wordCloud) {}
+		sort() { return this; }
+		exec() { return [this.wordCloud]}
+	}
+
 	const mockDocument = new MockDocument();
 
 	class MockModel {
-		static find(wordCloud) {
-			return {
-				exec() {return [wordCloud]}
-			}
+		static find(wordcloud) {
+			return new MockDocumentQuery(wordcloud);
 		}
 		constructor() {
 			return mockDocument
@@ -56,7 +60,9 @@ describe('WordCloudService', () => {
 
 	it('can get all', async () => {
 		const wordCloud = createWordCloud();
-		expect(await service.find(wordCloud)).toEqual([wordCloud]);
+		const findSpy = jest.spyOn(MockModel, 'find');
+		await service.find(wordCloud);
+		expect(findSpy).toBeCalledWith({politician: wordCloud.politician});
 	});
 
 	it('can insert', async () => {
