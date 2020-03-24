@@ -10,6 +10,11 @@ export class WordCloudController {
 
 	constructor(private wordCloudService: WordCloudService) {}
 
+	@Get('health')
+	async health(): Promise<string> {
+		return 'Okay';
+	}
+
 	@Get()
 	async findAll(@Query() searchWordCloudDto: SearchWordCloudDto): Promise<WordCloud[]> {
 		return await this.wordCloudService.find(searchWordCloudDto);

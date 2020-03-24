@@ -20,7 +20,7 @@ services:
     dns:
       - 172.0.0.10
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
       - MONGO_INITDB_ROOT_PASSWORD=pass123
       - HOSTNAMES=word-cloud-mongodb
 

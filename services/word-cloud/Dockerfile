@@ -29,7 +29,7 @@ COPY --from=builder /app/node_modules node_modules
 
 COPY package.json .
 
-COPY ormconfig.json .
+COPY .env .
 
 EXPOSE 3000
 
@@ -38,7 +38,7 @@ USER node
 
 FROM builder AS tester
 
-COPY ormconfig.json .
+COPY .env .
 
 CMD ["npm", "run", "test:e2e"]
 
