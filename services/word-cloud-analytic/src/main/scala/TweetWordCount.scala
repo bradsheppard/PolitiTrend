@@ -1,13 +1,18 @@
 import java.util.Calendar
 
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 
 object TweetWordCount {
 
-  case class CreateWord(word: String, count: Int)
-  case class CreateWordCloud(politician: Int, words: Seq[CreateWord])
+  case class Tweet(tweetText: String, tweetId: String, sentiments: Seq[Sentiment])
+  case class Sentiment(politician: Long, value: Double)
+
+  case class WordCount(politician: Long, word: String, count: Long)
+
+  case class CreateWord(word: String, count: Long)
+  case class CreateWordCloud(politician: Long, words: Seq[CreateWord])
 
   def main(args: Array[String]) {
     val spark = SparkSession.builder
@@ -24,47 +29,46 @@ object TweetWordCount {
     val currentMonth = "%02d".format(now.get(Calendar.MONTH) + 1)
     val currentDay = now.get(Calendar.DAY_OF_MONTH)
 
+    val s3Path = "s3a://tweets/topics/tweet-created/" +
+      s"year=${currentYear}/month=${currentMonth}/day=${currentDay}/hour=01"
+
     sc.hadoopConfiguration.set("fs.s3a.access.key", "brad1234")
     sc.hadoopConfiguration.set("fs.s3a.secret.key", "brad1234")
     sc.hadoopConfiguration.set("fs.s3a.path.style.access", "true")
     sc.hadoopConfiguration.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
     sc.hadoopConfiguration.set("fs.s3a.endpoint", "http://minio:9000")
 
-    val dataframe = spark.read.json(s"s3a://tweets/topics/tweet-created/" +
-      s"year=${currentYear}/month=${currentMonth}/day=${currentDay}")
+    val dataframe: Dataset[Tweet] = spark.read.json(s3Path).as[Tweet].persist()
+
+    val makeWord = udf((word: String, count: Long) => CreateWord(word, count))
 
     val w = Window.partitionBy($"politician").orderBy($"count".desc)
 
-    val wordCountDataFrame = dataframe
-        .withColumn("word", explode(split($"tweetText", "\\s+")))
+    var wordCountDataFrame: Dataset[WordCount] = dataframe
+        .withColumn("word",
+          explode(
+            split($"tweetText", "\\s+")
+          )
+        )
         .withColumn("politician", explode($"sentiments.politician"))
-        .filter(length($"word") >= 5)
+
         .groupBy("word", "politician")
-        .count()
-        .withColumn("row_number", row_number.over(w))
-        .where($"row_number" <= 10).persist()
+        .count().as[WordCount]
 
-    val makeWord = udf((word: String, count: Int) => CreateWord(word, count))
-    val makeWordCloud = udf((politician: Int, words: Seq[CreateWord]) => CreateWordCloud(politician, words))
+    wordCountDataFrame = wordCountDataFrame
+      .filter(x => x.word.length() >= 5)
+      .withColumn("row_number", row_number.over(w))
+      .where($"row_number" <= 10).as[WordCount]
 
-    val politicianWordCountDataFrame = wordCountDataFrame.groupBy("politician")
+    val politicianWordCountDataFrame: Dataset[CreateWordCloud] = wordCountDataFrame.groupBy($"politician")
       .agg(
         collect_list(
           makeWord(col("word"), col("count"))
-        ).as("words")
-      )
-    val createWordCloudDataframe = politicianWordCountDataFrame.select(makeWordCloud(col("politician"), col("words")).as("value"))
-    createWordCloudDataframe.show()
+        ).as("words").as[Set[CreateWord]]
+      ).as[CreateWordCloud]
 
-    val jsonifiedDataframe = createWordCloudDataframe.select(to_json(col("value")).as("value"))
+    val jsonifiedDataframe = politicianWordCountDataFrame.toJSON
     jsonifiedDataframe.show()
-
-    jsonifiedDataframe.coalesce(1)
-      .write
-      .option("header","true")
-      .option("sep",",")
-      .mode("overwrite")
-      .csv("results")
 
     jsonifiedDataframe.select($"value")
       .write

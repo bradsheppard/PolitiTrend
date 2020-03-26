@@ -1,4 +1,4 @@
-name := "tweet-analytics"
+name := "word-cloud-analytic"
 
 version := "1.0"
 
