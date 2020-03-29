@@ -18,6 +18,7 @@ object TweetWordCount {
 
     def main(args: Array[String]) {
         val spark = SparkSession.builder
+            .master("local[*]")
             .appName("Tweet Word Count")
             .getOrCreate()
 
@@ -25,13 +26,8 @@ object TweetWordCount {
 
         val sc = spark.sparkContext
 
-        val now = Calendar.getInstance()
-        val currentYear = now.get(Calendar.YEAR)
-        val currentMonth = "%02d".format(now.get(Calendar.MONTH) + 1)
-        val currentDay = now.get(Calendar.DAY_OF_MONTH)
-
-        val s3Path = "s3a://tweets/topics/tweet-created/" +
-            s"year=${currentYear}/month=${currentMonth}/day=${currentDay}/hour=01"
+        val todaysS3Path = getS3Path()
+        val yesterdaysS3Path = getS3Path(1)
 
         sc.hadoopConfiguration.set("fs.s3a.access.key", "brad1234")
         sc.hadoopConfiguration.set("fs.s3a.secret.key", "brad1234")
@@ -40,7 +36,7 @@ object TweetWordCount {
         sc.hadoopConfiguration.set("fs.s3a.endpoint", "http://minio:9000")
         sc.hadoopConfiguration.set("fs.s3a.connection.ssl.enabled", "false")
 
-        val dataframe: Dataset[Tweet] = spark.read.json(s3Path).as[Tweet].persist()
+        val dataframe: Dataset[Tweet] = spark.read.json(todaysS3Path, yesterdaysS3Path).as[Tweet].persist()
 
         val makeWord = udf((word: String, count: Long) => CreateWord(word, count))
 
@@ -80,5 +76,18 @@ object TweetWordCount {
             .save()
 
         spark.stop()
+    }
+
+    def getS3Path(offset: Int = 0): String = {
+        val now = Calendar.getInstance()
+        now.add(Calendar.DAY_OF_YEAR, -offset)
+        val currentYear = now.get(Calendar.YEAR)
+        val currentMonth = "%02d".format(now.get(Calendar.MONTH) + 1)
+        val currentDay = now.get(Calendar.DAY_OF_MONTH)
+
+        val s3Path = "s3a://tweets/topics/tweet-created/" +
+            s"year=$currentYear/month=$currentMonth/day=$currentDay/*"
+
+        s3Path
     }
 }
