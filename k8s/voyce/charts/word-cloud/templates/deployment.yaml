@@ -18,8 +18,8 @@ spec:
         - name: regcred
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.global.registry }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.global.registry }}/{{ .Values.image.wordCloud.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.wordCloud.pullPolicy }}
           ports:
             - name: http
               containerPort: 3000

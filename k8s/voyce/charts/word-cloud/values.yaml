@@ -5,8 +5,12 @@
 replicaCount: 1
 
 image:
-  repository: word-cloud
-  pullPolicy: Always
+  wordCloud:
+    repository: word-cloud
+    pullPolicy: Always
+  wordCloudAnalytic:
+    repository: word-cloud-analytic
+    pullPolicy: Always
 
 nameOverride: word-cloud
 fullnameOverride: word-cloud
