@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Box, Card, createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import PoliticianAvatar from './PoliticianAvatar';
-import LineChart from '../common/LineChart';
+import WordCloud from '../common/WordCloud';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,16 +16,16 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface OpinionSummary {
-    sentiment: number;
-    dateTime: string;
+interface WordCount {
+    word: string;
+    count: number;
 }
 
 interface Politician {
     name: string;
     party: string;
     sentiment: number;
-    sentimentHistory: OpinionSummary[];
+    wordCounts: WordCount[];
 }
 
 interface IProps {
@@ -35,10 +35,6 @@ interface IProps {
 const PoliticianHeader = (props: IProps) => {
     const { politician } = props;
     const classes = useStyles();
-
-    const lineChartData = politician.sentimentHistory.map((opinionSummary: OpinionSummary) => {
-        return {date: new Date(opinionSummary.dateTime), value: opinionSummary.sentiment}
-    });
 
     return (
         <Card className={classes.profileCard} elevation={0}>
@@ -60,14 +56,7 @@ const PoliticianHeader = (props: IProps) => {
                     Popularity: {politician.sentiment.toFixed(1)}
                 </Typography>
             </Grid>
-            { lineChartData.length > 0 ?
-                (
-                    <Grid item
-                          sm={12}>
-                        <LineChart data={lineChartData} xAxis='Time' yAxis='Popularity'/>
-                    </Grid>
-                ) : null
-            }
+            <WordCloud wordCounts={politician.wordCounts}/>
         </Card>
     );
 };

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ReactWordcloud, { MinMaxPair, Spiral } from 'react-wordcloud';
-import { extractWords, getWordCounts } from '../../utils/StringHelper';
+import ReactWordcloud, { MinMaxPair, Spiral, Word } from 'react-wordcloud';
 
 const wordCloudOptions = {
 	colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b'],
@@ -17,13 +16,22 @@ const wordCloudOptions = {
 	transitionDuration: 1000,
 };
 
+interface WordCount {
+	word: string;
+	count: number;
+}
+
 interface IProps {
-	statements: string[];
-	exclusion: string;
+	wordCounts: WordCount[];
 }
 
 const WordCloud = (props: IProps) => {
-	const words = getWordCounts(props.statements, extractWords(props.exclusion));
+	const words = props.wordCounts.map(x => {
+		return {
+			text: x.word,
+			value: x.count
+		} as Word
+	});
 
 	return (
 		<ReactWordcloud words={words} options={wordCloudOptions} />
