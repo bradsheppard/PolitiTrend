@@ -3,13 +3,29 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Globals from '../../utils/Globals';
-import { makeStyles, Slide, useScrollTrigger } from '@material-ui/core';
+import { makeStyles, Slide, Theme, useScrollTrigger } from '@material-ui/core';
 import BarItem from './BarItem';
 import Link from 'next/link';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import TwitterIcon from '@material-ui/icons/Twitter';
 
-const useStyles = makeStyles(() => ({
+
+const useStyles = makeStyles((theme: Theme) => ({
     title: {
-        flexGrow: 0.75,
+        flexGrow: 0.70,
+    },
+    items: {
+        textAlign: 'right',
+        flexGrow: 0.15
+    },
+    icons: {
+        textAlign: 'right',
+        flexGrow: 0.15,
+        height: '100%'
+    },
+    icon: {
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2)
     },
     titleText: {
         color: 'white',
@@ -53,18 +69,24 @@ const Header = (props: Props) => {
                                 </Typography>
                             </Link>
                         </div>
-                        <BarItem link='/'>
-                            Home
-                        </BarItem>
-                        <BarItem link='/politicians'>
-                            Politicians
-                        </BarItem>
-                        <BarItem link='test'>
-                            Stats
-                        </BarItem>
-                        <BarItem link='/about'>
-                            About
-                        </BarItem>
+                        <div className={classes.items}>
+                            <BarItem link='/'>
+                                Home
+                            </BarItem>
+                            <BarItem link='/politicians'>
+                                Politicians
+                            </BarItem>
+                            <BarItem link='test'>
+                                Stats
+                            </BarItem>
+                            <BarItem link='/about'>
+                                About
+                            </BarItem>
+                        </div>
+                        <div className={classes.icons}>
+                            <FacebookIcon className={classes.icon} />
+                            <TwitterIcon className={classes.icon} />
+                        </div>
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>

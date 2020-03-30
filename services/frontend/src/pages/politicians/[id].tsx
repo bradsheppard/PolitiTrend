@@ -8,8 +8,6 @@ import PoliticianDto from '../../apis/politician/PoliticianDto';
 import PoliticianHeader from '../../components/politician/PoliticianHeader';
 import PoliticianFeed from '../../components/politician/PoliticianFeed';
 import TransparentJumbo from '../../components/common/TransparentJumbo';
-import WordCloudDto from '../../apis/word-cloud/WordCloudDto';
-import WordCloudApi from '../../apis/word-cloud/WordCloudApi';
 
 const styles = (theme: Theme) => createStyles({
     profile: {
@@ -31,12 +29,6 @@ interface Politician {
     name: string;
     party: string;
     sentiment: number;
-    wordCounts: WordCount[];
-}
-
-interface WordCount {
-    word: string;
-    count: number;
 }
 
 interface IProps extends WithStyles<typeof styles> {
@@ -76,7 +68,6 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext) {
     const { id } = context.query;
     if (typeof id === 'string') {
         const politicianDto: PoliticianDto | null = await PoliticianApi.getOne(parseInt(id));
-        const wordCloudDtos: WordCloudDto[] = await WordCloudApi.get({politician: parseInt(id), limit: 1});
 
         if(!politicianDto)
             return {
@@ -87,8 +78,7 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext) {
             id: politicianDto.id,
             name: politicianDto.name,
             party: politicianDto.party,
-            sentiment: 5,
-            wordCounts: wordCloudDtos[0].words
+            sentiment: 5
         };
 
         return {

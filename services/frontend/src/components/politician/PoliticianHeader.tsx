@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Box, Card, createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import PoliticianAvatar from './PoliticianAvatar';
-import WordCloud from '../common/WordCloud';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,16 +15,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface WordCount {
-    word: string;
-    count: number;
-}
-
 interface Politician {
     name: string;
     party: string;
     sentiment: number;
-    wordCounts: WordCount[];
 }
 
 interface IProps {
@@ -42,21 +35,20 @@ const PoliticianHeader = (props: IProps) => {
                 <PoliticianAvatar politician={politician} />
             </Grid>
             <Grid item sm={12}>
-                <Typography variant='h4' color='primary' className={classes.profileParagraph}>
+                <Typography variant='h4' color='textPrimary' className={classes.profileParagraph}>
                     <Box fontWeight='fontWeightBold'>
                         {politician.name}
                     </Box>
                 </Typography>
-                <Typography variant='h6' color='primary' className={classes.profileParagraph}>
+                <Typography variant='h6' color='textPrimary' className={classes.profileParagraph}>
                     <Box fontWeight='fontWeightBold'>
                         {politician.party}
                     </Box>
                 </Typography>
-                <Typography variant='subtitle1' color='primary' className={classes.profileParagraph}>
+                <Typography variant='subtitle1' color='textPrimary' className={classes.profileParagraph}>
                     Popularity: {politician.sentiment.toFixed(1)}
                 </Typography>
             </Grid>
-            <WordCloud wordCounts={politician.wordCounts}/>
         </Card>
     );
 };

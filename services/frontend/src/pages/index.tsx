@@ -11,7 +11,6 @@ import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 import HomeNewsArticle from '../components/home/HomeNewsArticle';
 import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
-import { Tweet as TweetWidget } from 'react-twitter-widgets'
 import TransparentJumbo from '../components/common/TransparentJumbo';
 import { Waypoint } from 'react-waypoint';
 
@@ -35,7 +34,8 @@ const styles = (theme: Theme) => createStyles({
 });
 
 interface IProps extends WithStyles<typeof styles> {
-    newsArticles: NewsArticle[];
+    mainNewsArticles: NewsArticle[];
+    subNewsArticles: NewsArticle[];
     tweets: string[];
 }
 
@@ -48,16 +48,17 @@ class App extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            visibility: Array(props.newsArticles.length).fill(false)
+            visibility: Array(props.mainNewsArticles.length).fill(false)
         }
     }
 
     static async getInitialProps() {
-        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({limit: 4, politicians: [95]});
-        const tweetDtos: TweetDto[] = await TweetApi.get({limit: 4, politicians: [95]});
+        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({limit: 8, politicians: [90]});
+        const tweetDtos: TweetDto[] = await TweetApi.get({limit: 4, politicians: [90]});
 
         return {
-            newsArticles: newsArticleDtos,
+            mainNewsArticles: newsArticleDtos.slice(0, 2),
+            subNewsArticles: newsArticleDtos.slice(2, 8),
             tweets: tweetDtos.map(tweetDto => tweetDto.tweetId)
         };
     }
@@ -89,7 +90,7 @@ class App extends React.Component<IProps, IState> {
                         <Grid item
                             xs={12}>
                             {
-                                this.props.newsArticles.map((newsArticle, index) => {
+                                this.props.mainNewsArticles.map((newsArticle, index) => {
                                     return (
                                         <Waypoint onEnter={() => this.onEnter(index)} onLeave={() => this.onExit(index)}>
                                             <Fade in={visibility[index]} timeout={2000}>
@@ -102,24 +103,17 @@ class App extends React.Component<IProps, IState> {
                                 })
                             }
                         </Grid>
-                        <Grid item
-                              xs={3}>
-                            {
-                                this.props.tweets.map((tweet, index) => {
-                                    return (
-                                        <div className={classes.tweet}>
-                                            <TweetWidget
-                                                options={{
-                                                    align: 'center'
-                                                }}
-                                                tweetId={tweet}
-                                                key={index}
-                                            />
+                        {
+                            this.props.subNewsArticles.map((newsArticle, index) => {
+                                return (
+                                    <Grid item xs={4} key={index}>
+                                        <div className={classes.newsArticle}>
+                                            <HomeNewsArticle newsArticle={newsArticle} />
                                         </div>
-                                    )
-                                })
-                            }
-                        </Grid>
+                                    </Grid>
+                                );
+                            })
+                        }
                     </Grid>
                 </ContentContainer>
             </React.Fragment>
