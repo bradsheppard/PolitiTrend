@@ -72,7 +72,7 @@ object TweetWordCount {
             .write
             .format("kafka")
             .option("kafka.bootstrap.servers", "queue-kafka-bootstrap:9092")
-            .option("topic", "word-cloud-created")
+            .option("topic", "word-cloud-politician-word-cloud-created")
             .save()
 
         spark.stop()
