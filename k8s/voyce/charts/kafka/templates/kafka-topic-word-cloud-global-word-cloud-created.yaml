@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: word-cloud-created
+  name: word-cloud-global-word-cloud-created
   labels:
     strimzi.io/cluster: queue
 spec:

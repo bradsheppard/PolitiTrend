@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export interface WordCloud extends Document {
+export interface PoliticianWordCloud extends Document {
 	politician: number;
 	words: Array<Word>;
 	dateTime: Date;

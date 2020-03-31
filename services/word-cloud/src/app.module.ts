@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { WordCloudModule } from './word-cloud/word-cloud.module';
+import { PoliticianWordCloudModule } from './politician-word-cloud/politician-word-cloud.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GlobalWordCloudModule } from './global-word-cloud/global-word-cloud.module';
 
 @Module({
 	imports: [
@@ -14,7 +15,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 			},
 			inject: [ConfigService]
 		}),
-		WordCloudModule,
-	],
+		PoliticianWordCloudModule,
+		GlobalWordCloudModule
+	]
 })
 export class AppModule {}

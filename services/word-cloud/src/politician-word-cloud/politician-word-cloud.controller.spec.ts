@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WordCloudController } from './word-cloud.controller';
-import { WordCloudService } from './word-cloud.service';
+import { PoliticianWordCloudController } from './politician-word-cloud.controller';
+import { PoliticianWordCloudService } from './politician-word-cloud.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { WordCloud } from './interfaces/word-cloud.interface';
-import { CreateWordCloudDto } from './dto/create-word-cloud.dto';
+import { PoliticianWordCloud } from './interfaces/politician-word-cloud.interface';
+import { CreatePoliticianWordCloudDto } from './dtos/create-politician-word-cloud.dto';
 
 describe('WordCloud Controller', () => {
-	let controller: WordCloudController;
-	let service: WordCloudService;
+	let controller: PoliticianWordCloudController;
+	let service: PoliticianWordCloudService;
 
 	let id = 1;
 
-	function createWordCloud(): WordCloud {
+	function createWordCloud(): PoliticianWordCloud {
 		id++;
 		return {
 			politician: id,
@@ -19,10 +19,10 @@ describe('WordCloud Controller', () => {
 				word: `Test word ${id}`,
 				count: id
 			}]
-		} as WordCloud
+		} as PoliticianWordCloud
 	}
 
-	function createWordCloudDto(): CreateWordCloudDto {
+	function createWordCloudDto(): CreatePoliticianWordCloudDto {
 		id++;
 		return {
 			politician: id,
@@ -35,18 +35,18 @@ describe('WordCloud Controller', () => {
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			controllers: [WordCloudController],
+			controllers: [PoliticianWordCloudController],
 			providers: [
-				WordCloudService,
+				PoliticianWordCloudService,
 				{
-					provide: getModelToken('WordCloud'),
+					provide: getModelToken('PoliticianWordCloud'),
 					useValue: {}
 				}
 			]
 		}).compile();
 
-		controller = module.get<WordCloudController>(WordCloudController);
-		service = module.get<WordCloudService>(WordCloudService);
+		controller = module.get<PoliticianWordCloudController>(PoliticianWordCloudController);
+		service = module.get<PoliticianWordCloudService>(PoliticianWordCloudService);
 	});
 
 	it('should be defined', () => {

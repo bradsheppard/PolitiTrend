@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WordCloudService } from './word-cloud.service';
+import { PoliticianWordCloudService } from './politician-word-cloud.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { WordCloud } from './interfaces/word-cloud.interface';
+import { PoliticianWordCloud } from './interfaces/politician-word-cloud.interface';
 
 describe('WordCloudService', () => {
-	let service: WordCloudService;
+	let service: PoliticianWordCloudService;
 
 	let id = 1;
 
-	function createWordCloud(): WordCloud {
+	function createWordCloud(): PoliticianWordCloud {
 		id++;
 		return {
 			politician: id,
@@ -16,7 +16,7 @@ describe('WordCloudService', () => {
 				word: `Test word ${id}`,
 				count: id
 			}]
-		} as WordCloud
+		} as PoliticianWordCloud
 	}
 
 	class MockDocument {
@@ -43,15 +43,15 @@ describe('WordCloudService', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				WordCloudService,
+				PoliticianWordCloudService,
                 {
-                    provide: getModelToken('WordCloud'),
+                    provide: getModelToken('PoliticianWordCloud'),
                     useValue: MockModel
                 }
 			],
 		}).compile();
 
-		service = module.get<WordCloudService>(WordCloudService);
+		service = module.get<PoliticianWordCloudService>(PoliticianWordCloudService);
 	});
 
 	it('should be defined', () => {

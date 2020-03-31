@@ -1,7 +1,6 @@
 import * as mongoose from 'mongoose'
 
-const WordCloudSchema = new mongoose.Schema({
-	politician: Number,
+const GlobalWordCloudSchema = new mongoose.Schema({
 	dateTime: {
 		type: Date,
 		default: Date.now
@@ -13,7 +12,7 @@ const WordCloudSchema = new mongoose.Schema({
 	}]
 });
 
-WordCloudSchema.set('toJSON', {
+GlobalWordCloudSchema.set('toJSON', {
 	transform: (doc, ret) => {
 		ret.id = ret._id;
 		delete ret._id;
@@ -21,4 +20,4 @@ WordCloudSchema.set('toJSON', {
 	}
 });
 
-export { WordCloudSchema };
+export { GlobalWordCloudSchema };

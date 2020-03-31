@@ -1,7 +1,7 @@
 import { IsInt, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateWordCloudDto {
+export class CreatePoliticianWordCloudDto {
 	@IsInt()
 	@Type(() => Number)
 	politician: number;
