@@ -9,10 +9,8 @@ import {
 } from '@material-ui/core';
 import ContentContainer from '../components/common/ContentContainer';
 import _ from 'lodash';
-import Bar from '../components/bar/Bar';
 import PoliticianGridList from '../components/politician/PoliticianGridList';
 import Card from '../components/common/Card';
-import TransparentJumbo from '../components/common/TransparentJumbo';
 
 const style = (theme: Theme) => createStyles({
     search: {
@@ -70,8 +68,6 @@ class Politicians extends React.Component<IProps, IState> {
 
         return (
             <React.Fragment>
-                <Bar overlay />
-                <TransparentJumbo />
                 <ContentContainer>
                     <Card>
                         <Grid container

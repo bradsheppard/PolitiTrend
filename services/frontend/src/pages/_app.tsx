@@ -5,6 +5,8 @@ import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../utils/theme';
 import Globals from '../utils/Globals';
+import Bar from '../components/bar/Bar';
+import TransparentJumbo from '../components/common/TransparentJumbo';
 
 export default class MyApp extends App {
     componentDidMount() {
@@ -26,6 +28,8 @@ export default class MyApp extends App {
                 <ThemeProvider theme={theme}>
                     {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                     <CssBaseline />
+                    <Bar overlay />
+                    <TransparentJumbo />
                     <Component {...pageProps} />
                 </ThemeProvider>
             </React.Fragment>

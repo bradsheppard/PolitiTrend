@@ -5,14 +5,13 @@ import {
 } from '@material-ui/core';
 import * as React from 'react';
 import ContentContainer from '../components/common/ContentContainer';
-import Bar from '../components/bar/Bar';
 import NewsArticleDto from '../apis/news-article/NewsArticleDto';
 import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 import HomeNewsArticle from '../components/home/HomeNewsArticle';
 import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
-import TransparentJumbo from '../components/common/TransparentJumbo';
 import { Waypoint } from 'react-waypoint';
+import HomeSubNewsArticle from '../components/home/HomeSubNewsArticle';
 
 interface NewsArticle {
     image: string;
@@ -81,8 +80,6 @@ class App extends React.Component<IProps, IState> {
 
         return (
             <React.Fragment>
-                <Bar overlay />
-                <TransparentJumbo />
                 <ContentContainer>
                     <Grid container
                         direction='row'
@@ -108,7 +105,7 @@ class App extends React.Component<IProps, IState> {
                                 return (
                                     <Grid item xs={4} key={index}>
                                         <div className={classes.newsArticle}>
-                                            <HomeNewsArticle newsArticle={newsArticle} />
+                                            <HomeSubNewsArticle newsArticle={newsArticle} />
                                         </div>
                                     </Grid>
                                 );
