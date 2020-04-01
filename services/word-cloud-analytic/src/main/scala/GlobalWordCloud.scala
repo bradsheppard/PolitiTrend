@@ -25,8 +25,8 @@ object GlobalWordCloud {
         val sc = spark.sparkContext
         ConfigReader.load(sc)
 
-        val todaysS3Path = getS3Path()
-        val yesterdaysS3Path = getS3Path(1)
+        val todaysS3Path = PathTranslator.getS3Path()
+        val yesterdaysS3Path = PathTranslator.getS3Path(1)
 
         val dataframe: Dataset[Tweet] = spark.read.json(todaysS3Path, yesterdaysS3Path).as[Tweet].persist()
 
@@ -64,18 +64,5 @@ object GlobalWordCloud {
             .save()
 
         spark.stop()
-    }
-
-    def getS3Path(offset: Int = 0): String = {
-        val now = Calendar.getInstance()
-        now.add(Calendar.DAY_OF_YEAR, -offset)
-        val currentYear = now.get(Calendar.YEAR)
-        val currentMonth = "%02d".format(now.get(Calendar.MONTH) + 1)
-        val currentDay = now.get(Calendar.DAY_OF_MONTH)
-
-        val s3Path = "s3a://tweets/topics/tweet-created/" +
-            s"year=$currentYear/month=$currentMonth/day=$currentDay/hour=01"
-
-        s3Path
     }
 }
