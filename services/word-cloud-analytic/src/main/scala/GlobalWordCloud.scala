@@ -1,20 +1,18 @@
 import java.util.Calendar
 
-import org.apache.spark.sql.{Dataset, SparkSession}
-import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.{Dataset, SparkSession}
 
-object TweetWordCount {
-
+object GlobalWordCloud {
     case class Tweet(tweetText: String, tweetId: String, sentiments: Seq[Sentiment])
 
     case class Sentiment(politician: Long, value: Double)
 
-    case class WordCount(politician: Long, word: String, count: Long)
+    case class WordCount(word: String, count: Long)
 
     case class CreateWord(word: String, count: Long)
 
-    case class CreateWordCloud(politician: Long, words: Seq[CreateWord])
+    case class CreateWordCloud(words: Seq[CreateWord])
 
     def main(args: Array[String]) {
         val spark = SparkSession.builder
@@ -25,22 +23,14 @@ object TweetWordCount {
         import spark.implicits._
 
         val sc = spark.sparkContext
+        ConfigReader.load(sc)
 
         val todaysS3Path = getS3Path()
         val yesterdaysS3Path = getS3Path(1)
 
-        sc.hadoopConfiguration.set("fs.s3a.access.key", "brad1234")
-        sc.hadoopConfiguration.set("fs.s3a.secret.key", "brad1234")
-        sc.hadoopConfiguration.set("fs.s3a.path.style.access", "true")
-        sc.hadoopConfiguration.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
-        sc.hadoopConfiguration.set("fs.s3a.endpoint", "http://minio:9000")
-        sc.hadoopConfiguration.set("fs.s3a.connection.ssl.enabled", "false")
-
         val dataframe: Dataset[Tweet] = spark.read.json(todaysS3Path, yesterdaysS3Path).as[Tweet].persist()
 
         val makeWord = udf((word: String, count: Long) => CreateWord(word, count))
-
-        val w = Window.partitionBy($"politician").orderBy($"count".desc)
 
         var wordCountDataFrame: Dataset[WordCount] = dataframe
             .withColumn("word",
@@ -48,17 +38,15 @@ object TweetWordCount {
                     split($"tweetText", "\\s+")
                 )
             )
-            .withColumn("politician", explode($"sentiments.politician"))
 
-            .groupBy("word", "politician")
+            .groupBy("word")
             .count().as[WordCount]
 
         wordCountDataFrame = wordCountDataFrame
-            .filter(x => x.word.length() >= 5)
-            .withColumn("row_number", row_number.over(w))
-            .where($"row_number" <= 10).as[WordCount]
+            .filter(x => x.word.length() >= 5).orderBy($"count".desc)
+            .limit(20).as[WordCount]
 
-        val politicianWordCountDataFrame: Dataset[CreateWordCloud] = wordCountDataFrame.groupBy($"politician")
+        val politicianWordCountDataFrame: Dataset[CreateWordCloud] = wordCountDataFrame
             .agg(
                 collect_list(
                     makeWord(col("word"), col("count"))
@@ -72,7 +60,7 @@ object TweetWordCount {
             .write
             .format("kafka")
             .option("kafka.bootstrap.servers", "queue-kafka-bootstrap:9092")
-            .option("topic", "word-cloud-politician-word-cloud-created")
+            .option("topic", "word-cloud-global-word-cloud-created")
             .save()
 
         spark.stop()
@@ -86,7 +74,7 @@ object TweetWordCount {
         val currentDay = now.get(Calendar.DAY_OF_MONTH)
 
         val s3Path = "s3a://tweets/topics/tweet-created/" +
-            s"year=$currentYear/month=$currentMonth/day=$currentDay/*"
+            s"year=$currentYear/month=$currentMonth/day=$currentDay/hour=01"
 
         s3Path
     }
