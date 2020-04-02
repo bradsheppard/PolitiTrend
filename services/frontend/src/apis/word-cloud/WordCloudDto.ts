@@ -1,5 +1,4 @@
 interface WordCloudDto {
-    politician: number;
     words: WordDto[];
 }
 

@@ -1,6 +1,6 @@
 interface SearchWordCloudDto {
-    politician: number;
-    limit: number;
+    politician?: number;
+    limit?: number;
 }
 
 export default SearchWordCloudDto;
