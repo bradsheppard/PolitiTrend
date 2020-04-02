@@ -1,8 +1,6 @@
-import java.util.Calendar
-
-import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.{Dataset, SparkSession}
 
 object PoliticianWordCloud {
 
@@ -18,8 +16,7 @@ object PoliticianWordCloud {
 
     def main(args: Array[String]) {
         val spark = SparkSession.builder
-            .master("local[*]")
-            .appName("Tweet Word Count")
+            .appName("Politician Word Cloud")
             .getOrCreate()
 
         import spark.implicits._

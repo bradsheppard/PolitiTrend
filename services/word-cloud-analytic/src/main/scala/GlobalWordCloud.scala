@@ -1,5 +1,3 @@
-import java.util.Calendar
-
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{Dataset, SparkSession}
 
@@ -16,8 +14,7 @@ object GlobalWordCloud {
 
     def main(args: Array[String]) {
         val spark = SparkSession.builder
-            .master("local[*]")
-            .appName("Tweet Word Count")
+            .appName("Global Word Cloud")
             .getOrCreate()
 
         import spark.implicits._
