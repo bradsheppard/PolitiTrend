@@ -2,16 +2,13 @@ import * as React from 'react';
 import ReactWordcloud, { MinMaxPair, Spiral, Word } from 'react-wordcloud';
 
 const wordCloudOptions = {
-	colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b'],
 	enableTooltip: false,
 	deterministic: false,
-	fontFamily: 'Roboto',
-	fontSizes: [15, 50] as MinMaxPair,
+	fontSizes: [20, 75] as MinMaxPair,
 	fontStyle: 'normal',
-	fontWeight: 'bold',
-	padding: 10,
-	rotations: 10,
-	rotationAngles: [-75, 75] as MinMaxPair,
+	padding: 1,
+	rotations: 1,
+	rotationAngles: [0, 0] as MinMaxPair,
 	spiral: Spiral.Archimedean,
 	transitionDuration: 1000,
 };

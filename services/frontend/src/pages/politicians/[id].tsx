@@ -1,26 +1,29 @@
 import * as React from 'react';
-import { createStyles, Grid, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
+import { createStyles, Grid, Theme, Typography } from '@material-ui/core';
 import { NextPageContext } from 'next';
 import ContentContainer from '../../components/common/ContentContainer';
 import PoliticianApi from '../../apis/politician/PoliticianApi';
 import PoliticianDto from '../../apis/politician/PoliticianDto';
 import PoliticianHeader from '../../components/politician/PoliticianHeader';
 import PoliticianFeed from '../../components/politician/PoliticianFeed';
+import { makeStyles } from '@material-ui/styles';
 
-const styles = (theme: Theme) => createStyles({
-    profile: {
-        marginTop: theme.spacing(4),
-        textAlign: 'center'
-    },
-    content: {
-        paddingLeft: theme.spacing(8),
-        paddingRight: theme.spacing(8)
-    },
-    feed: {
-        marginLeft: theme.spacing(4),
-        marginRight: theme.spacing(4)
-    }
-});
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        profile: {
+            marginTop: theme.spacing(4),
+            textAlign: 'center'
+        },
+        content: {
+            paddingLeft: theme.spacing(8),
+            paddingRight: theme.spacing(8)
+        },
+        feed: {
+            marginLeft: theme.spacing(4),
+            marginRight: theme.spacing(4)
+        }
+    })
+);
 
 interface Politician {
     id: number;
@@ -29,7 +32,7 @@ interface Politician {
     sentiment: number;
 }
 
-interface IProps extends WithStyles<typeof styles> {
+interface IProps {
     politician: Politician | null;
 }
 
@@ -39,7 +42,8 @@ const PoliticianPage = (props: IProps) => {
             <Typography>Not Found</Typography>
         );
 
-    const { politician, classes } = props;
+    const { politician } = props;
+    const classes = useStyles();
 
     return (
         <React.Fragment>
@@ -88,4 +92,4 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext) {
     }
 };
 
-export default withStyles(styles)(PoliticianPage);
+export default PoliticianPage;

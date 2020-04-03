@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         subtitle: {
             paddingBottom: theme.spacing(3)
-        },
-        header: {
-            paddingTop: theme.spacing(2)
         }
     })
 );
@@ -41,7 +38,7 @@ const HomeNewsArticle = (props: IProps) => {
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
             <div>
-                <Typography gutterBottom variant='h3' color='textPrimary' className={classes.header}>
+                <Typography gutterBottom variant='h3' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
                     </Box>

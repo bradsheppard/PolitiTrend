@@ -12,6 +12,8 @@ import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
 import { Waypoint } from 'react-waypoint';
 import HomeSubNewsArticle from '../components/home/HomeSubNewsArticle';
+import HomeHeader from '../components/home/HomeHeader';
+import Divider from '../components/common/Divider';
 
 interface NewsArticle {
     image: string;
@@ -23,9 +25,10 @@ interface NewsArticle {
 
 const styles = (theme: Theme) => createStyles({
     newsArticle: {
-        marginLeft: theme.spacing(2),
         marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(6)
+        marginBottom: theme.spacing(6),
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1)
     },
     tweet: {
         marginTop: theme.spacing(2)
@@ -99,6 +102,12 @@ class App extends React.Component<IProps, IState> {
                                     )
                                 })
                             }
+                        </Grid>
+                        <Grid item xs={12}>
+                            <HomeHeader>
+                                Latest
+                            </HomeHeader>
+                            <Divider />
                         </Grid>
                         {
                             this.props.subNewsArticles.map((newsArticle, index) => {

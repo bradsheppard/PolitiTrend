@@ -30,6 +30,11 @@ const theme = createMuiTheme({
             fontFamily: [
                 'Roboto Condensed'
             ].join(',')
+        },
+        h4: {
+            fontFamily: [
+                'Roboto Condensed'
+            ].join(',')
         }
     }
 });
