@@ -1,5 +1,5 @@
 import {
-    createStyles, Fade, Grid,
+    createStyles, Grid,
     Theme, WithStyles,
     withStyles
 } from '@material-ui/core';
@@ -10,10 +10,10 @@ import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 import HomeNewsArticle from '../components/home/HomeNewsArticle';
 import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
-import { Waypoint } from 'react-waypoint';
 import HomeSubNewsArticle from '../components/home/HomeSubNewsArticle';
 import HomeHeader from '../components/home/HomeHeader';
 import Divider from '../components/common/Divider';
+import Fade from '../components/common/Fade';
 
 interface NewsArticle {
     image: string;
@@ -41,16 +41,13 @@ interface IProps extends WithStyles<typeof styles> {
     tweets: string[];
 }
 
-interface IState {
-    visibility: boolean[];
-}
-
-class App extends React.Component<IProps, IState> {
+class App extends React.Component<IProps> {
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            visibility: Array(props.mainNewsArticles.length).fill(false)
+            mainNewsArticleVisibility: Array(props.mainNewsArticles.length).fill(false),
+            subNewsArticleVisibility: Array(props.subNewsArticles.length).fill(false)
         }
     }
 
@@ -65,21 +62,8 @@ class App extends React.Component<IProps, IState> {
         };
     }
 
-    onEnter(index: number) {
-        const state = this.state;
-        this.state.visibility[index] = true;
-        this.setState(state);
-    }
-
-    onExit(index: number) {
-        const state = this.state;
-        state.visibility[index] = false;
-        this.setState(state);
-    }
-
     render() {
         const { classes } = this.props;
-        const { visibility } = this.state;
 
         return (
             <React.Fragment>
@@ -92,30 +76,32 @@ class App extends React.Component<IProps, IState> {
                             {
                                 this.props.mainNewsArticles.map((newsArticle, index) => {
                                     return (
-                                        <Waypoint onEnter={() => this.onEnter(index)} onLeave={() => this.onExit(index)}>
-                                            <Fade in={visibility[index]} timeout={2000}>
-                                                <div className={classes.newsArticle}>
-                                                    <HomeNewsArticle newsArticle={newsArticle} height={400} />
-                                                </div>
-                                            </Fade>
-                                        </Waypoint>
+                                        <Fade>
+                                            <div className={classes.newsArticle} key={index}>
+                                                <HomeNewsArticle newsArticle={newsArticle} height={400} />
+                                            </div>
+                                        </Fade>
                                     )
                                 })
                             }
                         </Grid>
                         <Grid item xs={12}>
-                            <HomeHeader>
-                                Latest
-                            </HomeHeader>
-                            <Divider />
+                            <Fade>
+                                <HomeHeader>
+                                    Latest
+                                </HomeHeader>
+                                <Divider />
+                            </Fade>
                         </Grid>
                         {
                             this.props.subNewsArticles.map((newsArticle, index) => {
                                 return (
                                     <Grid item xs={4} key={index}>
-                                        <div className={classes.newsArticle}>
-                                            <HomeSubNewsArticle newsArticle={newsArticle} />
-                                        </div>
+                                        <Fade>
+                                            <div className={classes.newsArticle}>
+                                                <HomeSubNewsArticle newsArticle={newsArticle} />
+                                            </div>
+                                        </Fade>
                                     </Grid>
                                 );
                             })
