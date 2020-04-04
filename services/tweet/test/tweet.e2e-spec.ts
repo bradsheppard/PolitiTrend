@@ -26,27 +26,7 @@ function createTweetDto() {
 		tweetId: id.toString(),
 		tweetText: `Test tweet ${id}`,
 		dateTime: new Date().toUTCString(),
-		sentiments: [
-			{
-				politician: id,
-				value: id,
-			},
-		],
-	} as CreateTweetDto;
-}
-
-function createTweetDtoForPolitician(politicianId: number) {
-	id++;
-	return {
-		tweetId: id.toString(),
-		tweetText: `Test tweet ${id}`,
-		dateTime: new Date().toUTCString(),
-		sentiments: [
-			{
-				politician: politicianId,
-				value: id,
-			},
-		],
+		politicians: [id]
 	} as CreateTweetDto;
 }
 
@@ -106,7 +86,6 @@ describe('TweetController (e2e)', () => {
 		const resultingTweet = res.body as Tweet;
 		const insertedTweet = tweetDto as Tweet;
 		insertedTweet.id = resultingTweet.id;
-		insertedTweet.sentiments[0].id = resultingTweet.sentiments[0].id;
 
 		expect(res.status).toEqual(201);
 		expect(resultingTweet).toEqual(insertedTweet);
@@ -208,12 +187,10 @@ describe('TweetService (e2e)', () => {
 		const insertedTweet1 = await service.insert(tweet1);
 		await service.insert(tweet2);
 
-		const politicianTweets = await service.get({politicians: [insertedTweet1.sentiments[0].politician]});
+		const politicianTweets = await service.get({politician: tweet1.politicians[0]});
 
 		expect(politicianTweets).toHaveLength(1);
-		for (const tweet of politicianTweets) {
-			expect(tweet.sentiments[0].politician).toEqual(insertedTweet1.sentiments[0].politician);
-		}
+		expect(politicianTweets[0]).toEqual(insertedTweet1);
 	});
 
 	it('Can get with limit and offset', async () => {
@@ -234,34 +211,6 @@ describe('TweetService (e2e)', () => {
 
 		expect(tweets[1].tweetId).toEqual(tweet3.tweetId);
 		expect(tweets[1].tweetText).toEqual(tweet3.tweetText);
-	});
-
-	it('Can get with limit per politician', async () => {
-		const tweet1Politician1 = createTweetDtoForPolitician(1);
-		const tweet2Politician1 = createTweetDtoForPolitician(1);
-		const tweet3Politician1 = createTweetDtoForPolitician(1);
-
-		const tweet1Politician2 = createTweetDtoForPolitician(2);
-		const tweet2Politician2 = createTweetDtoForPolitician(2);
-		const tweet3Politician2 = createTweetDtoForPolitician(2);
-
-		await Promise.all([
-			service.insert(tweet1Politician1),
-			service.insert(tweet2Politician1),
-			service.insert(tweet3Politician1),
-
-			service.insert(tweet1Politician2),
-			service.insert(tweet2Politician2),
-			service.insert(tweet3Politician2),
-		]);
-
-		const tweets = await service.get({limitPerPolitician: 2});
-
-		const politician1Tweets = tweets.filter(x => x.sentiments[0].politician === 1);
-		const politician2Tweets = tweets.filter(x => x.sentiments[0].politician === 2);
-
-		expect(politician1Tweets).toHaveLength(2);
-		expect(politician2Tweets).toHaveLength(2);
 	});
 
 	it('Can delete one', async () => {
@@ -318,30 +267,9 @@ describe('TweetService (e2e)', () => {
 
 		const resultingTweet = await service.upsertOnTweetId(updatedTweet);
 		updatedTweet.id = resultingTweet.id;
-		updatedTweet.sentiments[0].id = resultingTweet.sentiments[0].id;
 
 		const retrievedTweet = await service.getOne(resultingTweet.id);
 		expect(retrievedTweet).toEqual(updatedTweet);
-	});
-
-	it('Can upsert on tweetId, sentiments updated', async () => {
-		const tweet = createTweetDto() as any;
-
-		const insertedTweet = await service.upsertOnTweetId(tweet);
-		tweet.sentiments = [
-			{
-				politician: 45,
-				value: 4.5,
-			},
-		];
-
-		await service.upsertOnTweetId(tweet);
-
-		const retrievedTweet = await service.getOne(insertedTweet.id);
-		tweet.sentiments[0].id = retrievedTweet.sentiments[0].id;
-
-		expect(retrievedTweet.tweetText).toEqual(tweet.tweetText);
-		expect(retrievedTweet.sentiments).toEqual(tweet.sentiments);
 	});
 
 	it('Can upsert on tweetId, nothing changed', async () => {
@@ -352,15 +280,5 @@ describe('TweetService (e2e)', () => {
 
 		expect(resultingTweet.tweetText).toEqual(tweet.tweetText);
 		expect(resultingTweet.tweetId).toEqual(tweet.tweetId);
-	});
-
-	it('Can upsert with no sentiments, no exceptions', async () => {
-		const tweet = createTweetDto();
-		tweet.sentiments = [];
-
-		await service.upsertOnTweetId(tweet);
-		const resultingTweet = await service.upsertOnTweetId(tweet);
-
-		expect(resultingTweet.sentiments).toHaveLength(0);
 	});
 });

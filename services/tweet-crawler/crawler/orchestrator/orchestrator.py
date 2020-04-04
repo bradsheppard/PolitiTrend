@@ -1,9 +1,7 @@
 from typing import List
 
-from crawler.ml import SentimentAnalyzer
 from crawler.model.job import JobRepository, Job
 from crawler.model.politician import Politician
-from crawler.model.sentiment import Sentiment
 from crawler.model.tweet import TweetRepository, TweetCrawler
 
 
@@ -22,22 +20,16 @@ class Orchestrator:
 
         max_tweet_id = job.maxTweetId if job is not None else '1'
 
-        sentiment_analyzer = SentimentAnalyzer(subjects=list(map(lambda x: x.name, politicians)))
         results = self._tweet_crawler.get(
-            politician.name,
+            politician,
+            politicians,
             min_tweet_id=max_tweet_id)
-
-        for result in results:
-            analysis_result = sentiment_analyzer.analyze(result.tweetText)
-            for subject_result in analysis_result.subjectResults.keys():
-                sentiment = Sentiment(
-                    politician=self._lookup_politician_id(subject_result, politicians),
-                    value=analysis_result.subjectResults[subject_result])
-                result.sentiments.append(sentiment)
-            self._tweet_repository.insert(result)
 
         if len(results) == 0:
             return
+
+        for result in results:
+            self._tweet_repository.insert(result)
 
         max_id = max(tweet.tweetId for tweet in results)
         new_job = Job(minTweetId=max_tweet_id, maxTweetId=max_id, politician=politician.num)

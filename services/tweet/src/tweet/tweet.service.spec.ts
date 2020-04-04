@@ -3,12 +3,10 @@ import { TweetService } from './tweet.service';
 import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import Tweet from './tweet.entity';
 import { Repository } from 'typeorm';
-import { Sentiment } from '../sentiment/sentiment.entity';
 
 describe('Tweet Service', () => {
 	let service: TweetService;
 	let tweetRepository: Repository<Tweet>;
-	let sentimentRepository: Repository<Sentiment>;
 
 	let id = 0;
 
@@ -17,12 +15,7 @@ describe('Tweet Service', () => {
 		return {
 			tweetText: `test text ${id}`,
 			tweetId: id.toString(),
-			sentiments: [
-				{
-					politician: id,
-					value: id,
-				},
-			],
+			politicians: [id]
 		} as Tweet;
 	}
 
@@ -37,16 +30,11 @@ describe('Tweet Service', () => {
 					provide: getRepositoryToken(Tweet),
 					useClass: Repository,
 				},
-				{
-					provide: getRepositoryToken(Sentiment),
-					useClass: Repository,
-				},
 			],
 		}).compile();
 
 		service = module.get<TweetService>(TweetService);
 		tweetRepository = module.get<Repository<Tweet>>(getRepositoryToken(Tweet));
-		sentimentRepository = module.get<Repository<Sentiment>>(getRepositoryToken(Sentiment));
 	});
 
 	it('should be defined', () => {
@@ -79,16 +67,10 @@ describe('Tweet Service', () => {
 		const tweetSaveSpy = jest.spyOn(tweetRepository, 'save').mockResolvedValueOnce(opinion);
 		const tweetCreateSpy = jest.spyOn(tweetRepository, 'create').mockReturnValue(opinion);
 
-		const sentimentCreateSpy = jest.spyOn(sentimentRepository, 'create').mockReturnValue(opinion.sentiments[0]);
-		const sentimentSaveSpy = jest.spyOn(sentimentRepository, 'save').mockResolvedValueOnce(opinion.sentiments[0]);
-
 		await service.update(opinion);
 
 		expect(tweetSaveSpy).toBeCalledWith(opinion);
 		expect(tweetFindSpy).toBeCalledWith(opinion.id);
 		expect(tweetCreateSpy).toBeCalled();
-
-		expect(sentimentCreateSpy).toBeCalledWith(opinion.sentiments[0]);
-		expect(sentimentSaveSpy).toBeCalledWith(opinion.sentiments[0]);
 	});
 });

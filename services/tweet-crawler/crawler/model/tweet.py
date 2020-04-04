@@ -6,12 +6,12 @@ import requests
 import tweepy
 
 from crawler.message_bus import MessageBus
-from crawler.model.sentiment import Sentiment
+from crawler.model.politician import Politician
 
 
 @dataclass
 class Tweet:
-    sentiments: List[Sentiment]
+    politicians: List[int]
     dateTime: str
     tweetId: str
     tweetText: str
@@ -25,18 +25,40 @@ class TweetCrawler:
 
         self._api = tweepy.API(auth)
 
-    def get(self, search_term: str, **kwargs) -> List[Tweet]:
-        results = tweepy\
-            .Cursor(self._api.search, q=search_term, lang='en', result_type='mixed',
+    def get(self, politician: Politician, politicians: List[Politician], **kwargs) -> List[Tweet]:
+        tweepy_results = tweepy\
+            .Cursor(self._api.search, q=politician.name, lang='en', result_type='mixed',
                     tweet_mode='extended', count=100,
                     since_id=kwargs.get('min_tweet_id'), max_id=kwargs.get('max_tweet_id')) \
             .items(100)
 
-        return [Tweet(
-            tweetId=result.id_str,
-            tweetText=result.full_text,
-            dateTime=result.created_at.isoformat(' ', 'seconds'),
-            sentiments=[]) for result in results]
+        results = []
+
+        for tweepy_result in tweepy_results:
+            extracted_politicians = self.extract_politicians(tweepy_result.full_text, politicians)
+
+            if len(extracted_politicians) == 0:
+                continue
+
+            tweet = Tweet(
+                tweetId=tweepy_result.id_str,
+                tweetText=tweepy_result.full_text,
+                dateTime=tweepy_result.created_at.isoformat(' ', 'seconds'),
+                politicians=extracted_politicians
+            )
+
+            results.append(tweet)
+
+        return results
+
+    @staticmethod
+    def extract_politicians(text: str, politicians: List[Politician]) -> List[int]:
+        results = []
+        for politician in politicians:
+            if politician.name in text:
+                results.append(politician.num)
+
+        return results
 
 
 class TweetRepository:
@@ -53,7 +75,7 @@ class TweetRepository:
 
         for entry in body:
             tweet = Tweet(
-                sentiments=entry['sentiments'],
+                politicians=entry['politicians'],
                 tweetText=entry['tweetText'],
                 tweetId=entry['tweetId'],
                 dateTime=entry['dateTime'])

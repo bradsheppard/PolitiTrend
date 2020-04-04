@@ -5,7 +5,6 @@ import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import Tweet from './tweet.entity';
 import { Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
-import { Sentiment } from '../sentiment/sentiment.entity';
 
 describe('Tweet Controller', () => {
 	let controller: TweetController;
@@ -19,12 +18,7 @@ describe('Tweet Controller', () => {
 			id,
 			tweetText: `test text ${id}`,
 			tweetId: id.toString(),
-			sentiments: [
-				{
-					politician: id,
-					value: id,
-				},
-			],
+			politicians: [id],
 		} as Tweet;
 	}
 
@@ -38,10 +32,6 @@ describe('Tweet Controller', () => {
 				},
 				{
 					provide: getRepositoryToken(Tweet),
-					useClass: Repository,
-				},
-				{
-					provide: getRepositoryToken(Sentiment),
 					useClass: Repository,
 				},
 			],
@@ -65,8 +55,8 @@ describe('Tweet Controller', () => {
 	it('can get with politician', async () => {
 		const tweet = createTweet();
 		const getSpy = jest.spyOn(service, 'get').mockResolvedValueOnce([tweet]);
-		await controller.findAll({politicians: [1]});
-		expect(getSpy).toBeCalledWith({politicians: [1]});
+		await controller.findAll({politician: 1});
+		expect(getSpy).toBeCalledWith({politician: 1});
 	});
 
 	it('can get one when exists', async () => {
