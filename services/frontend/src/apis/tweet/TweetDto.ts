@@ -1,10 +1,8 @@
-import SentimentDto from './SentimentDto';
-
 interface TweetDto {
 	id: number;
 	tweetId: string;
 	tweetText: string;
-	sentiments: SentimentDto[];
+	politicians: number[];
 }
 
 export default TweetDto;

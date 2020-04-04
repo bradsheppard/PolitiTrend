@@ -1,5 +1,3 @@
-import SentimentDto from '../tweet/SentimentDto';
-
 interface NewsArticleDto {
     id: number;
     image: string;
@@ -7,7 +5,7 @@ interface NewsArticleDto {
     url: string;
     source: string;
     description: string;
-    sentiments: SentimentDto[];
+    politicians: number[];
 }
 
 export default NewsArticleDto;

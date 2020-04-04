@@ -52,8 +52,8 @@ class App extends React.Component<IProps> {
     }
 
     static async getInitialProps() {
-        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({limit: 8, politicians: [90]});
-        const tweetDtos: TweetDto[] = await TweetApi.get({limit: 4, politicians: [90]});
+        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({limit: 8, politician: 90});
+        const tweetDtos: TweetDto[] = await TweetApi.get({limit: 4, politician: 90});
 
         return {
             mainNewsArticles: newsArticleDtos.slice(0, 2),

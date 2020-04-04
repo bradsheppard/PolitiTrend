@@ -41,7 +41,7 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
     }
 
     async componentDidMount() {
-        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({politicians: [this.props.politician], limit: 10});
+        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({politician: this.props.politician, limit: 10});
         const newsArticles = newsArticleDtos.map(x => {
             return {
                 title: x.title,

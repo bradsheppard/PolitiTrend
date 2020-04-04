@@ -28,7 +28,7 @@ class PoliticianTweetFeed extends React.Component<IProps, IState> {
 
     async componentDidMount() {
         const { politician } = this.props;
-        const tweetDtos: TweetDto[] = await TweetApi.get({politicians: [politician], limit: 10});
+        const tweetDtos: TweetDto[] = await TweetApi.get({politician, limit: 10});
         const tweets = tweetDtos.map(x => { return {tweetId: x.tweetId} as Tweet });
         this.setState({
             tweets
