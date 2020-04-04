@@ -2,7 +2,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{Dataset, SparkSession}
 
 object GlobalWordCloud {
-    case class Tweet(tweetText: String, tweetId: String, sentiments: Seq[Sentiment])
+    case class Tweet(tweetText: String, tweetId: String, politicians: Seq[Long])
 
     case class Sentiment(politician: Long, value: Double)
 

@@ -4,7 +4,7 @@ import org.apache.spark.sql.{Dataset, SparkSession}
 
 object PoliticianWordCloud {
 
-    case class Tweet(tweetText: String, tweetId: String, sentiments: Seq[Sentiment])
+    case class Tweet(tweetText: String, tweetId: String, politicians: Seq[Long])
 
     case class Sentiment(politician: Long, value: Double)
 
@@ -39,7 +39,7 @@ object PoliticianWordCloud {
                     split($"tweetText", "\\s+")
                 )
             )
-            .withColumn("politician", explode($"sentiments.politician"))
+            .withColumn("politician", explode($"politicians"))
 
             .groupBy("word", "politician")
             .count().as[WordCount]
