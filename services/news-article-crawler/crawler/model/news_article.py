@@ -6,13 +6,12 @@ import requests
 import re
 
 from crawler.message_bus import MessageBus
-from crawler.model.crawler import Crawler
-from crawler.model.sentiment import Sentiment
+from crawler.model.politician import Politician
 
 
 @dataclass
 class NewsArticle:
-    sentiments: List[Sentiment]
+    politicians: List[int]
     dateTime: str
     image: str
     title: str
@@ -42,7 +41,7 @@ class NewsArticleRepository:
                 title=entry['title'],
                 url=entry['url'],
                 image=entry['image'],
-                sentiments=entry['sentiments'],
+                politicians=entry['politicians'],
                 dateTime=entry['dateTime'],
                 description=entry['description'],
                 source=entry['source']
@@ -53,7 +52,7 @@ class NewsArticleRepository:
         return news_articles
 
 
-class NewsArticleCrawler(Crawler[NewsArticle]):
+class NewsArticleCrawler:
 
     _url = 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/NewsSearchAPI'
 
@@ -63,8 +62,8 @@ class NewsArticleCrawler(Crawler[NewsArticle]):
             'x-rapidapi-key': api_key
         }
 
-    def get(self, search_term) -> List[NewsArticle]:
-        querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '10', 'q': search_term,
+    def get(self, politician: Politician, politicians: List[Politician]) -> List[NewsArticle]:
+        querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '10', 'q': politician.name,
                        'safeSearch': 'false'}
         response = requests.request('GET', self._url, headers=self._headers, params=querystring)
         body = json.loads(response.text)
@@ -73,16 +72,30 @@ class NewsArticleCrawler(Crawler[NewsArticle]):
         results = []
 
         for article in articles:
+            extracted_politicians = self.extract_politicians(article['title'], politicians)
+
+            if len(extracted_politicians) == 0:
+                continue
+
             news_article = NewsArticle(
                 title=NewsArticleCrawler._stip_html_tags(article['title']),
                 url=article['url'],
                 image=article['image']['url'],
-                sentiments=[],
+                politicians=extracted_politicians,
                 dateTime=article['datePublished'],
                 source=article['provider']['name'],
                 description=NewsArticleCrawler._stip_html_tags(article['description'])
             )
             results.append(news_article)
+
+        return results
+
+    @staticmethod
+    def extract_politicians(text: str, politicians: List[Politician]) -> List[int]:
+        results = []
+        for politician in politicians:
+            if politician.name in text:
+                results.append(politician.num)
 
         return results
 

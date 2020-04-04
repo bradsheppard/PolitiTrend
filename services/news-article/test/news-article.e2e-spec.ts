@@ -30,12 +30,7 @@ function createNewsArticleDto() {
 		url: `url_${id}`,
 		source: `source_${id}`,
 		description: `source_${id}`,
-		sentiments: [
-			{
-				politician: id,
-				value: id,
-			},
-		],
+		politicians: [id]
 	} as CreateNewsArticleDto;
 }
 
@@ -95,7 +90,6 @@ describe('NewsArticleController (e2e)', () => {
 		const resultingNewsArticle = res.body as NewsArticle;
 		const insertedNewsArticle = newsArticleDto as NewsArticle;
 		insertedNewsArticle.id = resultingNewsArticle.id;
-		insertedNewsArticle.sentiments[0].id = resultingNewsArticle.sentiments[0].id;
 
 		expect(res.status).toEqual(201);
 		expect(resultingNewsArticle).toEqual(insertedNewsArticle);
@@ -197,11 +191,11 @@ describe('NewsArticleService (e2e)', () => {
 		const insertedNewsArticle1 = await service.upsertOnUrl(newsArticle1);
 		await service.upsertOnUrl(newsArticle2);
 
-		const politicianNewsArticles = await service.get({politicians: [insertedNewsArticle1.sentiments[0].politician]});
+		const politicianNewsArticles = await service.get({politician: insertedNewsArticle1.politicians[0]});
 
 		expect(politicianNewsArticles).toHaveLength(1);
 		for (const newsArticle of politicianNewsArticles) {
-			expect(newsArticle.sentiments[0].politician).toEqual(insertedNewsArticle1.sentiments[0].politician);
+			expect(newsArticle.politicians[0]).toEqual(insertedNewsArticle1.politicians[0]);
 		}
 	});
 
@@ -278,30 +272,9 @@ describe('NewsArticleService (e2e)', () => {
 
 		const resultingNewsArticle = await service.upsertOnUrl(updatedNewsArticle);
 		updatedNewsArticle.id = resultingNewsArticle.id;
-		updatedNewsArticle.sentiments[0].id = resultingNewsArticle.sentiments[0].id;
 
 		const retrievedNewsArticle = await service.getOne(resultingNewsArticle.id);
 		expect(retrievedNewsArticle).toEqual(updatedNewsArticle);
-	});
-
-	it('Can upsert on newsArticleId, sentiments updated', async () => {
-		const newsArticle = createNewsArticleDto() as any;
-
-		const insertedNewsArticle = await service.upsertOnUrl(newsArticle);
-		newsArticle.sentiments = [
-			{
-				politician: 45,
-				value: 4.5,
-			},
-		];
-
-		await service.upsertOnUrl(newsArticle);
-
-		const retrievedNewsArticle = await service.getOne(insertedNewsArticle.id);
-		newsArticle.sentiments[0].id = retrievedNewsArticle.sentiments[0].id;
-
-		expect(retrievedNewsArticle.image).toEqual(newsArticle.image);
-		expect(retrievedNewsArticle.sentiments).toEqual(newsArticle.sentiments);
 	});
 
 	it('Can upsert on newsArticleId, nothing changed', async () => {
@@ -312,15 +285,5 @@ describe('NewsArticleService (e2e)', () => {
 
 		expect(resultingNewsArticle.image).toEqual(newsArticle.image);
 		expect(resultingNewsArticle.url).toEqual(newsArticle.url);
-	});
-
-	it('Can upsert with no sentiments, no exceptions', async () => {
-		const newsArticle = createNewsArticleDto();
-		newsArticle.sentiments = [];
-
-		await service.upsertOnUrl(newsArticle);
-		const resultingNewsArticle = await service.upsertOnUrl(newsArticle);
-
-		expect(resultingNewsArticle.sentiments).toHaveLength(0);
 	});
 });

@@ -1,6 +1,6 @@
 export class SearchNewsArticleDto {
 	url?: string;
-	politicians?: number[];
+	politician?: number;
 	limit?: number;
 	offset?: number;
 	title?: string;

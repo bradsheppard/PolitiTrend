@@ -2,7 +2,6 @@ import { SearchNewsArticleDto } from './dto/search-news-article.dto';
 import NewsArticle from './news-article.entity';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { Sentiment } from '../sentiment/sentiment.entity';
 import { Injectable } from '@nestjs/common';
 import { CreateNewsArticleDto } from './dto/create-news-article.dto';
 import { UpdateNewsArticleDto } from './dto/update-news-article.dto';
@@ -15,8 +14,6 @@ export class NewsArticleService {
 		private readonly connection: Connection,
 		@InjectRepository(NewsArticle)
 		private readonly newsArticleRepository: Repository<NewsArticle>,
-		@InjectRepository(Sentiment)
-		private readonly sentimentRepository: Repository<Sentiment>,
 	) {}
 
 	async getOne(id: number): Promise<NewsArticle | null> {
@@ -32,11 +29,10 @@ export class NewsArticleService {
 
 		const query = this.connection.createQueryBuilder();
 		query.addSelect('newsarticle')
-			.from(NewsArticle, 'newsarticle')
-			.leftJoinAndSelect('newsarticle.sentiments', 'sentiment');
+			.from(NewsArticle, 'newsarticle');
 
-		if (searchDto.politicians) {
-			query.andWhere('sentiment.politician in (:...politicians)', { politicians: searchDto.politicians });
+		if (searchDto.politician) {
+			query.andWhere(':politician = ANY(newsarticle.politicians)', { politician: searchDto.politician });
 		}
 
 		if (searchDto.url) {
@@ -83,14 +79,6 @@ export class NewsArticleService {
 		if (previousNewsArticles.length > 0) {
 			updateNewsArticleDto.id = previousNewsArticles[0].id;
 		}
-
-		const sentiments = [];
-		for (const sentiment of createNewsArticleDto.sentiments) {
-			const insertedSentiment = await this.sentimentRepository.save(this.sentimentRepository.create(sentiment));
-			sentiments.push(insertedSentiment);
-		}
-
-		updateNewsArticleDto.sentiments = sentiments;
 
 		const result = await this.newsArticleRepository.save(this.newsArticleRepository.create(updateNewsArticleDto));
 		return await this.newsArticleRepository.findOne(result.id);

@@ -3,7 +3,6 @@ import { NewsArticleService } from './news-article.service';
 import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import NewsArticle from './news-article.entity';
 import { Repository } from 'typeorm';
-import { Sentiment } from '../sentiment/sentiment.entity';
 
 describe('NewsArticle Service', () => {
 	let service: NewsArticleService;
@@ -19,12 +18,7 @@ describe('NewsArticle Service', () => {
 			title: `title_${id}`,
 			dateTime: new Date().toUTCString(),
 			url: `url_${id}`,
-			sentiments: [
-				{
-					politician: id,
-					value: id,
-				},
-			],
+			politicians: [id]
 		} as NewsArticle;
 	}
 
@@ -38,11 +32,7 @@ describe('NewsArticle Service', () => {
 				{
 					provide: getRepositoryToken(NewsArticle),
 					useClass: Repository,
-				},
-				{
-					provide: getRepositoryToken(Sentiment),
-					useClass: Repository,
-				},
+				}
 			],
 		}).compile();
 

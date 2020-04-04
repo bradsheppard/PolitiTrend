@@ -2,12 +2,10 @@ import {
 	Column,
 	Entity,
 	Index,
-	OneToMany,
 	PrimaryGeneratedColumn,
 	Unique,
 	ValueTransformer,
 } from 'typeorm';
-import { Sentiment } from '../sentiment/sentiment.entity';
 
 export const dateTransformer: ValueTransformer = {
 	from: (dbValue: Date) => {
@@ -26,8 +24,8 @@ export default class NewsArticle {
 	@Column({type: 'timestamp', transformer: dateTransformer})
 	dateTime: string;
 
-	@OneToMany(() => Sentiment, sentiment => sentiment.newsArticle, {cascade: true, eager: true})
-	sentiments: Sentiment[];
+	@Column({type: 'int', array: true })
+	politicians: number[];
 
 	@Index()
 	@Column()

@@ -6,8 +6,6 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-RUN python -m spacy download en
-
 COPY crawler crawler
 
 COPY test test

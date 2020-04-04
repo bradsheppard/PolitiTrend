@@ -1,7 +1,5 @@
-import { CreateSentimentDto } from '../../sentiment/dto/create-sentiment.dto';
-
 export class CreateNewsArticleDto {
-	sentiments: CreateSentimentDto[];
+	politicians: number[];
 	dateTime: string;
 	image: string;
 	title: string;
