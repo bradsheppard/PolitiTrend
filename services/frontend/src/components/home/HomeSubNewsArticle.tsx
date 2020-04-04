@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, createStyles, Link as MuiLink, Theme, Typography } from '@material-ui/core';
+import { Box, Link as MuiLink, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface NewsArticle {
@@ -14,17 +14,24 @@ interface IProps {
     newsArticle: NewsArticle;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles(
+{
         image: {
-            maxWidth: '100%',
+            position: 'absolute',
+            height: '100%',
             margin: 'auto',
-            display: 'block'
+            top: '-100%',
+            bottom: '-100%',
+            left: '-100%',
+            right: '-100%'
         },
-        subtitle: {
-            paddingBottom: theme.spacing(3)
+        imageContainer: {
+            position: 'relative',
+            overflow: 'hidden',
+            height: '20em',
+            justifyItems: 'center'
         }
-    })
+    }
 );
 
 const HomeSubNewsArticle = (props: IProps) => {
@@ -33,21 +40,23 @@ const HomeSubNewsArticle = (props: IProps) => {
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
             <div>
+                {
+                    props.newsArticle.image &&
+                        <div className={classes.imageContainer}>
+                            <img
+                                className={classes.image}
+                                src={props.newsArticle.image}
+                                alt={props.newsArticle.title} />
+                        </div>
+                }
                 <Typography gutterBottom variant='h4' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
                     </Box>
                 </Typography>
-                <Typography variant='subtitle1' color='textSecondary' className={classes.subtitle}>
+                <Typography variant='subtitle1' color='textSecondary'>
                     {props.newsArticle.description}
                 </Typography>
-                {
-                    props.newsArticle.image &&
-                    <img
-                        className={classes.image}
-                        src={props.newsArticle.image}
-                        alt={props.newsArticle.title} />
-                }
             </div>
         </MuiLink>
     );
