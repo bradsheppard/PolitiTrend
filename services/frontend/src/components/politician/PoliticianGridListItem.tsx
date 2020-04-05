@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
             float: 'left'
         },
         container: {
-            position: 'relative',
-            clear: 'both'
+            clear: 'both',
+            overflow: 'auto'
         }
     })
 );
@@ -61,6 +61,9 @@ const PoliticianGridListItem = (props: IProps & React.HTMLAttributes<HTMLDivElem
                     </Typography>
                     <Typography variant='h6' color='textSecondary'>
                         {props.politician.party}
+                    </Typography>
+                    <Typography variant='h6' color='textSecondary'>
+                        Senator
                     </Typography>
                 </div>
             </div>
