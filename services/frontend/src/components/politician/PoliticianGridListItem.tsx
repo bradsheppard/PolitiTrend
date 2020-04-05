@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'relative',
             float: 'left',
             overflow: 'hidden',
-            height: theme.spacing(40),
-            width: theme.spacing(40)
+            height: theme.spacing(30),
+            width: theme.spacing(30)
         },
         textContainer: {
             float: 'left'
