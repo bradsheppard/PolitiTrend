@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Link as MuiLink, Typography } from '@material-ui/core';
+import { Box, createStyles, Link as MuiLink, Theme, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface NewsArticle {
@@ -14,8 +14,8 @@ interface IProps {
     newsArticle: NewsArticle;
 }
 
-const useStyles = makeStyles(
-{
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
         image: {
             position: 'absolute',
             height: '100%',
@@ -28,14 +28,16 @@ const useStyles = makeStyles(
         imageContainer: {
             position: 'relative',
             overflow: 'hidden',
-            height: '20em',
+            height: theme.spacing(40),
             justifyItems: 'center'
         }
-    }
+    })
 );
 
 const HomeSubNewsArticle = (props: IProps) => {
     const classes = useStyles(props);
+
+    const maxStringLength = 400;
 
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
@@ -55,7 +57,10 @@ const HomeSubNewsArticle = (props: IProps) => {
                     </Box>
                 </Typography>
                 <Typography variant='subtitle1' color='textSecondary'>
-                    {props.newsArticle.description}
+                    {props.newsArticle.description.substring(0, maxStringLength)}
+                    {
+                        props.newsArticle.description.length > maxStringLength ? '...' : null
+                    }
                 </Typography>
             </div>
         </MuiLink>

@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import ContentContainer from '../components/common/ContentContainer';
 import _ from 'lodash';
-import PoliticianGridListNew from '../components/politician/PoliticianGridListNew';
+import PoliticianGridList from '../components/politician/PoliticianGridList';
 
 const style = (theme: Theme) => createStyles({
     search: {
@@ -30,7 +30,7 @@ interface IProps extends WithStyles<typeof style> {
 }
 
 interface IState {
-    search: string;
+    politicians: Politician[];
 }
 
 class Politicians extends React.Component<IProps, IState> {
@@ -39,9 +39,17 @@ class Politicians extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            search: ''
+            politicians: props.politicians
         }
     }
+
+    debounedHandle = _.debounce((event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            politicians: this.props.politicians.filter((politician: Politician) =>
+                politician.name.toLowerCase().includes(event.target.value.toLowerCase())
+            )
+        });
+    }, 1000);
 
     static async getInitialProps() {
         const politicians = await PoliticianApi.get();
@@ -53,13 +61,7 @@ class Politicians extends React.Component<IProps, IState> {
 
     handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
         event.persist();
-
-        const debounedHandle = _.debounce(() => {
-            this.setState({
-                search: event.target.value
-            });
-        }, 1000);
-        debounedHandle();
+        this.debounedHandle(event);
     }
 
     render() {
@@ -81,7 +83,7 @@ class Politicians extends React.Component<IProps, IState> {
                             </Grid>
                         </Grid>
                         <Grid item sm={12}>
-                            <PoliticianGridListNew politicians={this.props.politicians} />
+                            <PoliticianGridList politicians={this.state.politicians} />
                         </Grid>
                     </Grid>
                 </ContentContainer>

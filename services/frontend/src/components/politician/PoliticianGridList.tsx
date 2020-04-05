@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { GridList, GridListTile, GridListTileBar, Link as MuiLink, makeStyles } from '@material-ui/core';
+import PoliticianGridListItem from './PoliticianGridListItem';
+import { createStyles, Grid, Theme, Link as MuiLink } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import Link from 'next/link';
-import { politicianNameToImagePath } from '../../utils/ImagePath';
 
 interface IProps {
-    politicians: Politician[]
+    politicians: Politician[];
 }
 
 interface Politician {
@@ -13,33 +14,37 @@ interface Politician {
     party: string;
 }
 
-const useStyles = makeStyles({
-    img: {
-        width: '100%',
-        height: 'auto'
-    }
-});
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        container: {
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(2)
+        }
+    })
+);
 
 const PoliticianGridList = (props: IProps) => {
     const classes = useStyles();
 
     return (
-        <GridList cellHeight={500} cols={3}>
-            {props.politicians.map(politician => (
-                <GridListTile key={politician.id}>
-                    <Link href='/politicians/[id]' as={`/politicians/${politician.id}`}>
-                        <MuiLink href='#' className={classes.img}>
-                            <img src={politicianNameToImagePath(politician.name)} alt={politician.name} className={classes.img} />
-                        </MuiLink>
-                    </Link>
-                    <GridListTileBar
-                        title={politician.name}
-                        subtitle={<span>{politician.party}</span>}
-                    />
-                </GridListTile>
-            ))}
-        </GridList>
-    )
+        <React.Fragment>
+            <Grid container>
+            {
+                props.politicians.map((politician: Politician, index: number) => {
+                    return (
+                        <Grid item xs={6}>
+                            <Link href='/politicians/[id]' as={`/politicians/${politician.id}`}>
+                                <MuiLink href='#'>
+                                    <PoliticianGridListItem politician={politician} key={index} className={classes.container} />
+                                </MuiLink>
+                            </Link>
+                        </Grid>
+                    );
+                })
+            }
+            </Grid>
+        </React.Fragment>
+    );
 };
 
 export default PoliticianGridList;
