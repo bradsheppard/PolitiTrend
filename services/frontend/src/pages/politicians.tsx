@@ -2,15 +2,14 @@ import * as React from 'react';
 import PoliticianApi from '../apis/politician/PoliticianApi';
 import {
     createStyles,
-    Grid,
+    Grid, TextField,
     Theme,
     withStyles,
     WithStyles
 } from '@material-ui/core';
 import ContentContainer from '../components/common/ContentContainer';
 import _ from 'lodash';
-import PoliticianGridList from '../components/politician/PoliticianGridList';
-import Card from '../components/common/Card';
+import PoliticianGridListNew from '../components/politician/PoliticianGridListNew';
 
 const style = (theme: Theme) => createStyles({
     search: {
@@ -64,29 +63,27 @@ class Politicians extends React.Component<IProps, IState> {
     }
 
     render() {
-        // const { classes } = this.props;
+        const { classes } = this.props;
 
         return (
             <React.Fragment>
                 <ContentContainer>
-                    <Card>
-                        <Grid container
-                            alignItems='center'
-                            justify='center'>
-                            {/*<Grid item sm={12}>*/}
-                            {/*    <Grid container*/}
-                            {/*        alignItems='center'*/}
-                            {/*        justify='center'>*/}
-                            {/*        <Grid item sm={8}>*/}
-                            {/*            <TextField className={classes.search} label="Name" variant="outlined" onChange={this.handleSearchChange.bind(this)} />*/}
-                            {/*        </Grid>*/}
-                            {/*    </Grid>*/}
-                            {/*</Grid>*/}
-                            <Grid item sm={12}>
-                                <PoliticianGridList politicians={this.props.politicians}/>
+                    <Grid container
+                        alignItems='center'
+                        justify='center'>
+                        <Grid item sm={12}>
+                            <Grid container
+                                alignItems='center'
+                                justify='center'>
+                                <Grid item sm={8}>
+                                    <TextField className={classes.search} label="Name" variant="outlined" onChange={this.handleSearchChange.bind(this)} />
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Card>
+                        <Grid item sm={12}>
+                            <PoliticianGridListNew politicians={this.props.politicians} />
+                        </Grid>
+                    </Grid>
                 </ContentContainer>
             </React.Fragment>
         );
