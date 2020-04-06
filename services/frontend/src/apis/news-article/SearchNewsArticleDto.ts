@@ -1,7 +1,7 @@
 interface SearchNewsArticleDto {
     limit?: number;
     limitPerPolitician?: number;
-    politician: number;
+    politician?: number;
 }
 
 export default SearchNewsArticleDto;

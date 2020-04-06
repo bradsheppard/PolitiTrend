@@ -3,13 +3,13 @@ import PoliticianApi from '../apis/politician/PoliticianApi';
 import {
     createStyles,
     Grid, TextField,
-    Theme,
-    withStyles,
+    Theme, withStyles,
     WithStyles
 } from '@material-ui/core';
 import ContentContainer from '../components/common/ContentContainer';
 import _ from 'lodash';
-import PoliticianGridList from '../components/politician/PoliticianGridList';
+import PoliticianGridList from '../components/politicians/PoliticiansGridList';
+import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 
 const style = (theme: Theme) => createStyles({
     search: {
@@ -25,8 +25,15 @@ interface Politician {
     party: string;
 }
 
+interface NewsArticle {
+    title: string;
+    description: string;
+    url: string
+}
+
 interface IProps extends WithStyles<typeof style> {
     politicians: Politician[];
+    newsArticles: NewsArticle[];
 }
 
 interface IState {
@@ -53,9 +60,11 @@ class Politicians extends React.Component<IProps, IState> {
 
     static async getInitialProps() {
         const politicians = await PoliticianApi.get();
+        const newsArticles = await NewsArticleApi.get({limit: 4});
 
         return {
-            politicians
+            politicians,
+            newsArticles
         }
     }
 
@@ -70,9 +79,7 @@ class Politicians extends React.Component<IProps, IState> {
         return (
             <React.Fragment>
                 <ContentContainer>
-                    <Grid container
-                        alignItems='center'
-                        justify='center'>
+                    <Grid container>
                         <Grid item sm={12}>
                             <Grid container
                                 alignItems='center'

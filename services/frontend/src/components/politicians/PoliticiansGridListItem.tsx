@@ -27,12 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
             right: '-100%',
         },
         imageContainer: {
-            marginRight: theme.spacing(4),
+            marginRight: theme.spacing(2),
             position: 'relative',
             float: 'left',
             overflow: 'hidden',
-            height: theme.spacing(30),
-            width: theme.spacing(30)
+            height: theme.spacing(40),
+            width: theme.spacing(40)
         },
         textContainer: {
             float: 'left'
