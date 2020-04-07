@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const HomeNewsArticle = (props: IProps) => {
+const HomeMainNewsArticle = (props: IProps) => {
     const classes = useStyles(props);
 
     return (
@@ -58,4 +58,4 @@ const HomeNewsArticle = (props: IProps) => {
     );
 };
 
-export default HomeNewsArticle;
+export default HomeMainNewsArticle;

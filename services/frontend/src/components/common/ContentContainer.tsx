@@ -9,7 +9,7 @@ class ContentContainer extends React.Component {
                   alignItems='center'
                   direction='row'
                   justify='center'>
-                <Grid item sm={8}>
+                <Grid item xs={12} md={8}>
                             {this.props.children}
                 </Grid>
             </Grid>

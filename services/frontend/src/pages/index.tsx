@@ -7,13 +7,14 @@ import * as React from 'react';
 import ContentContainer from '../components/common/ContentContainer';
 import NewsArticleDto from '../apis/news-article/NewsArticleDto';
 import NewsArticleApi from '../apis/news-article/NewsArticleApi';
-import HomeNewsArticle from '../components/home/HomeNewsArticle';
+import HomeMainNewsArticle from '../components/home/HomeMainNewsArticle';
 import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
 import HomeLatestNewsArticle from '../components/home/HomeLatestNewsArticle';
 import HomeHeader from '../components/home/HomeHeader';
 import Divider from '../components/common/Divider';
 import Fade from '../components/common/Fade';
+import HomeTrendingNewsArticle from '../components/home/HomeTrendingNewsArticle';
 
 interface NewsArticle {
     image: string;
@@ -78,7 +79,7 @@ class App extends React.Component<IProps> {
                                     return (
                                         <Fade>
                                             <div className={classes.newsArticle} key={index}>
-                                                <HomeNewsArticle newsArticle={newsArticle} height={400} />
+                                                <HomeMainNewsArticle newsArticle={newsArticle} height={400} />
                                             </div>
                                         </Fade>
                                     )
@@ -96,7 +97,7 @@ class App extends React.Component<IProps> {
                         {
                             this.props.subNewsArticles.map((newsArticle, index) => {
                                 return (
-                                    <Grid item xs={4} key={index}>
+                                    <Grid item xs={12} md={4} key={index}>
                                         <Fade>
                                             <div className={classes.newsArticle}>
                                                 <HomeLatestNewsArticle newsArticle={newsArticle} />
@@ -117,10 +118,10 @@ class App extends React.Component<IProps> {
                         {
                             this.props.subNewsArticles.map((newsArticle, index) => {
                                 return (
-                                    <Grid item xs={4} key={index}>
+                                    <Grid item xs={12} key={index}>
                                         <Fade>
                                             <div className={classes.newsArticle}>
-                                                <HomeLatestNewsArticle newsArticle={newsArticle} />
+                                                <HomeTrendingNewsArticle newsArticle={newsArticle} />
                                             </div>
                                         </Fade>
                                     </Grid>
