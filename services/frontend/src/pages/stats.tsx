@@ -1,4 +1,4 @@
-import { Box, createStyles, Divider, Theme, Typography } from '@material-ui/core';
+import { Box, createStyles, Theme, Typography } from '@material-ui/core';
 import * as React from 'react';
 import ContentContainer from '../components/common/ContentContainer';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,15 +6,21 @@ import WordCloud from '../components/common/WordCloud';
 import WordCloudApi from '../apis/word-cloud/WordCloudApi';
 import WordCloudDto from '../apis/word-cloud/WordCloudDto';
 import LineChart from '../components/common/LineChart';
+import Divider from '../components/common/Divider';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         header: {
-            paddingTop: theme.spacing(2)
+            paddingTop: theme.spacing(4),
+            textAlign: 'center'
         },
         line: {
             backgroundColor: 'black',
             height: 3
+        },
+        wordCloud: {
+            paddingTop: theme.spacing(10),
+            paddingBottom: theme.spacing(10)
         }
     })
 );
@@ -44,19 +50,21 @@ const Stats = (props: IProps) => {
 
     return (
         <ContentContainer>
-            <Typography gutterBottom variant='h5' color='textPrimary' className={classes.header}>
+            <div className={classes.header}>
+                <Typography gutterBottom variant='h4' color='textPrimary' className={classes.header}>
+                    <Box fontWeight='fontWeightBold'>
+                        TRENDING
+                    </Box>
+                </Typography>
+                <Divider thickness={3} />
+            </div>
+            <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
+            <Typography gutterBottom variant='h4' color='textPrimary' className={classes.header}>
                 <Box fontWeight='fontWeightBold'>
-                    Trending
+                    POPULARITY
                 </Box>
             </Typography>
-            <Divider variant='middle' />
-            <WordCloud wordCounts={props.wordCounts}/>
-            <Typography gutterBottom variant='h5' color='textPrimary' className={classes.header}>
-                <Box fontWeight='fontWeightBold'>
-                    Popularity
-                </Box>
-            </Typography>
-            <Divider variant='middle' />
+            <Divider thickness={3} />
             <LineChart data={props.politicianPopularities[0].historicalPopularity} xAxis='Time' yAxis='Popularity' />
         </ContentContainer>
     );

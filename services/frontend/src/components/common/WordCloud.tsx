@@ -3,14 +3,16 @@ import ReactWordcloud, { MinMaxPair, Spiral, Word } from 'react-wordcloud';
 
 const wordCloudOptions = {
 	enableTooltip: false,
-	deterministic: false,
-	fontSizes: [20, 75] as MinMaxPair,
+	deterministic: true,
+	colors: ['black', '#9c0500', '#00099c'],
+	fontSizes: [40, 95] as MinMaxPair,
+	fontFamily: 'Raleway',
 	fontStyle: 'normal',
-	padding: 1,
-	rotations: 1,
-	rotationAngles: [0, 0] as MinMaxPair,
+	padding: 5,
+	rotations: 6,
+	rotationAngles: [-45, 45] as MinMaxPair,
 	spiral: Spiral.Archimedean,
-	transitionDuration: 1000,
+	transitionDuration: 2000,
 };
 
 interface WordCount {
@@ -22,7 +24,7 @@ interface IProps {
 	wordCounts: WordCount[];
 }
 
-const WordCloud = (props: IProps) => {
+const WordCloud = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
 	const words = props.wordCounts.map(x => {
 		return {
 			text: x.word,
@@ -31,7 +33,9 @@ const WordCloud = (props: IProps) => {
 	});
 
 	return (
-		<ReactWordcloud words={words} options={wordCloudOptions} />
+		<div className={props.className}>
+			<ReactWordcloud words={words} options={wordCloudOptions} />
+		</div>
 	);
 };
 
