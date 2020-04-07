@@ -7,6 +7,7 @@ import WordCloudApi from '../apis/word-cloud/WordCloudApi';
 import WordCloudDto from '../apis/word-cloud/WordCloudDto';
 import LineChart from '../components/common/LineChart';
 import Divider from '../components/common/Divider';
+import PieChart from '../components/common/PieChart';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -59,6 +60,7 @@ const Stats = (props: IProps) => {
                 <Divider thickness={3} />
             </div>
             <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
+            <PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}}).slice(0, 10)} />
             <Typography gutterBottom variant='h4' color='textPrimary' className={classes.header}>
                 <Box fontWeight='fontWeightBold'>
                     POPULARITY

@@ -10,7 +10,7 @@ import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 import HomeNewsArticle from '../components/home/HomeNewsArticle';
 import TweetDto from '../apis/tweet/TweetDto';
 import TweetApi from '../apis/tweet/TweetApi';
-import HomeSubNewsArticle from '../components/home/HomeSubNewsArticle';
+import HomeLatestNewsArticle from '../components/home/HomeLatestNewsArticle';
 import HomeHeader from '../components/home/HomeHeader';
 import Divider from '../components/common/Divider';
 import Fade from '../components/common/Fade';
@@ -99,13 +99,35 @@ class App extends React.Component<IProps> {
                                     <Grid item xs={4} key={index}>
                                         <Fade>
                                             <div className={classes.newsArticle}>
-                                                <HomeSubNewsArticle newsArticle={newsArticle} />
+                                                <HomeLatestNewsArticle newsArticle={newsArticle} />
                                             </div>
                                         </Fade>
                                     </Grid>
                                 );
                             })
                         }
+                        <Grid item xs={12}>
+                            <Fade>
+                                <HomeHeader>
+                                    Trending
+                                </HomeHeader>
+                                <Divider />
+                            </Fade>
+                        </Grid>
+                        {
+                            this.props.subNewsArticles.map((newsArticle, index) => {
+                                return (
+                                    <Grid item xs={4} key={index}>
+                                        <Fade>
+                                            <div className={classes.newsArticle}>
+                                                <HomeLatestNewsArticle newsArticle={newsArticle} />
+                                            </div>
+                                        </Fade>
+                                    </Grid>
+                                );
+                            })
+                        }
+
                     </Grid>
                 </ContentContainer>
             </React.Fragment>

@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const HomeSubNewsArticle = (props: IProps) => {
+const HomeLatestNewsArticle = (props: IProps) => {
     const classes = useStyles(props);
 
     const maxStringLength = 400;
@@ -67,4 +67,4 @@ const HomeSubNewsArticle = (props: IProps) => {
     );
 };
 
-export default HomeSubNewsArticle;
+export default HomeLatestNewsArticle;
