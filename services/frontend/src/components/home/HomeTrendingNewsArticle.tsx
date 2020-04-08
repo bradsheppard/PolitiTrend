@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, createStyles, Theme, Typography } from '@material-ui/core';
+import { Box, createStyles, Grid, Theme, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 interface IProps {
@@ -16,11 +16,9 @@ interface NewsArticle {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         imageContainer: {
-            marginRight: theme.spacing(2),
             position: 'relative',
             overflow: 'hidden',
             height: theme.spacing(40),
-            flex: 0.4
         },
         image: {
             position: 'absolute',
@@ -31,12 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
             left: '-100%',
             right: '-100%'
         },
-        textContainer: {
-            flex: 0.6
-        },
-        container: {
-            display: 'flex'
-        }
     })
 );
 
@@ -45,7 +37,8 @@ const HomeTrendingNewsArticle = (props: IProps) => {
     const maxStringLength = 400;
 
     return (
-        <div className={classes.container}>
+        <Grid container spacing={2}>
+            <Grid item xs={12} md={4}>
             {
                 props.newsArticle.image &&
                 <div className={classes.imageContainer}>
@@ -55,7 +48,8 @@ const HomeTrendingNewsArticle = (props: IProps) => {
                         alt={props.newsArticle.title} />
                 </div>
             }
-            <div className={classes.textContainer}>
+            </Grid>
+            <Grid item xs={12} md={8}>
                 <Typography gutterBottom variant='h4' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
@@ -67,8 +61,8 @@ const HomeTrendingNewsArticle = (props: IProps) => {
                         props.newsArticle.description.length > maxStringLength ? '...' : null
                     }
                 </Typography>
-            </div>
-        </div>
+            </Grid>
+        </Grid>
     );
 };
 
