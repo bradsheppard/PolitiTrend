@@ -5,11 +5,8 @@ import {
 } from '@material-ui/core';
 import * as React from 'react';
 import ContentContainer from '../components/common/ContentContainer';
-import NewsArticleDto from '../apis/news-article/NewsArticleDto';
 import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 import HomeMainNewsArticle from '../components/home/HomeMainNewsArticle';
-import TweetDto from '../apis/tweet/TweetDto';
-import TweetApi from '../apis/tweet/TweetApi';
 import HomeLatestNewsArticle from '../components/home/HomeLatestNewsArticle';
 import HomeHeader from '../components/home/HomeHeader';
 import Divider from '../components/common/Divider';
@@ -38,7 +35,7 @@ const styles = (theme: Theme) => createStyles({
 
 interface IProps extends WithStyles<typeof styles> {
     mainNewsArticles: NewsArticle[];
-    subNewsArticles: NewsArticle[];
+    latestNewsArticles: NewsArticle[];
     tweets: string[];
 }
 
@@ -48,18 +45,19 @@ class App extends React.Component<IProps> {
         super(props);
         this.state = {
             mainNewsArticleVisibility: Array(props.mainNewsArticles.length).fill(false),
-            subNewsArticleVisibility: Array(props.subNewsArticles.length).fill(false)
+            subNewsArticleVisibility: Array(props.latestNewsArticles.length).fill(false)
         }
     }
 
     static async getInitialProps() {
-        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({limit: 8, politician: 90});
-        const tweetDtos: TweetDto[] = await TweetApi.get({limit: 4, politician: 90});
+        const [mainNewsArticleDtos, latestNewsArticleDtos] = await Promise.all([
+            NewsArticleApi.get({limit: 2, politician: 90}),
+            NewsArticleApi.get({limit: 6})
+        ]);
 
         return {
-            mainNewsArticles: newsArticleDtos.slice(0, 2),
-            subNewsArticles: newsArticleDtos.slice(2, 8),
-            tweets: tweetDtos.map(tweetDto => tweetDto.tweetId)
+            mainNewsArticles: mainNewsArticleDtos,
+            latestNewsArticles: latestNewsArticleDtos
         };
     }
 
@@ -95,7 +93,7 @@ class App extends React.Component<IProps> {
                             </Fade>
                         </Grid>
                         {
-                            this.props.subNewsArticles.map((newsArticle, index) => {
+                            this.props.latestNewsArticles.map((newsArticle, index) => {
                                 return (
                                     <Grid item xs={12} md={4} key={index}>
                                         <Fade>
@@ -116,7 +114,7 @@ class App extends React.Component<IProps> {
                             </Fade>
                         </Grid>
                         {
-                            this.props.subNewsArticles.map((newsArticle, index) => {
+                            this.props.latestNewsArticles.map((newsArticle, index) => {
                                 return (
                                     <Grid item xs={12} key={index}>
                                         <Fade>

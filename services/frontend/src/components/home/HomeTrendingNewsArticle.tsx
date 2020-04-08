@@ -11,6 +11,7 @@ interface NewsArticle {
     description: string;
     image: string;
     url: string;
+    source: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,6 +54,11 @@ const HomeTrendingNewsArticle = (props: IProps) => {
                 <Typography gutterBottom variant='h4' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
+                    </Box>
+                </Typography>
+                <Typography gutterBottom variant='subtitle1' color='textSecondary'>
+                    <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                        Source: {props.newsArticle.source}
                     </Box>
                 </Typography>
                 <Typography variant='subtitle1' color='textSecondary'>

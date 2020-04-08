@@ -56,6 +56,11 @@ const HomeLatestNewsArticle = (props: IProps) => {
                         {props.newsArticle.title}
                     </Box>
                 </Typography>
+                <Typography gutterBottom variant='subtitle1' color='textSecondary'>
+                    <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                        Source: {props.newsArticle.source}
+                    </Box>
+                </Typography>
                 <Typography variant='subtitle1' color='textSecondary'>
                     {props.newsArticle.description.substring(0, maxStringLength)}
                     {
