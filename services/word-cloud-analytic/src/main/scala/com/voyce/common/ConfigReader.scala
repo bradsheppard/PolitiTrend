@@ -1,5 +1,6 @@
 package com.voyce.common
 
+import java.io.File
 import java.util.Properties
 
 import org.apache.spark.SparkContext
@@ -16,7 +17,7 @@ object ConfigReader {
     private final val sslEnabled = "fs.s3a.connection.ssl.enabled"
 
     def load(sc: SparkContext): Unit = {
-        val url = getClass.getResourceAsStream("application.properties")
+        val url = getClass.getResourceAsStream("/application.properties")
         val properties: Properties = new Properties()
 
         val source = Source.fromInputStream(url)
