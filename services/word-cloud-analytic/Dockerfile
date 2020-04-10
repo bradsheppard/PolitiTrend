@@ -1,4 +1,4 @@
-FROM openjdk:15-buster as builder
+FROM openjdk:8-buster as builder
 
 WORKDIR /app
 

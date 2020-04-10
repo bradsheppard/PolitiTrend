@@ -1,3 +1,5 @@
+package com.voyce.common
+
 import java.util.Properties
 
 import org.apache.spark.SparkContext

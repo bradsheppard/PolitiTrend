@@ -13,7 +13,7 @@ spec:
       - regcred
     image: "{{ .Values.global.registry }}/{{ .Values.image.wordCloudAnalytic.repository }}:{{ .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.image.wordCloudAnalytic.pullPolicy }}
-    mainClass: GlobalWordCloud
+    mainClass: com.voyce.globalwordcloud.GlobalWordCloudAnalytic
     mainApplicationFile: "local:///app/word-cloud-analytic.jar"
     sparkVersion: "2.4.5"
     restartPolicy:
