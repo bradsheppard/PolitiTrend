@@ -1,6 +1,7 @@
 package com.voyce.globalwordcloud
 
-import com.voyce.common.{WordCount, Tweet}
+import com.voyce.common.{Tweet, WordCount}
+import org.apache.spark.ml.feature.StopWordsRemover
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{Dataset, SparkSession}
 
@@ -12,18 +13,20 @@ object GlobalWordCloudCalculator {
 
         val makeWord = udf((word: String, count: Long) => WordCount(word, count))
 
-        var wordCountDataFrame: Dataset[WordCount] = tweetDataset
-            .withColumn("word",
-                explode(
-                    split($"tweetText", "\\s+")
-                )
-            )
+        val remover = new StopWordsRemover()
+            .setInputCol("words")
+            .setOutputCol("filteredWords")
 
+        var tweetWordArrayDataset = tweetDataset.withColumn("words", split($"tweetText", "\\s+"))
+        tweetWordArrayDataset = remover.transform(tweetWordArrayDataset)
+
+        var wordCountDataFrame: Dataset[WordCount] = tweetWordArrayDataset
+            .withColumn("word", explode($"filteredWords"))
             .groupBy("word")
             .count().as[WordCount]
 
         wordCountDataFrame = wordCountDataFrame
-            .filter(x => x.word.length() >= 5).orderBy($"count".desc)
+            .orderBy($"count".desc)
             .limit(20).as[WordCount]
 
         val politicianWordCountDataFrame: Dataset[GlobalWordCloud] = wordCountDataFrame
