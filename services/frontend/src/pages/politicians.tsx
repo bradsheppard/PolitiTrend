@@ -84,8 +84,12 @@ class Politicians extends React.Component<IProps, IState> {
                             <Grid container
                                 alignItems='center'
                                 justify='center'>
-                                <Grid item sm={8}>
-                                    <TextField className={classes.search} label="Name" variant="outlined" onChange={this.handleSearchChange.bind(this)} />
+                                <Grid item sm={12}>
+                                    <TextField
+                                        className={classes.search}
+                                        label="Name"
+                                        variant="outlined"
+                                        onChange={this.handleSearchChange.bind(this)} />
                                 </Grid>
                             </Grid>
                         </Grid>
