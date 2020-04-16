@@ -45,18 +45,41 @@ class YoutubeVideoCrawler:
 
     _url = 'https://www.googleapis.com/youtube/v3/search'
 
-    def __init__(self, api_key, access_token):
+    def __init__(self, api_key):
         self._api_key = api_key
         self._headers = {
-            'Authorization': 'Bearer ' + access_token,
             'Accept': 'application/json'
         }
 
-    def get(self, politician: Politician):
+    def get(self, politician: Politician, politicians: List[Politician]) -> List[YoutubeVideo]:
         querystring = {
             'type': 'video',
             'q': politician.name,
-            'key': self._api_key
+            'key': self._api_key,
+            'part': 'snippet'
         }
         response = requests.request('GET', self._url, headers=self._headers, params=querystring)
         body = json.loads(response.text)
+
+        youtube_videos = []
+
+        for item in body['items']:
+            title = item['snippet']['title']
+
+            youtube_video = YoutubeVideo(
+                videoId=item['id']['videoId'],
+                title=title,
+                politicians=self.extract_politicians(title, politicians)
+            )
+            youtube_videos.append(youtube_video)
+
+        return youtube_videos
+
+    @staticmethod
+    def extract_politicians(text: str, politicians: List[Politician]) -> List[int]:
+        results = []
+        for politician in politicians:
+            if politician.name in text:
+                results.append(politician.num)
+
+        return results
