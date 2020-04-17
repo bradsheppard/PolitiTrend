@@ -47,6 +47,10 @@ describe('YoutubeService', () => {
         static find() {
             return mockDocumentQuery;
         }
+
+        static deleteMany() {
+            return mockDocumentQuery;
+        }
     }
 
     beforeEach(async () => {
@@ -65,6 +69,15 @@ describe('YoutubeService', () => {
 
     it('should be defined', () => {
         expect(service).toBeDefined();
+    });
+
+    it('Can delete', async () => {
+        const mockDeleteMany = jest.fn();
+        mockDeleteMany.mockReturnValueOnce(mockDocumentQuery);
+
+        MockModel.deleteMany = mockDeleteMany;
+        await service.delete();
+        expect(mockDeleteMany).toBeCalled();
     });
 
     it('can get all', async () => {

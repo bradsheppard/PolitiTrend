@@ -52,6 +52,12 @@ describe('Youtube Controller', () => {
         expect(insertSpy).toBeCalled();
     });
 
+    it('Can delete', async() => {
+        const deleteSpy = jest.spyOn(service, 'delete').mockImplementation();
+        await controller.delete();
+        expect(deleteSpy).toBeCalled();
+    });
+
     it('Can create word cloud', async() => {
         const createDto = createYoutubeVideo();
         const insertSpy = jest.spyOn(service, 'create').mockImplementation();

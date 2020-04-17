@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { YoutubeVideoService } from './youtube-video.service';
 import { SearchYoutubeVideoDto } from './dtos/search-youtube-video.dto';
 import { YoutubeVideo } from './interfaces/youtube-video.interface';
@@ -17,6 +17,11 @@ export class YoutubeVideoController {
     @Post()
     async create(@Body() createYoutubeVideoDto: CreateYoutubeVideoDto): Promise<YoutubeVideo> {
         return await this.youtubeVideoService.create(createYoutubeVideoDto)
+    }
+
+    @Delete()
+    async delete(): Promise<void> {
+        await this.youtubeVideoService.delete();
     }
 
     @EventPattern('video-youtube-video-created')

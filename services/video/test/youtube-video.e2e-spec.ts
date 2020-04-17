@@ -109,6 +109,25 @@ describe('YoutubeVideoController (e2e)', () => {
         equals(resultingYoutubeVideo, createDto);
     });
 
+    it('/youtube (DELETE)', async() => {
+        const createDto1 = createYoutubeVideo();
+        const createDto2 = createYoutubeVideo();
+
+        await Promise.all([
+            service.create(createDto1),
+            service.create(createDto2)
+        ]);
+
+        await request(app.getHttpServer())
+            .delete('/youtube');
+
+        const response = await request(app.getHttpServer())
+            .get('/youtube');
+
+        expect(response.status).toEqual(200);
+        expect(response.body.length).toEqual(0);
+    });
+
     it('/youtube?limit=1 (GET)', async() => {
         const createDto1 = createYoutubeVideo();
         const createDto2 = createYoutubeVideo();
