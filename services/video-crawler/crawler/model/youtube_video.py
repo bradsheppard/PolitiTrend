@@ -57,7 +57,8 @@ class YoutubeVideoCrawler:
             'q': politician.name,
             'key': self._api_key,
             'part': 'snippet',
-            'maxResults': 50
+            'maxResults': 50,
+            'fields': 'items(id,snippet(title))'
         }
         response = requests.request('GET', self._url, headers=self._headers, params=querystring)
         body = json.loads(response.text)
