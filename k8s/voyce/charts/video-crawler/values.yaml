@@ -14,7 +14,7 @@ fullnameOverride: video-crawler
 
 cron:
   backoffLimit: 0
-  schedule: "0 * * * *"
+  schedule: "@every 4h"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
