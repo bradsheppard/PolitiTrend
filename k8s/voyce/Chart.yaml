@@ -30,6 +30,9 @@ dependencies:
   - name: tweet-crawler
     condition: tweet-crawler.enabled
     version: 1.0.0
+  - name: video-crawler
+    condition: video-crawler.enabled
+    version: 1.0.0
   - name: news-article
     condition: news-article.enabled
     version: 1.0.0

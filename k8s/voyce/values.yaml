@@ -29,6 +29,9 @@ frontend:
 kafka:
   enabled: true
 
+video-crawler:
+  enabled: false
+
 global:
   registry: registry.gitlab.com/brad_1357/voyce
 
