@@ -1,5 +1,6 @@
 import pytest
 import time
+from datetime import datetime, timezone
 
 from crawler.config import config
 from crawler.model.politician import Politician
@@ -25,7 +26,9 @@ def test_insert_and_get():
     youtube_video = YoutubeVideo(
         '123',
         'Test Video',
-        [1, 2]
+        'thumb.jps',
+        datetime.now(timezone.utc).isoformat(),
+        [1, 2],
     )
 
     repository.insert(youtube_video)

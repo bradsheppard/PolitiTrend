@@ -1,5 +1,6 @@
 import requests
 import json
+from dateutil import parser
 from typing import List
 from dataclasses import dataclass
 from crawler.message_bus import MessageBus
@@ -10,7 +11,16 @@ from crawler.model.politician import Politician
 class YoutubeVideo:
     videoId: str
     title: str
+    thumbnail: str
+    dateTime: str
     politicians: List[int]
+
+    def __eq__(self, other):
+
+        return self.videoId == other.videoId and \
+               self.title == other.title and \
+               self.thumbnail == other.thumbnail and \
+               (parser.parse(self.dateTime) - parser.parse(other.dateTime)).total_seconds() < 1
 
 
 class YoutubeVideoRepository:
@@ -29,7 +39,9 @@ class YoutubeVideoRepository:
             youtube_video = YoutubeVideo(
                 videoId=entry['videoId'],
                 title=entry['title'],
-                politicians=entry['politicians']
+                politicians=entry['politicians'],
+                dateTime=entry['dateTime'],
+                thumbnail=entry['thumbnail']
             )
 
             youtube_videos.append(youtube_video)
@@ -58,7 +70,7 @@ class YoutubeVideoCrawler:
             'key': self._api_key,
             'part': 'snippet',
             'maxResults': 50,
-            'fields': 'items(id,snippet(title))'
+            'fields': 'items(id,snippet(title, thumbnails, publishedAt))'
         }
         response = requests.request('GET', self._url, headers=self._headers, params=querystring)
         body = json.loads(response.text)
@@ -70,8 +82,10 @@ class YoutubeVideoCrawler:
 
             youtube_video = YoutubeVideo(
                 videoId=item['id']['videoId'],
+                thumbnail=item['snippet']['thumbnails']['default']['url'],
                 title=title,
-                politicians=self.extract_politicians(title, politicians)
+                politicians=self.extract_politicians(title, politicians),
+                dateTime=item['snippet']['publishedAt']
             )
             youtube_videos.append(youtube_video)
 
