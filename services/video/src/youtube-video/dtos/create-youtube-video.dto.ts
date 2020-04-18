@@ -7,6 +7,9 @@ export class CreateYoutubeVideoDto {
     @IsString()
     title: string;
 
+    @IsString()
+    thumbnail: string;
+
     @IsNumber({}, {each: true})
     politicians: number[];
 }

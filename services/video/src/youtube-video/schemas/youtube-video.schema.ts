@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose'
 const YoutubeVideoSchema = new mongoose.Schema({
     videoId: String,
     title: String,
+    thumbnail: String,
     politicians: [Number]
 });
 

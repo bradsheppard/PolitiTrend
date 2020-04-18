@@ -71,6 +71,7 @@ function createYoutubeVideo(): CreateYoutubeVideoDto {
 function equals(youtubeVideo: YoutubeVideo, createYoutubeVideoDto: CreateYoutubeVideoDto) {
     expect(youtubeVideo.title).toEqual(createYoutubeVideoDto.title);
     expect(youtubeVideo.videoId).toEqual(createYoutubeVideoDto.videoId);
+    expect(youtubeVideo.thumbnail).toEqual(createYoutubeVideoDto.thumbnail);
 }
 
 describe('YoutubeVideoController (e2e)', () => {
