@@ -33,8 +33,8 @@ const PoliticiansGridList = (props: IProps) => {
                 props.politicians.map((politician: Politician, index: number) => {
                     return (
                         <Grid item xs={12} md={6}>
-                            <Link href='/politicians/[id]' as={`/politicians/${politician.id}`}>
-                                <MuiLink href='#'>
+                            <Link href='/politicians/[id]' passHref as={`/politicians/${politician.id}`}>
+                                <MuiLink>
                                     <PoliticiansGridListItem politician={politician} key={index} className={classes.container} />
                                 </MuiLink>
                             </Link>

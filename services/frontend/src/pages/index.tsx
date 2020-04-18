@@ -36,6 +36,7 @@ const styles = (theme: Theme) => createStyles({
 interface IProps extends WithStyles<typeof styles> {
     mainNewsArticles: NewsArticle[];
     latestNewsArticles: NewsArticle[];
+    trendingNewsArticles: NewsArticle[];
     tweets: string[];
 }
 
@@ -50,14 +51,16 @@ class App extends React.Component<IProps> {
     }
 
     static async getInitialProps() {
-        const [mainNewsArticleDtos, latestNewsArticleDtos] = await Promise.all([
+        const [mainNewsArticleDtos, latestNewsArticleDtos, trendingNewsArticleDtos] = await Promise.all([
             NewsArticleApi.get({limit: 2, politician: 90}),
-            NewsArticleApi.get({limit: 6})
+            NewsArticleApi.get({limit: 6}),
+            NewsArticleApi.get({limit: 3})
         ]);
 
         return {
             mainNewsArticles: mainNewsArticleDtos,
-            latestNewsArticles: latestNewsArticleDtos
+            latestNewsArticles: latestNewsArticleDtos,
+            trendingNewsArticles: trendingNewsArticleDtos
         };
     }
 
@@ -114,7 +117,7 @@ class App extends React.Component<IProps> {
                             </Fade>
                         </Grid>
                         {
-                            this.props.latestNewsArticles.map((newsArticle, index) => {
+                            this.props.trendingNewsArticles.map((newsArticle, index) => {
                                 return (
                                     <Grid item xs={12} key={index}>
                                         <Fade>
