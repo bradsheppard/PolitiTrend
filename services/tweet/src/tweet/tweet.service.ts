@@ -93,7 +93,6 @@ export class TweetService {
 			updateTweetDto.id = previousTweets[0].id;
 		}
 
-		const result = await this.tweetRepository.save(this.tweetRepository.create(updateTweetDto));
-		return await this.tweetRepository.findOne(result.id);
+		return await this.tweetRepository.save(this.tweetRepository.create(updateTweetDto));
 	}
 }
