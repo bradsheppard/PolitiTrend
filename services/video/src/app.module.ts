@@ -13,7 +13,11 @@ import { TerminusModule } from '@nestjs/terminus';
             imports: [ConfigModule.forRoot()],
             useFactory: async (configService: ConfigService) => {
                 return {
-                    uri: configService.get<string>('MONGODB_URI')
+                    useFindAndModify: false,
+                    uri: configService.get<string>('MONGODB_URI'),
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true,
+                    useCreateIndex: true
                 }
             },
             inject: [ConfigService]

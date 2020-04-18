@@ -3,6 +3,12 @@ import { YoutubeVideoController } from './youtube-video.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { YoutubeVideoService } from './youtube-video.service';
 import { YoutubeVideo } from './interfaces/youtube-video.interface';
+import { CreateYoutubeVideoDto } from './dtos/create-youtube-video.dto';
+import * as mongoose from 'mongoose';
+import { YoutubeVideoSchema } from './schemas/youtube-video.schema';
+import { Model } from 'mongoose';
+
+const YoutubeVideoModel: Model<YoutubeVideo> = mongoose.model('YoutubeVideo', YoutubeVideoSchema);
 
 describe('Youtube Controller', () => {
     let controller: YoutubeVideoController;
@@ -10,12 +16,21 @@ describe('Youtube Controller', () => {
 
     let id = 1;
 
-    function createYoutubeVideo(): YoutubeVideo {
+    function createYoutubeVideoDto(): CreateYoutubeVideoDto {
         id++;
         return {
-            videoId: `Test id ${id}`,
-            title: `Test title ${id}`
-        } as YoutubeVideo
+            thumbnail: `TestThumb${id}`,
+            politicians: [id],
+            title: `Title ${id}`,
+            videoId: `Video${id}`,
+            dateTime: new Date().toISOString()
+        }
+    }
+
+    function createYoutubeVideo(): YoutubeVideo {
+        id++;
+        const createDto = createYoutubeVideoDto();
+        return new YoutubeVideoModel(createDto);
     }
 
     beforeEach(async () => {
@@ -46,9 +61,9 @@ describe('Youtube Controller', () => {
     });
 
     it('Can handle word cloud created', async () => {
-        const youtubeVideo = createYoutubeVideo();
+        const createDto = createYoutubeVideoDto();
         const insertSpy = jest.spyOn(service, 'create').mockImplementation();
-        await controller.handleYoutubeVideoCreated(youtubeVideo);
+        await controller.handleYoutubeVideoCreated(createDto);
         expect(insertSpy).toBeCalled();
     });
 
@@ -59,7 +74,7 @@ describe('Youtube Controller', () => {
     });
 
     it('Can create word cloud', async() => {
-        const createDto = createYoutubeVideo();
+        const createDto = createYoutubeVideoDto();
         const insertSpy = jest.spyOn(service, 'create').mockImplementation();
         await controller.create(createDto);
         expect(insertSpy).toBeCalled();

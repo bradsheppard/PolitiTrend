@@ -1,19 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { YoutubeVideoService } from './youtube-video.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { YoutubeVideo } from './interfaces/youtube-video.interface';
+import { CreateYoutubeVideoDto } from './dtos/create-youtube-video.dto';
 
 describe('YoutubeService', () => {
     let service: YoutubeVideoService;
 
     let id = 1;
 
-    function createYoutubeVideo(): YoutubeVideo {
+    function createYoutubeVideoDto(): CreateYoutubeVideoDto {
         id++;
         return {
-            videoId: `Test id ${id}`,
-            title: `Test title ${id}`
-        } as YoutubeVideo
+            thumbnail: `TestThumb${id}`,
+            politicians: [id],
+            title: `Title ${id}`,
+            videoId: `Video${id}`,
+            dateTime: new Date().toISOString()
+        }
     }
 
     class MockDocument {
@@ -87,9 +90,9 @@ describe('YoutubeService', () => {
     });
 
     it('can insert', async () => {
-        const youtubeVideo = createYoutubeVideo();
+        const createDto = createYoutubeVideoDto();
         const saveSpy = jest.spyOn(mockDocument, 'save').mockImplementation();
-        await service.create(youtubeVideo);
+        await service.create(createDto);
 
         expect(saveSpy).toBeCalled();
     });

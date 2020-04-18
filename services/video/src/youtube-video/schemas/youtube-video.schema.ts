@@ -1,10 +1,11 @@
 import * as mongoose from 'mongoose'
 
 const YoutubeVideoSchema = new mongoose.Schema({
-    videoId: String,
+    videoId: { type: String, index: true, unique: true },
     title: String,
     thumbnail: String,
-    politicians: [Number]
+    politicians: [Number],
+    dateTime: { type: Date, index: true },
 });
 
 YoutubeVideoSchema.set('toJSON', {

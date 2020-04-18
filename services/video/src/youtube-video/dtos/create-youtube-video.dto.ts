@@ -12,4 +12,7 @@ export class CreateYoutubeVideoDto {
 
     @IsNumber({}, {each: true})
     politicians: number[];
+
+    @IsString()
+    dateTime: string;
 }

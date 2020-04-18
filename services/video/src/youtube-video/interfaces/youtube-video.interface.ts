@@ -5,4 +5,5 @@ export interface YoutubeVideo extends Document {
     title: string;
     thumbnail: string;
     politicians: number[];
+    dateTime: Date;
 }

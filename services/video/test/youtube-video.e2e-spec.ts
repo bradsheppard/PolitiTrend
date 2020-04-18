@@ -58,25 +58,27 @@ beforeEach(async () => {
 
 let id = 1;
 
-function createYoutubeVideo(): CreateYoutubeVideoDto {
+function createYoutubeVideoDto(): CreateYoutubeVideoDto {
     id++;
     return {
-        videoId: `Test id ${id}`,
-        title: `Test title ${id}`,
-        politicians: [id]
-
-    } as CreateYoutubeVideoDto
+        thumbnail: `TestThumb${id}`,
+        politicians: [id],
+        title: `Title ${id}`,
+        videoId: `Video${id}`,
+        dateTime: new Date().toISOString()
+    }
 }
 
 function equals(youtubeVideo: YoutubeVideo, createYoutubeVideoDto: CreateYoutubeVideoDto) {
     expect(youtubeVideo.title).toEqual(createYoutubeVideoDto.title);
     expect(youtubeVideo.videoId).toEqual(createYoutubeVideoDto.videoId);
     expect(youtubeVideo.thumbnail).toEqual(createYoutubeVideoDto.thumbnail);
+    expect(youtubeVideo.dateTime).toEqual(createYoutubeVideoDto.dateTime);
 }
 
 describe('YoutubeVideoController (e2e)', () => {
     it('/youtube (GET)', async () => {
-        const createDto = createYoutubeVideo();
+        const createDto = createYoutubeVideoDto();
         await service.create(createDto);
 
         const response = await request(app.getHttpServer())
@@ -86,8 +88,8 @@ describe('YoutubeVideoController (e2e)', () => {
     });
 
     it('/youtube?limit=1 (GET)', async() => {
-        const createDto1 = createYoutubeVideo();
-        const createDto2 = createYoutubeVideo();
+        const createDto1 = createYoutubeVideoDto();
+        const createDto2 = createYoutubeVideoDto();
 
         await service.create(createDto1);
         await service.create(createDto2);
@@ -101,7 +103,7 @@ describe('YoutubeVideoController (e2e)', () => {
     });
 
     it('/youtube (POST)', async() => {
-        const createDto = createYoutubeVideo();
+        const createDto = createYoutubeVideoDto();
         const res = await request(app.getHttpServer())
             .post('/youtube')
             .send(createDto);
@@ -111,8 +113,8 @@ describe('YoutubeVideoController (e2e)', () => {
     });
 
     it('/youtube (DELETE)', async() => {
-        const createDto1 = createYoutubeVideo();
-        const createDto2 = createYoutubeVideo();
+        const createDto1 = createYoutubeVideoDto();
+        const createDto2 = createYoutubeVideoDto();
 
         await Promise.all([
             service.create(createDto1),
@@ -130,8 +132,8 @@ describe('YoutubeVideoController (e2e)', () => {
     });
 
     it('/youtube?limit=1 (GET)', async() => {
-        const createDto1 = createYoutubeVideo();
-        const createDto2 = createYoutubeVideo();
+        const createDto1 = createYoutubeVideoDto();
+        const createDto2 = createYoutubeVideoDto();
 
         await service.create(createDto1);
         await service.create(createDto2);
@@ -144,8 +146,8 @@ describe('YoutubeVideoController (e2e)', () => {
     });
 
     it('/youtube?limit=1&offset=1 (GET)', async() => {
-        const createDto1 = createYoutubeVideo();
-        const createDto2 = createYoutubeVideo();
+        const createDto1 = createYoutubeVideoDto();
+        const createDto2 = createYoutubeVideoDto();
 
         await service.create(createDto1);
         await service.create(createDto2);
@@ -158,8 +160,8 @@ describe('YoutubeVideoController (e2e)', () => {
     });
 
     it('/youtube?politician={id} (GET)', async() => {
-        const targetVideo = createYoutubeVideo();
-        const otherVideo = createYoutubeVideo();
+        const targetVideo = createYoutubeVideoDto();
+        const otherVideo = createYoutubeVideoDto();
 
         await Promise.all([
             service.create(targetVideo),
@@ -174,15 +176,32 @@ describe('YoutubeVideoController (e2e)', () => {
         equals(response.body[0], targetVideo);
     });
 
+    it('/youtube (POST) update duplicate', async() => {
+        const createDto = createYoutubeVideoDto();
+        await request(app.getHttpServer())
+            .post('/youtube')
+            .send(createDto);
+
+        createDto.title = 'New title';
+        const res = await request(app.getHttpServer())
+            .post('/youtube')
+            .send(createDto);
+
+        const resultingYoutubeVideo = res.body as YoutubeVideo;
+        equals(resultingYoutubeVideo, createDto);
+    });
+
     it('handle youtube video created', async () => {
-        const createYoutubeVideoDto = createYoutubeVideo();
-        const json = await client.emit('video-youtube-video-created', createYoutubeVideoDto).toPromise();
+        const createDto = createYoutubeVideoDto();
+        const json = await client.emit('video-youtube-video-created', createDto).toPromise();
         expect(json[0].topicName).toEqual('video-youtube-video-created');
 
         await waitForExpect(async () => {
-            const youtubeVideos: YoutubeVideo[] = await service.find({});
-            expect(youtubeVideos.length).toEqual(1);
-            equals(youtubeVideos[0], createYoutubeVideoDto);
+            const response = await request(app.getHttpServer())
+                .get('/youtube');
+            expect(response.status).toEqual(200);
+            expect(response.body.length).toEqual(1);
+            equals(response.body[0], createDto);
         });
     });
 });

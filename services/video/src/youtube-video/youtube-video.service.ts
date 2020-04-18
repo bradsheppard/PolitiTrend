@@ -30,8 +30,10 @@ export class YoutubeVideoService {
     }
 
     async create(createYoutubeVideoDto: CreateYoutubeVideoDto): Promise<YoutubeVideo> {
-        const createYoutubeVideo = new this.youtubeVideoModel(createYoutubeVideoDto);
-        return await createYoutubeVideo.save();
+        return this.youtubeVideoModel.findOneAndUpdate({ videoId: createYoutubeVideoDto.videoId }, createYoutubeVideoDto, {
+            upsert: true,
+            new: true
+        }).exec();
     }
 
     async delete() {
