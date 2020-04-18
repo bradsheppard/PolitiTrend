@@ -67,7 +67,7 @@ const PoliticianPage = (props: IProps) => {
 PoliticianPage.getInitialProps = async function(context: NextPageContext) {
     const { id } = context.query;
     if (typeof id === 'string') {
-        const politicianDto: PoliticianDto | null = await PoliticianApi.getOne(parseInt(id));
+        const politicianDto: PoliticianDto | null = await PoliticianApi.getOne(id);
 
         if(!politicianDto)
             return {

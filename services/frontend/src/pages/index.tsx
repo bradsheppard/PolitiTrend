@@ -75,8 +75,8 @@ class App extends React.Component<IProps> {
                             {
                                 this.props.mainNewsArticles.map((newsArticle, index) => {
                                     return (
-                                        <Fade>
-                                            <div className={classes.newsArticle} key={index}>
+                                        <Fade key={index}>
+                                            <div className={classes.newsArticle}>
                                                 <HomeMainNewsArticle newsArticle={newsArticle} height={400} />
                                             </div>
                                         </Fade>
