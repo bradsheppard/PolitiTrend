@@ -51,6 +51,10 @@ describe('YoutubeService', () => {
             return mockDocumentQuery;
         }
 
+        static findOneAndUpdate() {
+            return mockDocumentQuery;
+        }
+
         static deleteMany() {
             return mockDocumentQuery;
         }
@@ -91,9 +95,11 @@ describe('YoutubeService', () => {
 
     it('can insert', async () => {
         const createDto = createYoutubeVideoDto();
-        const saveSpy = jest.spyOn(mockDocument, 'save').mockImplementation();
+        const findOneAndUpdateSpy = jest.fn();
+        findOneAndUpdateSpy.mockReturnValue(mockDocumentQuery);
+        MockModel.findOneAndUpdate = findOneAndUpdateSpy;
         await service.create(createDto);
 
-        expect(saveSpy).toBeCalled();
+        expect(findOneAndUpdateSpy).toBeCalled();
     });
 });
