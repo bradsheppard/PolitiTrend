@@ -29,6 +29,9 @@ frontend:
 kafka:
   enabled: true
 
+video:
+  enabled: true
+
 video-crawler:
   enabled: true
 

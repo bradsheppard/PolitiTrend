@@ -33,6 +33,9 @@ dependencies:
   - name: video-crawler
     condition: video-crawler.enabled
     version: 1.0.0
+  - name: video
+    condition: video.enabled
+    version: 1.0.0
   - name: news-article
     condition: news-article.enabled
     version: 1.0.0
