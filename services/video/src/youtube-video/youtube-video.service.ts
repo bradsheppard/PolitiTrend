@@ -24,7 +24,7 @@ export class YoutubeVideoService {
             query = query.skip(searchYoutubeVideoDto.offset);
         }
 
-        query = query.sort({_id: 'desc'});
+        query = query.sort({dateTime: 'desc'});
 
         return await query.exec();
     }
