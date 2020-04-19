@@ -54,14 +54,6 @@ def test_crawl_all_on_exception():
 
     mock_politicians = [Politician(2, 'Test politician 2'), Politician(3, 'Test politician 3')]
 
-    crawler_result: YoutubeVideo = YoutubeVideo(
-        '123',
-        'Test Video',
-        'thumb.jps',
-        datetime.now(timezone.utc).isoformat(),
-        [1, 2],
-    )
-
     mock_youtube_video_crawler.get = Mock(side_effect=Exception('Crawling failed'))
 
     orchestrator = Orchestrator(mock_youtube_video_crawler, mock_youtube_video_repository, mock_job_repository)
@@ -71,4 +63,4 @@ def test_crawl_all_on_exception():
     mock_youtube_video_crawler.get.assert_called_with(mock_politicians[1], mock_politicians)
     assert not mock_youtube_video_repository.insert.called
 
-    assert mock_job_repository.insert.call_count == 1
+    assert mock_job_repository.insert.call_count == 0

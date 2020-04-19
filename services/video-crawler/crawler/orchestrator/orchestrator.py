@@ -27,9 +27,8 @@ class Orchestrator:
                 youtube_videos = self._youtube_video_crawler.get(politician, politicians)
                 for youtube_video in youtube_videos:
                     self._youtube_video_repository.insert(youtube_video)
+                job = Job(politician=politician.num)
+                self._job_repository.insert(job)
             except:
                 print("Exception. Finished at " + str(politician.num) + " " + politician.name)
                 return
-            finally:
-                job = Job(politician=politician.num)
-                self._job_repository.insert(job)
