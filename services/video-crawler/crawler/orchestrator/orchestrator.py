@@ -16,7 +16,8 @@ class Orchestrator:
         self._job_repository = job_repository
 
     def crawl_all(self, politicians: List[Politician]):
-        politician_id = self._job_repository.get_latest().politician
+        latest_job = self._job_repository.get_latest()
+        politician_id = latest_job.politician if latest_job is not None else politicians[0].num
 
         start_index = next(i for i, politician in enumerate(politicians) if politician.num is politician_id) + 1
         reshaped_politicians = politicians[start_index:] + politicians[:start_index]
