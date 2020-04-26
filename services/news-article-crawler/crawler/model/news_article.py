@@ -63,7 +63,7 @@ class NewsArticleCrawler:
         }
 
     def get(self, politician: Politician, politicians: List[Politician]) -> List[NewsArticle]:
-        querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '10', 'q': politician.name,
+        querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '50', 'q': politician.name,
                        'safeSearch': 'false'}
         response = requests.request('GET', self._url, headers=self._headers, params=querystring)
         body = json.loads(response.text)
