@@ -19,7 +19,8 @@
     "react-google-charts": "^3.0.15",
     "react-twitter-widgets": "^1.7.1",
     "react-waypoint": "^9.0.2",
-    "react-wordcloud": "^1.1.1"
+    "react-wordcloud": "^1.1.1",
+    "react-youtube": "^7.11.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",

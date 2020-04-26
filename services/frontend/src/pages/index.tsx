@@ -12,6 +12,8 @@ import HomeHeader from '../components/home/HomeHeader';
 import Divider from '../components/common/Divider';
 import Fade from '../components/common/Fade';
 import HomeTrendingNewsArticle from '../components/home/HomeTrendingNewsArticle';
+import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi';
+import HomeVideoPlayer from '../components/home/HomeVideoPlayer';
 
 interface NewsArticle {
     image: string;
@@ -19,6 +21,12 @@ interface NewsArticle {
     url: string;
     source: string;
     description: string;
+}
+
+interface YoutubeVideo {
+    title: string
+    videoId: string;
+    thumbnail: string;
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -37,6 +45,7 @@ interface IProps extends WithStyles<typeof styles> {
     mainNewsArticles: NewsArticle[];
     latestNewsArticles: NewsArticle[];
     trendingNewsArticles: NewsArticle[];
+    youtubeVideos: YoutubeVideo[];
     tweets: string[];
 }
 
@@ -51,16 +60,22 @@ class App extends React.Component<IProps> {
     }
 
     static async getInitialProps() {
-        const [mainNewsArticleDtos, latestNewsArticleDtos, trendingNewsArticleDtos] = await Promise.all([
+        const [mainNewsArticleDtos,
+            latestNewsArticleDtos,
+            trendingNewsArticleDtos,
+            youtubeVideoDtos,
+        ] = await Promise.all([
             NewsArticleApi.get({limit: 2, politician: 90}),
             NewsArticleApi.get({limit: 6}),
-            NewsArticleApi.get({limit: 3})
+            NewsArticleApi.get({limit: 3}),
+            YoutubeVideoApi.get({limit: 6})
         ]);
 
         return {
             mainNewsArticles: mainNewsArticleDtos,
             latestNewsArticles: latestNewsArticleDtos,
-            trendingNewsArticles: trendingNewsArticleDtos
+            trendingNewsArticles: trendingNewsArticleDtos,
+            youtubeVideos: youtubeVideoDtos
         };
     }
 
@@ -86,6 +101,19 @@ class App extends React.Component<IProps> {
                                     )
                                 })
                             }
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Fade>
+                                <HomeHeader>
+                                    Videos
+                                </HomeHeader>
+                                <Divider />
+                            </Fade>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className={classes.newsArticle}>
+                                <HomeVideoPlayer videos={this.props.youtubeVideos} />
+                            </div>
                         </Grid>
                         <Grid item xs={12}>
                             <Fade>

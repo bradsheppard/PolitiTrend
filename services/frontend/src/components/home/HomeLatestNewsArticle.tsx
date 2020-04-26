@@ -42,15 +42,12 @@ const HomeLatestNewsArticle = (props: IProps) => {
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
             <div>
-                {
-                    props.newsArticle.image &&
-                        <div className={classes.imageContainer}>
-                            <img
-                                className={classes.image}
-                                src={props.newsArticle.image}
-                                alt={props.newsArticle.title} />
-                        </div>
-                }
+                <div className={classes.imageContainer}>
+                    <img
+                        className={classes.image}
+                        src={props.newsArticle.image}
+                        alt={props.newsArticle.title} />
+                </div>
                 <Typography gutterBottom variant='h4' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
