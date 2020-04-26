@@ -14,7 +14,7 @@ fullnameOverride: news-article-crawler
 
 cron:
   backoffLimit: 0
-  schedule: "0 * * * *"
+  schedule: "@every 24h"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
