@@ -105,7 +105,7 @@ class App extends React.Component<IProps> {
                         <Grid item xs={12}>
                             <Fade>
                                 <HomeHeader>
-                                    Videos
+                                    Trending Videos
                                 </HomeHeader>
                                 <Divider />
                             </Fade>

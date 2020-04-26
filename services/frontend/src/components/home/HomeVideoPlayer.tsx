@@ -16,6 +16,9 @@ interface Video {
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        container: {
+            height: theme.spacing(70)
+        },
         image: {
             position: 'absolute',
             width: '100%',
@@ -30,10 +33,10 @@ const useStyles = makeStyles((theme: Theme) =>
             overflow: 'hidden',
             height: theme.spacing(15)
         },
-        titleContainer: {
+        title: {
             paddingLeft: theme.spacing(1)
         },
-        videoContainer: {
+        sideVideo: {
             cursor: 'pointer',
             paddingLeft: theme.spacing(1),
             paddingBottom: theme.spacing(1)
@@ -41,6 +44,10 @@ const useStyles = makeStyles((theme: Theme) =>
         videoPlayer: {
             width: '100%',
             height: theme.spacing(70)
+        },
+        sideVideoContainer: {
+            height: '100%',
+            overflow: 'scroll'
         }
     })
 );
@@ -54,37 +61,39 @@ const HomeVideoPlayer = (props: IProps) => {
     };
 
     return (
-        <Grid container>
+        <Grid container className={classes.container}>
             <Grid xs={8}>
                 <YouTube videoId={props.videos[playingVideo].videoId} className={classes.videoPlayer} />
             </Grid>
-            <Grid item xs={4}>
-                <Grid container>
-                {
-                    props.videos.map((video: Video, index: number) => {
-                        return (
-                            <Grid item xs={12}>
-                                <div onClick={() => onVideoClick(index)} className={classes.videoContainer}>
-                                    <Grid container>
-                                        <Grid item xs={6}>
-                                            <div className={classes.imageContainer}>
-                                                <img className={classes.image} src={video.thumbnail} alt={video.title} />
-                                            </div>
+            <Grid item xs={4} className={classes.sideVideoContainer}>
+                <div>
+                    <Grid container>
+                    {
+                        props.videos.map((video: Video, index: number) => {
+                            return (
+                                <Grid item xs={12}>
+                                    <div onClick={() => onVideoClick(index)} className={classes.sideVideo}>
+                                        <Grid container>
+                                            <Grid item xs={6}>
+                                                <div className={classes.imageContainer}>
+                                                    <img className={classes.image} src={video.thumbnail} alt={video.title} />
+                                                </div>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Typography className={classes.title} gutterBottom variant='subtitle1' color='textPrimary'>
+                                                    <Box fontWeight='fontWeightBold'>
+                                                        Source: {video.title}
+                                                    </Box>
+                                                </Typography>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            <Typography className={classes.titleContainer} gutterBottom variant='subtitle1' color='textPrimary'>
-                                                <Box fontWeight='fontWeightBold'>
-                                                    Source: {video.title}
-                                                </Box>
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </div>
-                            </Grid>
-                        );
-                    })
-                }
-                </Grid>
+                                    </div>
+                                </Grid>
+                            );
+                        })
+                    }
+                    </Grid>
+                </div>
             </Grid>
         </Grid>
     );
