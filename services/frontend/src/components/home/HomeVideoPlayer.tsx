@@ -47,7 +47,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         sideVideoContainer: {
             height: '100%',
-            overflow: 'scroll'
+            overflow: 'scroll',
+            overflowX: 'hidden'
         }
     })
 );
