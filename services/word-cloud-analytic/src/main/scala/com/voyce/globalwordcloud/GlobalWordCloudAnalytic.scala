@@ -23,7 +23,6 @@ object GlobalWordCloudAnalytic {
         val politicianWordCountDataFrame = GlobalWordCloudCalculator.calculate(spark, dataframe)
 
         val jsonifiedDataframe = politicianWordCountDataFrame.toJSON
-        jsonifiedDataframe.show()
 
         jsonifiedDataframe.select($"value")
             .write

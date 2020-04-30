@@ -13,17 +13,13 @@ object GlobalWordCloudCalculator {
 
         val makeWord = udf((word: String, count: Long) => WordCount(word, count))
 
-        val remover = new StopWordsRemover()
-            .setInputCol("words")
-            .setOutputCol("filteredWords")
-
-        var tweetWordArrayDataset = tweetDataset.withColumn("words", split($"tweetText", "\\s+"))
-        tweetWordArrayDataset = remover.transform(tweetWordArrayDataset)
+        val tweetWordArrayDataset = tweetDataset.withColumn("words", split($"tweetText", "\\s+"))
 
         var wordCountDataFrame: Dataset[WordCount] = tweetWordArrayDataset
-            .withColumn("word", explode($"filteredWords"))
+            .withColumn("word", explode($"words"))
             .groupBy("word")
             .count().as[WordCount]
+            .filter(x => x.word.startsWith("#"))
 
         wordCountDataFrame = wordCountDataFrame
             .orderBy($"count".desc)
