@@ -12,6 +12,11 @@ news_article_repository = NewsArticleRepository()
 
 for politician in politicians:
     print('Crawling for ' + politician.name)
-    results = news_article_crawler.get(politician, politicians)
-    for result in results:
-        news_article_repository.insert(result)
+    try:
+        results = news_article_crawler.get(politician, politicians)
+        for result in results:
+            news_article_repository.insert(result)
+    except Exception as ex:
+        print('Error occurred while crawling ' + politician.name)
+        print(ex)
+
