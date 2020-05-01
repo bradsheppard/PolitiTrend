@@ -21,6 +21,7 @@ interface NewsArticle {
     url: string;
     source: string;
     description: string;
+    dateTime: string;
 }
 
 interface YoutubeVideo {

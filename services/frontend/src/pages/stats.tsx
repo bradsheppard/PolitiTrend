@@ -12,8 +12,7 @@ import PieChart from '../components/common/PieChart';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         header: {
-            paddingTop: theme.spacing(4),
-            textAlign: 'center'
+            paddingTop: theme.spacing(4)
         },
         line: {
             backgroundColor: 'black',
@@ -52,9 +51,9 @@ const Stats = (props: IProps) => {
     return (
         <ContentContainer>
             <div className={classes.header}>
-                <Typography gutterBottom variant='h4' color='textPrimary' className={classes.header}>
+                <Typography gutterBottom variant='h5' color='textPrimary' className={classes.header}>
                     <Box fontWeight='fontWeightBold'>
-                        TRENDING
+                        Trending Hashtags
                     </Box>
                 </Typography>
                 <Divider thickness={3} />

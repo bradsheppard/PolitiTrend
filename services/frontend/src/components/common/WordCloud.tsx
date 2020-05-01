@@ -5,14 +5,14 @@ const wordCloudOptions = {
 	enableTooltip: false,
 	deterministic: true,
 	colors: ['black', '#9c0500', '#00099c'],
-	fontSizes: [40, 95] as MinMaxPair,
+	fontSizes: [30, 65] as MinMaxPair,
 	fontFamily: 'Raleway',
 	fontStyle: 'normal',
 	padding: 5,
 	rotations: 6,
 	rotationAngles: [-45, 45] as MinMaxPair,
 	spiral: Spiral.Archimedean,
-	transitionDuration: 2000,
+	transitionDuration: 2000
 };
 
 interface WordCount {

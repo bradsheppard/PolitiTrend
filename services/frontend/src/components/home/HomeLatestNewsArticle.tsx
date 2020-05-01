@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'relative',
             overflow: 'hidden',
             height: theme.spacing(40),
-            justifyItems: 'center'
+            justifyItems: 'center',
+            marginBottom: theme.spacing(1)
         }
     })
 );

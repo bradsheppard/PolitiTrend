@@ -5,6 +5,7 @@ interface NewsArticleDto {
     url: string;
     source: string;
     description: string;
+    dateTime: string;
     politicians: number[];
 }
 

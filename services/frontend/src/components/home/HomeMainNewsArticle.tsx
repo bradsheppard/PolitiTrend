@@ -5,6 +5,7 @@ import {
     makeStyles, Theme,
     Typography
 } from '@material-ui/core';
+import { toDate } from '../../utils/StringUtils';
 
 interface NewsArticle {
     image: string;
@@ -12,6 +13,7 @@ interface NewsArticle {
     url: string;
     source: string;
     description: string;
+    dateTime: string;
 }
 
 interface IProps {
@@ -41,6 +43,11 @@ const HomeMainNewsArticle = (props: IProps) => {
                 <Typography gutterBottom variant='h3' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
+                    </Box>
+                </Typography>
+                <Typography gutterBottom variant='subtitle1' color='textSecondary'>
+                    <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                        {toDate(props.newsArticle.dateTime)}
                     </Box>
                 </Typography>
                 <Typography gutterBottom variant='subtitle1' color='textSecondary'>
