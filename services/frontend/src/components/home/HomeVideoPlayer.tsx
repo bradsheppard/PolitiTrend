@@ -17,7 +17,9 @@ interface Video {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
-            height: theme.spacing(70)
+            height: theme.spacing(70),
+            background: '#1a1a1a',
+            padding: theme.spacing(5)
         },
         image: {
             position: 'absolute',
@@ -34,7 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
             height: theme.spacing(15)
         },
         title: {
-            paddingLeft: theme.spacing(1)
+            paddingLeft: theme.spacing(1),
+            color: '#fff'
         },
         sideVideo: {
             cursor: 'pointer',
@@ -43,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         videoPlayer: {
             width: '100%',
-            height: theme.spacing(70)
+            height: '100%'
         },
         sideVideoContainer: {
             height: '100%',
@@ -63,8 +66,10 @@ const HomeVideoPlayer = (props: IProps) => {
 
     return (
         <Grid container className={classes.container}>
-            <Grid xs={8}>
-                <YouTube videoId={props.videos[playingVideo].videoId} className={classes.videoPlayer} />
+            <Grid xs={8} className={classes.videoPlayer}>
+                <YouTube videoId={props.videos[playingVideo].videoId}
+                         className={classes.videoPlayer}
+                         containerClassName={classes.videoPlayer} />
             </Grid>
             <Grid item xs={4} className={classes.sideVideoContainer}>
                 <div>
@@ -81,9 +86,9 @@ const HomeVideoPlayer = (props: IProps) => {
                                                 </div>
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Typography className={classes.title} gutterBottom variant='subtitle1' color='textPrimary'>
+                                                <Typography className={classes.title} gutterBottom variant='subtitle1'>
                                                     <Box fontWeight='fontWeightBold'>
-                                                        Source: {video.title}
+                                                        {video.title}
                                                     </Box>
                                                 </Typography>
                                             </Grid>

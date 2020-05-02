@@ -59,7 +59,7 @@ const Stats = (props: IProps) => {
                 <Divider thickness={3} />
             </div>
             <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
-            <PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}}).slice(0, 10)} />
+            <PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}})} />
             <Typography gutterBottom variant='h4' color='textPrimary' className={classes.header}>
                 <Box fontWeight='fontWeightBold'>
                     POPULARITY

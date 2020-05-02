@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Box, createStyles, Link as MuiLink, makeStyles, Theme, Typography } from '@material-ui/core';
+import { toDate } from '../../utils/StringUtils';
 
 interface PoliticianNewsArticle {
     image: string;
@@ -7,6 +8,7 @@ interface PoliticianNewsArticle {
     url: string;
     source: string;
     description: string;
+    dateTime: string;
 }
 
 interface IProps {
@@ -36,6 +38,11 @@ const NewsArticle = (props: IProps) => {
                 <Typography color='textPrimary' gutterBottom variant='h3'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
+                    </Box>
+                </Typography>
+                <Typography gutterBottom variant='subtitle1' color='textSecondary'>
+                    <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                        {toDate(props.newsArticle.dateTime)}
                     </Box>
                 </Typography>
                 <Typography gutterBottom variant='subtitle1' color='textSecondary'>

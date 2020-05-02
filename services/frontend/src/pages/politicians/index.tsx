@@ -25,15 +25,8 @@ interface Politician {
     party: string;
 }
 
-interface NewsArticle {
-    title: string;
-    description: string;
-    url: string
-}
-
 interface IProps extends WithStyles<typeof style> {
     politicians: Politician[];
-    newsArticles: NewsArticle[];
 }
 
 interface IState {

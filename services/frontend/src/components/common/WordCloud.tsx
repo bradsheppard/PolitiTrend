@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ReactWordcloud, { MinMaxPair, Spiral, Word } from 'react-wordcloud';
+import ReactWordcloud, { MinMaxPair, Scale, Spiral, Word } from 'react-wordcloud';
 
 const wordCloudOptions = {
 	enableTooltip: false,
@@ -8,10 +8,11 @@ const wordCloudOptions = {
 	fontSizes: [30, 65] as MinMaxPair,
 	fontFamily: 'Raleway',
 	fontStyle: 'normal',
-	padding: 5,
+	padding: 3,
 	rotations: 6,
 	rotationAngles: [-45, 45] as MinMaxPair,
 	spiral: Spiral.Archimedean,
+	scale: Scale.Sqrt,
 	transitionDuration: 2000
 };
 
