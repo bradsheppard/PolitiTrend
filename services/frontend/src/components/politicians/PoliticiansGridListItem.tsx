@@ -13,6 +13,7 @@ interface Politician {
     id: number;
     name: string;
     party: string;
+    role: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -63,7 +64,7 @@ const PoliticiansGridListItem = (props: IProps & React.HTMLAttributes<HTMLDivEle
                         {props.politician.party}
                     </Typography>
                     <Typography variant='h6' color='textSecondary'>
-                        Senator
+                        {props.politician.role}
                     </Typography>
                 </div>
             </div>

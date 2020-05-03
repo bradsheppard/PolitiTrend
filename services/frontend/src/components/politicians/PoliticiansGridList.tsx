@@ -12,6 +12,7 @@ interface Politician {
     id: number;
     name: string;
     party: string;
+    role: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>

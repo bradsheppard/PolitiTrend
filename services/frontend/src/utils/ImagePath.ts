@@ -1,5 +1,5 @@
 const politicianNameToImagePath = (name: string) => {
-    return `/images/${name.replace(/ /g, '_')}.jpg`;
+    return `http://politician/images/${name.replace(/ /g, '_')}.jpg`;
 };
 
 export { politicianNameToImagePath }

@@ -23,6 +23,7 @@ interface Politician {
     id: number;
     name: string;
     party: string;
+    role: string;
 }
 
 interface IProps extends WithStyles<typeof style> {
