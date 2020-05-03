@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PoliticiansService } from './politicians.service';
-import Politician from './politicians.entity';
+import Politician, { Role } from './politicians.entity';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
 
 @Controller()
@@ -13,17 +13,12 @@ export class PoliticiansController {
 	}
 
 	@Get(':id')
-	async getPolitician(@Param('id') id: string) {
+	async getPolitician(@Param('id') id: string): Promise<Politician> {
 		return await this.politicianService.getOne(parseInt(id, 10));
 	}
 
 	@Post()
-	async insert(@Body() createPoliticianDto: CreatePoliticianDto) {
-		const politician: Politician = {
-			id: createPoliticianDto.id,
-			name: createPoliticianDto.name,
-			party: createPoliticianDto.party
-		};
-		await this.politicianService.insert(politician);
+	async insert(@Body() createPoliticianDto: CreatePoliticianDto): Promise<Politician> {
+		return await this.politicianService.insert(createPoliticianDto);
 	}
 }

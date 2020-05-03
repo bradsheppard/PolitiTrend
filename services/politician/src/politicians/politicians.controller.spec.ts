@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PoliticiansController } from './politicians.controller';
 import { PoliticiansService } from './politicians.service';
 import { getRepositoryToken} from '@nestjs/typeorm';
-import Politician from './politicians.entity';
+import Politician, { Role } from './politicians.entity';
 import { Repository } from 'typeorm';
 
 describe('Politicians Controller', () => {
@@ -35,6 +35,7 @@ describe('Politicians Controller', () => {
 			name: 'Test Name',
 			sentiment: 0,
 			party: 'Republican',
+			role: Role.SENATOR
 		}];
 		jest.spyOn(service, 'get').mockImplementation(async () => result);
 		expect(await controller.getPoliticians()).toBe(result);
@@ -46,6 +47,7 @@ describe('Politicians Controller', () => {
 			name: 'Test Name',
 			sentiment: 0,
 			party: 'Republican',
+			role: Role.SENATOR
 		};
 		jest.spyOn(service, 'getOne').mockImplementation(async () => result);
 		expect(await controller.getPolitician('1')).toBe(result);

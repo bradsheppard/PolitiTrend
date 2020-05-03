@@ -1,5 +1,11 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
+export enum Role {
+	SENATOR = 'Senator',
+	PRESIDENT = 'President',
+	PRESIDENTIAL_CANDIDATE = 'Presidential Candidate'
+}
+
 @Entity()
 export default class Politician {
 	@PrimaryColumn()
@@ -10,4 +16,10 @@ export default class Politician {
 
 	@Column()
 	party: string;
+
+	@Column({
+		type: 'enum',
+		enum: Role
+	})
+	role: Role
 }

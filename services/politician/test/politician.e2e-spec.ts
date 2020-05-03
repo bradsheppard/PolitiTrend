@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { CreatePoliticianDto } from '../src/politicians/dto/create-politician.dto';
 import { PoliticiansService } from '../src/politicians/politicians.service';
+import Politician, { Role } from '../src/politicians/politicians.entity';
 
 let app: INestApplication;
 let service: PoliticiansService;
@@ -15,7 +16,8 @@ function createPoliticianDto() {
 	return {
 		id,
 		name: `Politician ${id}`,
-		party: `Party ${id}`
+		party: `Party ${id}`,
+		role: Role.SENATOR.toString()
 	} as CreatePoliticianDto
 }
 
@@ -42,10 +44,24 @@ beforeEach(async () => {
 describe('PoliticianController (e2e)', () => {
 
 	it('/ (GET)', async () => {
-		const response = await request(app.getHttpServer()).get('/');
+		const response = await request(app.getHttpServer())
+			.get('/');
 
-		expect(response.status).toBe(200);
-		expect(response.body.length).toBe(100);
+		expect(response.status).toEqual(200);
+	});
+
+	it('/ (POST)', async () => {
+		const politicianDto = createPoliticianDto();
+		const res = await request(app.getHttpServer())
+			.post('/')
+			.send(politicianDto);
+
+		const resultingPolitician = res.body as Politician;
+		const insertedPolitician = politicianDto as Politician;
+		insertedPolitician.id = resultingPolitician.id;
+
+		expect(res.status).toEqual(201);
+		expect(resultingPolitician).toEqual(insertedPolitician);
 	});
 });
 
