@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         wordCloud: {
             paddingTop: theme.spacing(10),
-            paddingBottom: theme.spacing(10)
+            paddingBottom: theme.spacing(10),
+            minHeight: theme.spacing(50)
         }
     })
 );
