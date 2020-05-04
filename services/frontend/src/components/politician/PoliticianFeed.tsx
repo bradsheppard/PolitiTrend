@@ -1,13 +1,24 @@
 import * as React from 'react';
-import { Tab, Tabs } from '@material-ui/core';
+import { createStyles, Tab, Tabs, Theme } from '@material-ui/core';
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed';
 import PoliticianTweetFeed from './PoliticianTweetFeed';
+import { makeStyles } from '@material-ui/core/styles';
 
 interface IProps {
     politician: number;
 }
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        feedContainer: {
+            minHeight: theme.spacing(200)
+        }
+    })
+);
+
 const PoliticianFeed = (props: IProps) => {
     const [tabValue, setTabValue] = React.useState(0);
+    const classes = useStyles();
 
     const { politician } = props;
 
@@ -32,8 +43,10 @@ const PoliticianFeed = (props: IProps) => {
                 <Tab label='News Articles' {...a11yProps(0)} />
                 <Tab label='Tweets' {...a11yProps(1)} />
             </Tabs>
-            <PoliticianNewsArticleFeed politician={politician} hidden={tabValue === 1} />
-            <PoliticianTweetFeed politician={politician} hidden={tabValue === 0} />
+            <div className={classes.feedContainer}>
+                <PoliticianNewsArticleFeed politician={politician} hidden={tabValue === 1} />
+                <PoliticianTweetFeed politician={politician} hidden={tabValue === 0} />
+            </div>
         </React.Fragment>
     );
 };

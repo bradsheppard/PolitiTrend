@@ -7,6 +7,7 @@ import theme from '../utils/theme';
 import Globals from '../utils/Globals';
 import Bar from '../components/bar/Bar';
 import TransparentJumbo from '../components/common/TransparentJumbo';
+import Footer from '../components/footer/Footer';
 
 export default class MyApp extends App {
     componentDidMount() {
@@ -31,6 +32,7 @@ export default class MyApp extends App {
                     <Bar overlay />
                     <TransparentJumbo />
                     <Component {...pageProps} />
+                    <Footer/>
                 </ThemeProvider>
             </React.Fragment>
         );
