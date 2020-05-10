@@ -145,9 +145,9 @@ describe('PoliticianWordCloudController (e2e)', () => {
 
 	it('handle word cloud created', async () => {
 		const createWordCloudDto = createWordCloud();
-		const json = await client.emit('word-cloud-politician-word-cloud-created', createWordCloudDto).toPromise();
+		const json = await client.emit('analytics-politician-word-cloud-created', createWordCloudDto).toPromise();
 
-		expect(json[0].topicName).toEqual('word-cloud-politician-word-cloud-created');
+		expect(json[0].topicName).toEqual('analytics-politician-word-cloud-created');
 
 		await waitForExpect(async () => {
 			const wordClouds: PoliticianWordCloud[] = await service.find({});

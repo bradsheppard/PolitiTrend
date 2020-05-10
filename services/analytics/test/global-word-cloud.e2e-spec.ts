@@ -145,9 +145,9 @@ describe('GlobalWordCloudController (e2e)', () => {
 
 	it('handle word cloud created', async () => {
 		const createWordCloudDto = createWordCloud();
-		const json = await client.emit('word-cloud-global-word-cloud-created', createWordCloudDto).toPromise();
+		const json = await client.emit('analytics-global-word-cloud-created', createWordCloudDto).toPromise();
 
-		expect(json[0].topicName).toEqual('word-cloud-global-word-cloud-created');
+		expect(json[0].topicName).toEqual('analytics-global-word-cloud-created');
 
 		await waitForExpect(async () => {
 			const wordClouds: GlobalWordCloud[] = await service.find({});
