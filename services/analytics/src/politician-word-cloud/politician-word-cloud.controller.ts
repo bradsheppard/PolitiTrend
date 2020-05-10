@@ -25,7 +25,7 @@ export class PoliticianWordCloudController {
 		return await this.politicianWordCloudService.create(createPoliticianWordCloudDto);
 	}
 
-	@EventPattern('word-cloud-politician-word-cloud-created')
+	@EventPattern('analytics-politician-word-cloud-created')
 	async handleWordCloudCreated(createPoliticianWordCloudDto: CreatePoliticianWordCloudDto) {
 		await this.politicianWordCloudService.create(createPoliticianWordCloudDto);
 	}

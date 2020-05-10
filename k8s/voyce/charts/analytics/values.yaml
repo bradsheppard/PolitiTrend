@@ -1,19 +1,19 @@
-# Default values for word-cloud.
+# Default values for analytics.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  wordCloud:
-    repository: word-cloud
+  analytic:
+    repository: analytics
     pullPolicy: Always
   wordCloudAnalytic:
-    repository: word-cloud-analytic
+    repository: analytics-analytic
     pullPolicy: Always
 
-nameOverride: word-cloud
-fullnameOverride: word-cloud
+nameOverride: analytics
+fullnameOverride: analytics
 
 service:
   type: ClusterIP
@@ -33,9 +33,9 @@ mongodb:
 
   mongodbDatabase: admin
 
-  nameOverride: word-cloud-mongodb
+  nameOverride: analytics-mongodb
 
-  fullnameOverride: word-cloud-mongodb
+  fullnameOverride: analytics-mongodb
 
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/

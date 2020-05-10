@@ -14,7 +14,7 @@ services:
       dps:
         ipv4_address: 172.0.0.10
 
-  word-cloud-mongodb:
+  analytics-mongodb:
     image: mongo
     restart: always
     dns:
@@ -22,7 +22,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongodb
       - MONGO_INITDB_ROOT_PASSWORD=pass123
-      - HOSTNAMES=word-cloud-mongodb
+      - HOSTNAMES=analytics-mongodb
 
   adminer:
     image: adminer

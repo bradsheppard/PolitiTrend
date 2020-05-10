@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "word-cloud.fullname" . }}
+  name: {{ include "analytics.fullname" . }}
   labels:
-    {{- include "word-cloud.labels" . | nindent 4 }}
+    {{- include "analytics.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "word-cloud.selectorLabels" . | nindent 6 }}
+      {{- include "analytics.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "word-cloud.selectorLabels" . | nindent 8 }}
+        {{- include "analytics.selectorLabels" . | nindent 8 }}
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.global.registry }}/{{ .Values.image.wordCloud.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.wordCloud.pullPolicy }}
+          image: "{{ .Values.global.registry }}/{{ .Values.image.analytic.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.analytic.pullPolicy }}
           ports:
             - name: http
               containerPort: 3000

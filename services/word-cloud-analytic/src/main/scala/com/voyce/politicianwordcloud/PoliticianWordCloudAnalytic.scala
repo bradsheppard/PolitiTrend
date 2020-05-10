@@ -29,7 +29,7 @@ object PoliticianWordCloudAnalytic {
             .write
             .format("kafka")
             .option("kafka.bootstrap.servers", "queue-kafka-bootstrap:9092")
-            .option("topic", "word-cloud-politician-word-cloud-created")
+            .option("topic", "analytics-politician-word-cloud-created")
             .save()
 
         spark.stop()

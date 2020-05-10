@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: word-cloud-global-word-cloud-created
+  name: analytics-politician-word-cloud-created
   labels:
     strimzi.io/cluster: queue
 spec:

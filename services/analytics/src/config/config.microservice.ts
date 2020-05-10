@@ -8,7 +8,7 @@ const microserviceConfig: MicroserviceOptions = {
 			brokers: ['queue-kafka-bootstrap:9092'],
 		},
 		consumer: {
-			groupId: 'word-cloud-consumer'
+			groupId: 'analytics-consumer'
 		},
 		deserializer: new KafkaDeserializer(),
 	},

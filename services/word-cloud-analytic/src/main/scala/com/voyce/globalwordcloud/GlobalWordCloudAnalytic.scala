@@ -28,7 +28,7 @@ object GlobalWordCloudAnalytic {
             .write
             .format("kafka")
             .option("kafka.bootstrap.servers", "queue-kafka-bootstrap:9092")
-            .option("topic", "word-cloud-global-word-cloud-created")
+            .option("topic", "analytics-global-word-cloud-created")
             .save()
 
         spark.stop()

@@ -1,4 +1,4 @@
-service                 := word-cloud
+service                 := analytics
 test			:= $(service)-test
 tag                     := 1.0.0
 registry                ?= $(DOCKER_REGISTRY)

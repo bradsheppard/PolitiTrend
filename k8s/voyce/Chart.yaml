@@ -42,8 +42,8 @@ dependencies:
   - name: news-article-crawler
     condition: news-article-crawler.enabled
     version: 1.0.0
-  - name: word-cloud
-    condition: word-cloud.enabled
+  - name: analytics
+    condition: analytics.enabled
     version: 1.0.0
   - name: frontend
     condition: frontend.enabled

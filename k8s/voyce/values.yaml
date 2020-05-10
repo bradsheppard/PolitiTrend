@@ -20,7 +20,7 @@ news-article:
 news-article-crawler:
   enabled: true
 
-word-cloud:
+analytics:
   enabled: true
 
 frontend:

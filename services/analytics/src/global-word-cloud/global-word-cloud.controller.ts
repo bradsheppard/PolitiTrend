@@ -19,7 +19,7 @@ export class GlobalWordCloudController {
 		return await this.globalWordCloudService.create(createGlobalWordCloudDto);
 	}
 
-	@EventPattern('word-cloud-global-word-cloud-created')
+	@EventPattern('analytics-global-word-cloud-created')
 	async handleGlobalWordCloudCreated(createGlobalWordCloudDto: CreateGlobalWordCloudDto) {
 		await this.globalWordCloudService.create(createGlobalWordCloudDto);
 	}
