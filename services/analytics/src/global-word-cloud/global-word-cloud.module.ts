@@ -9,5 +9,4 @@ import { GlobalWordCloudSchema }  from './schemas/global-word-cloud.schema';
 	controllers: [GlobalWordCloudController],
 	providers: [GlobalWordCloudService],
 })
-export class GlobalWordCloudModule {
-}
+export class GlobalWordCloudModule {}

@@ -1,0 +1,12 @@
+import { IsInt, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class CreateSentimentDto {
+	@IsInt()
+	@Type(() => Number)
+	politician: number;
+
+	@IsNumber()
+	@Type(() => Number)
+	sentiment: number;
+}

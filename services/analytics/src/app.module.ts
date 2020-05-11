@@ -3,6 +3,7 @@ import { PoliticianWordCloudModule } from './politician-word-cloud/politician-wo
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GlobalWordCloudModule } from './global-word-cloud/global-word-cloud.module';
+import { SentimentModule } from './sentiment/sentiment.module';
 
 @Module({
 	imports: [
@@ -10,13 +11,18 @@ import { GlobalWordCloudModule } from './global-word-cloud/global-word-cloud.mod
 			imports: [ConfigModule.forRoot()],
 			useFactory: async (configService: ConfigService) => {
 				return {
-					uri: configService.get<string>('MONGODB_URI')
+					useFindAndModify: false,
+					uri: configService.get<string>('MONGODB_URI'),
+					useNewUrlParser: true,
+					useUnifiedTopology: true,
+					useCreateIndex: true
 				}
 			},
 			inject: [ConfigService]
 		}),
 		PoliticianWordCloudModule,
-		GlobalWordCloudModule
+		GlobalWordCloudModule,
+		SentimentModule
 	]
 })
 export class AppModule {}

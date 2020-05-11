@@ -3,7 +3,8 @@ import * as mongoose from 'mongoose'
 const GlobalWordCloudSchema = new mongoose.Schema({
 	dateTime: {
 		type: Date,
-		default: Date.now
+		default: Date.now,
+		index: true
 	},
 	words: [{
 		_id: false,
