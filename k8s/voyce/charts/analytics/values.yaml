@@ -9,7 +9,7 @@ image:
     repository: analytics
     pullPolicy: Always
   wordCloudAnalytic:
-    repository: analytics-analytic
+    repository: word-cloud-analytic
     pullPolicy: Always
 
 nameOverride: analytics
