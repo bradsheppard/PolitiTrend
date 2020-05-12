@@ -1,6 +1,6 @@
 from pyspark import SparkContext
 
-from config import config
+from sentiment_analyzer.config import config
 
 
 def load_config(spark_context: SparkContext):

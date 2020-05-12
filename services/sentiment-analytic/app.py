@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession, DataFrame
 
-from common.path_translator import get_s3_path
-from config.config_reader import load_config
+from sentiment_analyzer.common.path_translator import get_s3_path
+from sentiment_analyzer.config.config_reader import load_config
 from sentiment_analyzer import analyze
 
 spark = SparkSession.builder \
