@@ -5,7 +5,6 @@ from sentiment_analyzer.config.config_reader import load_config
 from sentiment_analyzer import analyze
 
 spark = SparkSession.builder \
-    .master('local[*]') \
     .getOrCreate()
 
 load_config(spark.sparkContext)
