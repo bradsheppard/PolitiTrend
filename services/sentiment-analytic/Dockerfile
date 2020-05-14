@@ -12,6 +12,8 @@ COPY config.ini .
 
 COPY sentiment_analyzer sentiment_analyzer
 
+COPY lib lib
+
 COPY run.sh .
 
 CMD ["./run.sh"]

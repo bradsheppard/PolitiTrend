@@ -11,6 +11,9 @@ image:
   wordCloudAnalytic:
     repository: word-cloud-analytic
     pullPolicy: Always
+  sentimentAnalytic:
+    repository: sentiment-analytic
+    pullPolicy: Always
 
 nameOverride: analytics
 fullnameOverride: analytics
