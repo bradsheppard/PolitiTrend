@@ -9,9 +9,10 @@ spark = SparkSession.builder \
 
 load_config(spark.sparkContext)
 
-s3_path = get_s3_path(1)
+s3_path_1 = get_s3_path(0)
+s3_path_2 = get_s3_path(1)
 
-dataframe: DataFrame = spark.read.json(s3_path).persist()
+dataframe: DataFrame = spark.read.json([s3_path_1, s3_path_2]).persist()
 
 sentiment_dataframe: DataFrame = analyze(dataframe)
 sentiment_dataframe.show()

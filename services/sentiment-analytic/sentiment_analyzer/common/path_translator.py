@@ -1,3 +1,11 @@
+from datetime import datetime, timedelta
+
+
 def get_s3_path(offset: int) -> str:
-    s3_path = 's3a://tweets/topics/tweet-created/year=2020/month=04/day=30/hour=12/*'
+    now = datetime.now()
+    now = now - timedelta(days=offset)
+
+    s3_path = f's3a://tweets/topics/tweet-created/' \
+              f'year={now.year}/' \
+              f'month={str(now.month).zfill(2)}/day={str(now.day).zfill(2)}/*'
     return s3_path
