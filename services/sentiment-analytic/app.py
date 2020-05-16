@@ -9,10 +9,19 @@ spark = SparkSession.builder \
 
 load_config(spark.sparkContext)
 
-s3_path_1 = get_s3_path(0)
-s3_path_2 = get_s3_path(1)
+paths = [get_s3_path(0), get_s3_path(1)]
 
-dataframe: DataFrame = spark.read.json([s3_path_1, s3_path_2]).persist()
+dataframe = None
+
+for path in paths:
+    try:
+        current_dataframe = spark.read.json(path).persist()
+        if dataframe is None:
+            dataframe = current_dataframe
+        else:
+            dataframe = dataframe.union(current_dataframe)
+    except Exception as e:
+        print(e)
 
 sentiment_dataframe: DataFrame = analyze(dataframe)
 sentiment_dataframe.show()
