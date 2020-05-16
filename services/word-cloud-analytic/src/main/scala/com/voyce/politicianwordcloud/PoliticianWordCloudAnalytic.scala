@@ -7,7 +7,6 @@ object PoliticianWordCloudAnalytic {
 
     def main(args: Array[String]) {
         val spark = SparkSession.builder
-                .master("local[*]")
             .appName("Politician Word Cloud")
             .getOrCreate()
 
