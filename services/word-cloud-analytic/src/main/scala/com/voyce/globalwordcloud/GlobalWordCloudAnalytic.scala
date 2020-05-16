@@ -15,12 +15,27 @@ object GlobalWordCloudAnalytic {
         val sc = spark.sparkContext
         ConfigReader.load(sc)
 
-        val todaysS3Path = PathTranslator.getS3Path()
-        val yesterdaysS3Path = PathTranslator.getS3Path(1)
+        val paths = List(PathTranslator.getS3Path(), PathTranslator.getS3Path(1))
 
-        val dataframe: Dataset[Tweet] = spark.read.json(todaysS3Path, yesterdaysS3Path).as[Tweet].persist()
+        var dataframe: Option[Dataset[Tweet]] = None
 
-        val politicianWordCountDataFrame = GlobalWordCloudCalculator.calculate(spark, dataframe)
+        for(path <- paths) {
+            try {
+                val currentDataframe: Dataset[Tweet] = spark.read.json(path).as[Tweet].persist()
+                if(dataframe.isEmpty) {
+                    dataframe = Option.apply(currentDataframe)
+                }
+                else {
+                    dataframe.get.union(currentDataframe)
+                }
+            }
+            catch {
+                case e: Exception =>
+                    println(e)
+            }
+        }
+
+        val politicianWordCountDataFrame = GlobalWordCloudCalculator.calculate(spark, dataframe.get)
 
         val jsonifiedDataframe = politicianWordCountDataFrame.toJSON
 
