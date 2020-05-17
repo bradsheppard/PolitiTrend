@@ -10,7 +10,6 @@ interface Tweet {
 
 interface IProps {
     politician: number;
-    hidden?: boolean;
 }
 
 interface IState {
@@ -36,9 +35,6 @@ class PoliticianTweetFeed extends React.Component<IProps, IState> {
     }
 
     render() {
-
-        if (this.props.hidden)
-            return null;
 
         return (
             <React.Fragment>

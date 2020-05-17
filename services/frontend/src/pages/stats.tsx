@@ -3,8 +3,8 @@ import * as React from 'react';
 import ContentContainer from '../components/common/ContentContainer';
 import { makeStyles } from '@material-ui/core/styles';
 import WordCloud from '../components/common/WordCloud';
-import WordCloudApi from '../apis/word-cloud/WordCloudApi';
-import WordCloudDto from '../apis/word-cloud/WordCloudDto';
+import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi';
+import GlobalWordCloudDto from '../apis/global-word-cloud/GlobalWordCloudDto';
 import LineChart from '../components/common/LineChart';
 import Divider from '../components/common/Divider';
 import PieChart from '../components/common/PieChart';
@@ -73,7 +73,7 @@ const Stats = (props: IProps) => {
 };
 
 Stats.getInitialProps = async function (): Promise<IProps> {
-    const wordClouds: WordCloudDto[] = await WordCloudApi.get({limit: 1});
+    const wordClouds: GlobalWordCloudDto[] = await GlobalWordCloudApi.get({limit: 1});
 
 
     if (wordClouds.length > 0)

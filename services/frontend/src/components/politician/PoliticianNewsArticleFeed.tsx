@@ -23,7 +23,6 @@ interface NewsArticle {
 
 interface IProps extends WithStyles<typeof styles> {
     politician: number;
-    hidden?: boolean;
 }
 
 interface IState {
@@ -62,9 +61,6 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
     }
 
     render() {
-        if(this.props.hidden)
-            return null;
-
         const { visibility } = this.state;
 
         return (

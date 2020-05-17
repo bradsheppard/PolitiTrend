@@ -3,10 +3,10 @@ import { createStyles, Grid, Theme, Typography } from '@material-ui/core';
 import { NextPageContext } from 'next';
 import ContentContainer from '../../components/common/ContentContainer';
 import PoliticianApi from '../../apis/politician/PoliticianApi';
-import PoliticianDto from '../../apis/politician/PoliticianDto';
 import PoliticianHeader from '../../components/politician/PoliticianHeader';
 import PoliticianFeed from '../../components/politician/PoliticianFeed';
 import { makeStyles } from '@material-ui/styles';
+import PoliticianWordCloudApi from '../../apis/politician-word-cloud/PoliticianWordCloudApi';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,6 +34,12 @@ interface Politician {
 
 interface IProps {
     politician: Politician | null;
+    wordCounts: WordCount[];
+}
+
+interface WordCount {
+    word: string;
+    count: number;
 }
 
 const PoliticianPage = (props: IProps) => {
@@ -42,7 +48,7 @@ const PoliticianPage = (props: IProps) => {
             <Typography>Not Found</Typography>
         );
 
-    const { politician } = props;
+    const { politician, wordCounts } = props;
     const classes = useStyles();
 
     return (
@@ -56,7 +62,7 @@ const PoliticianPage = (props: IProps) => {
                         <PoliticianHeader politician={politician}/>
                     </Grid>
                     <Grid item sm={9} className={classes.content}>
-                        <PoliticianFeed politician={politician.id} />
+                        <PoliticianFeed politician={politician.id} wordCounts={wordCounts} />
                     </Grid>
                 </Grid>
             </ContentContainer>
@@ -64,14 +70,18 @@ const PoliticianPage = (props: IProps) => {
     )
 };
 
-PoliticianPage.getInitialProps = async function(context: NextPageContext) {
+PoliticianPage.getInitialProps = async function(context: NextPageContext): Promise<IProps> {
     const { id } = context.query;
     if (typeof id === 'string') {
-        const politicianDto: PoliticianDto | null = await PoliticianApi.getOne(id);
+        const [politicianDto, wordCountsDto] = await Promise.all([
+            PoliticianApi.getOne(id),
+            PoliticianWordCloudApi.get({politician: parseInt(id)})
+        ]);
 
-        if(!politicianDto)
+        if(!politicianDto || !wordCountsDto)
             return {
-                politician: null
+                politician: null,
+                wordCounts: []
             };
 
         const politician: Politician = {
@@ -82,12 +92,14 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext) {
         };
 
         return {
-            politician
+            politician,
+            wordCounts: wordCountsDto[0].words
         };
     }
     else {
         return {
-            politician: null
+            politician: null,
+            wordCounts: []
         }
     }
 };
