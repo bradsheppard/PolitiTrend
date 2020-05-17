@@ -1,7 +1,6 @@
 package com.voyce.globalwordcloud
 
 import com.voyce.common.{Tweet, WordCount}
-import org.apache.spark.ml.feature.StopWordsRemover
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{Dataset, SparkSession}
 

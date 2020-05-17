@@ -26,9 +26,9 @@ object PoliticianWordCloudCalculator {
             .count().as[PoliticianWordCount]
 
         wordCountDataFrame = wordCountDataFrame
-            .filter(x => x.word.length() >= 5)
+            .filter(x => x.word.startsWith("#"))
             .withColumn("row_number", row_number.over(w))
-            .where($"row_number" <= 10).as[PoliticianWordCount]
+            .where($"row_number" <= 20).as[PoliticianWordCount]
 
         val politicianWordCountDataFrame: Dataset[PoliticianWordCloud] = wordCountDataFrame.groupBy($"politician")
             .agg(
