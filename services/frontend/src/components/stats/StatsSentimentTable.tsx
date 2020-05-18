@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
     createStyles,
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -35,7 +34,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
 const StyledTableCell = withStyles((theme: Theme) =>
     createStyles({
         head: {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.secondary.dark,
             color: theme.palette.common.white,
             fontWeight: 'bold',
             fontSize: 16
@@ -55,7 +54,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
 
     return (
         <div className={props.className}>
-            <TableContainer component={Paper}>
+            <TableContainer>
                 <Table>
                     <TableHead>
                         <TableRow>

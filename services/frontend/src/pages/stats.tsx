@@ -1,32 +1,27 @@
-import { Box, createStyles, Theme, Typography } from '@material-ui/core';
+import { createStyles, Grid, Theme } from '@material-ui/core';
 import * as React from 'react';
-import ContentContainer from '../components/common/ContentContainer';
 import { makeStyles } from '@material-ui/core/styles';
 import WordCloud from '../components/common/WordCloud';
 import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi';
-import Divider from '../components/common/Divider';
-import PieChart from '../components/common/PieChart';
 import SentimentApi from '../apis/sentiment/SentimentApi';
 import PoliticianApi from '../apis/politician/PoliticianApi';
 import StatsSentimentTable from '../components/stats/StatsSentimentTable';
+import StatsCard from '../components/stats/StatsCard';
+import StatsSentimentGraph from '../components/stats/StatsSentimentGraph';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         header: {
-            paddingTop: theme.spacing(4)
+            padding: theme.spacing(2),
+            backgroundColor: theme.palette.primary.main
         },
-        line: {
-            backgroundColor: 'black',
-            height: 3
+        card: {
+            margin: theme.spacing(2)
         },
         wordCloud: {
             marginTop: theme.spacing(6),
             marginBottom: theme.spacing(6),
             minHeight: theme.spacing(50)
-        },
-        sentiment: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6)
         }
     })
 );
@@ -49,27 +44,47 @@ interface Politician {
 
 const Stats = (props: IProps) => {
     const classes = useStyles();
+    const now = new Date();
+
+    const points = [
+        {
+            x: new Date(now.setDate(now.getDate() - 4)).toISOString(),
+            y: 1
+        },
+        {
+            x: new Date(now.setDate(now.getDate() - 3)).toISOString(),
+            y: 2
+        },
+        {
+            x: new Date(now.setDate(now.getDate() - 2)).toISOString(),
+            y: 3
+        },
+        {
+            x: new Date(now.setDate(now.getDate() - 1)).toISOString(),
+            y: 4
+        }
+    ];
 
     return (
-        <ContentContainer>
-            <div className={classes.header}>
-                <Typography gutterBottom variant='h5' color='textPrimary' className={classes.header}>
-                    <Box fontWeight='fontWeightBold'>
-                        Trending Hashtags
-                    </Box>
-                </Typography>
-                <Divider thickness={2} />
-            </div>
-            <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
-            <PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}})} />
-            <Typography gutterBottom variant='h5' color='textPrimary' className={classes.header}>
-                <Box fontWeight='fontWeightBold'>
-                    Social Media Sentiment
-                </Box>
-            </Typography>
-            <Divider thickness={2} />
-            <StatsSentimentTable politicians={props.politicians} className={classes.sentiment} />
-        </ContentContainer>
+        <Grid container>
+            <Grid item xs={6}>
+                <StatsCard title='Trending Hashtags' className={classes.card}>
+                    <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
+                    {/*<PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}})} />*/}
+                </StatsCard>
+            </Grid>
+
+            <Grid item xs={6}>
+                <StatsCard title='Social Media Sentiment' className={classes.card}>
+                    <StatsSentimentTable politicians={props.politicians} />
+                </StatsCard>
+            </Grid>
+            <Grid item xs={6}>
+                <StatsCard title='Sentiment Over Time' className={classes.card}>
+                    <StatsSentimentGraph points={points} />
+                </StatsCard>
+            </Grid>
+        </Grid>
     );
 };
 
