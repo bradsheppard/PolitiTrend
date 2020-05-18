@@ -1,15 +1,19 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { SentimentService } from './sentiment.service';
 import { CreateSentimentDto } from './dtos/create-sentiment.dto';
 import { Sentiment } from './interfaces/sentiment.interface';
 import { EventPattern } from '@nestjs/microservices';
+import { SearchSentimentDto } from './dtos/search-sentiment.dto';
 
 @Controller('sentiment')
 export class SentimentController {
 	constructor(private sentimentService: SentimentService) {}
 
 	@Get()
-	async findAll(): Promise<Sentiment[]> {
+	async findAll(@Query() searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+		if(searchSentimentDto.politician)
+			return await this.sentimentService.findByPolitician(searchSentimentDto.politician);
+
 		return await this.sentimentService.findAll();
 	}
 

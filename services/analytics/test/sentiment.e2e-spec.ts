@@ -100,6 +100,27 @@ describe('Sentiment (e2e)', () => {
 		equals(response.body[1], politician2CreateSentimentDto2);
 	});
 
+	it('/sentiment?politician={id} (GET)', async () => {
+		const politician1CreateSentimentDto1 = createSentimentForPolitician(1);
+		const politician1CreateSentimentDto2 = createSentimentForPolitician(1);
+
+		const politician2CreateSentimentDto1 = createSentimentForPolitician(2);
+		const politician2CreateSentimentDto2 = createSentimentForPolitician(2);
+
+		await service.create(politician1CreateSentimentDto1);
+		await service.create(politician1CreateSentimentDto2);
+		await service.create(politician2CreateSentimentDto1);
+		await service.create(politician2CreateSentimentDto2);
+
+		const response = await request(app.getHttpServer())
+			.get('/sentiment?politician=1');
+
+		expect(response.status).toEqual(200);
+		expect(response.body.length).toEqual(2);
+		equals(response.body[0], politician1CreateSentimentDto2);
+		equals(response.body[1], politician1CreateSentimentDto1);
+	});
+
 	it('/sentiment (POST)', async () => {
 		const createDto = createSentiment();
 		const res = await request(app.getHttpServer())

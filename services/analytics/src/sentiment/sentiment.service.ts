@@ -13,6 +13,10 @@ export class SentimentService {
 		return await createSentiment.save();
 	}
 
+	async findByPolitician(id: number): Promise<Sentiment[]> {
+		return await this.sentimentModel.find({politician: id}).limit(20).exec()
+	}
+
 	async findAll(): Promise<Sentiment[]> {
 		const query = this.sentimentModel.aggregate([
 			{
