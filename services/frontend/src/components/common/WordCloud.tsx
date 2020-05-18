@@ -4,7 +4,7 @@ import ReactWordcloud, { MinMaxPair, Scale, Spiral, Word } from 'react-wordcloud
 const wordCloudOptions = {
 	enableTooltip: false,
 	deterministic: true,
-	colors: ['black', '#9c0500', '#00099c'],
+	colors: ['black', '#cc2c26', '#3463cd'],
 	fontSizes: [30, 55] as MinMaxPair,
 	fontFamily: 'Raleway',
 	fontStyle: 'normal',

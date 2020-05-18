@@ -4,10 +4,11 @@ import ContentContainer from '../components/common/ContentContainer';
 import { makeStyles } from '@material-ui/core/styles';
 import WordCloud from '../components/common/WordCloud';
 import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi';
-import GlobalWordCloudDto from '../apis/global-word-cloud/GlobalWordCloudDto';
-import LineChart from '../components/common/LineChart';
 import Divider from '../components/common/Divider';
 import PieChart from '../components/common/PieChart';
+import SentimentApi from '../apis/sentiment/SentimentApi';
+import PoliticianApi from '../apis/politician/PoliticianApi';
+import StatsSentimentTable from '../components/stats/StatsSentimentTable';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,16 +20,20 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 3
         },
         wordCloud: {
-            paddingTop: theme.spacing(10),
-            paddingBottom: theme.spacing(10),
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6),
             minHeight: theme.spacing(50)
+        },
+        sentiment: {
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6)
         }
     })
 );
 
 interface IProps {
     wordCounts: WordCount[];
-    politicianPopularities: PoliticianPopularity[];
+    politicians: Politician[];
 }
 
 interface WordCount {
@@ -36,14 +41,10 @@ interface WordCount {
     count: number;
 }
 
-interface PoliticianPopularity {
-    politician: string;
-    historicalPopularity: Popularity[];
-}
-
-interface Popularity {
-    value: number;
-    date: Date;
+interface Politician {
+    name: string;
+    party: string;
+    sentiment: number;
 }
 
 const Stats = (props: IProps) => {
@@ -57,45 +58,41 @@ const Stats = (props: IProps) => {
                         Trending Hashtags
                     </Box>
                 </Typography>
-                <Divider thickness={3} />
+                <Divider thickness={2} />
             </div>
             <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
             <PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}})} />
-            <Typography gutterBottom variant='h4' color='textPrimary' className={classes.header}>
+            <Typography gutterBottom variant='h5' color='textPrimary' className={classes.header}>
                 <Box fontWeight='fontWeightBold'>
-                    POPULARITY
+                    Social Media Sentiment
                 </Box>
             </Typography>
-            <Divider thickness={3} />
-            <LineChart data={props.politicianPopularities[0].historicalPopularity} xAxis='Time' yAxis='Popularity' />
+            <Divider thickness={2} />
+            <StatsSentimentTable politicians={props.politicians} className={classes.sentiment} />
         </ContentContainer>
     );
 };
 
 Stats.getInitialProps = async function (): Promise<IProps> {
-    const wordClouds: GlobalWordCloudDto[] = await GlobalWordCloudApi.get({limit: 1});
+    const [ politicians, wordClouds, sentiments ] = await Promise.all([
+        PoliticianApi.get(),
+        GlobalWordCloudApi.get({limit: 1}),
+        SentimentApi.get()
+    ]);
 
-
-    if (wordClouds.length > 0)
+    const politicianSentiments = politicians.map(politician => {
+        const sentiment = sentiments.find(x => x.politician == politician.id);
         return {
-            wordCounts: wordClouds[0].words,
-            politicianPopularities: [
-                {
-                    politician: 'Bernie Sanders',
-                    historicalPopularity: [
-                        {
-                            date: new Date(),
-                            value: 7
-                        }
-                    ]
-                }
-            ]
-        };
+            name: politician.name,
+            party: politician.party,
+            sentiment: sentiment ? sentiment.sentiment : 0
+        }
+    });
 
     return {
-        wordCounts: [],
-        politicianPopularities: []
-    }
+        wordCounts: wordClouds.length > 0 ? wordClouds[0].words : [],
+        politicians: politicianSentiments.sort((a, b) => b.sentiment - a.sentiment)
+    };
 };
 
 export default Stats;
