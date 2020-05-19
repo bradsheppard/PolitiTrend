@@ -14,7 +14,7 @@ export class SentimentService {
 	}
 
 	async findByPolitician(id: number): Promise<Sentiment[]> {
-		return await this.sentimentModel.find({politician: id}).limit(20).exec()
+		return await this.sentimentModel.find({politician: id}).sort({dateTime: -1}).limit(20).exec()
 	}
 
 	async findAll(): Promise<Sentiment[]> {
