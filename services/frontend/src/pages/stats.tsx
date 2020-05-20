@@ -7,7 +7,7 @@ import SentimentApi from '../apis/sentiment/SentimentApi';
 import PoliticianApi from '../apis/politician/PoliticianApi';
 import StatsSentimentTable from '../components/stats/StatsSentimentTable';
 import StatsCard from '../components/stats/StatsCard';
-import StatsSentimentGraph from '../components/stats/StatsSentimentGraph';
+import PieChart from '../components/common/PieChart';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: theme.palette.primary.main
         },
         card: {
-            margin: theme.spacing(2)
+            margin: theme.spacing(4)
         },
         wordCloud: {
             marginTop: theme.spacing(6),
@@ -37,6 +37,7 @@ interface WordCount {
 }
 
 interface Politician {
+    id: number;
     name: string;
     party: string;
     sentiment: number;
@@ -44,44 +45,25 @@ interface Politician {
 
 const Stats = (props: IProps) => {
     const classes = useStyles();
-    const now = new Date();
-
-    const points = [
-        {
-            x: new Date(now.setDate(now.getDate() - 4)).toISOString(),
-            y: 1
-        },
-        {
-            x: new Date(now.setDate(now.getDate() - 3)).toISOString(),
-            y: 2
-        },
-        {
-            x: new Date(now.setDate(now.getDate() - 2)).toISOString(),
-            y: 3
-        },
-        {
-            x: new Date(now.setDate(now.getDate() - 1)).toISOString(),
-            y: 4
-        }
-    ];
 
     return (
         <Grid container>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
                 <StatsCard title='Trending Hashtags' className={classes.card}>
-                    <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
-                    {/*<PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}})} />*/}
+                    <Grid container>
+                        <Grid item xs={6}>
+                            <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}})} />
+                        </Grid>
+                    </Grid>
                 </StatsCard>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12}>
                 <StatsCard title='Social Media Sentiment' className={classes.card}>
-                    <StatsSentimentTable politicians={props.politicians} />
-                </StatsCard>
-            </Grid>
-            <Grid item xs={6}>
-                <StatsCard title='Sentiment Over Time' className={classes.card}>
-                    <StatsSentimentGraph points={points} />
+                    <StatsSentimentTable politicians={props.politicians} points={[]} />
                 </StatsCard>
             </Grid>
         </Grid>
@@ -98,6 +80,7 @@ Stats.getInitialProps = async function (): Promise<IProps> {
     const politicianSentiments = politicians.map(politician => {
         const sentiment = sentiments.find(x => x.politician == politician.id);
         return {
+            id: politician.id,
             name: politician.name,
             party: politician.party,
             sentiment: sentiment ? sentiment.sentiment : 0
