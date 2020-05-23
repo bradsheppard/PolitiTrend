@@ -12,7 +12,7 @@ import {
     withStyles
 } from '@material-ui/core';
 import { Line } from '@nivo/line';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SentimentApi from '../../apis/sentiment/SentimentApi';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
@@ -64,13 +64,51 @@ const StyledTableCell = withStyles((theme: Theme) =>
 
 const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
     const [page, setPage] = React.useState(0);
+    const [checked, setChecked] = useState(new Array(props.politicians.length).fill(false));
     const [sentimentHistorys, setSentimentHistories] = useState<SentimentHistory[]>([]);
+
+    const hasSentimentHistory = (politicianName: string) => {
+        for (const sentimentHistory of sentimentHistorys) {
+            if (sentimentHistory.id === politicianName)
+                return true;
+        }
+
+        return false;
+    };
+
+    const shouldDisplaySentimentHistory = (sentimentHistory: SentimentHistory) => {
+        const index = props.politicians.findIndex(x => x.name == sentimentHistory.id);
+        return checked[index];
+    };
+
+    useEffect(() => {
+        const fetchSentimentHistory = async () => {
+
+            for (let i = 0; i < checked.length; i++) {
+                const check = checked[i];
+
+                if (check) {
+                    const politcian = props.politicians[i];
+                    if (!hasSentimentHistory(politcian.name))
+                        await addSentimentHistory(politcian);
+                }
+            }
+        };
+
+        fetchSentimentHistory();
+    }, [checked]);
 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
-    const getHighestPerDay = (sentimentHistory: SentimentHistory) => {
+    const handleCheckboxClicked = (index: number) => {
+        const currentChecked = checked.slice();
+        currentChecked[index] = !currentChecked[index];
+        setChecked(currentChecked);
+    };
+
+    const getHighestPerX = (sentimentHistory: SentimentHistory) => {
         const highs: {[key: number]: number} = {};
 
         sentimentHistory.data.forEach(point => {
@@ -92,7 +130,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
         return newSentimentHistory;
     };
 
-    const handleCheckboxClicked = async (politician: Politician) => {
+    const addSentimentHistory = async (politician: Politician) => {
         const politicianSentiments = await SentimentApi.getForPolitician(politician.id);
         const data = politicianSentiments.map(sentiment => {
             return {
@@ -105,7 +143,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
             data: data
         };
         const current = sentimentHistorys.slice(0, sentimentHistorys.length);
-        current.push(getHighestPerDay(sentimentHistory));
+        current.push(getHighestPerX(sentimentHistory));
         setSentimentHistories(current);
     };
 
@@ -133,7 +171,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                                         <StyledTableCell>{politician.name}</StyledTableCell>
                                         <StyledTableCell>{politician.party}</StyledTableCell>
                                         <StyledTableCell>{politician.sentiment}</StyledTableCell>
-                                        <StyledTableCell><Checkbox onChange={() => handleCheckboxClicked(politician)} /></StyledTableCell>
+                                        <StyledTableCell><Checkbox checked={checked[index]} onChange={() => handleCheckboxClicked(index)} /></StyledTableCell>
                                     </StyledTableRow>
                                 )).slice(page * numRows, page * numRows + numRows)}
                             </TableBody>
@@ -155,7 +193,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                         <Line
                             height={height}
                             width={width}
-                            data={sentimentHistorys}
+                            data={sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x))}
                             margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                             xScale={{ type: 'point' }}
                             yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
@@ -179,14 +217,14 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                                 legendOffset: -40,
                                 legendPosition: 'middle'
                             }}
-                            colors={{ scheme: 'nivo' }}
-                            pointSize={12}
+                            colors={{ scheme: 'dark2' }}
+                            pointSize={8}
                             pointColor={{ theme: 'background' }}
-                            pointBorderWidth={5}
+                            pointBorderWidth={3}
                             pointBorderColor={{ from: 'serieColor' }}
                             pointLabel='sentiment'
                             pointLabelYOffset={-12}
-                            lineWidth={5}
+                            lineWidth={3}
                             useMesh={true}
                             legends={[
                                 {
