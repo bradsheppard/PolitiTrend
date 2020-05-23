@@ -24,7 +24,7 @@ const StatsCard = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
     const classes = useStyles();
 
     return (
-        <Paper className={clsx(classes.paper, props.className)}>
+        <Paper className={clsx(classes.paper, props.className)} square={true} elevation={20}>
             <div className={classes.header}>
                 <Typography variant='h6' style={{color: 'white'}}>
                     <Box fontWeight='fontWeightBold'>

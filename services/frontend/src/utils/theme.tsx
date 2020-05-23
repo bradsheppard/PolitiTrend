@@ -3,7 +3,7 @@ import { createMuiTheme } from '@material-ui/core';
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: 'rgb(49,78,156)'
+            main: 'rgb(36,55,134)'
         },
         secondary: {
             main: 'rgb(71,71,71)',

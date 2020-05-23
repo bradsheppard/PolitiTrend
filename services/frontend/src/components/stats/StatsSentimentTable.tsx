@@ -14,6 +14,7 @@ import {
 import { Line } from '@nivo/line';
 import { useState } from 'react';
 import SentimentApi from '../../apis/sentiment/SentimentApi';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 interface IProps {
     politicians: Politician[];
@@ -21,7 +22,7 @@ interface IProps {
 }
 
 interface SentimentHistory {
-    id: number;
+    id: string;
     data: Point[];
 }
 
@@ -91,8 +92,8 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
         return newSentimentHistory;
     };
 
-    const handleCheckboxClicked = async (politician: number) => {
-        const politicianSentiments = await SentimentApi.getForPolitician(politician);
+    const handleCheckboxClicked = async (politician: Politician) => {
+        const politicianSentiments = await SentimentApi.getForPolitician(politician.id);
         const data = politicianSentiments.map(sentiment => {
             return {
                 x: new Date(sentiment.dateTime).getDate(),
@@ -100,13 +101,15 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
             };
         });
         const sentimentHistory: SentimentHistory = {
-            id: politician,
+            id: politician.name,
             data: data
         };
         const current = sentimentHistorys.slice(0, sentimentHistorys.length);
         current.push(getHighestPerDay(sentimentHistory));
         setSentimentHistories(current);
     };
+
+    const numRows = 8;
 
     return (
         <Grid container>
@@ -130,86 +133,90 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                                         <StyledTableCell>{politician.name}</StyledTableCell>
                                         <StyledTableCell>{politician.party}</StyledTableCell>
                                         <StyledTableCell>{politician.sentiment}</StyledTableCell>
-                                        <StyledTableCell><Checkbox onChange={() => handleCheckboxClicked(politician.id)} /></StyledTableCell>
+                                        <StyledTableCell><Checkbox onChange={() => handleCheckboxClicked(politician)} /></StyledTableCell>
                                     </StyledTableRow>
-                                )).slice(page * 10, page * 10 + 10)}
+                                )).slice(page * numRows, page * numRows + numRows)}
                             </TableBody>
                         </Table>
                     </TableContainer>
                     <TablePagination
                         component="div"
                         count={props.politicians.length}
-                        rowsPerPageOptions={[10]}
-                        rowsPerPage={10}
+                        rowsPerPageOptions={[numRows]}
+                        rowsPerPage={numRows}
                         page={page}
                         onChangePage={handleChangePage}
                     />
                 </div>
             </Grid>
             <Grid item xs={6}>
-                <Line
-                    height={500}
-                    width={700}
-                    data={sentimentHistorys}
-                    margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-                    xScale={{ type: 'point' }}
-                    yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
-                    axisTop={null}
-                    axisRight={null}
-                    axisBottom={{
-                        orient: 'bottom',
-                        tickSize: 5,
-                        tickPadding: 5,
-                        tickRotation: 0,
-                        legend: 'Date',
-                        legendOffset: 36,
-                        legendPosition: 'middle'
-                    }}
-                    axisLeft={{
-                        orient: 'left',
-                        tickSize: 5,
-                        tickPadding: 5,
-                        tickRotation: 0,
-                        legend: 'Sentiment',
-                        legendOffset: -40,
-                        legendPosition: 'middle'
-                    }}
-                    colors={{ scheme: 'nivo' }}
-                    pointSize={12}
-                    pointColor={{ theme: 'background' }}
-                    pointBorderWidth={5}
-                    pointBorderColor={{ from: 'serieColor' }}
-                    pointLabel='sentiment'
-                    pointLabelYOffset={-12}
-                    lineWidth={5}
-                    useMesh={true}
-                    legends={[
-                        {
-                            anchor: 'bottom-right',
-                            direction: 'column',
-                            justify: false,
-                            translateX: 100,
-                            translateY: 0,
-                            itemsSpacing: 0,
-                            itemDirection: 'left-to-right',
-                            itemWidth: 80,
-                            itemHeight: 20,
-                            itemOpacity: 0.75,
-                            symbolSize: 12,
-                            symbolShape: 'circle',
-                            symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                            effects: [
+                <AutoSizer>
+                    {({height, width}) => (
+                        <Line
+                            height={height}
+                            width={width}
+                            data={sentimentHistorys}
+                            margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+                            xScale={{ type: 'point' }}
+                            yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                orient: 'bottom',
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: 'Date',
+                                legendOffset: 36,
+                                legendPosition: 'middle'
+                            }}
+                            axisLeft={{
+                                orient: 'left',
+                                tickSize: 5,
+                                tickPadding: 5,
+                                tickRotation: 0,
+                                legend: 'Sentiment',
+                                legendOffset: -40,
+                                legendPosition: 'middle'
+                            }}
+                            colors={{ scheme: 'nivo' }}
+                            pointSize={12}
+                            pointColor={{ theme: 'background' }}
+                            pointBorderWidth={5}
+                            pointBorderColor={{ from: 'serieColor' }}
+                            pointLabel='sentiment'
+                            pointLabelYOffset={-12}
+                            lineWidth={5}
+                            useMesh={true}
+                            legends={[
                                 {
-                                    on: 'hover',
-                                    style: {
-                                        itemBackground: 'rgba(0, 0, 0, .03)',
-                                        itemOpacity: 1
-                                    }
+                                    anchor: 'bottom-right',
+                                    direction: 'column',
+                                    justify: false,
+                                    translateX: 100,
+                                    translateY: 0,
+                                    itemsSpacing: 0,
+                                    itemDirection: 'left-to-right',
+                                    itemWidth: 80,
+                                    itemHeight: 20,
+                                    itemOpacity: 0.75,
+                                    symbolSize: 12,
+                                    symbolShape: 'circle',
+                                    symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                                    effects: [
+                                        {
+                                            on: 'hover',
+                                            style: {
+                                                itemBackground: 'rgba(0, 0, 0, .03)',
+                                                itemOpacity: 1
+                                            }
+                                        }
+                                    ]
                                 }
-                            ]
-                        }
-                    ]}
-                />
+                            ]}
+                        />
+                    )}
+                </AutoSizer>
             </Grid>
         </Grid>
     );
