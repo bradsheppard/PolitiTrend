@@ -10,7 +10,7 @@ COPY app.py .
 
 COPY config.ini .
 
-COPY sentiment_analyzer sentiment_analyzer
+COPY sentiment_analytic sentiment_analytic
 
 COPY lib lib
 
