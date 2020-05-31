@@ -27,7 +27,7 @@ interface SentimentHistory {
 }
 
 interface Point {
-    x: number;
+    x: string;
     y: number;
 }
 
@@ -109,7 +109,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
     };
 
     const getHighestPerX = (sentimentHistory: SentimentHistory) => {
-        const highs: {[key: number]: number} = {};
+        const highs: {[key: string]: number} = {};
 
         sentimentHistory.data.forEach(point => {
             if (!highs[point.x] || highs[point.x] < point.y) {
@@ -121,8 +121,8 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
             id: sentimentHistory.id,
             data: Object.keys(highs).map(key => {
                 return {
-                    x: parseInt(key),
-                    y: highs[parseInt(key)]
+                    x: key,
+                    y: highs[key]
                 }
             })
         };
@@ -133,8 +133,9 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
     const addSentimentHistory = async (politician: Politician) => {
         const politicianSentiments = await SentimentApi.getForPolitician(politician.id);
         const data = politicianSentiments.map(sentiment => {
+            const date = new Date(sentiment.dateTime);
             return {
-                x: new Date(sentiment.dateTime).getDate(),
+                x: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
                 y: sentiment.sentiment
             };
         });
@@ -148,6 +149,9 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
     };
 
     const numRows = 8;
+
+    const histories = sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x));
+    console.log(histories);
 
     return (
         <Grid container>
@@ -195,18 +199,21 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                             width={width}
                             data={sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x))}
                             margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-                            xScale={{ type: 'point' }}
+                            xScale={{
+                                type: 'time',
+                                format: '%Y-%m-%d',
+                                useUTC: false,
+                                precision: 'day'
+                            }}
+                            xFormat="time:%Y-%m-%d"
                             yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
                             axisTop={null}
                             axisRight={null}
                             axisBottom={{
-                                orient: 'bottom',
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: 'Date',
-                                legendOffset: 36,
-                                legendPosition: 'middle'
+                                format: '%b %d',
+                                tickValues: 'every 2 days',
+                                legend: 'time scale',
+                                legendOffset: -12,
                             }}
                             axisLeft={{
                                 orient: 'left',
@@ -226,32 +233,6 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                             pointLabelYOffset={-12}
                             lineWidth={3}
                             useMesh={true}
-                            legends={[
-                                {
-                                    anchor: 'bottom-right',
-                                    direction: 'column',
-                                    justify: false,
-                                    translateX: 100,
-                                    translateY: 0,
-                                    itemsSpacing: 0,
-                                    itemDirection: 'left-to-right',
-                                    itemWidth: 80,
-                                    itemHeight: 20,
-                                    itemOpacity: 0.75,
-                                    symbolSize: 12,
-                                    symbolShape: 'circle',
-                                    symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                                    effects: [
-                                        {
-                                            on: 'hover',
-                                            style: {
-                                                itemBackground: 'rgba(0, 0, 0, .03)',
-                                                itemOpacity: 1
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]}
                         />
                     )}
                 </AutoSizer>
