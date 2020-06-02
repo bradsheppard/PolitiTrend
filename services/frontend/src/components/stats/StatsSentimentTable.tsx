@@ -135,7 +135,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
         const data = politicianSentiments.map(sentiment => {
             const date = new Date(sentiment.dateTime);
             return {
-                x: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
+                x: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
                 y: sentiment.sentiment
             };
         });
