@@ -4,10 +4,23 @@ import { CreateTweetDto } from './dto/create-tweet.dto';
 import { EventPattern } from '@nestjs/microservices';
 import Tweet from './tweet.entity';
 import { SearchTweetDto } from './dto/search-tweet.dto';
+import { HealthCheck, HealthCheckService, TypeOrmHealthIndicator } from '@nestjs/terminus';
 
 @Controller()
 export class TweetController {
-	constructor(private tweetService: TweetService) {}
+	constructor(
+		private tweetService: TweetService,
+		private health: HealthCheckService,
+		private typeOrmHealthIndicator: TypeOrmHealthIndicator
+	) {}
+
+	@Get('/health')
+	@HealthCheck()
+	healthCheck() {
+		return this.health.check([
+			async () => this.typeOrmHealthIndicator.pingCheck('database')
+		])
+	}
 
 	@Get()
 	async findAll(@Query() query: SearchTweetDto) {

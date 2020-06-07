@@ -61,6 +61,8 @@ export class TweetService {
 			query.offset(searchTweetDto.offset);
 		}
 
+		query.orderBy('tweet.dateTime', 'DESC');
+
 		return query;
 	}
 

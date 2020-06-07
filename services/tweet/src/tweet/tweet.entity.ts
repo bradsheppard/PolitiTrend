@@ -17,6 +17,7 @@ export default class Tweet {
 	@Column({type: 'timestamp', transformer: dateTransformer})
 	dateTime: string;
 
+	@Index()
 	@Column({type: 'int', array: true })
 	politicians: number[];
 

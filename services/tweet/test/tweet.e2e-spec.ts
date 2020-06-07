@@ -10,6 +10,7 @@ import microserviceConfig from '../src/config/config.microservice';
 import { ClientProviderOptions } from '@nestjs/microservices/module/interfaces/clients-module.interface';
 import waitForExpect from 'wait-for-expect';
 import { UpdateTweetDto } from '../src/tweet/dto/update-tweet.dto';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 waitForExpect.defaults.timeout = 20000;
 jest.setTimeout(30000);
@@ -69,6 +70,13 @@ beforeEach(async () => {
 });
 
 describe('TweetController (e2e)', () => {
+
+	it('/health (GET)', async () => {
+		const response = await request(app.getHttpServer())
+			.get('/health');
+
+		expect(response.status).toEqual(200);
+	});
 
 	it('/ (GET)', async () => {
 		const response = await request(app.getHttpServer())
