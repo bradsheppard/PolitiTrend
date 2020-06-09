@@ -5,6 +5,7 @@ from attr import dataclass
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import udf, explode
 from pyspark.sql.types import FloatType, IntegerType, MapType
+from pyspark.sql import functions as F
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from sentiment_analytic.model.politician import Politician
@@ -85,6 +86,8 @@ def analyze(dataframe, subjects: List[Politician]) -> DataFrame:
         .withColumn('sentiments', udf_sentiment(subjects)('tweetText')) \
         .select(explode('sentiments').alias('politician', 'sentiment')) \
         .groupBy('politician') \
-        .agg({'sentiment': 'avg'}).withColumnRenamed('avg(sentiment)', 'sentiment')
+        .agg(F.avg('sentiment'), F.count('sentiment')) \
+        .withColumnRenamed('avg(sentiment)', 'sentiment') \
+        .withColumnRenamed('count(sentiment)', 'sampleSize')
 
     return sentiment_dataframe

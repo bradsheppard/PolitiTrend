@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose'
 const SentimentSchema = new mongoose.Schema({
 	politician: Number,
 	sentiment: Number,
+	sampleSize: Number,
 	dateTime: {
 		type: Date,
 		default: Date.now

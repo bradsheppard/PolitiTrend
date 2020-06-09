@@ -36,6 +36,10 @@ def test_get_entity_sentiments(spark_context, politicians):
             'politicians': [1]
         },
         {
+            'tweetText': 'Bob Young is awesome',
+            'politicians': [1]
+        },
+        {
             'tweetText': 'John Smith sucks',
             'politicians': [2]
         }
@@ -44,11 +48,13 @@ def test_get_entity_sentiments(spark_context, politicians):
     expected_data = [
         {
             'sentiment': 0.6248999834060669,
-            'politician': 1
+            'politician': 1,
+            'sampleSize': 2
         },
         {
             'sentiment': -0.3612000048160553,
-            'politician': 2
+            'politician': 2,
+            'sampleSize': 1
         }
     ]
 

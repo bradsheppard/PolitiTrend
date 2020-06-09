@@ -9,4 +9,8 @@ export class CreateSentimentDto {
 	@IsNumber()
 	@Type(() => Number)
 	sentiment: number;
+
+	@IsInt()
+	@Type(() => Number)
+	sampleSize: number;
 }

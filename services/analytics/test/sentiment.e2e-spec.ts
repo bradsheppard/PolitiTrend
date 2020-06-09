@@ -61,7 +61,8 @@ function createSentiment(): CreateSentimentDto {
 	id++;
 	return {
 		sentiment: id,
-		politician: id
+		politician: id,
+		sampleSize: id + 100
 	}
 }
 
@@ -69,13 +70,15 @@ function createSentimentForPolitician(politician: number): CreateSentimentDto {
 	id++;
 	return {
 		sentiment: id,
-		politician
+		politician,
+		sampleSize: id + 100
 	}
 }
 
 function equals(sentiment: Sentiment, sentimentDto: CreateSentimentDto) {
 	expect(sentiment.sentiment).toEqual(sentimentDto.sentiment);
 	expect(sentiment.politician).toEqual(sentimentDto.politician);
+	expect(sentiment.sampleSize).toEqual(sentimentDto.sampleSize);
 }
 
 describe('Sentiment (e2e)', () => {

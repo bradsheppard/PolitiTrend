@@ -31,7 +31,8 @@ export class SentimentService {
 					'id': { $first: '$_id'},
 					'politician': { $first: '$politician'},
 					'dateTime': { $first: '$dateTime'},
-					'sentiment': { $first: '$sentiment'}
+					'sentiment': { $first: '$sentiment'},
+					'sampleSize': { $first: '$sampleSize'}
 				}
 			},
 			{

@@ -17,7 +17,8 @@ describe('Sentiment Controller', () => {
 			id,
 			politician: id,
 			sentiment: id,
-			dateTime: new Date()
+			dateTime: new Date(),
+			sampleSize: id + 100
 		} as Sentiment;
 	}
 
@@ -25,7 +26,8 @@ describe('Sentiment Controller', () => {
 		id++;
 		return {
 			politician: id,
-			sentiment: id
+			sentiment: id,
+			sampleSize: id + 100
 		}
 	}
 
