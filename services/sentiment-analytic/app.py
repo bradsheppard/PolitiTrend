@@ -15,7 +15,7 @@ spark = SparkSession.builder \
 
 load_config(spark.sparkContext)
 
-paths = [get_s3_path(0), get_s3_path(1)]
+paths = [get_s3_path(0), get_s3_path(1), get_s3_path(2), get_s3_path(3)]
 
 dataframe = None
 
