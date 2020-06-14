@@ -13,7 +13,7 @@ spec:
   tasksMax: 1
   config:
     format.class: io.confluent.connect.s3.format.json.JsonFormat
-    flush.size: 6
+    flush.size: 1000
     topics: tweet-created
     partitioner.class: io.confluent.connect.storage.partitioner.HourlyPartitioner
     name: s3-sink-connector
