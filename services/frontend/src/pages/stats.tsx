@@ -1,13 +1,12 @@
 import { createStyles, Grid, Theme } from '@material-ui/core';
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WordCloud from '../components/common/WordCloud';
 import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi';
 import SentimentApi from '../apis/sentiment/SentimentApi';
 import PoliticianApi from '../apis/politician/PoliticianApi';
 import StatsSentimentTable from '../components/stats/StatsSentimentTable';
 import StatsCard from '../components/stats/StatsCard';
-import PieChart from '../components/common/PieChart';
+import StatsWordCloud from '../components/stats/StatsWordCloud';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,14 +49,7 @@ const Stats = (props: IProps) => {
         <Grid container>
             <Grid item xs={12}>
                 <StatsCard title='Trending Hashtags' className={classes.card}>
-                    <Grid container>
-                        <Grid item xs={6}>
-                            <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <PieChart categories={props.wordCounts.map(x => {return {name: x.word, value: x.count}})} />
-                        </Grid>
-                    </Grid>
+                    <StatsWordCloud wordCounts={props.wordCounts} politicians={props.politicians} />
                 </StatsCard>
             </Grid>
 
