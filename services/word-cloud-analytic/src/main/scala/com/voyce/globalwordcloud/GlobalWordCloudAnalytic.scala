@@ -1,7 +1,7 @@
 package com.voyce.globalwordcloud
 
 import com.voyce.common.{ConfigReader, PathTranslator, Tweet}
-import org.apache.spark.sql.{Dataset, SparkSession}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object GlobalWordCloudAnalytic {
 
@@ -13,20 +13,22 @@ object GlobalWordCloudAnalytic {
         import spark.implicits._
 
         val sc = spark.sparkContext
-        ConfigReader.load(sc)
+        val configReader = new ConfigReader()
+        configReader.load(sc)
 
-        val paths = List(PathTranslator.getS3Path(), PathTranslator.getS3Path(1))
+        val lookback = configReader.getLookback()
+        val paths = (0 to lookback).toList.map(x => PathTranslator.getS3Path(x))
 
-        var dataframe: Option[Dataset[Tweet]] = None
+        var optionalDataframe: Option[DataFrame] = None
 
         for(path <- paths) {
             try {
-                val currentDataframe: Dataset[Tweet] = spark.read.json(path).as[Tweet].persist()
-                if(dataframe.isEmpty) {
-                    dataframe = Option.apply(currentDataframe)
+                val currentDataframe: DataFrame = spark.read.json(path)
+                if(optionalDataframe.isEmpty) {
+                    optionalDataframe = Option.apply(currentDataframe)
                 }
                 else {
-                    dataframe.get.union(currentDataframe)
+                    optionalDataframe.get.union(currentDataframe)
                 }
             }
             catch {
@@ -35,7 +37,8 @@ object GlobalWordCloudAnalytic {
             }
         }
 
-        val politicianWordCountDataFrame = GlobalWordCloudCalculator.calculate(spark, dataframe.get)
+        val dataframe = optionalDataframe.get.as[Tweet].persist()
+        val politicianWordCountDataFrame = GlobalWordCloudCalculator.calculate(spark, dataframe)
 
         val jsonifiedDataframe = politicianWordCountDataFrame.toJSON
 
