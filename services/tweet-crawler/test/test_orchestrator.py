@@ -22,7 +22,8 @@ def test_crawl_all():
         [],
         datetime.datetime.now().isoformat(' ', 'seconds'),
         '123',
-        'Test text')
+        'Test text',
+        'Test location')
 
     mock_tweet_crawler.get = Mock(return_value=[crawler_result])
 
@@ -68,7 +69,8 @@ def test_crawl_all_no_job():
         [],
         datetime.datetime.now().isoformat(' ', 'seconds'),
         '123',
-        'Test text')
+        'Test text',
+        'Test location')
 
     mock_tweet_crawler.get = Mock(return_value=[crawler_result])
 

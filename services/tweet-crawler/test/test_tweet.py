@@ -43,7 +43,8 @@ def test_insert_and_get():
         tweetId='1',
         tweetText=random_string(),
         dateTime=datetime.datetime.now().isoformat(' ', 'seconds'),
-        politicians=[1]
+        politicians=[1],
+        location='Test location'
     )
 
     repository.insert(tweet)

@@ -15,6 +15,7 @@ class Tweet:
     dateTime: str
     tweetId: str
     tweetText: str
+    location: str
 
 
 class TweetCrawler:
@@ -44,7 +45,8 @@ class TweetCrawler:
                 tweetId=tweepy_result.id_str,
                 tweetText=tweepy_result.full_text,
                 dateTime=tweepy_result.created_at.isoformat(' ', 'seconds'),
-                politicians=extracted_politicians
+                politicians=extracted_politicians,
+                location=tweepy_result.user.location
             )
 
             results.append(tweet)
@@ -78,7 +80,8 @@ class TweetRepository:
                 politicians=entry['politicians'],
                 tweetText=entry['tweetText'],
                 tweetId=entry['tweetId'],
-                dateTime=entry['dateTime'])
+                dateTime=entry['dateTime'],
+                location=entry['location'])
 
             tweets.append(tweet)
 
