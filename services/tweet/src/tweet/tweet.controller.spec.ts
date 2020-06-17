@@ -5,6 +5,7 @@ import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import Tweet from './tweet.entity';
 import { Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
 
 describe('Tweet Controller', () => {
 	let controller: TweetController;
@@ -35,6 +36,7 @@ describe('Tweet Controller', () => {
 					useClass: Repository,
 				},
 			],
+			imports: [TerminusModule]
 		}).compile();
 
 		controller = module.get<TweetController>(TweetController);
