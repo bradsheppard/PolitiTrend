@@ -56,6 +56,9 @@ export class TweetService {
 		if (searchTweetDto.limit) {
 			query.limit(searchTweetDto.limit);
 		}
+		else {
+			query.limit(10);
+		}
 
 		if (searchTweetDto.offset) {
 			query.offset(searchTweetDto.offset);
