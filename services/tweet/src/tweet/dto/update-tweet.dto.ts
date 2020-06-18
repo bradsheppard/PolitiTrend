@@ -3,5 +3,6 @@ export class UpdateTweetDto {
 	politicians: number[];
 	tweetId: string;
 	tweetText: string;
+	location: string;
 	dateTime: string;
 }

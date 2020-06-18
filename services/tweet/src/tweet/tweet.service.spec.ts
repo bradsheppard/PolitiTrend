@@ -10,12 +10,13 @@ describe('Tweet Service', () => {
 
 	let id = 0;
 
-	function createOpinion() {
+	function createTweet() {
 		id++;
 		return {
 			tweetText: `test text ${id}`,
 			tweetId: id.toString(),
-			politicians: [id]
+			politicians: [id],
+			location: `Test location ${id}`
 		} as Tweet;
 	}
 
@@ -43,13 +44,13 @@ describe('Tweet Service', () => {
 	});
 
 	it('can get all', async () => {
-		const opinion = createOpinion();
+		const opinion = createTweet();
 		jest.spyOn(tweetRepository, 'find').mockResolvedValueOnce([opinion]);
 		expect(await service.get()).toEqual([opinion]);
 	});
 
 	it('can get one', async () => {
-		const opinion = createOpinion();
+		const opinion = createTweet();
 		jest.spyOn(tweetRepository, 'findOne').mockResolvedValueOnce(opinion);
 		expect(await service.getOne(opinion.id)).toEqual(opinion);
 	});
@@ -61,7 +62,7 @@ describe('Tweet Service', () => {
 	});
 
 	it('can update', async () => {
-		const opinion = createOpinion();
+		const opinion = createTweet();
 
 		const tweetFindSpy = jest.spyOn(tweetRepository, 'findOne').mockResolvedValueOnce(opinion);
 		const tweetSaveSpy = jest.spyOn(tweetRepository, 'save').mockResolvedValueOnce(opinion);

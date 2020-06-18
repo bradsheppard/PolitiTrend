@@ -20,6 +20,7 @@ describe('Tweet Controller', () => {
 			tweetText: `test text ${id}`,
 			tweetId: id.toString(),
 			politicians: [id],
+			location: `test location ${id}`
 		} as Tweet;
 	}
 

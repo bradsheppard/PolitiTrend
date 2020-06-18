@@ -3,4 +3,5 @@ export class CreateTweetDto {
 	tweetId: string;
 	tweetText: string;
 	dateTime: string;
+	location: string;
 }

@@ -27,7 +27,8 @@ function createTweetDto() {
 		tweetId: id.toString(),
 		tweetText: `Test tweet ${id}`,
 		dateTime: new Date().toUTCString(),
-		politicians: [id]
+		politicians: [id],
+		location: `test location ${id}`
 	} as CreateTweetDto;
 }
 
@@ -61,8 +62,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-	await client.close();
-	await app.close();
+	// await client.close();
+	// await app.close();
 });
 
 beforeEach(async () => {

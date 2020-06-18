@@ -27,4 +27,7 @@ export default class Tweet {
 
 	@Column()
 	tweetText: string;
+
+	@Column()
+	location: string;
 }
