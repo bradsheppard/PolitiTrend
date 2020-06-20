@@ -27,4 +27,4 @@ spec:
     value.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
     value.converter.schemas.enable: false
-    s3.part.retries: 10
+    s3.part.retries: 30
