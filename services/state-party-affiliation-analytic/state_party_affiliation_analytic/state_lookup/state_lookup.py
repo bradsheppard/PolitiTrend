@@ -3,6 +3,12 @@ from typing import Union
 import os
 import geograpy
 import pandas as pd
+import nltk
+
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
 
 script_dir = os.path.dirname(__file__)
 state_dataframe = pd.read_csv(script_dir + '/state_list.csv')
@@ -20,7 +26,3 @@ def get_state(location: str) -> Union[str, None]:
                 return row['Abbreviation']
 
     return None
-
-
-
-
