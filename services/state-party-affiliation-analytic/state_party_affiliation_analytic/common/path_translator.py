@@ -7,5 +7,5 @@ def get_s3_path(offset: int) -> str:
 
     s3_path = f's3://tweets/topics/tweet-created/' \
               f'year={now.year}/' \
-              f'month={str(now.month).zfill(2)}/day={str(now.day).zfill(2)}/*/*'
+              f'month={str(now.month).zfill(2)}/day=22/*/*'
     return s3_path
