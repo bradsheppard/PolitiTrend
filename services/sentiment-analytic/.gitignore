@@ -1,6 +1,6 @@
 /.idea
 /.pytest_cache
 /env
-/notebook
+/notebook/env
 **/__pycache__
 .python-version
