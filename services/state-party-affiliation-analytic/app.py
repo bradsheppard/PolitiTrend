@@ -4,9 +4,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from state_party_affiliation_analytic.common.path_translator import get_s3_path
 from state_party_affiliation_analytic.config import config
+from state_party_affiliation_analytic.dataframe.dataframe import compute_party_sentiments
 from state_party_affiliation_analytic.model.politician import PoliticianRepository
-from state_party_affiliation_analytic.sentiment_analyzer.sentiment_analyzer import get_entity_sentiments
-from state_party_affiliation_analytic.state_lookup import get_state
 
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.max_columns', None)
@@ -25,13 +24,6 @@ df = dd.read_json(path, storage_options={
     }
 })
 
-df['sentiment'] = df['tweetText'].map(lambda x: get_entity_sentiments(x, politicians))
-df['state'] = df['location'].map(get_state)
-df = df.assign(
-    Democratic=df['sentiment'].map(lambda x: x['Democratic'] if 'Democratic' in x else 0),
-    Republican=df['sentiment'].map(lambda x: x['Republican'] if 'Republican' in x else 0)
-)
-
-df = df.groupby(['state'])[['Democratic', 'Republican']].mean()
+result = compute_party_sentiments(df, politicians)
 
 print(df.head(40))

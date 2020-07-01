@@ -1,5 +1,5 @@
-from state_party_affiliation_analytic.sentiment_analyzer.sentiment_analyzer import get_entity_sentiments
+from state_party_affiliation_analytic.sentiment_analyzer.sentiment_analyzer import get_party_sentiments
 
 __all__ = [
-    get_entity_sentiments
+    get_party_sentiments
 ]

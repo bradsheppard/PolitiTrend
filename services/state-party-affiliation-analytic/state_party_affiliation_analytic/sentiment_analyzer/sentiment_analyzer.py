@@ -1,24 +1,22 @@
-from typing import Dict, List, Union
-
 import spacy
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
-from state_party_affiliation_analytic.model.politician import Politician
-
+from typing import Dict, List, Union
 from statistics import mean
+
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from state_party_affiliation_analytic.model.politician import Politician
 
 sentiment_analyzer = SentimentIntensityAnalyzer()
 
 nlp = spacy.load('en')
 
 
-def get_entity_sentiments(statement: str, subjects: List[Politician] = None) -> Dict[str, float]:
+def get_party_sentiments(statement: str, subjects: List[Politician] = None) -> Dict[str, float]:
     doc = nlp(statement)
 
     results = {}
     for sent in doc.sents:
         score = sentiment_analyzer.polarity_scores(sent.text)['compound']
-        pos_subjects = get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'], subjects)
+        pos_subjects = _get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'], subjects)
 
         max_length = 0
         for subject in pos_subjects.values():
@@ -38,24 +36,24 @@ def get_entity_sentiments(statement: str, subjects: List[Politician] = None) -> 
     return results
 
 
-def get_pos_subjects(doc, pos_list, politicians) -> Dict[str, List[str]]:
+def _get_pos_subjects(doc, pos_list, politicians) -> Dict[str, List[str]]:
     verbs = {politician.party: [] for politician in politicians}
     for possible_verb in doc:
         if possible_verb.pos_ in pos_list:
             found_child = False
             children = possible_verb.children
             for child in children:
-                match = match_politician(child.text, politicians)
+                match = _match_politician(child.text, politicians)
                 if match is not None and child.dep_ == 'nsubj':
                     verbs[match.party].append(possible_verb)
-                    traverse_subject_conjs(child, possible_verb, verbs, politicians)
+                    _traverse_subject_conjs(child, possible_verb, verbs, politicians)
                     found_child = True
             if not found_child:
-                traverse_up(possible_verb, possible_verb, verbs, politicians)
+                _traverse_up(possible_verb, possible_verb, verbs, politicians)
     return verbs
 
 
-def match_politician(text, politicians) -> Union[Politician, None]:
+def _match_politician(text, politicians) -> Union[Politician, None]:
     for politician in politicians:
         split_name = politician.name.split()
         if text in split_name:
@@ -63,24 +61,24 @@ def match_politician(text, politicians) -> Union[Politician, None]:
     return None
 
 
-def traverse_up(possible_verb, current, verbs, politicians):
+def _traverse_up(possible_verb, current, verbs, politicians):
     head = current.head
     if current == head:
         return
     children = head.children
     for child in children:
-        match = match_politician(child.text, politicians)
+        match = _match_politician(child.text, politicians)
         if match is not None and child.dep_ == 'nsubj':
             verbs[match.party].append(possible_verb)
-            traverse_subject_conjs(child, possible_verb, verbs, politicians)
-    traverse_up(possible_verb, head, verbs, politicians)
+            _traverse_subject_conjs(child, possible_verb, verbs, politicians)
+    _traverse_up(possible_verb, head, verbs, politicians)
 
 
-def traverse_subject_conjs(subj, possible_verb, verbs, politicians):
+def _traverse_subject_conjs(subj, possible_verb, verbs, politicians):
     children = subj.children
     for child in children:
         if child.dep_ == 'conj':
-            match = match_politician(child.text, politicians)
+            match = _match_politician(child.text, politicians)
             if match is not None:
                 verbs[match.party].append(possible_verb)
-                traverse_subject_conjs(child, possible_verb, verbs, politicians)
+                _traverse_subject_conjs(child, possible_verb, verbs, politicians)
