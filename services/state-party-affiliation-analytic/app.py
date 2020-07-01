@@ -32,7 +32,6 @@ df = df.assign(
     Republican=df['sentiment'].map(lambda x: x['Republican'] if 'Republican' in x else 0)
 )
 
-# df = df.groupby(['state'])['sentiment'].mean()
-# df = df.explode('sentiment')
+df = df.groupby(['state'])[['Democratic', 'Republican']].mean()
 
 print(df.head(40))
