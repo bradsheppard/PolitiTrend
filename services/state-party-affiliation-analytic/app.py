@@ -12,7 +12,7 @@ pd.set_option('display.max_columns', None)
 
 sentiment_analyzer = SentimentIntensityAnalyzer()
 
-path = get_s3_path(1)
+path = get_s3_path(3)
 politician_repository = PoliticianRepository()
 politicians = politician_repository.get_all()
 
@@ -26,4 +26,4 @@ df = dd.read_json(path, storage_options={
 
 result = compute_party_sentiments(df, politicians)
 
-print(df.head(40))
+print(result.head(40))
