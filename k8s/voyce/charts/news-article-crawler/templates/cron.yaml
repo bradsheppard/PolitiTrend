@@ -20,6 +20,7 @@ spec:
           imagePullSecrets:
             {{- toYaml . | nindent 12 }}
         {{- end }}
+          serviceAccountName: {{ include "news-article-crawler.serviceAccountName" . }}
           containers:
             - name: {{ .Chart.Name }}
               image: "{{ .Values.global.registry }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
