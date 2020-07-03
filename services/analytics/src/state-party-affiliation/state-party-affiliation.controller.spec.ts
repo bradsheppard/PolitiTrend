@@ -44,4 +44,11 @@ describe('StatePartyAffiliation Controller', () => {
 		jest.spyOn(service, 'findAll').mockResolvedValueOnce([statePartyAffiliation]);
 		expect(await controller.findAll()).toEqual([statePartyAffiliation]);
 	});
+
+	it('Can handle state party affiliation created', async () => {
+		const statePartyAffiliation = createStatePartyAffiliation();
+		const insertSpy = jest.spyOn(service, 'create').mockImplementation();
+		await controller.handleStatePartyAffiliationCreated(statePartyAffiliation);
+		expect(insertSpy).toBeCalled();
+	});
 });
