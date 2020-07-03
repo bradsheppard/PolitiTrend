@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GlobalWordCloudModule } from './global-word-cloud/global-word-cloud.module';
 import { SentimentModule } from './sentiment/sentiment.module';
+import { StatePartyAffiliationModule } from './state-party-affiliation/state-party-affiliation.module';
 
 @Module({
 	imports: [
@@ -22,7 +23,8 @@ import { SentimentModule } from './sentiment/sentiment.module';
 		}),
 		PoliticianWordCloudModule,
 		GlobalWordCloudModule,
-		SentimentModule
+		SentimentModule,
+		StatePartyAffiliationModule
 	]
 })
 export class AppModule {}
