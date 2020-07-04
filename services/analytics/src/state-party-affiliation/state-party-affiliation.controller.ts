@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { StatePartyAffiliation } from './interfaces/state-party-affiliation.interface';
 import { StatePartyAffiliationService } from './state-party-affiliation.service';
-import { CreateStatePartyAffiliation } from './dtos/create-state-party-affiliation';
+import { CreateStatePartyAffiliationDto } from './dtos/create-state-party-affiliation-dto';
 import { EventPattern } from '@nestjs/microservices';
 
 @Controller('state-party-affiliation')
@@ -14,12 +14,12 @@ export class StatePartyAffiliationController {
 	}
 
 	@Post()
-	async create(@Body() createStatePartyAffiliation: CreateStatePartyAffiliation): Promise<StatePartyAffiliation> {
+	async create(@Body() createStatePartyAffiliation: CreateStatePartyAffiliationDto): Promise<StatePartyAffiliation> {
 		return await this.statePartyAffiliationService.create(createStatePartyAffiliation);
 	}
 
-	@EventPattern('analytics-state-party-affiliation-create')
-	async handleStatePartyAffiliationCreated(@Body() createStatePartyAffiliation: CreateStatePartyAffiliation): Promise<StatePartyAffiliation> {
+	@EventPattern('analytics-state-party-affiliation-created')
+	async handleStatePartyAffiliationCreated(@Body() createStatePartyAffiliation: CreateStatePartyAffiliationDto): Promise<StatePartyAffiliation> {
 		return await this.statePartyAffiliationService.create(createStatePartyAffiliation);
 	}
 }

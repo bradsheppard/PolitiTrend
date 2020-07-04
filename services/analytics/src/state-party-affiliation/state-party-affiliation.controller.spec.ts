@@ -3,6 +3,7 @@ import { StatePartyAffiliationController } from './state-party-affiliation.contr
 import { StatePartyAffiliationService } from './state-party-affiliation.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { StatePartyAffiliation } from './interfaces/state-party-affiliation.interface';
+import { CreateStatePartyAffiliationDto } from './dtos/create-state-party-affiliation-dto';
 
 describe('StatePartyAffiliation Controller', () => {
 	let controller: StatePartyAffiliationController;
@@ -16,6 +17,17 @@ describe('StatePartyAffiliation Controller', () => {
 			state: `State ${id}`,
 			dateTime: new Date()
 		} as StatePartyAffiliation;
+	}
+
+	function createStatePartyAffiliationDto(): CreateStatePartyAffiliationDto {
+		id++;
+		return {
+			state: `State ${id}`,
+			affiliations: {
+				democratic: id,
+				republican: 1 - id
+			}
+		}
 	}
 
 	beforeEach(async () => {
@@ -43,6 +55,13 @@ describe('StatePartyAffiliation Controller', () => {
 		const statePartyAffiliation = createStatePartyAffiliation();
 		jest.spyOn(service, 'findAll').mockResolvedValueOnce([statePartyAffiliation]);
 		expect(await controller.findAll()).toEqual([statePartyAffiliation]);
+	});
+
+	it('Can create', async () => {
+		const createDto = createStatePartyAffiliationDto();
+		const insertSpy = jest.spyOn(service, 'create').mockImplementation();
+		await controller.create(createDto);
+		expect(insertSpy).toBeCalled();
 	});
 
 	it('Can handle state party affiliation created', async () => {

@@ -1,7 +1,7 @@
 import { IsInt, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateStatePartyAffiliation {
+export class CreateStatePartyAffiliationDto {
 	@IsString()
 	state: string;
 

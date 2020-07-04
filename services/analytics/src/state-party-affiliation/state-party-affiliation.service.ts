@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { StatePartyAffiliation } from './interfaces/state-party-affiliation.interface';
-import { CreateStatePartyAffiliation } from './dtos/create-state-party-affiliation';
+import { CreateStatePartyAffiliationDto } from './dtos/create-state-party-affiliation-dto';
 
 @Injectable()
 export class StatePartyAffiliationService {
@@ -22,6 +22,7 @@ export class StatePartyAffiliationService {
 					'id': { $first: '$_id'},
 					'state': { $first: '$state'},
 					'dateTime': { $first: '$dateTime'},
+					'affiliations': { $first: '$affiliations'}
 				}
 			},
 			{
@@ -39,8 +40,12 @@ export class StatePartyAffiliationService {
 		return await query.exec();
 	}
 
-	async create(createStatePartyAffiliation: CreateStatePartyAffiliation): Promise<StatePartyAffiliation> {
+	async create(createStatePartyAffiliation: CreateStatePartyAffiliationDto): Promise<StatePartyAffiliation> {
 		const createSentiment = new this.statePartyAffiliationModel(createStatePartyAffiliation);
 		return await createSentiment.save();
+	}
+
+	async delete(): Promise<void> {
+		await this.statePartyAffiliationModel.deleteMany({}).exec();
 	}
 }
