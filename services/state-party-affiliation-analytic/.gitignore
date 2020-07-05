@@ -2,6 +2,7 @@
 /data
 /venv
 /env
+/dask-worker-space
 /.pytest_cache
 **/__pycache__
 
