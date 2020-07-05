@@ -8,10 +8,19 @@ dependencies:
 - name: tweet-crawler
   repository: ""
   version: 1.0.0
+- name: video-crawler
+  repository: ""
+  version: 1.0.0
+- name: video
+  repository: ""
+  version: 1.0.0
 - name: news-article
   repository: ""
   version: 1.0.0
 - name: news-article-crawler
+  repository: ""
+  version: 1.0.0
+- name: analytics
   repository: ""
   version: 1.0.0
 - name: frontend
@@ -19,9 +28,9 @@ dependencies:
   version: 1.0.0
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
-  version: 5.0.16
+  version: 5.0.30
 - name: kafka
   repository: ""
   version: 1.0.0
-digest: sha256:fcb9540febd55e30fbe2627f4ee1fb822b486012c60e5f02590143ec582876e8
-generated: "2020-03-16T19:48:28.959429394-02:30"
+digest: sha256:0018cda7cec89b71e54bdfc27f399e25a6e437391f2e3b07928f9a002970fadf
+generated: "2020-07-05T12:21:34.494052625-02:30"

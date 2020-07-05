@@ -50,7 +50,7 @@ dependencies:
     version: 1.0.0
   - name: minio
     condition: minio.enabled
-    version: 5.0.16
+    version: 5.0.30
     repository: https://kubernetes-charts.storage.googleapis.com
   - name: kafka
     condition: kafka.enabled

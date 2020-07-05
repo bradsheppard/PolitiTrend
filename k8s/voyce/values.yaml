@@ -48,6 +48,8 @@ minio:
   secretKey: brad1234
   nameOverride: minio
   fullnameOverride: minio
+  persistence:
+    size: 50Gi
   resources:
     requests:
       memory: 64Mi
