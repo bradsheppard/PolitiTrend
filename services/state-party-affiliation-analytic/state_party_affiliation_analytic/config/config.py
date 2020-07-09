@@ -3,7 +3,10 @@ from dataclasses import dataclass
 
 config_parser = configparser.ConfigParser()
 config_parser.read('config.ini')
+
 s3_config = config_parser['s3']
+analytic_config = config_parser['analytic']
+queue_config = config_parser['queue']
 
 
 @dataclass()
@@ -11,10 +14,16 @@ class Config:
     s3_username: str
     s3_password: str
     s3_url: str
+    analytic_lookback_days: int
+    queue_host: str
+    queue_topic: str
 
 
 config = Config(
     s3_username=s3_config['username'],
     s3_password=s3_config['password'],
-    s3_url=s3_config['url']
+    s3_url=s3_config['url'],
+    analytic_lookback_days=analytic_config['lookback_days'],
+    queue_host=queue_config['url'],
+    queue_topic=queue_config['topic']
 )

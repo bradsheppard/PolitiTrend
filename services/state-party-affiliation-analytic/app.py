@@ -1,5 +1,6 @@
 import dask.dataframe as dd
 import pandas as pd
+import json
 
 from dask.distributed import Client
 
@@ -8,7 +9,18 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from state_party_affiliation_analytic.common.path_translator import get_s3_path
 from state_party_affiliation_analytic.config import config
 from state_party_affiliation_analytic.dataframe.dataframe import compute_party_sentiments
+from state_party_affiliation_analytic.message_bus import MessageBus
 from state_party_affiliation_analytic.model.politician import PoliticianRepository
+from state_party_affiliation_analytic.model.state_party_affiliation import StatePartyAffiliation, Affiliations
+
+
+def enqueue_state_party_affiliation(dd):
+    state_party_affiliation = StatePartyAffiliation(dd.Index, Affiliations(dd.Republican, dd.Democratic))
+    serialized = json.dumps(state_party_affiliation.__dict__, default=lambda o: o.__dict__)
+    message_queue.send(str.encode(serialized))
+
+    return None
+
 
 if __name__ == "__main__":
 
@@ -18,8 +30,9 @@ if __name__ == "__main__":
     pd.set_option('display.max_columns', None)
 
     sentiment_analyzer = SentimentIntensityAnalyzer()
+    message_queue = MessageBus(config.queue_host, config.queue_topic)
 
-    paths = [get_s3_path(0), get_s3_path(1), get_s3_path(2)]
+    paths = [get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
 
     politician_repository = PoliticianRepository()
     politicians = politician_repository.get_all()
@@ -45,4 +58,5 @@ if __name__ == "__main__":
 
     result = compute_party_sentiments(combined_df, politicians)
 
-    print(result.head(40))
+    for row in result.itertuples():
+        enqueue_state_party_affiliation(row)
