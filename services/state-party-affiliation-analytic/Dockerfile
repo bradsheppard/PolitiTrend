@@ -2,6 +2,10 @@ FROM python:3.7-slim-buster
 
 WORKDIR /app
 
+RUN apt-get update
+
+RUN apt-get install -y gcc python3.7-dev
+
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
@@ -16,4 +20,4 @@ COPY app.py .
 
 COPY config.ini .
 
-CMD ["python", "-u", "./crawler.py"]
+CMD ["python", "-u", "./app.py"]
