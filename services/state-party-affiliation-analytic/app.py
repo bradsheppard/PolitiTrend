@@ -1,14 +1,12 @@
-import dask.dataframe as dd
-import pandas as pd
 import json
 
-from dask.distributed import Client
-
+import dask.dataframe as dd
+from dask_kubernetes import KubeCluster
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from state_party_affiliation_analytic.common.path_translator import get_s3_path
 from state_party_affiliation_analytic.config import config
-from state_party_affiliation_analytic.dataframe.dataframe import compute_party_sentiments
+from state_party_affiliation_analytic.dask.dataframe import compute_party_sentiments
 from state_party_affiliation_analytic.message_bus import MessageBus
 from state_party_affiliation_analytic.model.politician import PoliticianRepository
 from state_party_affiliation_analytic.model.state_party_affiliation import StatePartyAffiliation, Affiliations
@@ -24,10 +22,8 @@ def enqueue_state_party_affiliation(dd):
 
 if __name__ == "__main__":
 
-    client = Client()
-
-    pd.set_option('display.max_colwidth', None)
-    pd.set_option('display.max_columns', None)
+    kube_cluster = KubeCluster.from_yaml('worker-spec.yml')
+    kube_cluster.scale(2)
 
     sentiment_analyzer = SentimentIntensityAnalyzer()
     message_queue = MessageBus(config.queue_host, config.queue_topic)

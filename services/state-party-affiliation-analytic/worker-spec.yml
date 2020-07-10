@@ -1,0 +1,21 @@
+kind: Pod
+metadata:
+  labels:
+    foo: bar
+spec:
+  restartPolicy: Never
+  containers:
+  - image: daskdev/dask:latest
+    imagePullPolicy: IfNotPresent
+    args: [dask-worker, --nthreads, '1', --no-dashboard, --memory-limit, 256MB, --death-timeout, '60']
+    name: dask
+    env:
+      - name: EXTRA_PIP_PACKAGES
+        value: git+https://github.com/dask/distributed
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: 200m
+      requests:
+        memory: 128Mi
+        cpu: 100m
