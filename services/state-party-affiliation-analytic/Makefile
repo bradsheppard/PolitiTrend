@@ -1,4 +1,4 @@
-service	:= sentiment-analytic
+service	:= state-party-affiliation-analytic
 tag	:= 1.0.0
 
 .PHONY: build
