@@ -8,9 +8,6 @@ image:
   analytic:
     repository: analytics
     pullPolicy: Always
-  wordCloudAnalytic:
-    repository: word-cloud-analytic
-    pullPolicy: Always
   sentimentAnalytic:
     repository: sentiment-analytic
     pullPolicy: Always
