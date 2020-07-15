@@ -58,6 +58,10 @@ const Stats = (props: IProps) => {
                     <StatsSentimentTable politicians={props.politicians} points={[]} />
                 </StatsCard>
             </Grid>
+            <Grid item xs={12}>
+                <StatsCard title='State Affiliations' className={classes.card}>
+                </StatsCard>
+            </Grid>
         </Grid>
     );
 };
