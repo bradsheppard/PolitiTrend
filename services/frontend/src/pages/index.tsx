@@ -10,7 +10,6 @@ import HomeMainNewsArticle from '../components/home/HomeMainNewsArticle';
 import HomeLatestNewsArticle from '../components/home/HomeLatestNewsArticle';
 import HomeHeader from '../components/home/HomeHeader';
 import Divider from '../components/common/Divider';
-import Fade from '../components/common/Fade';
 import HomeTrendingNewsArticle from '../components/home/HomeTrendingNewsArticle';
 import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi';
 import HomeVideoPlayer from '../components/home/HomeVideoPlayer';
@@ -94,22 +93,18 @@ class App extends React.Component<IProps> {
                             {
                                 this.props.mainNewsArticles.map((newsArticle, index) => {
                                     return (
-                                        <Fade key={index}>
-                                            <div className={classes.newsArticle}>
-                                                <HomeMainNewsArticle newsArticle={newsArticle} height={400} />
-                                            </div>
-                                        </Fade>
+                                        <div className={classes.newsArticle} key={index}>
+                                            <HomeMainNewsArticle newsArticle={newsArticle} height={400} />
+                                        </div>
                                     )
                                 })
                             }
                         </Grid>
                         <Grid item xs={12}>
-                            <Fade>
-                                <HomeHeader>
-                                    Trending Videos
-                                </HomeHeader>
-                                <Divider />
-                            </Fade>
+                            <HomeHeader>
+                                Trending Videos
+                            </HomeHeader>
+                            <Divider />
                         </Grid>
                         <Grid item xs={12}>
                             <div className={classes.newsArticle}>
@@ -117,43 +112,35 @@ class App extends React.Component<IProps> {
                             </div>
                         </Grid>
                         <Grid item xs={12}>
-                            <Fade>
-                                <HomeHeader>
-                                    Latest
-                                </HomeHeader>
-                                <Divider />
-                            </Fade>
+                            <HomeHeader>
+                                Latest
+                            </HomeHeader>
+                            <Divider />
                         </Grid>
                         {
                             this.props.latestNewsArticles.map((newsArticle, index) => {
                                 return (
                                     <Grid item xs={12} md={4} key={index}>
-                                        <Fade>
-                                            <div className={classes.newsArticle}>
-                                                <HomeLatestNewsArticle newsArticle={newsArticle} />
-                                            </div>
-                                        </Fade>
+                                        <div className={classes.newsArticle}>
+                                            <HomeLatestNewsArticle newsArticle={newsArticle} />
+                                        </div>
                                     </Grid>
                                 );
                             })
                         }
                         <Grid item xs={12}>
-                            <Fade>
-                                <HomeHeader>
-                                    Trending
-                                </HomeHeader>
-                                <Divider />
-                            </Fade>
+                            <HomeHeader>
+                                Trending
+                            </HomeHeader>
+                            <Divider />
                         </Grid>
                         {
                             this.props.trendingNewsArticles.map((newsArticle, index) => {
                                 return (
                                     <Grid item xs={12} key={index}>
-                                        <Fade>
-                                            <div className={classes.newsArticle}>
-                                                <HomeTrendingNewsArticle newsArticle={newsArticle} />
-                                            </div>
-                                        </Fade>
+                                        <div className={classes.newsArticle}>
+                                            <HomeTrendingNewsArticle newsArticle={newsArticle} />
+                                        </div>
                                     </Grid>
                                 );
                             })
