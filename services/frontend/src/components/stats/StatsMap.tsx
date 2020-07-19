@@ -43,6 +43,7 @@ const StatsMap = (props: IProps) => {
                                     key={geo.rsmKey}
                                     geography={geo}
                                     fill={color}
+                                    stroke='#eaeaec'
                                 />
                             );
                         })}
