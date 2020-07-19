@@ -1,8 +1,8 @@
 interface StatePartyAffiliationDto {
     state: string;
     affiliations: {
-        democratic: string;
-        republican: string;
+        democratic: number;
+        republican: number;
     }
 }
 

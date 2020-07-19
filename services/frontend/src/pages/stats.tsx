@@ -8,6 +8,7 @@ import StatsSentimentTable from '../components/stats/StatsSentimentTable';
 import StatsCard from '../components/stats/StatsCard';
 import StatsWordCloud from '../components/stats/StatsWordCloud';
 import StatsMap from '../components/stats/StatsMap';
+import StatePartyAffiliationApi from '../apis/state-party-affiliation/StatePartyAffiliationApi';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,15 +30,16 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
     wordCounts: WordCount[];
     politicians: Politician[];
+    statePartyAffiliations: StatePartyAffiliation[];
 }
 
-// interface StatePartyAffiliation {
-//     state: string;
-//     affiliations: {
-//         democratic: string;
-//         republican: string;
-//     }
-// }
+interface StatePartyAffiliation {
+    state: string;
+    affiliations: {
+        democratic: number;
+        republican: number;
+    }
+}
 
 interface WordCount {
     word: string;
@@ -69,7 +71,7 @@ const Stats = (props: IProps) => {
             </Grid>
             <Grid item xs={12}>
                 <StatsCard title='State Affiliations' className={classes.card}>
-                    <StatsMap />
+                    <StatsMap statePartyAffiliations={props.statePartyAffiliations} />
                 </StatsCard>
             </Grid>
         </Grid>
@@ -77,10 +79,11 @@ const Stats = (props: IProps) => {
 };
 
 Stats.getInitialProps = async function (): Promise<IProps> {
-    const [ politicians, wordClouds, sentiments ] = await Promise.all([
+    const [ politicians, wordClouds, sentiments, statePartyAffiliations ] = await Promise.all([
         PoliticianApi.get(),
         GlobalWordCloudApi.get({limit: 1}),
-        SentimentApi.get()
+        SentimentApi.get(),
+        StatePartyAffiliationApi.get()
     ]);
 
     const politicianSentiments = politicians.map(politician => {
@@ -95,7 +98,8 @@ Stats.getInitialProps = async function (): Promise<IProps> {
 
     return {
         wordCounts: wordClouds.length > 0 ? wordClouds[0].words : [],
-        politicians: politicianSentiments.sort((a, b) => b.sentiment - a.sentiment)
+        politicians: politicianSentiments.sort((a, b) => b.sentiment - a.sentiment),
+        statePartyAffiliations
     };
 };
 

@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 
 class StatePartyAffiliationApi {
 
-    private static url = `http://${url}/api/state-party-affiliation`;
+    private static url = `http://${url}/api/statepartyaffiliations`;
 
     static async get(): Promise<StatePartyAffiliationDto[]> {
         const axiosInstance = this.createAxiosInstance();
