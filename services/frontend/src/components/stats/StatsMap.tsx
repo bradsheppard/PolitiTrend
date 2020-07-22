@@ -102,7 +102,7 @@ const StatsMap = (props: IProps) => {
                     )}
                 </Geographies>
             </ComposableMap>
-            <ReactTooltip place="bottom" type="dark" effect="float">{tooltip}</ReactTooltip>
+            <ReactTooltip>{tooltip}</ReactTooltip>
         </div>
     );
 };
