@@ -34,12 +34,6 @@ interface Politician {
 
 interface IProps {
     politician: Politician | null;
-    wordCounts: WordCount[];
-}
-
-interface WordCount {
-    word: string;
-    count: number;
 }
 
 const PoliticianPage = (props: IProps) => {
@@ -48,7 +42,7 @@ const PoliticianPage = (props: IProps) => {
             <Typography>Not Found</Typography>
         );
 
-    const { politician, wordCounts } = props;
+    const { politician } = props;
     const classes = useStyles();
 
     return (
@@ -62,7 +56,7 @@ const PoliticianPage = (props: IProps) => {
                         <PoliticianHeader politician={politician}/>
                     </Grid>
                     <Grid item sm={9} className={classes.content}>
-                        <PoliticianFeed politician={politician.id} wordCounts={wordCounts} />
+                        <PoliticianFeed politician={politician.id} />
                     </Grid>
                 </Grid>
             </ContentContainer>
@@ -80,8 +74,7 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext): Promi
 
         if(!politicianDto || !wordCountsDto)
             return {
-                politician: null,
-                wordCounts: []
+                politician: null
             };
 
         const politician: Politician = {
@@ -92,14 +85,12 @@ PoliticianPage.getInitialProps = async function(context: NextPageContext): Promi
         };
 
         return {
-            politician,
-            wordCounts: wordCountsDto[0].words
+            politician
         };
     }
     else {
         return {
-            politician: null,
-            wordCounts: []
+            politician: null
         }
     }
 };

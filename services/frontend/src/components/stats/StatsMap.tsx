@@ -3,6 +3,8 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 
 import allStates from './allstates.json';
 import { scaleQuantize } from 'd3-scale';
+import { useState } from 'react';
+import ReactTooltip from 'react-tooltip';
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -26,6 +28,8 @@ const democraticScale = scaleQuantize<string>()
         "#3463cd"
     ]);
 
+const democraticMain = "#0d11cd";
+
 interface IProps {
     statePartyAffiliations: StatePartyAffiliation[];
 }
@@ -40,16 +44,18 @@ interface StatePartyAffiliation {
 
 const StatsMap = (props: IProps) => {
 
+    const [tooltip, setTooltip] = useState('');
+
     const lookupStatePartyAffiliation = (state: string) => {
         return props.statePartyAffiliations.find(statePartyAffiliation => state.toLowerCase() === statePartyAffiliation.state.toLowerCase());
     };
 
     return (
-        <ComposableMap projection="geoAlbersUsa">
-            <Geographies geography={geoUrl}>
-                {({ geographies }) => (
-                    <>
-                        {geographies.map(geo => {
+        <div>
+            <ComposableMap data-tip="" projection="geoAlbersUsa">
+                <Geographies geography={geoUrl}>
+                    {({ geographies }) => (
+                        geographies.map(geo => {
                             const state = allStates.find(s => s.val === geo.id);
                             if(!state)
                                 return;
@@ -57,27 +63,49 @@ const StatsMap = (props: IProps) => {
                             if(!statePartyAffiliation)
                                 return;
 
-                            let color;
-                            if(statePartyAffiliation.affiliations.democratic > statePartyAffiliation.affiliations.republican)
+                            let color = '#333333';
+                            let party = 'Neutral';
+                            if(statePartyAffiliation.affiliations.democratic > statePartyAffiliation.affiliations.republican) {
+                                party = 'Democratic';
                                 color = democraticScale(statePartyAffiliation.affiliations.democratic - statePartyAffiliation.affiliations.republican);
-                            else if(statePartyAffiliation.affiliations.democratic < statePartyAffiliation.affiliations.republican)
+                            }
+                            else if(statePartyAffiliation.affiliations.democratic < statePartyAffiliation.affiliations.republican) {
+                                party = 'Republican';
                                 color = republicanScale(statePartyAffiliation.affiliations.republican - statePartyAffiliation.affiliations.democratic);
-                            else
-                                color = '#33333';
+
+                            }
 
                             return (
                                 <Geography
                                     key={geo.rsmKey}
                                     geography={geo}
                                     fill={color}
+                                    onMouseEnter={() => {
+                                        setTooltip(state.id + ' - ' + party);
+                                    }}
+                                    onMouseLeave={() => {
+                                        setTooltip('');
+                                    }}
                                     stroke='#eaeaec'
+                                    style={{
+                                        default: {
+                                            outline: "none"
+                                        },
+                                        hover: {
+                                            outline: "none"
+                                        },
+                                        pressed: {
+                                            outline: "none"
+                                        }
+                                    }}
                                 />
                             );
-                        })}
-                    </>
-                )}
-            </Geographies>
-        </ComposableMap>
+                        })
+                    )}
+                </Geographies>
+            </ComposableMap>
+            <ReactTooltip place="bottom" type="dark" effect="float">{tooltip}</ReactTooltip>
+        </div>
     );
 };
 
