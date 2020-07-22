@@ -28,8 +28,6 @@ const democraticScale = scaleQuantize<string>()
         "#3463cd"
     ]);
 
-const democraticMain = "#0d11cd";
-
 interface IProps {
     statePartyAffiliations: StatePartyAffiliation[];
 }
