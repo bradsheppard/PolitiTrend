@@ -66,7 +66,7 @@ const HomeVideoPlayer = (props: IProps) => {
 
     return (
         <Grid container className={classes.container}>
-            <Grid xs={8} className={classes.videoPlayer}>
+            <Grid item xs={8} className={classes.videoPlayer}>
                 <YouTube videoId={props.videos[playingVideo].videoId}
                          className={classes.videoPlayer}
                          containerClassName={classes.videoPlayer} />

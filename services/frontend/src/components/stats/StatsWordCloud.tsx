@@ -44,8 +44,14 @@ const StatsWordCloud = (props: IProps) => {
     const handleChange = async (event: React.ChangeEvent<{value: unknown}>) => {
         const politicianId = event.target.value as number;
         setPolitician(politicianId);
-        const wordCloud = (await PoliticianWordCloudApi.get({politician: politicianId}))[0].words;
-        setWordCounts(wordCloud);
+        if (politicianId === -1) {
+            const wordCloud = props.wordCounts;
+            setWordCounts(wordCloud);
+        }
+        else {
+            const wordCloud = (await PoliticianWordCloudApi.get({politician: politicianId}))[0].words;
+            setWordCounts(wordCloud);
+        }
     };
 
     return (
