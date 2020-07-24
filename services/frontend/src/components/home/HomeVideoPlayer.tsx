@@ -77,7 +77,7 @@ const HomeVideoPlayer = (props: IProps) => {
                     {
                         props.videos.map((video: Video, index: number) => {
                             return (
-                                <Grid item xs={12}>
+                                <Grid item xs={12} key={index}>
                                     <div onClick={() => onVideoClick(index)} className={classes.sideVideo}>
                                         <Grid container>
                                             <Grid item xs={6}>
