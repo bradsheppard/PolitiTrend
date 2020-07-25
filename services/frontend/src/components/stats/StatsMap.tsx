@@ -54,10 +54,10 @@ const StatsMap = (props: IProps) => {
                 <Geographies geography={geoUrl}>
                     {({ geographies }) => (
                         geographies.map(geo => {
-                            const state = allStates.find(s => s.val === geo.id);
+                            const state = allStates.find(s => s.id === geo.id);
                             if(!state)
                                 return;
-                            const statePartyAffiliation = lookupStatePartyAffiliation(state.id);
+                            const statePartyAffiliation = lookupStatePartyAffiliation(state.abv);
                             if(!statePartyAffiliation)
                                 return;
 
@@ -79,7 +79,7 @@ const StatsMap = (props: IProps) => {
                                     geography={geo}
                                     fill={color}
                                     onMouseEnter={() => {
-                                        setTooltip(state.id + ' - ' + party);
+                                        setTooltip(state.name + ' - ' + party);
                                     }}
                                     onMouseLeave={() => {
                                         setTooltip('');
