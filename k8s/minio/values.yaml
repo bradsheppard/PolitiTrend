@@ -1,0 +1,16 @@
+minio:
+  enabled: true
+  buckets:
+    - name: tweets
+      policy: none
+      purge: false
+  accessKey: brad1234
+  secretKey: brad1234
+  nameOverride: minio
+  fullnameOverride: minio
+  persistence:
+    size: 50Gi
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 60m

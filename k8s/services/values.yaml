@@ -1,4 +1,4 @@
-# Default values for voyce.
+# Default values for services.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -38,19 +38,3 @@ video-crawler:
 global:
   registry: registry.gitlab.com/brad_1357/voyce
 
-minio:
-  enabled: true
-  buckets:
-    - name: tweets
-      policy: none
-      purge: false
-  accessKey: brad1234
-  secretKey: brad1234
-  nameOverride: minio
-  fullnameOverride: minio
-  persistence:
-    size: 50Gi
-  resources:
-    requests:
-      memory: 64Mi
-      cpu: 60m
