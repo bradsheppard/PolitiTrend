@@ -37,9 +37,8 @@ resources:
     memory: 128Mi
 
 mongodb:
-  mongodbPassword: pass123
+  existingSecret: analytics-mongodb-secret
   mongodbUsername: mongodb
-
   mongodbDatabase: admin
 
   nameOverride: analytics-mongodb
