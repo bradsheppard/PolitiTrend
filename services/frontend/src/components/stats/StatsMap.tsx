@@ -70,7 +70,6 @@ const StatsMap = (props: IProps) => {
                             else if(statePartyAffiliation.affiliations.democratic < statePartyAffiliation.affiliations.republican) {
                                 party = 'Republican';
                                 color = republicanScale(statePartyAffiliation.affiliations.republican - statePartyAffiliation.affiliations.democratic);
-
                             }
 
                             return (
