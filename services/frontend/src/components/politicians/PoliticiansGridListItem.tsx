@@ -3,7 +3,6 @@ import { Box, createStyles, Theme, Typography } from '@material-ui/core';
 import { politicianNameToImagePath } from '../../utils/ImagePath';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
-import Fade from '../common/Fade';
 
 interface IProps {
     politician: Politician;
@@ -49,26 +48,24 @@ const PoliticiansGridListItem = (props: IProps & React.HTMLAttributes<HTMLDivEle
     const classes = useStyles();
 
     return (
-        <Fade>
-            <div className={clsx(classes.container, props.className)}>
-                <div className={classes.imageContainer}>
-                    <img src={politicianNameToImagePath(props.politician.name)} alt={props.politician.name} className={classes.image} />
-                </div>
-                <div className={classes.textContainer}>
-                    <Typography variant='h4' color='textPrimary'>
-                        <Box fontWeight='fontWeightBold'>
-                            {props.politician.name}
-                        </Box>
-                    </Typography>
-                    <Typography variant='h6' color='textSecondary'>
-                        {props.politician.party}
-                    </Typography>
-                    <Typography variant='h6' color='textSecondary'>
-                        {props.politician.role}
-                    </Typography>
-                </div>
+        <div className={clsx(classes.container, props.className)}>
+            <div className={classes.imageContainer}>
+                <img src={politicianNameToImagePath(props.politician.name)} alt={props.politician.name} className={classes.image} />
             </div>
-        </Fade>
+            <div className={classes.textContainer}>
+                <Typography variant='h4' color='textPrimary'>
+                    <Box fontWeight='fontWeightBold'>
+                        {props.politician.name}
+                    </Box>
+                </Typography>
+                <Typography variant='h6' color='textSecondary'>
+                    {props.politician.party}
+                </Typography>
+                <Typography variant='h6' color='textSecondary'>
+                    {props.politician.role}
+                </Typography>
+            </div>
+        </div>
     );
 };
 
