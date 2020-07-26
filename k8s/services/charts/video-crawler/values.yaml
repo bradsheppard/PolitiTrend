@@ -47,7 +47,7 @@ postgresql:
   ## PostgreSQL password
   ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
   ##
-  postgresqlPassword: pass123
+  existingSecret: video-crawler-postgres-secret
 
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
