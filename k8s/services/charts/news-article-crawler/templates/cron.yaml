@@ -25,6 +25,14 @@ spec:
             - name: {{ .Chart.Name }}
               image: "{{ .Values.global.registry }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
+              volumeMounts:
+                - name: secret-volume
+                  mountPath: /app/config.ini
+                  subPath: config.ini
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
+          volumes:
+            - name: secret-volume
+              secret:
+                secretName: news-article-crawler-secret
           restartPolicy: Never
