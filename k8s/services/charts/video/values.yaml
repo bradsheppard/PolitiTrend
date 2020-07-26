@@ -34,7 +34,7 @@ resources:
     memory: 128Mi
 
 mongodb:
-  mongodbPassword: pass123
+  existingSecret: video-mongodb-secret
   mongodbUsername: mongodb
 
   mongodbDatabase: admin
