@@ -57,7 +57,8 @@ const Stats = (props: IProps) => {
     const classes = useStyles();
 
     return (
-        <Grid container>
+        <Grid container
+              justify='center'>
             <Grid item xs={12}>
                 <StatsCard title='Trending Hashtags' className={classes.card}>
                     <StatsWordCloud wordCounts={props.wordCounts} politicians={props.politicians} />
