@@ -72,8 +72,8 @@ const StatsWordCloud = (props: IProps) => {
                         onChange={handleChange}
                     >
                         <MenuItem value={-1}>All</MenuItem>
-                        {props.politicians.map(politician => (
-                            <MenuItem value={politician.id}>
+                        {props.politicians.map((politician, index) => (
+                            <MenuItem value={politician.id} key={index}>
                                 {politician.name}
                             </MenuItem>
                         ))}
