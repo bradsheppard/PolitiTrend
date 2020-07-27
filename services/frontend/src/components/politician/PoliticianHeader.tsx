@@ -45,9 +45,6 @@ const PoliticianHeader = (props: IProps) => {
                         {politician.party}
                     </Box>
                 </Typography>
-                <Typography variant='subtitle1' color='textPrimary' className={classes.profileParagraph}>
-                    Popularity: {politician.sentiment.toFixed(1)}
-                </Typography>
             </Grid>
         </Card>
     );
