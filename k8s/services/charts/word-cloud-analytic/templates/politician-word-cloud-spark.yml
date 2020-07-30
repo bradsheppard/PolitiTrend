@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   schedule: "@every 4h"
-  concurrencyPolicy: Allow
+  concurrencyPolicy: Forbid
   template:
     type: Scala
     mode: cluster
