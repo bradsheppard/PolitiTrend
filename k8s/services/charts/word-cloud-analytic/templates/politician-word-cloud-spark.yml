@@ -24,7 +24,7 @@ spec:
       memory: "512m"
       labels:
         version: 2.4.5
-      serviceAccount: cluster-spark
+      serviceAccount: operators-spark
     executor:
       coreRequest: "200m"
       coreLimit: "400m"

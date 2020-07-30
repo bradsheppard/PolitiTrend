@@ -51,3 +51,5 @@ dependencies:
   - name: kafka
     condition: kafka.enabled
     version: 1.0.0
+  - name: word-cloud-analytic
+    condition: word-cloud-analytic.enabled

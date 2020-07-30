@@ -35,6 +35,9 @@ video:
 video-crawler:
   enabled: true
 
+word-cloud-analytic:
+  enabled: true
+
 global:
   registry: registry.gitlab.com/brad_1357/voyce
 
