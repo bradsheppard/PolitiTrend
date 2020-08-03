@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { Sentiment } from './interfaces/sentiment.interface';
 import { CreateSentimentDto } from './dtos/create-sentiment.dto';
+import { SearchSentimentDto } from './dtos/search-sentiment.dto';
 
 @Injectable()
 export class SentimentService {
@@ -17,8 +18,8 @@ export class SentimentService {
 		return await this.sentimentModel.find({politician: id}).sort({dateTime: -1}).limit(20).exec()
 	}
 
-	async findAll(): Promise<Sentiment[]> {
-		const query = this.sentimentModel.aggregate([
+	async findAll(searchSentimentDto?: SearchSentimentDto): Promise<Sentiment[]> {
+		const aggregations: any[] = [
 			{
 				$sort: {
 					politician: 1,
@@ -45,7 +46,17 @@ export class SentimentService {
 					_id: 0
 				}
 			}
-		]);
+		];
+
+		if(searchSentimentDto && searchSentimentDto.minSampleSize) {
+			aggregations.push({
+				$match: {
+					sampleSize: { $gte: searchSentimentDto.minSampleSize }
+				}
+			});
+		}
+
+		const query = this.sentimentModel.aggregate(aggregations);
 
 		return await query.exec();
 	}

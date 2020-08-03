@@ -75,6 +75,15 @@ function createSentimentForPolitician(politician: number): CreateSentimentDto {
 	}
 }
 
+function createSentimentWithSampleSizeForPolitician(politician: number, sampleSize: number): CreateSentimentDto {
+	id++;
+	return {
+		sentiment: id,
+		politician,
+		sampleSize
+	}
+}
+
 function equals(sentiment: Sentiment, sentimentDto: CreateSentimentDto) {
 	expect(sentiment.sentiment).toEqual(sentimentDto.sentiment);
 	expect(sentiment.politician).toEqual(sentimentDto.politician);
@@ -122,6 +131,23 @@ describe('Sentiment (e2e)', () => {
 		expect(response.body.length).toEqual(2);
 		equals(response.body[0], politician1CreateSentimentDto2);
 		equals(response.body[1], politician1CreateSentimentDto1);
+	});
+
+	it('/sentiment?minSampleSize=3 (GET', async() => {
+		const politician1CreateSentimentDto = createSentimentWithSampleSizeForPolitician(1, 4);
+		const politician2CreateSentimentDto = createSentimentWithSampleSizeForPolitician(2, 1);
+
+		await Promise.all([
+			service.create(politician1CreateSentimentDto),
+			service.create(politician2CreateSentimentDto)
+		]);
+
+		const response = await request(app.getHttpServer())
+			.get('/sentiment?minSampleSize=3');
+
+		expect(response.status).toEqual(200);
+		expect(response.body.length).toEqual(1);
+		equals(response.body[0], politician1CreateSentimentDto);
 	});
 
 	it('/sentiment (POST)', async () => {

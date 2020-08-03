@@ -14,7 +14,7 @@ export class SentimentController {
 		if(searchSentimentDto.politician)
 			return await this.sentimentService.findByPolitician(searchSentimentDto.politician);
 
-		return await this.sentimentService.findAll();
+		return await this.sentimentService.findAll(searchSentimentDto);
 	}
 
 	@Post()
