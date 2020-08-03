@@ -53,9 +53,9 @@ interface Politician {
     sentiment: number;
 }
 
-const trendingHashtagsDescription = 'Based on talked about topics in social media.';
+const trendingHashtagsDescription = 'Trending hashtags per-politician based on social media posts.';
 const socialMediaSentimentDescription = 'Popularity/likeability of the politician based on social media posts. ' +
-    'A higher number indicates a higher favorability.';
+    'A higher number indicates a higher favorability (on a scale of 1 to 10).';
 const stateAffiliationDescription = 'Democratic/Republican favorability per-state based on social media posts.';
 
 const Stats = (props: IProps) => {
@@ -69,7 +69,6 @@ const Stats = (props: IProps) => {
                     <StatsWordCloud wordCounts={props.wordCounts} politicians={props.politicians} />
                 </StatsCard>
             </Grid>
-
             <Grid item xs={12}>
                 <StatsCard title='Social Media Sentiment' description={socialMediaSentimentDescription} className={classes.card}>
                     <StatsSentimentTable politicians={props.politicians} points={[]} />

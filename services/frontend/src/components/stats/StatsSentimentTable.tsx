@@ -130,6 +130,10 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
         return newSentimentHistory;
     };
 
+    const scaleSentiment = (sentiment: number) => {
+        return (sentiment * 5 + 5).toFixed(1);
+    };
+
     const addSentimentHistory = async (politician: Politician) => {
         const politicianSentiments = await SentimentApi.getForPolitician(politician.id);
         const data = politicianSentiments.map(sentiment => {
@@ -174,7 +178,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                                         <StyledTableCell>{index+1}</StyledTableCell>
                                         <StyledTableCell>{politician.name}</StyledTableCell>
                                         <StyledTableCell>{politician.party}</StyledTableCell>
-                                        <StyledTableCell>{politician.sentiment}</StyledTableCell>
+                                        <StyledTableCell>{scaleSentiment(politician.sentiment)}</StyledTableCell>
                                         <StyledTableCell><Checkbox checked={checked[index]} onChange={() => handleCheckboxClicked(index)} /></StyledTableCell>
                                     </StyledTableRow>
                                 )).slice(page * numRows, page * numRows + numRows)}
