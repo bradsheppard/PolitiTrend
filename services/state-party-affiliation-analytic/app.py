@@ -23,7 +23,7 @@ def enqueue_state_party_affiliation(dd):
 if __name__ == "__main__":
 
     kube_cluster = KubeCluster.from_yaml('worker-spec.yml')
-    kube_cluster.scale(2)
+    kube_cluster.scale(int(config.analytic_num_workers))
 
     sentiment_analyzer = SentimentIntensityAnalyzer()
     message_queue = MessageBus(config.queue_host, config.queue_topic)
