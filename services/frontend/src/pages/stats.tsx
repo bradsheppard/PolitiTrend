@@ -53,6 +53,11 @@ interface Politician {
     sentiment: number;
 }
 
+const trendingHashtagsDescription = 'Based on talked about topics in social media.';
+const socialMediaSentimentDescription = 'Popularity/likeability of the politician based on social media posts. ' +
+    'A higher number indicates a higher favorability.';
+const stateAffiliationDescription = 'Democratic/Republican favorability per-state based on social media posts.';
+
 const Stats = (props: IProps) => {
     const classes = useStyles();
 
@@ -60,18 +65,18 @@ const Stats = (props: IProps) => {
         <Grid container
               justify='center'>
             <Grid item xs={12}>
-                <StatsCard title='Trending Hashtags' className={classes.card}>
+                <StatsCard title='Trending Hashtags' description={trendingHashtagsDescription} className={classes.card}>
                     <StatsWordCloud wordCounts={props.wordCounts} politicians={props.politicians} />
                 </StatsCard>
             </Grid>
 
             <Grid item xs={12}>
-                <StatsCard title='Social Media Sentiment' className={classes.card}>
+                <StatsCard title='Social Media Sentiment' description={socialMediaSentimentDescription} className={classes.card}>
                     <StatsSentimentTable politicians={props.politicians} points={[]} />
                 </StatsCard>
             </Grid>
             <Grid item xs={12}>
-                <StatsCard title='State Affiliations' className={classes.card}>
+                <StatsCard title='State Affiliations' description={stateAffiliationDescription} className={classes.card}>
                     <StatsMap statePartyAffiliations={props.statePartyAffiliations} />
                 </StatsCard>
             </Grid>
@@ -87,15 +92,17 @@ Stats.getInitialProps = async function (): Promise<IProps> {
         StatePartyAffiliationApi.get()
     ]);
 
-    const politicianSentiments = politicians.map(politician => {
+    const politicianSentiments = politicians.reduce<Politician[]>((result, politician) => {
         const sentiment = sentiments.find(x => x.politician == politician.id);
-        return {
-            id: politician.id,
-            name: politician.name,
-            party: politician.party,
-            sentiment: sentiment ? sentiment.sentiment : 0
-        }
-    });
+        if(sentiment)
+            result.push({
+                id: politician.id,
+                name: politician.name,
+                party: politician.party,
+                sentiment: sentiment.sentiment
+            });
+        return result;
+    }, []);
 
     return {
         wordCounts: wordClouds.length > 0 ? wordClouds[0].words : [],

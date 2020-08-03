@@ -3,6 +3,7 @@ import axios from 'axios';
 import SentimentDto from '../../apis/sentiment/SentimentDto';
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse<SentimentDto[]>) {
+    req.query.minSampleSize = '200';
     const axiosResponse = await axios.get<SentimentDto[]>('http://analytics/sentiment', {params: req.query});
     res.json(axiosResponse.data);
 }

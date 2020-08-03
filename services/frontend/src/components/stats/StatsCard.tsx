@@ -3,12 +3,17 @@ import { Box, createStyles, Paper, Theme, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { PropsWithChildren } from 'react';
 import clsx from 'clsx';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import ReactTooltip from 'react-tooltip';
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         header: {
             padding: theme.spacing(2),
-            backgroundColor: theme.palette.primary.main
+            backgroundColor: theme.palette.primary.main,
+            display: 'flex',
+            justifyContent: 'space-between'
         },
         paper: {
             overflow: 'hidden'
@@ -17,7 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IProps extends PropsWithChildren<{}> {
-    title: string
+    title: string;
+    description: string;
 }
 
 const StatsCard = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
@@ -31,6 +37,8 @@ const StatsCard = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
                         {props.title}
                     </Box>
                 </Typography>
+                <HelpOutlineIcon data-tip={props.description} style={{color: 'white'}} />
+                <ReactTooltip />
             </div>
             {props.children}
         </Paper>
