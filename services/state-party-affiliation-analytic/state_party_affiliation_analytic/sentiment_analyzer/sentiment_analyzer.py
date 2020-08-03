@@ -7,33 +7,36 @@ from state_party_affiliation_analytic.model.politician import Politician
 
 sentiment_analyzer = SentimentIntensityAnalyzer()
 
-nlp = spacy.load('en')
+nlp = spacy.load('en', disable=['ner', 'entity_linker', 'textcat', 'entity_ruler',
+                                'merge_entities'])
 
 
-def get_party_sentiments(statement: str, subjects: List[Politician] = None) -> Dict[str, float]:
-    doc = nlp(statement)
+def get_party_sentiments(statements: List[str], subjects: List[Politician] = None) -> List[Dict[str, float]]:
+    results_list = []
+    for doc in nlp.pipe(statements):
+        results = {}
+        for sent in doc.sents:
+            score = sentiment_analyzer.polarity_scores(sent.text)['compound']
+            pos_subjects = _get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'], subjects)
 
-    results = {}
-    for sent in doc.sents:
-        score = sentiment_analyzer.polarity_scores(sent.text)['compound']
-        pos_subjects = _get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'], subjects)
+            max_length = 0
+            for subject in pos_subjects.values():
+                if len(subject) > max_length:
+                    max_length = len(subject)
 
-        max_length = 0
-        for subject in pos_subjects.values():
-            if len(subject) > max_length:
-                max_length = len(subject)
+            for key in pos_subjects:
+                if len(pos_subjects[key]) == max_length and max_length is not 0:
+                    if key not in results:
+                        results[key] = [score]
+                    else:
+                        results[key].append(score)
 
-        for key in pos_subjects:
-            if len(pos_subjects[key]) == max_length and max_length is not 0:
-                if key not in results:
-                    results[key] = [score]
-                else:
-                    results[key].append(score)
+        for key in results:
+            results[key] = mean(results[key])
 
-    for key in results:
-        results[key] = mean(results[key])
+        results_list.append(results)
 
-    return results
+    return results_list
 
 
 def _get_pos_subjects(doc, pos_list, politicians) -> Dict[str, List[str]]:
