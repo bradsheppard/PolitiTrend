@@ -3,6 +3,7 @@ import { createStyles, Tab, Tabs, Theme } from '@material-ui/core';
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed';
 import PoliticianTweetFeed from './PoliticianTweetFeed';
 import { makeStyles } from '@material-ui/core/styles';
+import PoliticianVideoFeed from './PoliticianVideoFeed';
 
 interface IProps {
     politician: number;
@@ -38,7 +39,9 @@ const PoliticianFeed = (props: IProps) => {
             case 0:
                 return <PoliticianNewsArticleFeed politician={politician} />;
             case 1:
-                return <PoliticianTweetFeed politician={politician}/>;
+                return <PoliticianTweetFeed politician={politician} />;
+            case 2:
+                return <PoliticianVideoFeed politician={politician} />
         }
     }
 
@@ -51,6 +54,7 @@ const PoliticianFeed = (props: IProps) => {
             >
                 <Tab label='News Articles' {...a11yProps(0)} />
                 <Tab label='Tweets' {...a11yProps(1)} />
+                <Tab label='Videos' {...a11yProps(2)} />
             </Tabs>
             <div className={classes.feedContainer}>
                 {renderFeed(tabValue)}

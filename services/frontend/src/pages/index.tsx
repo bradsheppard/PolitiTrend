@@ -12,7 +12,7 @@ import HomeHeader from '../components/home/HomeHeader';
 import Divider from '../components/common/Divider';
 import HomeTrendingNewsArticle from '../components/home/HomeTrendingNewsArticle';
 import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi';
-import HomeVideoPlayer from '../components/home/HomeVideoPlayer';
+import VideoPlayer from '../components/common/VideoPlayer';
 
 interface NewsArticle {
     image: string;
@@ -108,7 +108,7 @@ class App extends React.Component<IProps> {
                         </Grid>
                         <Grid item xs={12}>
                             <div className={classes.newsArticle}>
-                                <HomeVideoPlayer videos={this.props.youtubeVideos} />
+                                <VideoPlayer videos={this.props.youtubeVideos} />
                             </div>
                         </Grid>
                         <Grid item xs={12}>

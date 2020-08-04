@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const HomeVideoPlayer = (props: IProps) => {
+const VideoPlayer = (props: IProps) => {
     const classes = useStyles();
     const [playingVideo, setPlayingVideo] = useState(0);
 
@@ -105,4 +105,4 @@ const HomeVideoPlayer = (props: IProps) => {
     );
 };
 
-export default HomeVideoPlayer;
+export default VideoPlayer;
