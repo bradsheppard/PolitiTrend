@@ -42,7 +42,7 @@ const PoliticianVideoFeed = (props: IProps) => {
 
     return (
         <div className={classes.container}>
-            <VideoPlayer videos={videos} />
+            <VideoPlayer videos={videos} height={50} />
         </div>
     );
 };

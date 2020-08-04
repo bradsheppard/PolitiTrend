@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 interface IProps {
     videos: Video[];
+    height: number;
 }
 
 interface Video {
@@ -17,7 +18,7 @@ interface Video {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
-            height: theme.spacing(70),
+            height: (props: IProps) => theme.spacing(props.height),
             background: '#1a1a1a',
             padding: theme.spacing(5)
         },
@@ -57,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const VideoPlayer = (props: IProps) => {
-    const classes = useStyles();
+    const classes = useStyles(props);
     const [playingVideo, setPlayingVideo] = useState(0);
 
     const onVideoClick = (index: number) => {
@@ -103,6 +104,10 @@ const VideoPlayer = (props: IProps) => {
             </Grid>
         </Grid>
     );
+};
+
+VideoPlayer.defaultProps = {
+    height: 70
 };
 
 export default VideoPlayer;
