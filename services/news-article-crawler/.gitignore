@@ -2,5 +2,8 @@
 /data
 /venv
 /env
+/notebook/env
 /.pytest_cache
 **/__pycache__
+**/.ipynb_checkpoints
+
