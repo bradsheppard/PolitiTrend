@@ -29,12 +29,10 @@ const PoliticianVideoFeed = (props: IProps) => {
     const [videos, setVideos] = useState<YoutubeVideo[]>([]);
 
     useEffect(() => {
-        const fetchVideos = async () => {
+        (async () => {
             const fetchedVideos = await YoutubeVideoApi.get({politician: props.politician});
             setVideos(fetchedVideos);
-        };
-
-        fetchVideos();
+        })();
     });
 
     if(videos.length === 0)
