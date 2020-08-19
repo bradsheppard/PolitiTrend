@@ -13,7 +13,7 @@ click==7.1.2
 cloudpickle==1.4.1
 cssselect==1.1.0
 cymem==2.0.3
-dask==2.19.0
+dask==2.23.0
 dask-kubernetes==0.10.1
 distributed==2.19.0
 docutils==0.15.2

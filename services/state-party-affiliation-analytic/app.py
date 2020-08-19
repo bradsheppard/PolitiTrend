@@ -2,6 +2,7 @@ import json
 
 import dask.dataframe as dd
 from dask_kubernetes import KubeCluster
+from dask.distributed import Client
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from state_party_affiliation_analytic.common.path_translator import get_s3_path
@@ -25,34 +26,36 @@ if __name__ == "__main__":
     kube_cluster = KubeCluster.from_yaml('worker-spec.yml')
     kube_cluster.scale(int(config.analytic_num_workers))
 
-    sentiment_analyzer = SentimentIntensityAnalyzer()
-    message_queue = MessageBus(config.queue_host, config.queue_topic)
+    with Client(kube_cluster) as client:
 
-    paths = [get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
+        sentiment_analyzer = SentimentIntensityAnalyzer()
+        message_queue = MessageBus(config.queue_host, config.queue_topic)
 
-    politician_repository = PoliticianRepository()
-    politicians = politician_repository.get_all()
+        paths = [get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
 
-    storage_options = {
-        "key": config.s3_username,
-        "secret": config.s3_password,
-        "client_kwargs": {
-            "endpoint_url": config.s3_url
+        politician_repository = PoliticianRepository()
+        politicians = politician_repository.get_all()
+
+        storage_options = {
+            "key": config.s3_username,
+            "secret": config.s3_password,
+            "client_kwargs": {
+                "endpoint_url": config.s3_url
+            }
         }
-    }
 
-    dfs = []
+        dfs = []
 
-    for path in paths:
-        try:
-            df = dd.read_json(path, storage_options=storage_options)
-            dfs.append(df)
-        except Exception:
-            print('Error reading path ' + path)
+        for path in paths:
+            try:
+                df = dd.read_json(path, storage_options=storage_options)
+                dfs.append(df)
+            except Exception:
+                print('Error reading path ' + path)
 
-    combined_df = dd.concat(dfs)
+        combined_df = dd.concat(dfs)
 
-    result = compute_party_sentiments(combined_df, politicians)
+        result = compute_party_sentiments(combined_df, politicians)
 
-    for row in result.itertuples():
-        enqueue_state_party_affiliation(row)
+        for row in result.itertuples():
+            enqueue_state_party_affiliation(row)
