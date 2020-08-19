@@ -20,3 +20,13 @@ rules:
     verbs:
       - "get"
       - "list"
+  - apiGroups:
+      - "" # indicates the core API group
+    resources:
+      - "services"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "delete"
