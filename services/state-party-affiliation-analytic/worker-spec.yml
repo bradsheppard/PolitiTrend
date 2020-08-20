@@ -4,18 +4,18 @@ metadata:
     foo: bar
 spec:
   restartPolicy: Never
+  imagePullSecrets:
+  - name: regcred
   containers:
-  - image: daskdev/dask:latest
+  - image: registry.gitlab.com/brad_1357/voyce/state-party-affiliation-analytic:1.0.0
     imagePullPolicy: IfNotPresent
-    args: [dask-worker, --nthreads, '1', --no-dashboard, --memory-limit, 256MB, --death-timeout, '60']
+    command: [sh, -c, dask-worker]
+    args: [--nthreads, '1', --no-dashboard, --memory-limit, 2G, --death-timeout, '60']
     name: dask
-    env:
-      - name: EXTRA_PIP_PACKAGES
-        value: git+https://github.com/dask/distributed
     resources:
       limits:
-        memory: 256Mi
-        cpu: 200m
+        memory: 2G
+        cpu: 400m
       requests:
-        memory: 128Mi
-        cpu: 100m
+        memory: 1G
+        cpu: 200m

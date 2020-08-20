@@ -8,6 +8,8 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+
 RUN python3 -m spacy download en
 
 COPY state_party_affiliation_analytic state_party_affiliation_analytic

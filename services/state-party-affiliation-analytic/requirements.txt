@@ -10,12 +10,12 @@ catalogue==1.0.0
 certifi==2020.6.20
 chardet==3.0.4
 click==7.1.2
-cloudpickle==1.4.1
+cloudpickle==1.5.0
 cssselect==1.1.0
 cymem==2.0.3
 dask==2.23.0
 dask-kubernetes==0.10.1
-distributed==2.19.0
+distributed==2.23.0
 docutils==0.15.2
 feedfinder2==0.0.4
 feedparser==5.2.1
@@ -41,7 +41,7 @@ multidict==4.7.6
 murmurhash==1.0.2
 newspaper3k==0.2.8
 nltk==3.5
-numpy==1.18.5
+numpy==1.18.1
 oauthlib==3.1.0
 packaging==20.4
 pandas==1.0.5

@@ -1,9 +1,8 @@
 import json
 
 import dask.dataframe as dd
-from dask_kubernetes import KubeCluster
 from dask.distributed import Client
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from dask_kubernetes import KubeCluster
 
 from state_party_affiliation_analytic.common.path_translator import get_s3_path
 from state_party_affiliation_analytic.config import config
@@ -22,20 +21,19 @@ def enqueue_state_party_affiliation(dd):
 
 
 if __name__ == "__main__":
+    num_workers = int(config.analytic_num_workers)
 
     kube_cluster = KubeCluster.from_yaml('worker-spec.yml')
-    kube_cluster.scale(int(config.analytic_num_workers))
+    kube_cluster.scale(num_workers)
+
+    message_queue = MessageBus(config.queue_host, config.queue_topic)
+
+    politician_repository = PoliticianRepository()
+    politicians = politician_repository.get_all()
+
+    paths = [get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
 
     with Client(kube_cluster) as client:
-
-        sentiment_analyzer = SentimentIntensityAnalyzer()
-        message_queue = MessageBus(config.queue_host, config.queue_topic)
-
-        paths = [get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
-
-        politician_repository = PoliticianRepository()
-        politicians = politician_repository.get_all()
-
         storage_options = {
             "key": config.s3_username,
             "secret": config.s3_password,
