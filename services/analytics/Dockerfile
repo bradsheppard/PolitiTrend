@@ -2,19 +2,13 @@ FROM node:12-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json .
-
-COPY package-lock.json .
+COPY package.json package-lock.json tsconfig.json tsconfig.build.json ./
 
 RUN npm install
 
 COPY src src
 
 COPY test test
-
-COPY tsconfig.json .
-
-COPY tsconfig.build.json .
 
 RUN npm run build
 
@@ -27,9 +21,7 @@ COPY --from=builder /app/dist dist
 
 COPY --from=builder /app/node_modules node_modules
 
-COPY package.json .
-
-COPY .env .
+COPY package.json .env ./
 
 EXPOSE 3000
 
@@ -37,8 +29,6 @@ USER node
 
 
 FROM builder AS tester
-
-COPY .env .
 
 CMD ["npm", "run", "test:e2e"]
 
