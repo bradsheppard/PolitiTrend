@@ -13,6 +13,8 @@ const PoliticianWordCloudSchema = new mongoose.Schema({
 	}]
 });
 
+PoliticianWordCloudSchema.index({politician: 1, dateTime: -1});
+
 PoliticianWordCloudSchema.set('toJSON', {
 	transform: (doc, ret) => {
 		ret.id = ret._id;
