@@ -6,7 +6,6 @@ import PoliticianApi from '../../apis/politician/PoliticianApi';
 import PoliticianHeader from '../../components/politician/PoliticianHeader';
 import PoliticianFeed from '../../components/politician/PoliticianFeed';
 import { makeStyles } from '@material-ui/styles';
-import PoliticianWordCloudApi from '../../apis/politician-word-cloud/PoliticianWordCloudApi';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -67,12 +66,11 @@ const PoliticianPage = (props: IProps) => {
 PoliticianPage.getInitialProps = async function(context: NextPageContext): Promise<IProps> {
     const { id } = context.query;
     if (typeof id === 'string') {
-        const [politicianDto, wordCountsDto] = await Promise.all([
-            PoliticianApi.getOne(id),
-            PoliticianWordCloudApi.get({politician: parseInt(id)})
+        const [politicianDto ] = await Promise.all([
+            PoliticianApi.getOne(id)
         ]);
 
-        if(!politicianDto || !wordCountsDto)
+        if(!politicianDto)
             return {
                 politician: null
             };

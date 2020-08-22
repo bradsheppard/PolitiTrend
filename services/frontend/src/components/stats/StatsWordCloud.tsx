@@ -49,7 +49,7 @@ const StatsWordCloud = (props: IProps) => {
             setWordCounts(wordCloud);
         }
         else {
-            const wordCloud = (await PoliticianWordCloudApi.get({politician: politicianId}))[0].words;
+            const wordCloud = (await PoliticianWordCloudApi.get({politician: politicianId, limit: 1}))[0].words;
             setWordCounts(wordCloud);
         }
     };

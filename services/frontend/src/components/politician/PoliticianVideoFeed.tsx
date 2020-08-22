@@ -30,7 +30,7 @@ const PoliticianVideoFeed = (props: IProps) => {
 
     useEffect(() => {
         (async () => {
-            const fetchedVideos = await YoutubeVideoApi.get({politician: props.politician});
+            const fetchedVideos = await YoutubeVideoApi.get({politician: props.politician, limit: 6});
             setVideos(fetchedVideos);
         })();
     });
