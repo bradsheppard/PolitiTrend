@@ -46,7 +46,7 @@ export class TweetService {
 			.from(Tweet, 'tweet');
 
 		if (searchTweetDto.politician) {
-			query.andWhere(':politician = ANY(tweet.politicians)', { politician: searchTweetDto.politician });
+			query.andWhere('tweet.politicians @> ARRAY[:politician::INT]', { politician: searchTweetDto.politician });
 		}
 
 		if (searchTweetDto.tweetId) {

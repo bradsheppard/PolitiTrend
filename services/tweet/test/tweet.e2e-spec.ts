@@ -10,7 +10,6 @@ import microserviceConfig from '../src/config/config.microservice';
 import { ClientProviderOptions } from '@nestjs/microservices/module/interfaces/clients-module.interface';
 import waitForExpect from 'wait-for-expect';
 import { UpdateTweetDto } from '../src/tweet/dto/update-tweet.dto';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 waitForExpect.defaults.timeout = 20000;
 jest.setTimeout(30000);
@@ -207,6 +206,10 @@ describe('TweetService (e2e)', () => {
 		const tweet2 = createTweetDto();
 		const tweet3 = createTweetDto();
 
+		tweet1.dateTime = 'Mon, 24 Aug 2020 21:18:41 GMT';
+		tweet2.dateTime = 'Mon, 24 Aug 2020 21:18:42 GMT';
+		tweet3.dateTime = 'Mon, 24 Aug 2020 21:18:43 GMT'
+
 		await service.insert(tweet1);
 
 		await service.insert(tweet2);
@@ -218,8 +221,8 @@ describe('TweetService (e2e)', () => {
 		expect(tweets[0].tweetId).toEqual(tweet2.tweetId);
 		expect(tweets[0].tweetText).toEqual(tweet2.tweetText);
 
-		expect(tweets[1].tweetId).toEqual(tweet3.tweetId);
-		expect(tweets[1].tweetText).toEqual(tweet3.tweetText);
+		expect(tweets[1].tweetId).toEqual(tweet1.tweetId);
+		expect(tweets[1].tweetText).toEqual(tweet1.tweetText);
 	});
 
 	it('Can delete one', async () => {
