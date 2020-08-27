@@ -15,6 +15,7 @@ export const dateTransformer: ValueTransformer = {
 };
 
 @Entity()
+@Index('IDX_NEWS_ARTICLE_POLITICIANS', { synchronize: false })
 @Unique(['url'])
 export default class NewsArticle {
 	@PrimaryGeneratedColumn()
@@ -42,4 +43,7 @@ export default class NewsArticle {
 
 	@Column()
 	source: string;
+
+	@Column({nullable: true})
+	summary: string;
 }

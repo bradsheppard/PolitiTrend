@@ -5,6 +5,7 @@ import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import NewsArticle from './news-article.entity';
 import { Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
 
 describe('NewsArticle Controller', () => {
 	let controller: NewsArticleController;
@@ -27,6 +28,7 @@ describe('NewsArticle Controller', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [NewsArticleController],
+			imports: [TerminusModule],
 			providers: [NewsArticleService,
 				{
 					provide: getConnectionToken(),

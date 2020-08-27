@@ -30,7 +30,8 @@ function createNewsArticleDto() {
 		url: `url_${id}`,
 		source: `source_${id}`,
 		description: `source_${id}`,
-		politicians: [id]
+		politicians: [id],
+		summary: `Test summary ${id}`
 	} as CreateNewsArticleDto;
 }
 
@@ -204,9 +205,15 @@ describe('NewsArticleService (e2e)', () => {
 		const newsArticle2 = createNewsArticleDto();
 		const newsArticle3 = createNewsArticleDto();
 
-		await service.upsertOnUrl(newsArticle1);
-		await service.upsertOnUrl(newsArticle2);
-		await service.upsertOnUrl(newsArticle3);
+		newsArticle1.dateTime = 'Wed, 26 Aug 2020 21:50:38 GMT';
+		newsArticle2.dateTime = 'Wed, 26 Aug 2020 21:51:38 GMT';
+		newsArticle3.dateTime = 'Wed, 26 Aug 2020 21:52:38 GMT'
+
+		await Promise.all([
+			service.upsertOnUrl(newsArticle1),
+			service.upsertOnUrl(newsArticle2),
+			service.upsertOnUrl(newsArticle3)
+		]);
 
 		const newsArticles = await service.get({limit: 2, offset: 1});
 		expect(newsArticles).toHaveLength(2);

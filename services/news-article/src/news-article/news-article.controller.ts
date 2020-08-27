@@ -3,10 +3,23 @@ import { NewsArticleService } from './news-article.service';
 import { SearchNewsArticleDto } from './dto/search-news-article.dto';
 import { EventPattern } from '@nestjs/microservices';
 import { CreateNewsArticleDto } from './dto/create-news-article.dto';
+import { HealthCheck, HealthCheckService, TypeOrmHealthIndicator } from '@nestjs/terminus';
 
 @Controller()
 export class NewsArticleController {
-	constructor(private newsArticleService: NewsArticleService) {}
+	constructor(
+		private health: HealthCheckService,
+		private typeOrmHealthIndicator: TypeOrmHealthIndicator,
+		private newsArticleService: NewsArticleService
+	) {}
+
+	@Get('health')
+	@HealthCheck()
+	async check() {
+		return this.health.check([
+			async () => this.typeOrmHealthIndicator.pingCheck('database')
+		])
+	}
 
 	@Get()
 	async findAll(@Query() query: SearchNewsArticleDto) {

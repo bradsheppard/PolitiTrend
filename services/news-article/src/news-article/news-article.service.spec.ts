@@ -3,6 +3,7 @@ import { NewsArticleService } from './news-article.service';
 import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
 import NewsArticle from './news-article.entity';
 import { Repository } from 'typeorm';
+import { TerminusModule } from '@nestjs/terminus';
 
 describe('NewsArticle Service', () => {
 	let service: NewsArticleService;
@@ -24,6 +25,7 @@ describe('NewsArticle Service', () => {
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
+			imports: [TerminusModule],
 			providers: [NewsArticleService,
 				{
 					provide: getConnectionToken(),
