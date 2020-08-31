@@ -8,6 +8,9 @@ import { Tweet } from './schemas/tweet.schema';
 @Injectable()
 export class TweetService {
 
+	private static readonly MAX_LIMIT = 50;
+	private static readonly DEFAULT_LIMIT = 10;
+
 	constructor(@InjectModel(Tweet.name) private readonly tweetModel: Model<Tweet>) {}
 
 	async deleteOne(id: string): Promise<boolean> {
@@ -27,7 +30,10 @@ export class TweetService {
 		}
 
 		if (searchTweetDto.limit) {
-			query = query.limit(searchTweetDto.limit);
+			query = query.limit(Math.min(searchTweetDto.limit, TweetService.MAX_LIMIT));
+		}
+		else {
+			query = query.limit(TweetService.DEFAULT_LIMIT)
 		}
 
 		if (searchTweetDto.offset) {
