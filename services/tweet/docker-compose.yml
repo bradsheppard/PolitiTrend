@@ -14,14 +14,15 @@ services:
       dps:
         ipv4_address: 172.0.0.10
 
-  tweet-postgresql:
-    image: postgres
+  tweet-mongodb:
+    image: mongo
     restart: always
     dns:
       - 172.0.0.10
     environment:
-      - POSTGRES_PASSWORD=pass123
-      - HOSTNAMES=tweet-postgresql
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=pass123
+      - HOSTNAMES=tweet-mongodb
 
   adminer:
     image: adminer

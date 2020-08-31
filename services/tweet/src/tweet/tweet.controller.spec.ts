@@ -1,11 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TweetController } from './tweet.controller';
 import { TweetService } from './tweet.service';
-import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
-import Tweet from './tweet.entity';
-import { Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
+import { Tweet } from './schemas/tweet.schema';
+import { getModelToken } from '@nestjs/mongoose';
 
 describe('Tweet Controller', () => {
 	let controller: TweetController;
@@ -29,13 +28,9 @@ describe('Tweet Controller', () => {
 			controllers: [TweetController],
 			providers: [TweetService,
 				{
-					provide: getConnectionToken(),
-					useValue: {},
-				},
-				{
-					provide: getRepositoryToken(Tweet),
-					useClass: Repository,
-				},
+					provide: getModelToken('Tweet'),
+					useValue: {}
+				}
 			],
 			imports: [TerminusModule]
 		}).compile();
@@ -91,7 +86,7 @@ describe('Tweet Controller', () => {
 
 	it('can insert on event', async () => {
 		const tweet = createTweet();
-		const insertSpy = jest.spyOn(service, 'upsertOnTweetId').mockImplementation();
+		const insertSpy = jest.spyOn(service, 'create').mockImplementation();
 		await controller.handleTweetCreated(tweet);
 		expect(insertSpy).toBeCalled();
 	});

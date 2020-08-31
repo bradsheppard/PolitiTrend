@@ -1,4 +1,4 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsDate, IsDateString, IsInt, IsISO8601, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateTweetDto {
@@ -12,8 +12,9 @@ export class CreateTweetDto {
 	@IsString()
 	tweetText: string;
 
-	@IsString()
-	dateTime: string;
+	@IsDate()
+	@Type(() => Date)
+	dateTime: Date;
 
 	@IsString()
 	location: string;
