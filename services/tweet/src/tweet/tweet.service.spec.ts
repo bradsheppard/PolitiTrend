@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TweetService } from './tweet.service';
-import { getConnectionToken, getRepositoryToken } from '@nestjs/typeorm';
-import Tweet from './tweet.entity';
-import { Repository } from 'typeorm';
+import { Tweet } from './schemas/tweet.schema';
+import { getModelToken } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 describe('Tweet Service', () => {
 	let service: TweetService;
-	let tweetRepository: Repository<Tweet>;
+	let tweetModel: Model<Tweet>;
 
 	let id = 0;
 
@@ -24,54 +24,84 @@ describe('Tweet Service', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [TweetService,
 				{
-					provide: getConnectionToken(),
-					useValue: {},
-				},
-				{
-					provide: getRepositoryToken(Tweet),
-					useClass: Repository,
-				},
+					provide: getModelToken('Tweet'),
+					useValue: MockModel,
+				}
 			],
 		}).compile();
 
 		service = module.get<TweetService>(TweetService);
-		tweetRepository = module.get<Repository<Tweet>>(getRepositoryToken(Tweet));
+		tweetModel = module.get<Model<Tweet>>(getModelToken('Tweet'));
 	});
+
+	class MockDocument {
+		save() {
+			return;
+		}
+	}
+
+	class MockDocumentQuery {
+		sort() {
+			return this;
+		}
+
+		limit() {
+			return this;
+		}
+
+		exec() {
+			return [];
+		}
+	}
+
+	const mockDocument = new MockDocument();
+	const mockDocumentQuery = new MockDocumentQuery();
+
+	class MockModel {
+		constructor() {
+			return mockDocument;
+		}
+
+		static find() {
+			return mockDocumentQuery;
+		}
+
+		static findOneAndUpdate() {
+			return mockDocumentQuery;
+		}
+
+		static deleteMany() {
+			return mockDocumentQuery;
+		}
+	}
 
 	it('should be defined', () => {
 		expect(service).toBeDefined();
-		expect(tweetRepository).toBeDefined();
+		expect(tweetModel).toBeDefined();
+	});
+
+	it('Can delete', async () => {
+		const mockDeleteMany = jest.fn();
+		mockDeleteMany.mockReturnValueOnce(mockDocumentQuery);
+
+		MockModel.deleteMany = mockDeleteMany;
+		await service.delete();
+		expect(mockDeleteMany).toBeCalled();
 	});
 
 	it('can get all', async () => {
-		const opinion = createTweet();
-		jest.spyOn(tweetRepository, 'find').mockResolvedValueOnce([opinion]);
-		expect(await service.get()).toEqual([opinion]);
+		const findSpy = jest.spyOn(mockDocumentQuery, 'limit');
+		await service.get({ limit: 1 });
+		expect(findSpy).toBeCalledWith(1);
 	});
 
-	it('can get one', async () => {
-		const opinion = createTweet();
-		jest.spyOn(tweetRepository, 'findOne').mockResolvedValueOnce(opinion);
-		expect(await service.getOne(opinion.id)).toEqual(opinion);
-	});
+	it('can insert', async () => {
+		const createDto = createTweet();
+		const findOneAndUpdateSpy = jest.fn();
+		findOneAndUpdateSpy.mockReturnValue(mockDocumentQuery);
+		MockModel.findOneAndUpdate = findOneAndUpdateSpy;
+		await service.create(createDto);
 
-	it('can delete', async () => {
-		const deleteSpy = jest.spyOn(tweetRepository, 'delete').mockImplementation();
-		await service.delete();
-		expect(deleteSpy).toBeCalled();
-	});
-
-	it('can update', async () => {
-		const opinion = createTweet();
-
-		const tweetFindSpy = jest.spyOn(tweetRepository, 'findOne').mockResolvedValueOnce(opinion);
-		const tweetSaveSpy = jest.spyOn(tweetRepository, 'save').mockResolvedValueOnce(opinion);
-		const tweetCreateSpy = jest.spyOn(tweetRepository, 'create').mockReturnValue(opinion);
-
-		await service.update(opinion);
-
-		expect(tweetSaveSpy).toBeCalledWith(opinion);
-		expect(tweetFindSpy).toBeCalledWith(opinion.id);
-		expect(tweetCreateSpy).toBeCalled();
+		expect(findOneAndUpdateSpy).toBeCalled();
 	});
 });
