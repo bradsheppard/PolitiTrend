@@ -19,4 +19,3 @@ for politician in politicians:
     except Exception as ex:
         print('Error occurred while crawling ' + politician.name)
         print(ex)
-

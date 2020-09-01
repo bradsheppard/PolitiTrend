@@ -17,4 +17,4 @@ class Summarizer:
         self._session = session
 
     def summarize(self, text):
-        return ''
+        return self._summarizer(text).eval(session=self._session)
