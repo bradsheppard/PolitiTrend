@@ -2,6 +2,7 @@ import datetime
 import random
 import string
 import time
+from unittest.mock import patch, MagicMock
 
 import pytest
 from dateutil import parser
@@ -12,8 +13,12 @@ from crawler.model.politician import Politician
 
 
 @pytest.fixture
-def news_article_crawler():
-    news_article_crawler = NewsArticleCrawler(config.contextual_web_api_key)
+@patch('crawler.summarizer.Summarizer')
+def news_article_crawler(summarizer_mock):
+    summarize_mock = MagicMock(return_value='summary')
+    summarizer_mock.summarize = summarize_mock
+
+    news_article_crawler = NewsArticleCrawler(config.contextual_web_api_key, summarizer_mock)
     return news_article_crawler
 
 
@@ -44,7 +49,8 @@ def test_insert_and_get():
         dateTime=datetime.datetime.now().isoformat(' ', 'seconds'),
         politicians=[1],
         source=random_string(),
-        description=random_string()
+        description=random_string(),
+        summary=random_string()
     )
 
     repository.insert(news_article)

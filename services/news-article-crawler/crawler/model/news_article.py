@@ -7,6 +7,7 @@ import re
 
 from crawler.message_bus import MessageBus
 from crawler.model.politician import Politician
+from crawler.summarizer.summarizer import Summarizer
 
 
 @dataclass
@@ -18,6 +19,7 @@ class NewsArticle:
     url: str
     source: str
     description: str
+    summary: str
 
 
 class NewsArticleRepository:
@@ -44,7 +46,8 @@ class NewsArticleRepository:
                 politicians=entry['politicians'],
                 dateTime=entry['dateTime'],
                 description=entry['description'],
-                source=entry['source']
+                source=entry['source'],
+                summary=entry['summary']
             )
 
             news_articles.append(news_article)
@@ -56,11 +59,12 @@ class NewsArticleCrawler:
 
     _url = 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/NewsSearchAPI'
 
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, summarizer: Summarizer):
         self._headers = {
             'x-rapidapi-host': 'contextualwebsearch-websearch-v1.p.rapidapi.com',
             'x-rapidapi-key': api_key
         }
+        self._summarizer = summarizer
 
     def get(self, politician: Politician, politicians: List[Politician]) -> List[NewsArticle]:
         querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '50', 'q': politician.name,
@@ -73,6 +77,8 @@ class NewsArticleCrawler:
 
         for article in articles:
             extracted_politicians = self.extract_politicians(article['title'], politicians)
+            stripped_description = NewsArticleCrawler._stip_html_tags(article['description'])
+            summary = self._summarizer.summarize(stripped_description)
 
             if len(extracted_politicians) == 0:
                 continue
@@ -84,7 +90,8 @@ class NewsArticleCrawler:
                 politicians=extracted_politicians,
                 dateTime=article['datePublished'],
                 source=article['provider']['name'],
-                description=NewsArticleCrawler._stip_html_tags(article['description'])
+                description=stripped_description,
+                summary=summary
             )
             results.append(news_article)
 
