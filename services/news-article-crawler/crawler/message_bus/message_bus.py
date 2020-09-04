@@ -4,7 +4,12 @@ from kafka import KafkaConsumer, KafkaProducer
 class MessageBus:
 
     def __init__(self, host: str, topic: str):
-        self._consumer = KafkaConsumer(topic, bootstrap_servers=host, group_id='news-article-crawler')
+        self._consumer = KafkaConsumer(
+            topic,
+            bootstrap_servers=host,
+            group_id='news-article-crawler',
+            auto_offset_reset='earliest'
+        )
         self._producer = KafkaProducer(bootstrap_servers=host)
         self._topic = topic
 
