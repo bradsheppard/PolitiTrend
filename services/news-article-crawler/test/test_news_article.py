@@ -9,8 +9,8 @@ from dateutil import parser
 
 from crawler.config import config
 from crawler.container import Container
-from crawler.model.news_article import NewsArticleCrawler, NewsArticle
-from crawler.model.politician import Politician
+from crawler.news_article import NewsArticleCrawler, NewsArticle
+from crawler.politician import Politician
 
 
 @pytest.fixture

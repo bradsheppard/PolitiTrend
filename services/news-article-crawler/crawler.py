@@ -1,7 +1,7 @@
 from typing import List
 
 from crawler.container import Container
-from crawler.model.politician import Politician
+from crawler.politician import Politician
 
 container = Container()
 

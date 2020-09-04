@@ -1,8 +1,8 @@
 from dependency_injector import containers, providers
 from crawler.config import config
 from crawler.message_bus import MessageBus
-from crawler.model.news_article import NewsArticleRepository, NewsArticleCrawler
-from crawler.model.politician import PoliticianRepository
+from crawler.news_article import NewsArticleRepository, NewsArticleCrawler
+from crawler.politician import PoliticianRepository
 from crawler.summarizer import Summarizer
 
 

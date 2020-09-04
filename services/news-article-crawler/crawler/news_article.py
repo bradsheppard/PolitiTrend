@@ -6,8 +6,8 @@ import requests
 import re
 
 from crawler.message_bus import MessageBus
-from crawler.model.politician import Politician
-from crawler.summarizer.summarizer import Summarizer
+from crawler.politician import Politician
+from crawler.summarizer import Summarizer
 
 
 @dataclass
