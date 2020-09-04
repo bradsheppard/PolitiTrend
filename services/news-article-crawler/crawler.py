@@ -5,9 +5,9 @@ from crawler.politician import Politician
 
 container = Container()
 
-politician_repository = container.politician_repository
-news_article_repository = container.news_article_repository
-news_article_crawler = container.news_article_crawler
+politician_repository = container.politician_repository()
+news_article_repository = container.news_article_repository()
+news_article_crawler = container.news_article_crawler()
 
 politicians: List[Politician] = politician_repository.get_all()
 
