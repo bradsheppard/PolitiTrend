@@ -1,17 +1,16 @@
 from typing import List
 
-from crawler.config import config
-from crawler.model.news_article import NewsArticleCrawler, NewsArticleRepository
-from crawler.model.politician import Politician, PoliticianRepository
-from crawler.summarizer.summarizer import Summarizer
+from crawler.container import Container
+from crawler.model.politician import Politician
 
-politician_repository = PoliticianRepository()
+container = Container()
+
+politician_repository = container.politician_repository
+news_article_repository = container.news_article_repository
+news_article_crawler = container.news_article_crawler
+
 politicians: List[Politician] = politician_repository.get_all()
 
-summarizer = Summarizer()
-
-news_article_crawler = NewsArticleCrawler(config.contextual_web_api_key, summarizer)
-news_article_repository = NewsArticleRepository()
 
 for politician in politicians:
     print('Crawling for ' + politician.name)

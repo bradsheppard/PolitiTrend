@@ -16,5 +16,6 @@ class Summarizer:
 
         self._session = session
 
-    def summarize(self, text):
-        return self._summarizer(text).eval(session=self._session)
+    def summarize(self, input_text):
+        returned_bytes = self._session.run(self._summarizer([input_text]))[0]
+        return returned_bytes.decode('utf-8')

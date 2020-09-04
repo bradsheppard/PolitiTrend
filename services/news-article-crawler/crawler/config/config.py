@@ -1,24 +1,22 @@
 import configparser
+from dataclasses import dataclass
 
 config_parser = configparser.ConfigParser()
 config_parser.read('config.ini')
+
 contextual_web_config = config_parser['contextual_web']
+kafka_config = config_parser['kafka']
 
 
+@dataclass
 class Config:
-
-    def __init__(self):
-        self.contextual_web_api_key = None
-
-    @property
-    def contextual_web_api_key(self):
-        return self._contextual_web_api_key
-
-    @contextual_web_api_key.setter
-    def contextual_web_api_key(self, value):
-        self._contextual_web_api_key = value
+    contextual_web_api_key: str
+    kafka_host: str
+    kafka_topic: str
 
 
-config = Config()
-
-config.contextual_web_api_key = contextual_web_config['api_key']
+config = Config(
+    contextual_web_config['api_key'],
+    kafka_config['host'],
+    kafka_config['topic']
+)

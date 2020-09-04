@@ -1,9 +1,12 @@
 import time
-from crawler.message_bus import MessageBus
+
+from crawler.container import Container
 
 
 def test_receive_message():
-    message_bus = MessageBus('queue-kafka-bootstrap:9092', 'news-article-created')
+    container = Container()
+    message_bus = container.message_bus()
+
     message_bus.send(b'test_message')
     time.sleep(5)
     response = message_bus.consume_one()

@@ -8,7 +8,8 @@ import pytest
 from dateutil import parser
 
 from crawler.config import config
-from crawler.model.news_article import NewsArticleCrawler, NewsArticleRepository, NewsArticle
+from crawler.container import Container
+from crawler.model.news_article import NewsArticleCrawler, NewsArticle
 from crawler.model.politician import Politician
 
 
@@ -20,6 +21,14 @@ def news_article_crawler(summarizer_mock):
 
     news_article_crawler = NewsArticleCrawler(config.contextual_web_api_key, summarizer_mock)
     return news_article_crawler
+
+
+@pytest.fixture
+def news_article_repository():
+    container = Container()
+    news_article_repository = container.news_article_repository()
+
+    return news_article_repository
 
 
 def test_get(news_article_crawler: NewsArticleCrawler):
@@ -39,9 +48,7 @@ def test_get_with_politicians(news_article_crawler):
         assert news_article.politicians == [1]
 
 
-def test_insert_and_get():
-    repository = NewsArticleRepository()
-
+def test_insert_and_get(news_article_repository):
     news_article = NewsArticle(
         image=random_string(),
         title=random_string(),
@@ -53,10 +60,10 @@ def test_insert_and_get():
         summary=random_string()
     )
 
-    repository.insert(news_article)
+    news_article_repository.insert(news_article)
 
     time.sleep(2)
-    inserted_news_articles = repository.get_all()
+    inserted_news_articles = news_article_repository.get_all()
 
     assert len(inserted_news_articles) > 0
 
