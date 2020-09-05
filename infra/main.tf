@@ -60,6 +60,8 @@ resource "google_container_cluster" "primary" {
     name     = "${var.project}-gke-cluster"
     location = var.zone
 
+    provider = google-beta
+
     # We can't create a cluster with no node pool defined, but we want to only use
     # separately managed node pools. So we create the smallest possible default
     # node pool and immediately delete it.
@@ -67,6 +69,11 @@ resource "google_container_cluster" "primary" {
     initial_node_count       = 1
 
     project = google_project.project.project_id
+
+    cluster_autoscaling {
+        enabled = false
+        autoscaling_profile = "OPTIMIZE_UTILIZATION"
+    }
 
     ip_allocation_policy {
         # Whether alias IPs will be used for pod IPs in the cluster. Defaults to
@@ -103,7 +110,10 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     name       = "${var.project}-node-pool"
     cluster    = google_container_cluster.primary.name
 
-    node_count = 0
+    autoscaling {
+        max_node_count = 5
+        min_node_count = 1
+    }
 
     location = var.zone
     project = google_project.project.project_id
