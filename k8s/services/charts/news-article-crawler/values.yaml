@@ -27,9 +27,11 @@ cron:
 
 resources:
   requests:
+    nvidia.com/gpu: 1
     cpu: 200m
     memory: 1Gi
   limits:
+    nvidia.com/gpu: 1
     cpu: 500m
-    memory: 4Gi
+    memory: 2Gi
 

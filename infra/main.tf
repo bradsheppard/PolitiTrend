@@ -132,33 +132,32 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     }
 }
 
-resource "google_container_node_pool" "gpu_preemptible_nodes" {
-    name = "${var.project}-gpu-node-pool"
-    cluster = google_container_cluster.primary.name
-
-    autoscaling {
-        max_node_count = 1
-        min_node_count = 0
-    }
-
-    location = var.zone
-    project = google_project.project.project_id
-
-    node_config {
-        preemptible = true
-
-        metadata = {
-            disable-legacy-endpoints = "true"
-        }
-
-        guest_accelerator {
-            count = 1
-            type  = "nvidia-tesla-p100"
-        }
-
-        oauth_scopes = [
-            "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring",
-        ]
-    }
-}
+//resource "google_container_node_pool" "gpu_preemptible_nodes" {
+//    name = "${var.project}-gpu-pool"
+//    cluster = google_container_cluster.primary.name
+//
+//    autoscaling {
+//        max_node_count = 1
+//        min_node_count = 0
+//    }
+//
+//    location = var.zone
+//    project = google_project.project.project_id
+//
+//    node_config {
+//        machine_type = "n1-standard-2"
+//        metadata = {
+//            disable-legacy-endpoints = "true"
+//        }
+//
+//        guest_accelerator {
+//            count = 1
+//            type  = "nvidia-tesla-p100"
+//        }
+//
+//        oauth_scopes = [
+//            "https://www.googleapis.com/auth/logging.write",
+//            "https://www.googleapis.com/auth/monitoring",
+//        ]
+//    }
+//}
