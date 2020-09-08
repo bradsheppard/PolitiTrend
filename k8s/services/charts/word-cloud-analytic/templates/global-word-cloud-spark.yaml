@@ -4,7 +4,7 @@ metadata:
   name: word-cloud-global-spark
   namespace: default
 spec:
-  schedule: "@every 4h"
+  schedule: "@every 6h"
   concurrencyPolicy: Forbid
   template:
     type: Scala
