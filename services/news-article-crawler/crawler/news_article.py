@@ -66,8 +66,18 @@ class NewsArticleCrawler:
         }
         self._summarizer = summarizer
 
+    def _get_summaries(self, news_articles):
+        stripped_descriptions = list(map(self._get_description, news_articles))
+        summaries = self._summarizer.summarize_all(stripped_descriptions)
+        return summaries
+
+    @staticmethod
+    def _get_description(article):
+        stripped_description = NewsArticleCrawler._stip_html_tags(article['description'])
+        return stripped_description
+
     def get(self, politician: Politician, politicians: List[Politician]) -> List[NewsArticle]:
-        querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '50', 'q': politician.name,
+        querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '20', 'q': politician.name,
                        'safeSearch': 'false'}
         response = requests.request('GET', self._url, headers=self._headers, params=querystring)
         body = json.loads(response.text)
@@ -75,13 +85,15 @@ class NewsArticleCrawler:
         articles = body['value']
         results = []
 
-        for article in articles:
+        summaries = self._get_summaries(articles)
+
+        for index, article in enumerate(articles):
             extracted_politicians = self.extract_politicians(article['title'], politicians)
             stripped_description = NewsArticleCrawler._stip_html_tags(article['description'])
-            summary = self._summarizer.summarize(stripped_description)
+            summary = summaries[index]
 
             if len(extracted_politicians) == 0:
-                continue
+                extracted_politicians = [politician.num]
 
             news_article = NewsArticle(
                 title=NewsArticleCrawler._stip_html_tags(article['title']),

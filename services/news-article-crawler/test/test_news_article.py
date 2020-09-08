@@ -35,7 +35,10 @@ def test_get(news_article_crawler: NewsArticleCrawler):
     test_politician: Politician = Politician(1, 'Donald Trump')
 
     news_articles = news_article_crawler.get(test_politician, [])
-    assert len(news_articles) == 0
+    assert len(news_articles) > 0
+
+    for news_article in news_articles:
+        assert news_article.politicians == [1]
 
 
 def test_get_with_politicians(news_article_crawler):
