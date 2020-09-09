@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
     divider: {
         backgroundColor: 'black',
-        height: (props: IProps) => props.thickness ? props.thickness : 2
+        height: (props: IProps) => props.thickness ? props.thickness : 3
     }
 });
 

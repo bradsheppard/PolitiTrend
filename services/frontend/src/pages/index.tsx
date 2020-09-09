@@ -9,10 +9,11 @@ import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 import HomeMainNewsArticle from '../components/home/HomeMainNewsArticle';
 import HomeLatestNewsArticle from '../components/home/HomeLatestNewsArticle';
 import HomeHeader from '../components/home/HomeHeader';
-import Divider from '../components/common/Divider';
-import HomeTrendingNewsArticle from '../components/home/HomeTrendingNewsArticle';
 import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi';
 import VideoPlayer from '../components/common/VideoPlayer';
+import HomeElectionMatchup from '../components/home/HomeElectionMatchup';
+import SentimentApi from '../apis/sentiment/SentimentApi';
+import PoliticianApi from '../apis/politician/PoliticianApi';
 
 interface NewsArticle {
     image: string;
@@ -29,12 +30,23 @@ interface YoutubeVideo {
     thumbnail: string;
 }
 
+interface Politician {
+    name: string;
+    party: string;
+    sentiment: number;
+    role: string;
+}
+
 const styles = (theme: Theme) => createStyles({
     newsArticle: {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(6),
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1)
+    },
+    electionMatchup: {
+        marginTop: theme.spacing(10),
+        marginBottom: theme.spacing(10)
     },
     tweet: {
         marginTop: theme.spacing(2)
@@ -44,9 +56,9 @@ const styles = (theme: Theme) => createStyles({
 interface IProps extends WithStyles<typeof styles> {
     mainNewsArticles: NewsArticle[];
     latestNewsArticles: NewsArticle[];
-    trendingNewsArticles: NewsArticle[];
     youtubeVideos: YoutubeVideo[];
-    tweets: string[];
+    incumbent: Politician;
+    challenger: Politician;
 }
 
 class App extends React.Component<IProps> {
@@ -60,22 +72,42 @@ class App extends React.Component<IProps> {
     }
 
     static async getInitialProps() {
-        const [mainNewsArticleDtos,
-            latestNewsArticleDtos,
-            trendingNewsArticleDtos,
+        const [
+            newsArticleDtos,
             youtubeVideoDtos,
+            incumbentSentimentDto,
+            challengerSentimentDto,
+            incumbentPolitician,
+            challengerPolitician,
         ] = await Promise.all([
-            NewsArticleApi.get({limit: 2, politician: 90}),
             NewsArticleApi.get({limit: 6}),
-            NewsArticleApi.get({limit: 3}),
-            YoutubeVideoApi.get({limit: 6})
+            YoutubeVideoApi.get({limit: 6}),
+            SentimentApi.getForPolitician(101),
+            SentimentApi.getForPolitician(102),
+            PoliticianApi.getOne(101),
+            PoliticianApi.getOne(102)
         ]);
 
+        const incumbent: Politician = {
+            name: incumbentPolitician!.name,
+            party: incumbentPolitician!.party,
+            sentiment: incumbentSentimentDto![0].sentiment,
+            role: incumbentPolitician!.role
+        }
+
+        const challenger: Politician = {
+            name: challengerPolitician!.name,
+            party: challengerPolitician!.party,
+            sentiment: challengerSentimentDto![0].sentiment,
+            role: challengerPolitician!.role
+        }
+
         return {
-            mainNewsArticles: mainNewsArticleDtos,
-            latestNewsArticles: latestNewsArticleDtos,
-            trendingNewsArticles: trendingNewsArticleDtos,
-            youtubeVideos: youtubeVideoDtos
+            mainNewsArticles: newsArticleDtos,
+            latestNewsArticles: newsArticleDtos,
+            youtubeVideos: youtubeVideoDtos,
+            incumbent,
+            challenger
         };
     }
 
@@ -88,6 +120,21 @@ class App extends React.Component<IProps> {
                     <Grid container
                         direction='row'
                         justify='center'>
+                        <Grid item xs={12}>
+                            <HomeHeader>
+                                ELECTION MATCHUP
+                            </HomeHeader>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className={classes.electionMatchup}>
+                                <HomeElectionMatchup incumbent={this.props.incumbent} challenger={this.props.challenger} />
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <HomeHeader>
+                                NEWS ARTICLES
+                            </HomeHeader>
+                        </Grid>
                         <Grid item
                             xs={12}>
                             {
@@ -104,7 +151,6 @@ class App extends React.Component<IProps> {
                             <HomeHeader>
                                 Trending Videos
                             </HomeHeader>
-                            <Divider />
                         </Grid>
                         <Grid item xs={12}>
                             <div className={classes.newsArticle}>
@@ -115,7 +161,6 @@ class App extends React.Component<IProps> {
                             <HomeHeader>
                                 Latest
                             </HomeHeader>
-                            <Divider />
                         </Grid>
                         {
                             this.props.latestNewsArticles.map((newsArticle, index) => {
@@ -128,24 +173,6 @@ class App extends React.Component<IProps> {
                                 );
                             })
                         }
-                        <Grid item xs={12}>
-                            <HomeHeader>
-                                Trending
-                            </HomeHeader>
-                            <Divider />
-                        </Grid>
-                        {
-                            this.props.trendingNewsArticles.map((newsArticle, index) => {
-                                return (
-                                    <Grid item xs={12} key={index}>
-                                        <div className={classes.newsArticle}>
-                                            <HomeTrendingNewsArticle newsArticle={newsArticle} />
-                                        </div>
-                                    </Grid>
-                                );
-                            })
-                        }
-
                     </Grid>
                 </ContentContainer>
             </React.Fragment>

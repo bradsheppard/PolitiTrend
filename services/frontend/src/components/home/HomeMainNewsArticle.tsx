@@ -40,7 +40,7 @@ const HomeMainNewsArticle = (props: IProps) => {
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
             <div>
-                <Typography gutterBottom variant='h3' color='textPrimary'>
+                <Typography gutterBottom variant='h4' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
                         {props.newsArticle.title}
                     </Box>
