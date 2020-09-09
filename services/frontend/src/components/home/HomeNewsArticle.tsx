@@ -9,10 +9,9 @@ import { toDate } from '../../utils/StringUtils';
 
 interface NewsArticle {
     image: string;
-    title: string;
+    summary: string;
     url: string;
     source: string;
-    description: string;
     dateTime: string;
 }
 
@@ -34,7 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const HomeMainNewsArticle = (props: IProps) => {
+const capitalize = (inputString: string) => {
+    return inputString.replace(/\b\w/g, l => l.toUpperCase())
+}
+
+const HomeNewsArticle = (props: IProps) => {
     const classes = useStyles(props);
 
     return (
@@ -42,7 +45,7 @@ const HomeMainNewsArticle = (props: IProps) => {
             <div>
                 <Typography gutterBottom variant='h4' color='textPrimary'>
                     <Box fontWeight='fontWeightBold'>
-                        {props.newsArticle.title}
+                        {capitalize(props.newsArticle.summary)}
                     </Box>
                 </Typography>
                 <Typography gutterBottom variant='subtitle1' color='textSecondary'>
@@ -55,19 +58,16 @@ const HomeMainNewsArticle = (props: IProps) => {
                         Source: {props.newsArticle.source}
                     </Box>
                 </Typography>
-                <Typography variant='subtitle1' color='textSecondary' className={classes.subtitle}>
-                    {props.newsArticle.description}
-                </Typography>
                 {
                     props.newsArticle.image &&
                     <img
                         className={classes.image}
                         src={props.newsArticle.image}
-                        alt={props.newsArticle.title} />
+                        alt={props.newsArticle.summary} />
                 }
             </div>
         </MuiLink>
     );
 };
 
-export default HomeMainNewsArticle;
+export default HomeNewsArticle;
