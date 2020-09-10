@@ -20,8 +20,11 @@ interface NewsArticle {
     summary: string;
     url: string;
     source: string;
-    description: string;
     dateTime: string;
+    politicians: {
+        name: string;
+        party: string;
+    }[];
 }
 
 interface YoutubeVideo {
@@ -70,38 +73,47 @@ class App extends React.Component<IProps> {
     }
 
     static async getInitialProps() {
+        const incumbentId = 101;
+        const challengerId = 102;
+
         const [
             newsArticleDtos,
             youtubeVideoDtos,
             incumbentSentimentDto,
             challengerSentimentDto,
-            incumbentPolitician,
-            challengerPolitician,
+            politicianDtos
         ] = await Promise.all([
             NewsArticleApi.get({limit: 6}),
             YoutubeVideoApi.get({limit: 6}),
-            SentimentApi.getForPolitician(101),
-            SentimentApi.getForPolitician(102),
-            PoliticianApi.getOne(101),
-            PoliticianApi.getOne(102)
+            SentimentApi.getForPolitician(incumbentId),
+            SentimentApi.getForPolitician(challengerId),
+            PoliticianApi.get()
         ]);
 
+        const incumbentPoliticianDto = politicianDtos.find(x => x.id === incumbentId);
+        const challengerPoliticianDto = politicianDtos.find(x => x.id === challengerId);
+
         const incumbent: Politician = {
-            name: incumbentPolitician!.name,
-            party: incumbentPolitician!.party,
+            name: incumbentPoliticianDto!.name,
+            party: incumbentPoliticianDto!.party,
             sentiment: incumbentSentimentDto![0].sentiment,
-            role: incumbentPolitician!.role
+            role: incumbentPoliticianDto!.role
         }
 
         const challenger: Politician = {
-            name: challengerPolitician!.name,
-            party: challengerPolitician!.party,
+            name: challengerPoliticianDto!.name,
+            party: challengerPoliticianDto!.party,
             sentiment: challengerSentimentDto![0].sentiment,
-            role: challengerPolitician!.role
+            role: challengerPoliticianDto!.role
         }
 
+        const newsArticles = newsArticleDtos.map(newsArticleDto => {
+            const politicians = politicianDtos.filter(politicianDto => newsArticleDto.politicians.includes(politicianDto.id));
+            return { ...newsArticleDto, politicians }
+        });
+
         return {
-            mainNewsArticles: newsArticleDtos,
+            mainNewsArticles: newsArticles,
             youtubeVideos: youtubeVideoDtos,
             incumbent,
             challenger

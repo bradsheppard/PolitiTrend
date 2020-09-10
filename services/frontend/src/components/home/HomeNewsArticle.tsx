@@ -1,9 +1,12 @@
 import * as React from 'react';
 import {
+    Avatar,
     Box, Link as MuiLink,
     Typography
 } from '@material-ui/core';
 import { toDate } from '../../utils/StringUtils';
+import { AvatarGroup } from '@material-ui/lab';
+import { politicianNameToImagePath } from '../../utils/ImagePath';
 
 interface NewsArticle {
     image: string;
@@ -11,6 +14,12 @@ interface NewsArticle {
     url: string;
     source: string;
     dateTime: string;
+    politicians: Politician[]
+}
+
+interface Politician {
+    name: string;
+    party: string;
 }
 
 interface IProps {
@@ -41,6 +50,13 @@ const HomeNewsArticle = (props: IProps) => {
                         Source: {props.newsArticle.source}
                     </Box>
                 </Typography>
+                <AvatarGroup max={4}>
+                    {
+                        props.newsArticle.politicians.map((politician, index) =>
+                            <Avatar alt={politician.name} src={politicianNameToImagePath(politician.name)} key={index} />
+                        )
+                    }
+                </AvatarGroup>
             </div>
         </MuiLink>
     );
