@@ -8,7 +8,7 @@ interface IProps extends PropsWithChildren<{}> {}
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
-            marginTop: theme.spacing(8)
+            marginTop: theme.spacing(6)
         }
     })
 );

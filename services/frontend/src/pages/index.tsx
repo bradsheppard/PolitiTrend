@@ -45,8 +45,8 @@ const styles = (theme: Theme) => createStyles({
         marginRight: theme.spacing(1)
     },
     electionMatchup: {
-        marginTop: theme.spacing(10),
-        marginBottom: theme.spacing(10)
+        marginTop: theme.spacing(6),
+        marginBottom: theme.spacing(6)
     },
     tweet: {
         marginTop: theme.spacing(2)

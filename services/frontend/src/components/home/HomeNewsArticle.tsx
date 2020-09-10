@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {
-    Box, createStyles,
-    Link as MuiLink,
-    makeStyles, Theme,
+    Box, Link as MuiLink,
     Typography
 } from '@material-ui/core';
 import { toDate } from '../../utils/StringUtils';
@@ -20,26 +18,11 @@ interface IProps {
     height?: number;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        image: {
-            maxWidth: '100%',
-            margin: 'auto',
-            display: 'block'
-        },
-        subtitle: {
-            paddingBottom: theme.spacing(3)
-        }
-    })
-);
-
 const capitalize = (inputString: string) => {
     return inputString.replace(/\b\w/g, l => l.toUpperCase())
 }
 
 const HomeNewsArticle = (props: IProps) => {
-    const classes = useStyles(props);
-
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
             <div>
@@ -58,13 +41,6 @@ const HomeNewsArticle = (props: IProps) => {
                         Source: {props.newsArticle.source}
                     </Box>
                 </Typography>
-                {
-                    props.newsArticle.image &&
-                    <img
-                        className={classes.image}
-                        src={props.newsArticle.image}
-                        alt={props.newsArticle.summary} />
-                }
             </div>
         </MuiLink>
     );
