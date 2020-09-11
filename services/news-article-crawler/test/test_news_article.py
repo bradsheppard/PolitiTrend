@@ -51,6 +51,17 @@ def test_get_with_politicians(news_article_crawler):
         assert news_article.politicians == [1]
 
 
+def test_get_with_multiple_politicians(news_article_crawler):
+    main_politician: Politician = Politician(1, 'Donald Trump')
+    secondary_politician: Politician = Politician(2, 'Don')
+
+    news_articles = news_article_crawler.get(main_politician, [main_politician, secondary_politician])
+    assert len(news_articles) > 0
+
+    for news_article in news_articles:
+        assert news_article.politicians == [1, 2]
+
+
 def test_insert_and_get(news_article_repository):
     news_article = NewsArticle(
         image=random_string(),

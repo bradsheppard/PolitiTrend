@@ -88,7 +88,9 @@ class NewsArticleCrawler:
         summaries = self._get_summaries(articles)
 
         for index, article in enumerate(articles):
-            extracted_politicians = self.extract_politicians(article['title'], politicians)
+            extracted_politicians = self.extract_politicians(
+                article['title'] + article['description'] + article['body'], politicians)
+
             stripped_description = NewsArticleCrawler._stip_html_tags(article['description'])
             summary = summaries[index]
 
