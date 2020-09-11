@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {
     Avatar,
-    Box, Link as MuiLink,
+    Box, createStyles, Link as MuiLink, Theme,
     Typography
 } from '@material-ui/core';
 import { toDate } from '../../utils/StringUtils';
 import { AvatarGroup } from '@material-ui/lab';
 import { politicianNameToImagePath } from '../../utils/ImagePath';
+import { makeStyles } from '@material-ui/styles';
 
 interface NewsArticle {
     image: string;
@@ -27,11 +28,22 @@ interface IProps {
     height?: number;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        avatar: {
+            width: theme.spacing(10),
+            height: theme.spacing(10)
+        }
+    }),
+);
+
 const capitalize = (inputString: string) => {
     return inputString.replace(/\b\w/g, l => l.toUpperCase())
 }
 
 const HomeNewsArticle = (props: IProps) => {
+    const classes = useStyles();
+
     return (
         <MuiLink href={props.newsArticle.url} underline='none'>
             <div>
@@ -53,7 +65,12 @@ const HomeNewsArticle = (props: IProps) => {
                 <AvatarGroup max={4}>
                     {
                         props.newsArticle.politicians.map((politician, index) =>
-                            <Avatar alt={politician.name} src={politicianNameToImagePath(politician.name)} key={index} />
+                            <Avatar
+                                alt={politician.name}
+                                src={politicianNameToImagePath(politician.name)}
+                                key={index}
+                                className={classes.avatar}
+                            />
                         )
                     }
                 </AvatarGroup>

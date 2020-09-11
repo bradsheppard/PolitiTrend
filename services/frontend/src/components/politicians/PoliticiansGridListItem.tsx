@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'relative',
             float: 'left',
             overflow: 'hidden',
+            borderRadius: '50%',
             height: theme.spacing(40),
             width: theme.spacing(40)
         },
