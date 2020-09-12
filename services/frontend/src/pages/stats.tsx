@@ -64,18 +64,18 @@ const Stats = (props: IProps) => {
     return (
         <Grid container
               justify='center'>
-            <Grid item xs={12}>
-                <StatsCard title='Trending Hashtags' description={trendingHashtagsDescription} className={classes.card}>
+            <Grid item xs={10}>
+                <StatsCard title='TRENDING HASHTAGS' description={trendingHashtagsDescription} className={classes.card}>
                     <StatsWordCloud wordCounts={props.wordCounts} politicians={props.politicians} />
                 </StatsCard>
             </Grid>
-            <Grid item xs={12}>
-                <StatsCard title='Social Media Sentiment' description={socialMediaSentimentDescription} className={classes.card}>
+            <Grid item xs={10}>
+                <StatsCard title='SOCIAL MEDIA SENTIMENT' description={socialMediaSentimentDescription} className={classes.card}>
                     <StatsSentimentTable politicians={props.politicians} points={[]} />
                 </StatsCard>
             </Grid>
-            <Grid item xs={12}>
-                <StatsCard title='State Affiliations' description={stateAffiliationDescription} className={classes.card}>
+            <Grid item xs={10}>
+                <StatsCard title='STATE AFFILIATIONS' description={stateAffiliationDescription} className={classes.card}>
                     <StatsMap statePartyAffiliations={props.statePartyAffiliations} />
                 </StatsCard>
             </Grid>
