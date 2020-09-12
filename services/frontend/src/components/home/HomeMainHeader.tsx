@@ -18,7 +18,7 @@ const HomeMainHeader = (props: IProps) => {
 
     return (
         <div className={classes.container}>
-            <Typography gutterBottom variant='h3' color='textPrimary' align='center'>
+            <Typography gutterBottom variant='h2' color='textPrimary' align='center'>
                 <Box fontWeight='fontWeightBold'>
                     {props.children}
                 </Box>

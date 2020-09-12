@@ -14,26 +14,26 @@ const theme = createMuiTheme({
     },
     typography: {
         fontFamily: [
-            'Lato'
+            'Merriweather'
         ].join(','),
         h1: {
             fontFamily: [
-                'Roboto Condensed'
+                'Raleway'
             ].join(',')
         },
         h2: {
             fontFamily: [
-                'Roboto Condensed'
+                'Raleway'
             ].join(',')
         },
         h3: {
             fontFamily: [
-                'Roboto Condensed'
+                'Raleway'
             ].join(',')
         },
         h4: {
             fontFamily: [
-                'Roboto Condensed'
+                'Raleway'
             ].join(',')
         }
     }

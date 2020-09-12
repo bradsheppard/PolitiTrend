@@ -23,7 +23,6 @@ interface NewsArticle {
     url: string;
     image: string;
     source: string;
-    description: string;
     dateTime: string;
 }
 

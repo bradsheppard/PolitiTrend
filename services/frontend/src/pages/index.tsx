@@ -1,6 +1,5 @@
 import {
-    createStyles, Grid,
-    Theme, WithStyles,
+    createStyles, Grid, Theme, WithStyles,
     withStyles
 } from '@material-ui/core';
 import * as React from 'react';
@@ -42,14 +41,13 @@ interface Politician {
 
 const styles = (theme: Theme) => createStyles({
     newsArticle: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(6),
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1)
+        margin: theme.spacing(4),
+        height: `calc(100% - ${theme.spacing(8)}px)`
     },
     electionMatchup: {
-        marginTop: theme.spacing(6),
-        marginBottom: theme.spacing(6)
+        padding: theme.spacing(8),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2)
     },
     tweet: {
         marginTop: theme.spacing(2)
@@ -128,7 +126,8 @@ class App extends React.Component<IProps> {
                 <ContentContainer>
                     <Grid container
                         direction='row'
-                        justify='center'>
+                        justify='center'
+                        alignItems='stretch'>
                         <Grid item xs={12}>
                             <HomeMainHeader>
                                 ELECTION MATCHUP
@@ -144,18 +143,17 @@ class App extends React.Component<IProps> {
                                 NEWS ARTICLES
                             </HomeHeader>
                         </Grid>
-                        <Grid item
-                            xs={12}>
                             {
                                 this.props.mainNewsArticles.map((newsArticle, index) => {
                                     return (
-                                        <div className={classes.newsArticle} key={index}>
-                                            <HomeNewsArticle newsArticle={newsArticle} height={400} />
-                                        </div>
+                                        <Grid item xs={12} md={6} key={index}>
+                                            <div className={classes.newsArticle}>
+                                                <HomeNewsArticle newsArticle={newsArticle} />
+                                            </div>
+                                        </Grid>
                                     )
                                 })
                             }
-                        </Grid>
                         <Grid item xs={12}>
                             <HomeHeader>
                                 Trending Videos

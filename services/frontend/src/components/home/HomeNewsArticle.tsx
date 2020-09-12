@@ -25,7 +25,6 @@ interface Politician {
 
 interface IProps {
     newsArticle: NewsArticle;
-    height?: number;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,6 +32,16 @@ const useStyles = makeStyles((theme: Theme) =>
         avatar: {
             width: theme.spacing(10),
             height: theme.spacing(10)
+        },
+        paper: {
+            padding: theme.spacing(2),
+            height: '100%'
+        },
+        container: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'column',
+            height: '100%'
         }
     }),
 );
@@ -45,23 +54,25 @@ const HomeNewsArticle = (props: IProps) => {
     const classes = useStyles();
 
     return (
-        <MuiLink href={props.newsArticle.url} underline='none'>
-            <div>
-                <Typography gutterBottom variant='h4' color='textPrimary'>
-                    <Box fontWeight='fontWeightBold'>
-                        {capitalize(props.newsArticle.summary)}
-                    </Box>
-                </Typography>
-                <Typography gutterBottom variant='subtitle1' color='textSecondary'>
-                    <Box fontWeight='fontWeightBold' fontStyle='italic'>
-                        {toDate(props.newsArticle.dateTime)}
-                    </Box>
-                </Typography>
-                <Typography gutterBottom variant='subtitle1' color='textSecondary'>
-                    <Box fontWeight='fontWeightBold' fontStyle='italic'>
-                        Source: {props.newsArticle.source}
-                    </Box>
-                </Typography>
+        <MuiLink href={props.newsArticle.url} className={classes.paper} underline='none'>
+            <div className={classes.container}>
+                <div>
+                    <Typography gutterBottom variant='h4' color='textPrimary'>
+                        <Box fontWeight='fontWeightBold'>
+                            {capitalize(props.newsArticle.summary)}
+                        </Box>
+                    </Typography>
+                    <Typography gutterBottom variant='subtitle1' color='textSecondary'>
+                        <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                            {toDate(props.newsArticle.dateTime)}
+                        </Box>
+                    </Typography>
+                    <Typography gutterBottom variant='subtitle1' color='textSecondary'>
+                        <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                            Source: {props.newsArticle.source}
+                        </Box>
+                    </Typography>
+                </div>
                 <AvatarGroup max={4}>
                     {
                         props.newsArticle.politicians.map((politician, index) =>

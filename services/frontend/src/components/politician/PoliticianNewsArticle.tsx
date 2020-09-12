@@ -7,7 +7,6 @@ interface PoliticianNewsArticle {
     title: string;
     url: string;
     source: string;
-    description: string;
     dateTime: string;
 }
 
@@ -49,9 +48,6 @@ const NewsArticle = (props: IProps) => {
                     <Box fontWeight='fontWeightBold' fontStyle='italic'>
                         Source: {props.newsArticle.source}
                     </Box>
-                </Typography>
-                <Typography className={classes.subtitle} variant='subtitle1' color="textSecondary">
-                    {props.newsArticle.description}
                 </Typography>
                 {
                     props.newsArticle.image &&
