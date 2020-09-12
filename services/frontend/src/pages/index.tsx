@@ -4,8 +4,8 @@ import {
 } from '@material-ui/core';
 import * as React from 'react';
 import ContentContainer from '../components/common/ContentContainer';
+import NewsArticleComponent from '../components/common/NewsArticle';
 import NewsArticleApi from '../apis/news-article/NewsArticleApi';
-import HomeNewsArticle from '../components/home/HomeNewsArticle';
 import HomeHeader from '../components/home/HomeHeader';
 import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi';
 import VideoPlayer from '../components/common/VideoPlayer';
@@ -105,13 +105,8 @@ class App extends React.Component<IProps> {
             role: challengerPoliticianDto!.role
         }
 
-        const newsArticles = newsArticleDtos.map(newsArticleDto => {
-            const politicians = politicianDtos.filter(politicianDto => newsArticleDto.politicians.includes(politicianDto.id));
-            return { ...newsArticleDto, politicians }
-        });
-
         return {
-            mainNewsArticles: newsArticles,
+            mainNewsArticles: newsArticleDtos,
             youtubeVideos: youtubeVideoDtos,
             incumbent,
             challenger
@@ -148,7 +143,7 @@ class App extends React.Component<IProps> {
                                     return (
                                         <Grid item xs={12} md={6} key={index}>
                                             <div className={classes.newsArticle}>
-                                                <HomeNewsArticle newsArticle={newsArticle} />
+                                                <NewsArticleComponent newsArticle={newsArticle} />
                                             </div>
                                         </Grid>
                                     )

@@ -10,7 +10,6 @@ import { politicianNameToImagePath } from '../../utils/ImagePath';
 import { makeStyles } from '@material-ui/styles';
 
 interface NewsArticle {
-    image: string;
     summary: string;
     url: string;
     source: string;
@@ -50,7 +49,7 @@ const capitalize = (inputString: string) => {
     return inputString.replace(/\b\w/g, l => l.toUpperCase())
 }
 
-const HomeNewsArticle = (props: IProps) => {
+const NewsArticle = (props: IProps) => {
     const classes = useStyles();
 
     return (
@@ -63,12 +62,12 @@ const HomeNewsArticle = (props: IProps) => {
                         </Box>
                     </Typography>
                     <Typography gutterBottom variant='subtitle1' color='textSecondary'>
-                        <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                        <Box fontWeight='fontWeightBold'>
                             {toDate(props.newsArticle.dateTime)}
                         </Box>
                     </Typography>
                     <Typography gutterBottom variant='subtitle1' color='textSecondary'>
-                        <Box fontWeight='fontWeightBold' fontStyle='italic'>
+                        <Box fontWeight='fontWeightBold'>
                             Source: {props.newsArticle.source}
                         </Box>
                     </Typography>
@@ -90,4 +89,4 @@ const HomeNewsArticle = (props: IProps) => {
     );
 };
 
-export default HomeNewsArticle;
+export default NewsArticle;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import NewsArticleApi from '../../apis/news-article/NewsArticleApi';
 import NewsArticleDto from '../../apis/news-article/NewsArticleDto';
-import NewsArticleComponent from './PoliticianNewsArticle';
+import NewsArticleComponent from '../common/NewsArticle';
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination'
 
@@ -19,11 +19,16 @@ const styles = (theme: Theme) => createStyles({
 });
 
 interface NewsArticle {
-    title: string;
     url: string;
-    image: string;
     source: string;
     dateTime: string;
+    summary: string;
+    politicians: Politician[];
+}
+
+interface Politician {
+    name: string;
+    party: string;
 }
 
 interface IProps extends WithStyles<typeof styles> {
@@ -32,7 +37,8 @@ interface IProps extends WithStyles<typeof styles> {
 
 interface IState {
     newsArticles: NewsArticle[];
-    page: number
+    politicians: Politician[];
+    page: number;
 }
 
 class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
@@ -41,12 +47,14 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             newsArticles: [],
+            politicians: [],
             page: 1
         };
     }
 
     async componentDidMount() {
         const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({politician: this.props.politician, limit: 5});
+
         this.setState({
             newsArticles: newsArticleDtos
         });
@@ -59,6 +67,7 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
                 limit: 5,
                 offset: 5 * (value - 1)
             });
+
         this.setState({
             page: value,
             newsArticles: newsArticleDtos
@@ -81,7 +90,6 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
             </div>
         )
     }
-
 }
 
 export default withStyles(styles)(PoliticianNewsArticleFeed);
