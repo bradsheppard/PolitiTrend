@@ -49,6 +49,9 @@ const PrettoSliderTemplate = (props: any) => withStyles({
         height: 8,
         pointerEvents: 'none'
     },
+    markLabel: {
+        color: 'grey'
+    },
     thumb: {
         height: 24,
         width: 24,
@@ -77,15 +80,15 @@ const PrettoSliderTemplate = (props: any) => withStyles({
 const sliderMarks = [
     {
         value: -10,
-        label: 'Trump'
+        label: 'Trump (-10)'
     },
     {
         value: 0,
-        label: 'Neutral'
+        label: 'Neutral (0)'
     },
     {
         value: 10,
-        label: 'Biden'
+        label: 'Biden (10)'
     }
 ]
 
@@ -109,17 +112,42 @@ const democraticScale = scaleQuantize<string>()
         "#3463cd"
     ]);
 
-const HomeElectionMatchup = (props: IProps) => {
-    let color = '#333333';
-
-    const sentimentDifference = (props.challenger.sentiment * 5 + 5) - (props.incumbent.sentiment * 5 + 5);
-
+const getColor = (sentimentDifference: number) => {
+    let color = '#a7a7a7';
     if(sentimentDifference > 0) {
         color = democraticScale(sentimentDifference);
     }
     else if(sentimentDifference < 0) {
         color = republicanScale(sentimentDifference)
     }
+
+    return color;
+}
+
+const getSummary = (sentimentDifference: number) => {
+    let summary = 'Neutral';
+
+    if(sentimentDifference > 4) {
+        summary = 'Large Biden Favorability';
+    }
+    else if(sentimentDifference < -4) {
+        summary = 'Large Trump Favorability';
+    }
+    else if (sentimentDifference > 0) {
+        summary = 'Small Biden Favorability';
+    }
+    else if (sentimentDifference < 0) {
+        summary = 'Small Trump Favorability';
+    }
+
+    return summary;
+}
+
+const HomeElectionMatchup = (props: IProps) => {
+    const sentimentDifference = (props.challenger.sentiment * 5 + 5) - (props.incumbent.sentiment * 5 + 5);
+
+    const color = getColor(sentimentDifference);
+    const summary = getSummary(sentimentDifference);
 
     const PrettoSlider = PrettoSliderTemplate({color})
 
@@ -168,10 +196,19 @@ const HomeElectionMatchup = (props: IProps) => {
                     <PrettoSlider
                         min={-10}
                         max={10}
+                        getAriaValueText={() => sentimentDifference.toFixed(2).toString()}
+                        valueLabelFormat={() => sentimentDifference.toFixed(2).toString()}
                         marks={sliderMarks}
-                        valueLabelDisplay="auto"
                         aria-label="pretto slider"
+                        valueLabelDisplay="on"
                         defaultValue={sentimentDifference} />
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant='subtitle1' color='textSecondary' align='center'>
+                        <Box fontWeight='fontWeightBold'>
+                            {summary}
+                        </Box>
+                    </Typography>
                 </Grid>
             </Grid>
         </div>
