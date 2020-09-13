@@ -67,14 +67,14 @@ class NewsArticleCrawler:
         self._summarizer = summarizer
 
     def _get_summaries(self, news_articles):
-        stripped_descriptions = list(map(self._get_description, news_articles))
-        summaries = self._summarizer.summarize_all(stripped_descriptions)
+        stripped_body = list(map(self._get_body, news_articles))
+        summaries = self._summarizer.summarize_all(stripped_body)
         return summaries
 
     @staticmethod
-    def _get_description(article):
-        stripped_description = NewsArticleCrawler._stip_html_tags(article['description'])
-        return stripped_description
+    def _get_body(article):
+        stripped_body = NewsArticleCrawler._stip_html_tags(article['body'])
+        return stripped_body
 
     def get(self, politician: Politician, politicians: List[Politician]) -> List[NewsArticle]:
         querystring = {'autoCorrect': 'false', 'pageNumber': '1', 'pageSize': '20', 'q': politician.name,
