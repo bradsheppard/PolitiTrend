@@ -8,19 +8,19 @@ import BarItem from './BarItem';
 import Link from 'next/link';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
+import ContentContainer from '../common/ContentContainer';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
     title: {
-        flexGrow: 0.70,
+        flexGrow: 0.2,
     },
     items: {
-        textAlign: 'right',
-        flexGrow: 0.15
+        flexGrow: 0.2
     },
     icons: {
         textAlign: 'right',
-        flexGrow: 0.15,
+        flexGrow: 0.6,
         height: '100%'
     },
     icon: {
@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     titleText: {
         color: 'white',
-        textDecoration: 'none'
+        textDecoration: 'none',
+        fontWeight: 700
     }
 }));
 
@@ -39,33 +40,35 @@ const Header = () => {
     return (
         <React.Fragment>
             <AppBar position="fixed" color="secondary" style={{ backgroundColor: 'rgba(0,0,0,0.9)'}}>
-                <Toolbar>
-                    <div className={classes.title}>
-                        <Link href='/' passHref>
-                            <Typography variant="h6" component='a' className={classes.titleText}>
-                                {capitalize(Globals.name)}
-                            </Typography>
-                        </Link>
-                    </div>
-                    <div className={classes.items}>
-                        <BarItem link='/'>
-                            Home
-                        </BarItem>
-                        <BarItem link='/politicians'>
-                            Politicians
-                        </BarItem>
-                        <BarItem link='/stats'>
-                            Stats
-                        </BarItem>
-                        <BarItem link='/about'>
-                            About
-                        </BarItem>
-                    </div>
-                    <div className={classes.icons}>
-                        <FacebookIcon className={classes.icon} />
-                        <TwitterIcon className={classes.icon} />
-                    </div>
-                </Toolbar>
+                <ContentContainer>
+                    <Toolbar>
+                        <div className={classes.title}>
+                            <Link href='/' passHref>
+                                <Typography variant="h6" component='a' className={classes.titleText}>
+                                    {capitalize(Globals.name)}
+                                </Typography>
+                            </Link>
+                        </div>
+                        <div className={classes.items}>
+                            <BarItem link='/'>
+                                Home
+                            </BarItem>
+                            <BarItem link='/politicians'>
+                                Politicians
+                            </BarItem>
+                            <BarItem link='/stats'>
+                                Stats
+                            </BarItem>
+                            <BarItem link='/about'>
+                                About
+                            </BarItem>
+                        </div>
+                        <div className={classes.icons}>
+                            <FacebookIcon className={classes.icon} />
+                            <TwitterIcon className={classes.icon} />
+                        </div>
+                    </Toolbar>
+                </ContentContainer>
             </AppBar>
         </React.Fragment>
 

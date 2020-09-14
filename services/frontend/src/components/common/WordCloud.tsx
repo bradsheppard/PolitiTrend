@@ -7,6 +7,7 @@ const wordCloudOptions = {
 	colors: ['black', '#cc2c26', '#3463cd'],
 	fontSizes: [30, 55] as MinMaxPair,
 	fontFamily: 'Raleway',
+	fontWeight: '900',
 	fontStyle: 'normal',
 	padding: 6,
 	rotations: 6,

@@ -19,22 +19,39 @@ const theme = createMuiTheme({
         h1: {
             fontFamily: [
                 'Raleway'
-            ].join(',')
+            ].join(','),
+            fontWeight: 900
         },
         h2: {
             fontFamily: [
                 'Raleway'
-            ].join(',')
+            ].join(','),
+            fontWeight: 900
         },
         h3: {
             fontFamily: [
                 'Raleway'
-            ].join(',')
+            ].join(','),
+            fontWeight: 900
         },
         h4: {
             fontFamily: [
                 'Raleway'
-            ].join(',')
+            ].join(','),
+            fontWeight: 900
+        },
+        h5: {
+            fontFamily: [
+                'Raleway'
+            ].join(','),
+            fontWeight: 900
+        },
+        h6: {
+            fontFamily: [
+                'Raleway'
+            ].join(','),
+            fontWeight: 900,
+            fontSize: 16
         }
     }
 });

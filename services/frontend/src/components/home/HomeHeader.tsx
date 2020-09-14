@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, createStyles, Theme, Typography } from '@material-ui/core';
+import { createStyles, Theme, Typography } from '@material-ui/core';
 import { PropsWithChildren } from 'react';
 import Divider from '../common/Divider';
 import { makeStyles } from '@material-ui/styles';
@@ -20,9 +20,7 @@ const HomeHeader = (props: IProps) => {
     return (
         <div className={classes.container}>
             <Typography gutterBottom variant='h3' color='textPrimary'>
-                <Box fontWeight='fontWeightBold'>
-                    {props.children}
-                </Box>
+                {props.children}
             </Typography>
             <Divider />
         </div>

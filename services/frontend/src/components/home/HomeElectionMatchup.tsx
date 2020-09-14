@@ -166,7 +166,7 @@ const HomeElectionMatchup = (props: IProps) => {
                                 {props.incumbent.name}
                             </Box>
                         </Typography>
-                        <Typography variant='h6' color='textSecondary' align='center'>
+                        <Typography variant='subtitle1' color='textSecondary' align='center'>
                             {props.incumbent.party}
                         </Typography>
                         <Typography variant='subtitle1' color='textSecondary' align='center'>
@@ -184,7 +184,7 @@ const HomeElectionMatchup = (props: IProps) => {
                                 {props.challenger.name}
                             </Box>
                         </Typography>
-                        <Typography variant='h6' color='textSecondary' align='center'>
+                        <Typography variant='subtitle1' color='textSecondary' align='center'>
                             {props.challenger.party}
                         </Typography>
                         <Typography variant='subtitle1' color='textSecondary' align='center'>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
     Avatar,
-    Box, createStyles, Link as MuiLink, Theme,
+    createStyles, Link as MuiLink, Theme,
     Typography
 } from '@material-ui/core';
 import { toDate } from '../../utils/StringUtils';
@@ -57,19 +57,13 @@ const NewsArticle = (props: IProps) => {
             <div className={classes.container}>
                 <div>
                     <Typography gutterBottom variant='h4' color='textPrimary'>
-                        <Box fontWeight='fontWeightBold'>
-                            {capitalize(props.newsArticle.summary)}
-                        </Box>
+                        {capitalize(props.newsArticle.summary)}
                     </Typography>
                     <Typography gutterBottom variant='subtitle1' color='textSecondary'>
-                        <Box fontWeight='fontWeightBold'>
-                            {toDate(props.newsArticle.dateTime)}
-                        </Box>
+                        {toDate(props.newsArticle.dateTime)}
                     </Typography>
                     <Typography gutterBottom variant='subtitle1' color='textSecondary'>
-                        <Box fontWeight='fontWeightBold'>
-                            Source: {props.newsArticle.source}
-                        </Box>
+                        Source: {props.newsArticle.source}
                     </Typography>
                 </div>
                 <AvatarGroup max={4}>

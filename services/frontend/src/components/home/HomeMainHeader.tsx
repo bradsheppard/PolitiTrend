@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PropsWithChildren } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Box, createStyles, Theme, Typography } from '@material-ui/core';
+import { createStyles, Theme, Typography } from '@material-ui/core';
 
 interface IProps extends PropsWithChildren<{}> {}
 
@@ -19,9 +19,7 @@ const HomeMainHeader = (props: IProps) => {
     return (
         <div className={classes.container}>
             <Typography gutterBottom variant='h2' color='textPrimary' align='center'>
-                <Box fontWeight='fontWeightBold'>
-                    {props.children}
-                </Box>
+                {props.children}
             </Typography>
         </div>
     );
