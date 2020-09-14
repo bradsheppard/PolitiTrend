@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, createStyles, Theme, Typography } from '@material-ui/core';
+import { createStyles, Theme, Typography } from '@material-ui/core';
 import { politicianNameToImagePath } from '../../utils/ImagePath';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
@@ -55,14 +55,12 @@ const PoliticiansGridListItem = (props: IProps & React.HTMLAttributes<HTMLDivEle
             </div>
             <div className={classes.textContainer}>
                 <Typography variant='h4' color='textPrimary'>
-                    <Box fontWeight='fontWeightBold'>
-                        {props.politician.name}
-                    </Box>
+                    {props.politician.name}
                 </Typography>
-                <Typography variant='h6' color='textSecondary'>
+                <Typography variant='subtitle1' color='textSecondary'>
                     {props.politician.party}
                 </Typography>
-                <Typography variant='h6' color='textSecondary'>
+                <Typography variant='subtitle1' color='textSecondary'>
                     {props.politician.role}
                 </Typography>
             </div>

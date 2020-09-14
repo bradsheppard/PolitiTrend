@@ -151,7 +151,7 @@ class App extends React.Component<IProps> {
                             }
                         <Grid item xs={12}>
                             <HomeHeader>
-                                Trending Videos
+                                TRENDING VIDEOS
                             </HomeHeader>
                         </Grid>
                         <Grid item xs={12}>

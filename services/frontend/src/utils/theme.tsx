@@ -52,6 +52,9 @@ const theme = createMuiTheme({
             ].join(','),
             fontWeight: 900,
             fontSize: 16
+        },
+        subtitle1: {
+            fontWeight: 900
         }
     }
 });

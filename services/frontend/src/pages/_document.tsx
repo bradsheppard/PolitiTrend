@@ -15,10 +15,7 @@ class MyDocument extends Document {
                     />
                     {/* PWA primary color */}
                     <meta name="theme-color" content={theme.palette.primary.main} />
-                    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
                     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-                    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;1,300&display=swap" rel="stylesheet" />
-                    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet" />
                     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet" />
                 </Head>
                 <body>
