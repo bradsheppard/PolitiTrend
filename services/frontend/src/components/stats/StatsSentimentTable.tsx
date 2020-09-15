@@ -14,7 +14,6 @@ import {
 import { Line } from '@nivo/line';
 import { useEffect, useState } from 'react';
 import SentimentApi from '../../apis/sentiment/SentimentApi';
-import AutoSizer from 'react-virtualized-auto-sizer';
 
 interface IProps {
     politicians: Politician[];
@@ -54,10 +53,13 @@ const StyledTableCell = withStyles((theme: Theme) =>
             backgroundColor: theme.palette.secondary.dark,
             color: theme.palette.common.white,
             fontWeight: 'bold',
-            fontSize: 16
+            fontSize: 14
         },
         body: {
             fontSize: 14,
+            height: theme.spacing(1),
+            paddingTop: 0,
+            paddingBottom: 0
         },
     }),
 )(TableCell);
@@ -152,17 +154,59 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
         setSentimentHistories(current);
     };
 
-    const numRows = 8;
+    const numRows = 6;
 
     const histories = sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x));
     console.log(histories);
 
     return (
         <Grid container>
-            <Grid item xs={6}>
-                <div className={props.className}>
+            <Grid item xs={12}>
+                <Line
+                    height={400}
+                    width={1600}
+                    data={sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x))}
+                    margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+                    xScale={{
+                        type: 'time',
+                        format: '%Y-%m-%d',
+                        useUTC: false,
+                        precision: 'day'
+                    }}
+                    xFormat="time:%Y-%m-%d"
+                    yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
+                    axisTop={null}
+                    axisRight={null}
+                    axisBottom={{
+                        format: '%b %d',
+                        tickValues: 'every 2 days',
+                        legend: 'time scale',
+                        legendOffset: -12,
+                    }}
+                    axisLeft={{
+                        orient: 'left',
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                        legend: 'Sentiment',
+                        legendOffset: -40,
+                        legendPosition: 'middle'
+                    }}
+                    colors={{ scheme: 'dark2' }}
+                    pointSize={8}
+                    pointColor={{ theme: 'background' }}
+                    pointBorderWidth={3}
+                    pointBorderColor={{ from: 'serieColor' }}
+                    pointLabel='sentiment'
+                    pointLabelYOffset={-12}
+                    lineWidth={3}
+                    useMesh={true}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <div>
                     <TableContainer>
-                        <Table>
+                        <Table size='small'>
                             <TableHead>
                                 <TableRow>
                                     <StyledTableCell>Rank</StyledTableCell>
@@ -179,7 +223,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                                         <StyledTableCell>{politician.name}</StyledTableCell>
                                         <StyledTableCell>{politician.party}</StyledTableCell>
                                         <StyledTableCell>{scaleSentiment(politician.sentiment)}</StyledTableCell>
-                                        <StyledTableCell><Checkbox checked={checked[index]} onChange={() => handleCheckboxClicked(index)} /></StyledTableCell>
+                                        <StyledTableCell><Checkbox size='small' checked={checked[index]} onChange={() => handleCheckboxClicked(index)} /></StyledTableCell>
                                     </StyledTableRow>
                                 )).slice(page * numRows, page * numRows + numRows)}
                             </TableBody>
@@ -194,52 +238,6 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                         onChangePage={handleChangePage}
                     />
                 </div>
-            </Grid>
-            <Grid item xs={6}>
-                <AutoSizer>
-                    {({height, width}) => (
-                        <Line
-                            height={height}
-                            width={width}
-                            data={sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x))}
-                            margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-                            xScale={{
-                                type: 'time',
-                                format: '%Y-%m-%d',
-                                useUTC: false,
-                                precision: 'day'
-                            }}
-                            xFormat="time:%Y-%m-%d"
-                            yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
-                            axisTop={null}
-                            axisRight={null}
-                            axisBottom={{
-                                format: '%b %d',
-                                tickValues: 'every 2 days',
-                                legend: 'time scale',
-                                legendOffset: -12,
-                            }}
-                            axisLeft={{
-                                orient: 'left',
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: 'Sentiment',
-                                legendOffset: -40,
-                                legendPosition: 'middle'
-                            }}
-                            colors={{ scheme: 'dark2' }}
-                            pointSize={8}
-                            pointColor={{ theme: 'background' }}
-                            pointBorderWidth={3}
-                            pointBorderColor={{ from: 'serieColor' }}
-                            pointLabel='sentiment'
-                            pointLabelYOffset={-12}
-                            lineWidth={3}
-                            useMesh={true}
-                        />
-                    )}
-                </AutoSizer>
             </Grid>
         </Grid>
     );
