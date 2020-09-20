@@ -11,10 +11,7 @@ export class SentimentController {
 
 	@Get()
 	async findAll(@Query() searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
-		if(searchSentimentDto.politician)
-			return await this.sentimentService.findByPolitician(searchSentimentDto.politician);
-
-		return await this.sentimentService.findAll(searchSentimentDto);
+		return await this.sentimentService.find(searchSentimentDto);
 	}
 
 	@Post()

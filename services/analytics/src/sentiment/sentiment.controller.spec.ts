@@ -54,13 +54,13 @@ describe('Sentiment Controller', () => {
 
 	it('Can get all', async () => {
 		const sentiment = createSentiment();
-		jest.spyOn(service, 'findAll').mockResolvedValueOnce([sentiment]);
+		jest.spyOn(service, 'find').mockResolvedValueOnce([sentiment]);
 		expect(await controller.findAll({})).toEqual([sentiment]);
 	});
 
 	it('Can get by politician', async () => {
 		const sentiment = createSentiment();
-		jest.spyOn(service, 'findByPolitician').mockResolvedValueOnce([sentiment]);
+		jest.spyOn(service, 'find').mockResolvedValueOnce([sentiment]);
 		expect(await controller.findAll({politician: sentiment.politician})).toEqual([sentiment]);
 	});
 

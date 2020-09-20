@@ -1,4 +1,4 @@
-import { IsInt } from 'class-validator';
+import { IsDate, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class SearchSentimentDto {
@@ -9,4 +9,12 @@ export class SearchSentimentDto {
 	@IsInt()
 	@Type(() => Number)
 	minSampleSize?: number;
+
+	@IsDate()
+	@Type(() => Date)
+	start?: Date;
+
+	@IsDate()
+	@Type(() => Date)
+	end?: Date;
 }

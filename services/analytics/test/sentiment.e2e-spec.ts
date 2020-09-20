@@ -66,15 +66,6 @@ function createSentiment(): CreateSentimentDto {
 	}
 }
 
-function createSentimentForPolitician(politician: number): CreateSentimentDto {
-	id++;
-	return {
-		sentiment: id,
-		politician,
-		sampleSize: id + 100
-	}
-}
-
 function createSentimentWithSampleSizeForPolitician(politician: number, sampleSize: number): CreateSentimentDto {
 	id++;
 	return {
@@ -90,50 +81,189 @@ function equals(sentiment: Sentiment, sentimentDto: CreateSentimentDto) {
 	expect(sentiment.sampleSize).toEqual(sentimentDto.sampleSize);
 }
 
+function equalsWithDate(sentiment: Sentiment, sentimentDto: CreateSentimentDto) {
+	expect(sentiment.sentiment).toEqual(sentimentDto.sentiment);
+	expect(sentiment.politician).toEqual(sentimentDto.politician);
+	expect(sentiment.sampleSize).toEqual(sentimentDto.sampleSize);
+	expect(sentiment.dateTime).toEqual(sentimentDto.dateTime.toISOString());
+}
+
 describe('Sentiment (e2e)', () => {
 	it('/sentiment (GET)', async () => {
-		const politician1CreateSentimentDto1 = createSentimentForPolitician(1);
-		const politician1CreateSentimentDto2 = createSentimentForPolitician(1);
+		const currentDate = new Date('2020-01-02');
+		const yesterday = new Date('2020-01-01');
 
-		const politician2CreateSentimentDto1 = createSentimentForPolitician(2);
-		const politician2CreateSentimentDto2 = createSentimentForPolitician(2);
+		const politician1CreateSentimentDto1: CreateSentimentDto = {
+			sentiment: 1,
+			sampleSize: 100,
+			politician: 1,
+			dateTime: currentDate
+		};
+		const politician1CreateSentimentDto2: CreateSentimentDto = {
+			sentiment: 2,
+			sampleSize: 200,
+			politician: 1,
+			dateTime: yesterday
+		};
 
-		await service.create(politician1CreateSentimentDto1);
-		await service.create(politician1CreateSentimentDto2);
-		await service.create(politician2CreateSentimentDto1);
-		await service.create(politician2CreateSentimentDto2);
+		const politician2CreateSentimentDto1: CreateSentimentDto = {
+			sentiment: 1,
+			sampleSize: 100,
+			politician: 2,
+			dateTime: currentDate
+		};
+		const politician2CreateSentimentDto2: CreateSentimentDto = {
+			sentiment: 2,
+			sampleSize: 200,
+			politician: 2,
+			dateTime: yesterday
+		};
+
+		await Promise.all([
+			service.create(politician1CreateSentimentDto1),
+			service.create(politician1CreateSentimentDto2),
+			service.create(politician2CreateSentimentDto1),
+			service.create(politician2CreateSentimentDto2)
+		]);
+
+		const expectedResponse = [
+			politician1CreateSentimentDto1,
+			politician1CreateSentimentDto2,
+			politician2CreateSentimentDto1,
+			politician2CreateSentimentDto2
+		]
 
 		const response = await request(app.getHttpServer())
 			.get('/sentiment');
 
 		expect(response.status).toEqual(200);
-		expect(response.body.length).toEqual(2);
-		equals(response.body[0], politician1CreateSentimentDto2);
-		equals(response.body[1], politician2CreateSentimentDto2);
+		expect(response.body.length).toEqual(4);
+		for(let i = 0; i < response.body.length; i++) {
+			equalsWithDate(response.body[i], expectedResponse[i]);
+		}
 	});
 
-	it('/sentiment?politician={id} (GET)', async () => {
-		const politician1CreateSentimentDto1 = createSentimentForPolitician(1);
-		const politician1CreateSentimentDto2 = createSentimentForPolitician(1);
+	it('/sentiment?politician={id} (GET) One day downsampling', async () => {
+		const politician1CreateSentimentDto1: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 100,
+			sentiment: 1
+		};
+		const politician1CreateSentimentDto2: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 200,
+			sentiment: 4
+		};
 
-		const politician2CreateSentimentDto1 = createSentimentForPolitician(2);
-		const politician2CreateSentimentDto2 = createSentimentForPolitician(2);
+		const politician2CreateSentimentDto1: CreateSentimentDto = {
+			politician: 2,
+			sampleSize: 300,
+			sentiment: 5
+		};
+		const politician2CreateSentimentDto2: CreateSentimentDto = {
+			politician: 2,
+			sampleSize: 400,
+			sentiment: 6
+		};
 
-		await service.create(politician1CreateSentimentDto1);
-		await service.create(politician1CreateSentimentDto2);
-		await service.create(politician2CreateSentimentDto1);
-		await service.create(politician2CreateSentimentDto2);
+		const expectedResponse = {
+			politician: 1,
+			sampleSize: 300,
+			sentiment: 3
+		};
+
+		await Promise.all([
+			service.create(politician1CreateSentimentDto1),
+			service.create(politician1CreateSentimentDto2),
+			service.create(politician2CreateSentimentDto1),
+			service.create(politician2CreateSentimentDto2)
+		]);
 
 		const response = await request(app.getHttpServer())
 			.get('/sentiment?politician=1');
 
 		expect(response.status).toEqual(200);
-		expect(response.body.length).toEqual(2);
-		equals(response.body[0], politician1CreateSentimentDto2);
-		equals(response.body[1], politician1CreateSentimentDto1);
+		expect(response.body.length).toEqual(1);
+		equals(response.body[0], expectedResponse);
 	});
 
-	it('/sentiment?minSampleSize=3 (GET', async() => {
+	it('/sentiment?politician={id} (GET) Multiple day downsampling', async () => {
+		const currentDate = new Date('2020-01-02');
+		const yesterday = new Date('2020-01-01');
+
+		const politician1CreateSentimentDto1: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 100,
+			sentiment: 1,
+			dateTime: currentDate
+		};
+		const politician1CreateSentimentDto2: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 200,
+			sentiment: 4,
+			dateTime: currentDate
+		};
+
+		const politician1CreateSentimentDto3: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 500,
+			sentiment: 1,
+			dateTime: yesterday
+		};
+		const politician1CreateSentimentDto4: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 1500,
+			sentiment: 4,
+			dateTime: yesterday
+		};
+
+		const politician2CreateSentimentDto1: CreateSentimentDto = {
+			politician: 2,
+			sampleSize: 300,
+			sentiment: 5
+		};
+		const politician2CreateSentimentDto2: CreateSentimentDto = {
+			politician: 2,
+			sampleSize: 400,
+			sentiment: 6
+		};
+
+		const expectedResponse = [
+			{
+				politician: 1,
+				sampleSize: 300,
+				sentiment: 3,
+				dateTime: currentDate
+			},
+			{
+				politician: 1,
+				sampleSize: 2000,
+				sentiment: 3.25,
+				dateTime: yesterday
+			}
+		];
+
+		await Promise.all([
+			service.create(politician1CreateSentimentDto1),
+			service.create(politician1CreateSentimentDto2),
+			service.create(politician1CreateSentimentDto3),
+			service.create(politician1CreateSentimentDto4),
+			service.create(politician2CreateSentimentDto1),
+			service.create(politician2CreateSentimentDto2)
+		]);
+
+		const response = await request(app.getHttpServer())
+			.get('/sentiment?politician=1&start=2020-01-01');
+
+		expect(response.status).toEqual(200);
+		expect(response.body.length).toEqual(expectedResponse.length);
+
+		for(let i = 0; i < response.body.length; i++) {
+			equalsWithDate(response.body[i], expectedResponse[i]);
+		}
+	});
+
+	it('/sentiment?minSampleSize=3 (GET)', async() => {
 		const politician1CreateSentimentDto = createSentimentWithSampleSizeForPolitician(1, 4);
 		const politician2CreateSentimentDto = createSentimentWithSampleSizeForPolitician(2, 1);
 
@@ -167,7 +297,7 @@ describe('Sentiment (e2e)', () => {
 		expect(json[0].topicName).toEqual('analytics-sentiment-created');
 
 		await waitForExpect(async () => {
-			const sentiments: Sentiment[] = await service.findAll();
+			const sentiments: Sentiment[] = await service.find({});
 			expect(sentiments.length).toEqual(1);
 			equals(sentiments[0], createDto);
 		});
