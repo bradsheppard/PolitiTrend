@@ -110,28 +110,6 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
         setChecked(currentChecked);
     };
 
-    const getHighestPerX = (sentimentHistory: SentimentHistory) => {
-        const highs: {[key: string]: number} = {};
-
-        sentimentHistory.data.forEach(point => {
-            if (!highs[point.x] || highs[point.x] < point.y) {
-                highs[point.x] = point.y;
-            }
-        });
-
-        const newSentimentHistory: SentimentHistory = {
-            id: sentimentHistory.id,
-            data: Object.keys(highs).map(key => {
-                return {
-                    x: key,
-                    y: highs[key]
-                }
-            })
-        };
-
-        return newSentimentHistory;
-    };
-
     const scaleSentiment = (sentiment: number) => {
         return (sentiment * 5 + 5).toFixed(1);
     };
@@ -150,7 +128,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
             data: data
         };
         const current = sentimentHistorys.slice(0, sentimentHistorys.length);
-        current.push(getHighestPerX(sentimentHistory));
+        current.push(sentimentHistory);
         setSentimentHistories(current);
     };
 
