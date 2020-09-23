@@ -17,9 +17,9 @@ FROM node:12-alpine AS app
 
 WORKDIR /app
 
-COPY --from=builder /app/dist dist
-
 COPY --from=builder /app/node_modules node_modules
+
+COPY --from=builder /app/dist dist
 
 COPY package.json .env ./
 
