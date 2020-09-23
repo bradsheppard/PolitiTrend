@@ -10,6 +10,8 @@ const SentimentSchema = new mongoose.Schema({
 	},
 });
 
+SentimentSchema.index({dateTime: -1});
+
 SentimentSchema.index({politician: 1, dateTime: -1});
 
 SentimentSchema.set('toJSON', {
