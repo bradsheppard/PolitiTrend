@@ -143,7 +143,56 @@ describe('Sentiment (e2e)', () => {
 		}
 	});
 
-	it('/sentiment?politician={id} (GET) One day downsampling', async () => {
+	it('/sentiment?politician={id} (GET) One day', async () => {
+		const currentDate = new Date('2020-01-02');
+		const yesterday = new Date('2020-01-01');
+
+		const politician1CreateSentimentDto1: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 100,
+			sentiment: 1,
+			dateTime: currentDate
+		};
+		const politician1CreateSentimentDto2: CreateSentimentDto = {
+			politician: 1,
+			sampleSize: 200,
+			sentiment: 4,
+			dateTime: yesterday
+		};
+
+		const politician2CreateSentimentDto1: CreateSentimentDto = {
+			politician: 2,
+			sampleSize: 300,
+			sentiment: 5,
+			dateTime: currentDate
+		};
+		const politician2CreateSentimentDto2: CreateSentimentDto = {
+			politician: 2,
+			sampleSize: 400,
+			sentiment: 6,
+			dateTime: yesterday
+		};
+
+		const expectedResponse = [politician1CreateSentimentDto1, politician1CreateSentimentDto2]
+
+		await Promise.all([
+			service.create(politician1CreateSentimentDto1),
+			service.create(politician1CreateSentimentDto2),
+			service.create(politician2CreateSentimentDto1),
+			service.create(politician2CreateSentimentDto2)
+		]);
+
+		const response = await request(app.getHttpServer())
+			.get('/sentiment?politician=1');
+
+		expect(response.status).toEqual(200);
+		expect(response.body.length).toEqual(2);
+		for(let i = 0; i < response.body.length; i++) {
+			equals(response.body[i], expectedResponse[i]);
+		}
+	});
+
+	it('/sentiment?politician={id}&resample=86400000 (GET) One day with resampling', async () => {
 		const politician1CreateSentimentDto1: CreateSentimentDto = {
 			politician: 1,
 			sampleSize: 100,
@@ -166,11 +215,13 @@ describe('Sentiment (e2e)', () => {
 			sentiment: 6
 		};
 
-		const expectedResponse = {
-			politician: 1,
-			sampleSize: 300,
-			sentiment: 3
-		};
+		const expectedResponse = [
+			{
+				politician: 1,
+				sampleSize: 300,
+				sentiment: 3
+			}
+		];
 
 		await Promise.all([
 			service.create(politician1CreateSentimentDto1),
@@ -180,14 +231,16 @@ describe('Sentiment (e2e)', () => {
 		]);
 
 		const response = await request(app.getHttpServer())
-			.get('/sentiment?politician=1');
+			.get('/sentiment?politician=1&resample=86400000');
 
 		expect(response.status).toEqual(200);
 		expect(response.body.length).toEqual(1);
-		equals(response.body[0], expectedResponse);
+		for(let i = 0; i < response.body.length; i++) {
+			equals(response.body[i], expectedResponse[i]);
+		}
 	});
 
-	it('/sentiment?politician={id} (GET) Multiple day downsampling', async () => {
+	it('/sentiment?politician={id}&start=2020-01-01&resample=86400000 (GET) Multiple day downsampling', async () => {
 		const currentDate = new Date('2020-01-02');
 		const yesterday = new Date('2020-01-01');
 
@@ -253,7 +306,7 @@ describe('Sentiment (e2e)', () => {
 		]);
 
 		const response = await request(app.getHttpServer())
-			.get('/sentiment?politician=1&start=2020-01-01');
+			.get('/sentiment?politician=1&start=2020-01-01&resample=86400000');
 
 		expect(response.status).toEqual(200);
 		expect(response.body.length).toEqual(expectedResponse.length);

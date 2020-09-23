@@ -8,8 +8,6 @@ import { SearchSentimentDto } from './dtos/search-sentiment.dto';
 @Injectable()
 export class SentimentService {
 
-	private static SAMPLING_RATE = 86400000;
-
 	constructor(@InjectModel('Sentiment') private readonly sentimentModel: Model<Sentiment>) {}
 
 	async create(createSentimentDto: CreateSentimentDto): Promise<Sentiment> {
@@ -17,14 +15,14 @@ export class SentimentService {
 		return await createSentiment.save();
 	}
 
-	private static generateGroupClause() {
+	private static generateGroupClause(resamplingRate: number) {
 		return {
 			_id: {
 				'dateTime': {
 					$subtract: ["$dateTime", {
 						$mod: [{
 							$toLong: "$dateTime"
-						}, SentimentService.SAMPLING_RATE]
+						}, resamplingRate]
 					}]
 				},
 				'politician': '$politician'
@@ -58,13 +56,13 @@ export class SentimentService {
 		return filter
 	}
 
-	async find(searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+	async findWithResampling(searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
 		const aggregations: any[] = [
 			{
 				$match: SentimentService.generateMatchFilter(searchSentimentDto)
 			},
 			{
-				$group: SentimentService.generateGroupClause()
+				$group: SentimentService.generateGroupClause(searchSentimentDto.resample)
 			},
 			{
 				$project: {
@@ -86,11 +84,41 @@ export class SentimentService {
 		if(searchSentimentDto.minSampleSize)
 			aggregations.splice(3, 0,{
 				$match: { sampleSize: { $gte: searchSentimentDto.minSampleSize }}
-			},)
+			});
 
 		const query = this.sentimentModel.aggregate(aggregations);
 
 		return await query.exec();
+	}
+
+	async findWithoutResampling(searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+		const aggregations: any[] = [
+			{
+				$match: SentimentService.generateMatchFilter(searchSentimentDto)
+			},
+			{
+				$sort: {
+					politician: 1,
+					dateTime: -1
+				}
+			}
+		]
+
+		if(searchSentimentDto.minSampleSize)
+			aggregations.splice(3, 0, {
+				$match: { sampleSize: { $gte: searchSentimentDto.minSampleSize }}
+			});
+
+		const query = this.sentimentModel.aggregate(aggregations);
+
+		return await query.exec();
+	}
+
+	async find(searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+		if(searchSentimentDto.resample)
+			return await this.findWithResampling(searchSentimentDto);
+
+		return await this.findWithoutResampling(searchSentimentDto);
 	}
 
 	async delete(): Promise<void> {

@@ -17,4 +17,8 @@ export class SearchSentimentDto {
 	@IsDate()
 	@Type(() => Date)
 	end?: Date;
+
+	@IsInt()
+	@Type(() => Number)
+	resample?: number;
 }
