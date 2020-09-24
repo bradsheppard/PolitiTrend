@@ -83,8 +83,8 @@ class App extends React.Component<IProps> {
         ] = await Promise.all([
             NewsArticleApi.get({limit: 6}),
             YoutubeVideoApi.get({limit: 6}),
-            SentimentApi.getForPolitician(incumbentId),
-            SentimentApi.getForPolitician(challengerId),
+            SentimentApi.getHistoryForPolitician(incumbentId),
+            SentimentApi.getHistoryForPolitician(challengerId),
             PoliticianApi.get()
         ]);
 

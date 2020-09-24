@@ -1,28 +1,26 @@
 import * as React from 'react';
+import { useState } from 'react';
 import {
     Checkbox,
-    createStyles, Grid,
+    createStyles,
+    Grid,
     Table,
     TableBody,
     TableCell,
     TableContainer,
-    TableHead, TablePagination,
+    TableHead,
+    TablePagination,
     TableRow,
+    TableSortLabel,
     Theme,
     withStyles
 } from '@material-ui/core';
-import { Line } from '@nivo/line';
-import { useEffect, useState } from 'react';
+import { Line as NivoLine } from '@nivo/line';
 import SentimentApi from '../../apis/sentiment/SentimentApi';
+import { makeStyles } from '@material-ui/styles';
 
 interface IProps {
     politicians: Politician[];
-    points: Point[];
-}
-
-interface SentimentHistory {
-    id: string;
-    data: Point[];
 }
 
 interface Point {
@@ -30,11 +28,25 @@ interface Point {
     y: number;
 }
 
+interface Line {
+    id: number;
+    data: Point[];
+}
+
 interface Politician {
     id: number;
     name: string;
     party: string;
-    sentiment: number;
+    sentiment?: number;
+}
+
+interface Row {
+    id: number;
+    name: string;
+    party: string;
+    sentiment?: number;
+    display: boolean;
+    line?: Line;
 }
 
 const StyledTableRow = withStyles((theme: Theme) =>
@@ -64,58 +76,158 @@ const StyledTableCell = withStyles((theme: Theme) =>
     }),
 )(TableCell);
 
+type Order = 'asc' | 'desc';
+
+const useStyles = makeStyles({
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    },
+});
+
+interface EnhancedTableProps {
+    classes: ReturnType<typeof useStyles>;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Row) => void;
+    order: Order;
+    orderBy: string;
+}
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
+
+function getComparator<T>(
+    order: Order,
+    orderBy: keyof T,
+): (a: T, b: T) => number {
+    return order === 'desc'
+        ? (a, b) => descendingComparator(a, b, orderBy)
+        : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
+    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+}
+
+interface HeadCell {
+    disablePadding: boolean;
+    id: keyof Row;
+    label: string;
+}
+
+const headCells: HeadCell[] = [
+    {id: 'id', disablePadding: false, label: 'ID' },
+    { id: 'name', disablePadding: false, label: 'Politician' },
+    { id: 'party', disablePadding: false, label: 'Party' },
+    { id: 'sentiment', disablePadding: false, label: 'Current Sentiment' },
+    { id: 'display', disablePadding: false, label: 'Display' },
+];
+
+function EnhancedTableHead(props: EnhancedTableProps) {
+    const { classes, order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property: keyof Row) => (event: React.MouseEvent<unknown>) => {
+        onRequestSort(event, property);
+    };
+
+    return (
+        <TableHead>
+            <TableRow>
+                {headCells.map((headCell) => (
+                    <TableCell
+                        key={headCell.id}
+                        align='left'
+                        padding={headCell.disablePadding ? 'none' : 'default'}
+                        sortDirection={orderBy === headCell.id ? order : false}
+                    >
+                        <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={createSortHandler(headCell.id)}
+                        >
+                            {headCell.label}
+                            {orderBy === headCell.id ? (
+                                <span className={classes.visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </span>
+                            ) : null}
+                        </TableSortLabel>
+                    </TableCell>
+                ))}
+            </TableRow>
+        </TableHead>
+    );
+}
+
 const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
-    const [page, setPage] = React.useState(0);
-    const [checked, setChecked] = useState(new Array(props.politicians.length).fill(false));
-    const [sentimentHistorys, setSentimentHistories] = useState<SentimentHistory[]>([]);
+    const classes = useStyles();
+    const [page, setPage] = useState(0);
+    const [order, setOrder] = useState<Order>('asc');
+    const [orderBy, setOrderBy] = useState<keyof Row>('sentiment');
 
-    const hasSentimentHistory = (politicianName: string) => {
-        for (const sentimentHistory of sentimentHistorys) {
-            if (sentimentHistory.id === politicianName)
-                return true;
-        }
-
-        return false;
-    };
-
-    const shouldDisplaySentimentHistory = (sentimentHistory: SentimentHistory) => {
-        const index = props.politicians.findIndex(x => x.name == sentimentHistory.id);
-        return checked[index];
-    };
-
-    useEffect(() => {
-        const fetchSentimentHistory = async () => {
-
-            for (let i = 0; i < checked.length; i++) {
-                const check = checked[i];
-
-                if (check) {
-                    const politcian = props.politicians[i];
-                    if (!hasSentimentHistory(politcian.name))
-                        await addSentimentHistory(politcian);
-                }
-            }
+    const initialRows: Row[] = props.politicians.map(politician => {
+        const row: Row = {
+            id: politician.id,
+            display: false,
+            name: politician.name,
+            sentiment: politician.sentiment,
+            party: politician.party
         };
 
-        fetchSentimentHistory();
-    }, [checked]);
+        return row;
+    });
+
+    const [rows, setRows] = useState<Row[]>(initialRows);
+
+    const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Row) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
-    const handleCheckboxClicked = (index: number) => {
-        const currentChecked = checked.slice();
-        currentChecked[index] = !currentChecked[index];
-        setChecked(currentChecked);
+    const handleCheckboxClicked = async (index: number) => {
+        const newRows = rows.slice(0);
+
+        for(const row of newRows) {
+            if(row.id === index) {
+                row.display = !row.display;
+                if(!row.line) {
+                    row.line = await addLine(row.id);
+                }
+            }
+        }
+
+        setRows(newRows);
     };
 
     const scaleSentiment = (sentiment: number) => {
         return (sentiment * 5 + 5).toFixed(1);
     };
 
-    const addSentimentHistory = async (politician: Politician) => {
-        const politicianSentiments = await SentimentApi.getForPolitician(politician.id);
+    const addLine = async (id: number) => {
+        const politicianSentiments = await SentimentApi.getHistoryForPolitician(id);
         const data = politicianSentiments.map(sentiment => {
             const date = new Date(sentiment.dateTime);
             return {
@@ -123,27 +235,22 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                 y: sentiment.sentiment
             };
         });
-        const sentimentHistory: SentimentHistory = {
-            id: politician.name,
+        const line: Line = {
+            id: id,
             data: data
         };
-        const current = sentimentHistorys.slice(0, sentimentHistorys.length);
-        current.push(sentimentHistory);
-        setSentimentHistories(current);
+        return line;
     };
 
     const numRows = 6;
 
-    const histories = sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x));
-    console.log(histories);
-
     return (
         <Grid container>
             <Grid item xs={12}>
-                <Line
+                <NivoLine
                     height={400}
                     width={1600}
-                    data={sentimentHistorys.filter(x => shouldDisplaySentimentHistory(x))}
+                    data={rows.filter(x => x.line && x.display).map(x => x.line as Line)}
                     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                     xScale={{
                         type: 'time',
@@ -185,25 +292,24 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                 <div>
                     <TableContainer>
                         <Table size='small'>
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>Rank</StyledTableCell>
-                                    <StyledTableCell>Politician</StyledTableCell>
-                                    <StyledTableCell>Party</StyledTableCell>
-                                    <StyledTableCell>Sentiment</StyledTableCell>
-                                    <StyledTableCell>Display</StyledTableCell>
-                                </TableRow>
-                            </TableHead>
+                            <EnhancedTableHead
+                                classes={classes}
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort} />
                             <TableBody>
-                                {props.politicians.map((politician: Politician, index: number) => (
-                                    <StyledTableRow key={index}>
-                                        <StyledTableCell>{index+1}</StyledTableCell>
-                                        <StyledTableCell>{politician.name}</StyledTableCell>
-                                        <StyledTableCell>{politician.party}</StyledTableCell>
-                                        <StyledTableCell>{scaleSentiment(politician.sentiment)}</StyledTableCell>
-                                        <StyledTableCell><Checkbox size='small' checked={checked[index]} onChange={() => handleCheckboxClicked(index)} /></StyledTableCell>
-                                    </StyledTableRow>
-                                )).slice(page * numRows, page * numRows + numRows)}
+                                {stableSort<Row>(rows, getComparator<Row>(order, orderBy))
+                                    .slice(page * numRows, page * numRows + numRows)
+                                    .map((row: Row, index: number) => (
+                                        <StyledTableRow key={index}>
+                                            <StyledTableCell>{row.id}</StyledTableCell>
+                                            <StyledTableCell>{row.name}</StyledTableCell>
+                                            <StyledTableCell>{row.party}</StyledTableCell>
+                                            <StyledTableCell>{row.sentiment ? scaleSentiment(row.sentiment) : 'N/A'}</StyledTableCell>
+                                            <StyledTableCell><Checkbox size='small' checked={row.display} onChange={async () => await handleCheckboxClicked(row.id)} /></StyledTableCell>
+                                        </StyledTableRow>
+                                    ))
+                                }
                             </TableBody>
                         </Table>
                     </TableContainer>

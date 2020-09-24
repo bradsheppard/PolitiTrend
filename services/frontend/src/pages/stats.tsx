@@ -50,7 +50,7 @@ interface Politician {
     id: number;
     name: string;
     party: string;
-    sentiment: number;
+    sentiment?: number;
 }
 
 const trendingHashtagsDescription = 'Trending hashtags per-politician based on social media posts.';
@@ -71,7 +71,7 @@ const Stats = (props: IProps) => {
             </Grid>
             <Grid item xs={10}>
                 <StatsCard title='SOCIAL MEDIA SENTIMENT' description={socialMediaSentimentDescription} className={classes.card}>
-                    <StatsSentimentTable politicians={props.politicians} points={[]} />
+                    <StatsSentimentTable politicians={props.politicians} />
                 </StatsCard>
             </Grid>
             <Grid item xs={10}>
@@ -93,19 +93,18 @@ Stats.getInitialProps = async function (): Promise<IProps> {
 
     const politicianSentiments = politicians.reduce<Politician[]>((result, politician) => {
         const sentiment = sentiments.find(x => x.politician == politician.id);
-        if(sentiment)
-            result.push({
-                id: politician.id,
-                name: politician.name,
-                party: politician.party,
-                sentiment: sentiment.sentiment
-            });
+        result.push({
+            id: politician.id,
+            name: politician.name,
+            party: politician.party,
+            sentiment: sentiment ? sentiment.sentiment : undefined
+        });
         return result;
     }, []);
 
     return {
         wordCounts: wordClouds.length > 0 ? wordClouds[0].words : [],
-        politicians: politicianSentiments.sort((a, b) => b.sentiment - a.sentiment),
+        politicians: politicianSentiments,
         statePartyAffiliations
     };
 };

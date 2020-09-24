@@ -9,7 +9,6 @@ import {
 import ContentContainer from '../../components/common/ContentContainer';
 import _ from 'lodash';
 import PoliticianGridList from '../../components/politicians/PoliticiansGridList';
-import NewsArticleApi from '../../apis/news-article/NewsArticleApi';
 
 const style = (theme: Theme) => createStyles({
     search: {
@@ -54,11 +53,9 @@ class Index extends React.Component<IProps, IState> {
 
     static async getInitialProps() {
         const politicians = await PoliticianApi.get();
-        const newsArticles = await NewsArticleApi.get({limit: 4});
 
         return {
-            politicians,
-            newsArticles
+            politicians
         }
     }
 

@@ -5,6 +5,7 @@ import SentimentDto from './SentimentDto';
 class SentimentApi {
 
     private static url = `http://${url}/api/sentiment`;
+    private static LOOKBACK_DAYS = 30;
 
     static async get(): Promise<SentimentDto[]> {
         const axiosInstance = this.createAxiosInstance();
@@ -12,9 +13,18 @@ class SentimentApi {
         return res.data;
     }
 
-    static async getForPolitician(id: number): Promise<SentimentDto[]> {
+    static async getHistoryForPolitician(id: number): Promise<SentimentDto[]> {
         const axiosInstance = this.createAxiosInstance();
-        const res = await axiosInstance.get<SentimentDto[]>('', {params: {politician: id}});
+        const start = new Date();
+        start.setDate(start.getDate() - SentimentApi.LOOKBACK_DAYS)
+
+        const res = await axiosInstance.get<SentimentDto[]>('',
+            {
+                params: {
+                    politician: id,
+                    start
+                }
+            });
         return res.data;
     }
 
