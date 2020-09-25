@@ -9,13 +9,13 @@ tf.disable_eager_execution()
 
 class Summarizer:
 
-    batch_size = 5
+    batch_size = 2
 
     def __init__(self):
         g = tf.Graph()
         with g.as_default():
             text_input = tf.placeholder(dtype=tf.string, shape=[None])
-            summarizer = hub.Module('https://tfhub.dev/google/bertseq2seq/roberta24_gigaword/1', name='summarizer')
+            summarizer = hub.Module('https://tfhub.dev/google/bertseq2seq/roberta24_bbc/1', name='summarizer')
             summarization = summarizer(text_input)
             init_op = tf.group([tf.global_variables_initializer(), tf.tables_initializer()])
         g.finalize()
