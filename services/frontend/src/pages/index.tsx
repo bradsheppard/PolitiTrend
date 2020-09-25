@@ -8,11 +8,11 @@ import NewsArticleComponent from '../components/common/NewsArticle';
 import NewsArticleApi from '../apis/news-article/NewsArticleApi';
 import HomeHeader from '../components/home/HomeHeader';
 import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi';
-import VideoPlayer from '../components/common/VideoPlayer';
 import HomeElectionMatchup from '../components/home/HomeElectionMatchup';
 import SentimentApi from '../apis/sentiment/SentimentApi';
 import PoliticianApi from '../apis/politician/PoliticianApi';
 import HomeMainHeader from '../components/home/HomeMainHeader';
+import Video from '../components/common/Video';
 
 interface NewsArticle {
     image: string;
@@ -51,6 +51,9 @@ const styles = (theme: Theme) => createStyles({
     },
     tweet: {
         marginTop: theme.spacing(2)
+    },
+    video: {
+        margin: theme.spacing(4)
     }
 });
 
@@ -154,11 +157,17 @@ class App extends React.Component<IProps> {
                                 TRENDING VIDEOS
                             </HomeHeader>
                         </Grid>
-                        <Grid item xs={12}>
-                            <div className={classes.newsArticle}>
-                                <VideoPlayer videos={this.props.youtubeVideos} />
-                            </div>
-                        </Grid>
+                        {
+                            this.props.youtubeVideos.map((video, index) => {
+                                return (
+                                    <Grid item xs={12} md={4} key={index}>
+                                        <div className={classes.video}>
+                                            <Video video={video} />
+                                        </div>
+                                    </Grid>
+                                )
+                            })
+                        }
                     </Grid>
                 </ContentContainer>
             </React.Fragment>
