@@ -100,6 +100,12 @@ interface EnhancedTableProps {
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+    if(!a[orderBy] && b[orderBy]) {
+        return 1
+    }
+    if(a[orderBy] && !b[orderBy]) {
+        return -1;
+    }
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -180,8 +186,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
     const classes = useStyles();
     const [page, setPage] = useState(0);
-    const [order, setOrder] = useState<Order>('asc');
-    const [orderBy, setOrderBy] = useState<keyof Row>('sentiment');
+    const [order, setOrder] = useState<Order>('desc');
+    const [orderBy, setOrderBy] = useState<keyof Row>('display');
 
     const initialRows: Row[] = props.politicians.map(politician => {
         const row: Row = {
