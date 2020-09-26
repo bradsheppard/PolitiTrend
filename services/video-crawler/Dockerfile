@@ -2,9 +2,7 @@ FROM python:3.7-slim-buster
 
 WORKDIR /app
 
-RUN apt-get update
-
-RUN apt-get install -y gcc libpq-dev python-dev
+RUN apt-get update && apt-get install -y gcc libpq-dev python-dev
 
 COPY requirements.txt .
 
