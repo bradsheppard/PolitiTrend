@@ -3,8 +3,8 @@ import time
 from datetime import datetime, timezone
 
 from crawler.config import config
-from crawler.model.politician import Politician
-from crawler.model.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository, YoutubeVideo
+from crawler.politician import Politician
+from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository, YoutubeVideo
 
 
 @pytest.fixture

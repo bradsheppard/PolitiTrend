@@ -1,8 +1,8 @@
 from typing import List
 
-from crawler.model.job import JobRepository, Job
-from crawler.model.politician import Politician
-from crawler.model.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
+from crawler.job import JobRepository, Job
+from crawler.politician import Politician
+from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
 
 
 class Orchestrator:

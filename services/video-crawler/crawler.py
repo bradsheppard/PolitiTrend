@@ -4,10 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from crawler.config import config
-from crawler.model.job import JobRepository, Job
-from crawler.model.politician import PoliticianRepository, Politician
-from crawler.model.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
+from crawler.job import JobRepository
 from crawler.orchestrator import Orchestrator
+from crawler.politician import PoliticianRepository, Politician
+from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
 
 politician_repository = PoliticianRepository()
 politicians: List[Politician] = politician_repository.get_all()

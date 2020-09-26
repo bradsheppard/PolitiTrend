@@ -2,9 +2,9 @@ import datetime
 from unittest.mock import Mock, call
 from datetime import datetime, timezone
 
-from crawler.model.job import Job
-from crawler.model.politician import Politician
-from crawler.model.youtube_video import YoutubeVideo
+from crawler.job import Job
+from crawler.politician import Politician
+from crawler.youtube_video import YoutubeVideo
 from crawler.orchestrator import Orchestrator
 
 

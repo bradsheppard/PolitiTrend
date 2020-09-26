@@ -4,7 +4,7 @@ from dateutil import parser
 from typing import List
 from dataclasses import dataclass
 from crawler.message_bus import MessageBus
-from crawler.model.politician import Politician
+from crawler.politician import Politician
 
 
 @dataclass()
