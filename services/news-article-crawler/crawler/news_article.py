@@ -57,7 +57,7 @@ class NewsArticleRepository:
 
 class NewsArticleCrawler:
 
-    _url = 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/NewsSearchAPI'
+    _url = 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/search/NewsSearchAPI'
 
     def __init__(self, api_key: str, summarizer: Summarizer):
         self._headers = {
