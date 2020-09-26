@@ -8,6 +8,8 @@ const YoutubeVideoSchema = new mongoose.Schema({
     dateTime: { type: Date, index: true },
 });
 
+YoutubeVideoSchema.index({politician: 1, dateTime: -1});
+
 YoutubeVideoSchema.set('toJSON', {
     transform: (doc, ret) => {
         ret.id = ret._id;

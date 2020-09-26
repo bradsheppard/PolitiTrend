@@ -7,6 +7,9 @@ import { CreateYoutubeVideoDto } from './dtos/create-youtube-video.dto';
 
 @Injectable()
 export class YoutubeVideoService {
+
+    private static DEFAULT_LIMIT = 10;
+
     constructor(@InjectModel('YoutubeVideo') private readonly youtubeVideoModel: Model<YoutubeVideo>) {}
 
     async find(searchYoutubeVideoDto: SearchYoutubeVideoDto): Promise<YoutubeVideo[]> {
@@ -18,6 +21,9 @@ export class YoutubeVideoService {
 
         if (searchYoutubeVideoDto.limit) {
             query = query.limit(searchYoutubeVideoDto.limit);
+        }
+        else {
+            query = query.limit(YoutubeVideoService.DEFAULT_LIMIT);
         }
 
         if (searchYoutubeVideoDto.offset) {

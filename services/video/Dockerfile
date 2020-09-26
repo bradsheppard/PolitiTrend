@@ -1,10 +1,8 @@
-FROM node:10-alpine AS builder
+FROM node:12-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json .
-
-COPY package-lock.json .
+COPY package.json package-lock.json tsconfig.json tsconfig.build.json ./
 
 RUN npm install
 
@@ -12,24 +10,18 @@ COPY src src
 
 COPY test test
 
-COPY tsconfig.json .
-
-COPY tsconfig.build.json .
-
 RUN npm run build
 
 
-FROM node:10-alpine AS app
+FROM node:12-alpine AS app
 
 WORKDIR /app
 
-COPY --from=builder /app/dist dist
+COPY package.json .env ./
 
 COPY --from=builder /app/node_modules node_modules
 
-COPY package.json .
-
-COPY .env .
+COPY --from=builder /app/dist dist
 
 EXPOSE 3000
 
