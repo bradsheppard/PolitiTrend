@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Checkbox,
     createStyles,
@@ -186,7 +186,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
     const initialRows: Row[] = props.politicians.map(politician => {
         const row: Row = {
             id: politician.id,
-            display: false,
+            display: politician.id === 101 || politician.id === 102,
             name: politician.name,
             sentiment: politician.sentiment,
             party: politician.party
@@ -194,6 +194,12 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
 
         return row;
     });
+
+    useEffect(() => {
+        (async () => {
+            await updateLines();
+        })();
+    }, []);
 
     const [rows, setRows] = useState<Row[]>(initialRows);
 
@@ -213,14 +219,23 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
         for(const row of newRows) {
             if(row.id === index) {
                 row.display = !row.display;
-                if(!row.line) {
-                    row.line = await addLine(row.id);
-                }
+            }
+        }
+
+        await updateLines();
+    };
+
+    const updateLines = async () => {
+        const newRows = rows.slice(0);
+
+        for(const row of newRows) {
+            if(!row.line && row.display) {
+                row.line = await addLine(row.id);
             }
         }
 
         setRows(newRows);
-    };
+    }
 
     const scaleSentiment = (sentiment: number) => {
         return (sentiment * 5 + 5).toFixed(1);
