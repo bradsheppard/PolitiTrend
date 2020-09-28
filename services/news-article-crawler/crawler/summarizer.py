@@ -4,12 +4,10 @@ import tensorflow.compat.v1 as tf
 import tensorflow_hub as hub
 import tensorflow_text as text
 
-tf.disable_eager_execution()
-
 
 class Summarizer:
 
-    batch_size = 2
+    batch_size = 1
 
     def __init__(self):
         g = tf.Graph()
