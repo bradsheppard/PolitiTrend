@@ -30,6 +30,7 @@ class Orchestrator:
                     self._youtube_video_repository.insert(youtube_video)
                 job = Job(politician=politician.num)
                 self._job_repository.insert(job)
-            except:
+            except Exception as ex:
                 print("Exception. Finished at " + str(politician.num) + " " + politician.name)
+                print(ex)
                 return

@@ -82,7 +82,7 @@ class YoutubeVideoCrawler:
 
             youtube_video = YoutubeVideo(
                 videoId=item['id']['videoId'],
-                thumbnail=item['snippet']['thumbnails']['default']['url'],
+                thumbnail=item['snippet']['thumbnails']['high']['url'],
                 title=title,
                 politicians=self.extract_politicians(title, politicians),
                 dateTime=item['snippet']['publishedAt']
