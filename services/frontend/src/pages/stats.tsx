@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(6),
             marginBottom: theme.spacing(6),
             minHeight: theme.spacing(50)
+        },
+        map: {
+            maxWidth: '70em',
+            margin: '0 auto'
         }
     })
 );
@@ -75,8 +79,8 @@ const Stats = (props: IProps) => {
                 </StatsCard>
             </Grid>
             <Grid item xs={10}>
-                <StatsCard title='STATE AFFILIATIONS' description={stateAffiliationDescription} className={classes.card}>
-                    <StatsMap statePartyAffiliations={props.statePartyAffiliations} />
+                <StatsCard title='STATE MATCHUP' description={stateAffiliationDescription} className={classes.card}>
+                    <StatsMap className={classes.map} statePartyAffiliations={props.statePartyAffiliations} />
                 </StatsCard>
             </Grid>
         </Grid>

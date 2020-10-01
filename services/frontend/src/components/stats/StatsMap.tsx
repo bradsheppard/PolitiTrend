@@ -40,7 +40,7 @@ interface StatePartyAffiliation {
     }
 }
 
-const StatsMap = (props: IProps) => {
+const StatsMap = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
 
     const [tooltip, setTooltip] = useState('');
 
@@ -49,7 +49,7 @@ const StatsMap = (props: IProps) => {
     };
 
     return (
-        <div>
+        <div className={props.className}>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
                 <Geographies geography={geoUrl}>
                     {({ geographies }) => (
