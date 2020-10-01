@@ -1,3 +1,4 @@
+import timeit
 from typing import List
 
 from crawler.container import Container
@@ -11,6 +12,7 @@ news_article_crawler = container.news_article_crawler()
 
 politicians: List[Politician] = politician_repository.get_all()
 
+start = timeit.default_timer()
 
 for politician in politicians:
     print('Crawling for ' + politician.name)
@@ -21,3 +23,7 @@ for politician in politicians:
     except Exception as ex:
         print('Error occurred while crawling ' + politician.name)
         print(ex)
+
+end = timeit.default_timer()
+
+print('Total time: ', end - start)
