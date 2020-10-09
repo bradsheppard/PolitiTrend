@@ -11,6 +11,9 @@ spec:
     imagePullPolicy: IfNotPresent
     command: [sh, -c, dask-worker]
     args: [--nthreads, '1', --no-dashboard, --memory-limit, 2G, --death-timeout, '60']
+    env:
+      - name: EXTRA_PIP_PACKAGES
+        value: git+https://github.com/dask/distributed
     name: dask
     resources:
       limits:
