@@ -22,7 +22,8 @@ export class StatePartyAffiliationService {
 					'id': { $first: '$_id'},
 					'state': { $first: '$state'},
 					'dateTime': { $first: '$dateTime'},
-					'affiliations': { $first: '$affiliations'}
+					'affiliations': { $first: '$affiliations'},
+					'sampleSize': { $first: '$sampleSize'}
 				}
 			},
 			{

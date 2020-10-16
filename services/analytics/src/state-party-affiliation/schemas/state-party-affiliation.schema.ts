@@ -9,7 +9,8 @@ const StatePartyAffiliationSchema = new mongoose.Schema({
 	affiliations: {
 		democratic: Number,
 		republican: Number
-	}
+	},
+	sampleSize: Number
 });
 
 StatePartyAffiliationSchema.index({state: 1, dateTime: -1});

@@ -25,7 +25,8 @@ function createStatePartyAffiliationDto(): CreateStatePartyAffiliationDto {
     affiliations: {
       democratic: id,
       republican: 1 - id
-    }
+    },
+    sampleSize: id
   }
 }
 
@@ -36,7 +37,8 @@ function createStatePartyAffiliationDtoForState(state: string): CreateStateParty
     affiliations: {
       democratic: id,
       republican: 1 - id
-    }
+    },
+    sampleSize: id
   }
 }
 
@@ -82,6 +84,7 @@ beforeEach(async () => {
 function equals(statePartyAffiliation: StatePartyAffiliation, statePartyAffiliationDto: CreateStatePartyAffiliationDto) {
   expect(statePartyAffiliation.state).toEqual(statePartyAffiliationDto.state);
   expect(statePartyAffiliation.affiliations).toEqual(statePartyAffiliationDto.affiliations);
+  expect(statePartyAffiliation.sampleSize).toEqual(statePartyAffiliation.sampleSize);
 }
 
 describe('State Party Affiliation (e2e)', () => {

@@ -6,5 +6,6 @@ export interface StatePartyAffiliation extends Document {
 	affiliations: {
 		democratic: number;
 		republican: number;
-	}
+	},
+	sampleSize: number;
 }

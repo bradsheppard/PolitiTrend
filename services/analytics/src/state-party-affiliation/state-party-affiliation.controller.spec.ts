@@ -15,7 +15,8 @@ describe('StatePartyAffiliation Controller', () => {
 		id++;
 		return {
 			state: `State ${id}`,
-			dateTime: new Date()
+			dateTime: new Date(),
+			sampleSize: id
 		} as StatePartyAffiliation;
 	}
 
@@ -26,7 +27,8 @@ describe('StatePartyAffiliation Controller', () => {
 			affiliations: {
 				democratic: id,
 				republican: 1 - id
-			}
+			},
+			sampleSize: id
 		}
 	}
 

@@ -5,6 +5,10 @@ export class CreateStatePartyAffiliationDto {
 	@IsString()
 	state: string;
 
+	@IsInt()
+	@Type(() => Number)
+	sampleSize: number;
+
 	affiliations: Affiliations;
 }
 
