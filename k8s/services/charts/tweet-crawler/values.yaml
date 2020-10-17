@@ -14,7 +14,7 @@ fullnameOverride: tweet-crawler
 
 cron:
   backoffLimit: 0
-  schedule: "0 * * * *"
+  schedule: "@every 12h"
 
 serviceAccount:
   # Specifies whether a service account should be created
