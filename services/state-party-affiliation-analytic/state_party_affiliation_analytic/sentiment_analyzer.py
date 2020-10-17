@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 from statistics import mean
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from state_party_affiliation_analytic.model.politician import Politician
+from state_party_affiliation_analytic.politician import Politician
 
 sentiment_analyzer = SentimentIntensityAnalyzer()
 

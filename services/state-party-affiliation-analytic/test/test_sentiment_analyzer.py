@@ -1,7 +1,7 @@
 import pytest
 
-from state_party_affiliation_analytic.model.politician import Politician
-from state_party_affiliation_analytic.sentiment_analyzer.sentiment_analyzer import get_party_sentiments
+from state_party_affiliation_analytic.politician import Politician
+from state_party_affiliation_analytic.sentiment_analyzer import get_party_sentiments
 
 
 @pytest.fixture

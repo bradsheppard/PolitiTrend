@@ -4,20 +4,17 @@ import dask.dataframe as dd
 from dask.distributed import Client
 from dask_kubernetes import KubeCluster
 
-from state_party_affiliation_analytic.common.path_translator import get_s3_path
+from state_party_affiliation_analytic.path_translator import get_s3_path
 from state_party_affiliation_analytic.config import config
-from state_party_affiliation_analytic.dask.dataframe import compute_party_sentiments
+from state_party_affiliation_analytic.dataframe import compute_party_sentiments
 from state_party_affiliation_analytic.message_bus import MessageBus
-from state_party_affiliation_analytic.model.politician import PoliticianRepository
-from state_party_affiliation_analytic.model.state_party_affiliation import StatePartyAffiliation, Affiliations
+from state_party_affiliation_analytic.politician import PoliticianRepository
+from state_party_affiliation_analytic.state_party_affiliation import StatePartyAffiliation, from_dataframe
 
 
-def enqueue_state_party_affiliation(dd):
-    state_party_affiliation = StatePartyAffiliation(dd.Index, Affiliations(dd.Republican, dd.Democratic))
+def enqueue_state_party_affiliation(state_party_affiliation: StatePartyAffiliation):
     serialized = json.dumps(state_party_affiliation.__dict__, default=lambda o: o.__dict__)
     message_queue.send(str.encode(serialized))
-
-    return None
 
 
 if __name__ == "__main__":
@@ -55,5 +52,7 @@ if __name__ == "__main__":
 
         result = compute_party_sentiments(combined_df, politicians)
 
-        for row in result.itertuples():
-            enqueue_state_party_affiliation(row)
+        state_party_affiliations = from_dataframe(result)
+
+        for state_party_affiliation in state_party_affiliations:
+            enqueue_state_party_affiliation(state_party_affiliation)
