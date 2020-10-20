@@ -36,9 +36,7 @@ const PoliticianHeader = (props: IProps) => {
             </Grid>
             <Grid item sm={12}>
                 <Typography variant='h4' color='textPrimary' className={classes.profileParagraph}>
-                    <Box fontWeight='fontWeightBold'>
-                        {politician.name}
-                    </Box>
+                    {politician.name}
                 </Typography>
                 <Typography variant='h6' color='textPrimary' className={classes.profileParagraph}>
                     <Box fontWeight='fontWeightBold'>
