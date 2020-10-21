@@ -6,7 +6,7 @@ import YoutubeVideoDto from './YoutubeVideoDto'
 class YoutubeVideoApi {
     private static url = `http://${url}/api/videos/youtube`
 
-    static async get(searchYoutubeVideoDto: SearchYoutubeVideoDto) {
+    static async get(searchYoutubeVideoDto: SearchYoutubeVideoDto): Promise<YoutubeVideoDto[]> {
         const axiosInstance = this.createAxiosInstance()
         const res = await axiosInstance.get<YoutubeVideoDto[]>('', {
             params: searchYoutubeVideoDto,

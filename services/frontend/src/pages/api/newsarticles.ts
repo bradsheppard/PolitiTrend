@@ -18,7 +18,10 @@ interface Politician {
     role: string
 }
 
-export default async function handle(req: NextApiRequest, res: NextApiResponse<NewsArticleDto[]>) {
+export default async function handle(
+    req: NextApiRequest,
+    res: NextApiResponse<NewsArticleDto[]>
+): Promise<void> {
     const newsArticleAxiosResponse = await axios.get<NewsArticle[]>('http://news-article', {
         params: req.query,
     })

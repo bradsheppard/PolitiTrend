@@ -6,7 +6,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint \"src/**/*.tsx\""
+    "lint": "eslint \"src/**/{*.tsx,*.ts}\""
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",

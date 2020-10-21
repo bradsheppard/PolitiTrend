@@ -11,7 +11,7 @@ class PoliticianApi {
         return res.data
     }
 
-    static async getOne(id: any): Promise<PoliticianDto | null> {
+    static async getOne(id: number): Promise<PoliticianDto | null> {
         const axiosInstance = this.createAxiosInstance()
         const res = await axiosInstance.get(`/${id}`)
 

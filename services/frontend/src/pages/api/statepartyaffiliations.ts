@@ -5,7 +5,7 @@ import StatePartyAffiliationDto from '../../apis/state-party-affiliation/StatePa
 export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse<StatePartyAffiliationDto[]>
-) {
+): Promise<void> {
     const axiosResponse = await axios.get<StatePartyAffiliationDto[]>(
         'http://analytics/state-party-affiliation',
         { params: req.query }

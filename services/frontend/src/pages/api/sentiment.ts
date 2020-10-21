@@ -2,7 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 import SentimentDto from '../../apis/sentiment/SentimentDto'
 
-export default async function handle(req: NextApiRequest, res: NextApiResponse<SentimentDto[]>) {
+export default async function handle(
+    req: NextApiRequest,
+    res: NextApiResponse<SentimentDto[]>
+): Promise<void> {
     req.query.minSampleSize = '200'
     req.query.resample = '86400000'
 

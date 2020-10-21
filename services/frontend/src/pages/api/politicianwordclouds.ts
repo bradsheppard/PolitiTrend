@@ -5,7 +5,7 @@ import PoliticianWordCloudDto from '../../apis/politician-word-cloud/PoliticianW
 export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse<PoliticianWordCloudDto[]>
-) {
+): Promise<void> {
     const axiosResponse = await axios.get<PoliticianWordCloudDto[]>(
         'http://analytics/politician-word-cloud',
         { params: req.query }
