@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { Box, createStyles, Grid, Theme, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import YouTube from 'react-youtube';
-import { useState } from 'react';
+import * as React from 'react'
+import { Box, createStyles, Grid, Theme, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
+import YouTube from 'react-youtube'
+import { useState } from 'react'
 
 interface IProps {
-    videos: Video[];
-    height: number;
+    videos: Video[]
+    height: number
 }
 
 interface Video {
-    videoId: string;
-    thumbnail: string;
-    title: string;
+    videoId: string
+    thumbnail: string
+    title: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
         container: {
             height: (props: IProps) => theme.spacing(props.height),
             background: '#1a1a1a',
-            padding: theme.spacing(5)
+            padding: theme.spacing(5),
         },
         image: {
             position: 'absolute',
@@ -29,66 +29,81 @@ const useStyles = makeStyles((theme: Theme) =>
             top: '-100%',
             bottom: '-100%',
             left: '-100%',
-            right: '-100%'
+            right: '-100%',
         },
         imageContainer: {
             position: 'relative',
             overflow: 'hidden',
-            height: theme.spacing(15)
+            height: theme.spacing(15),
         },
         title: {
             paddingLeft: theme.spacing(1),
-            color: '#fff'
+            color: '#fff',
         },
         sideVideo: {
             cursor: 'pointer',
             paddingLeft: theme.spacing(1),
-            paddingBottom: theme.spacing(1)
+            paddingBottom: theme.spacing(1),
         },
         videoPlayer: {
             width: '100%',
-            height: '100%'
+            height: '100%',
         },
         sideVideoContainer: {
             height: '100%',
             overflow: 'scroll',
-            overflowX: 'hidden'
-        }
+            overflowX: 'hidden',
+        },
     })
-);
+)
 
-const VideoPlayer = (props: IProps) => {
-    const classes = useStyles(props);
-    const [playingVideo, setPlayingVideo] = useState(0);
+const VideoPlayer: React.FC<IProps> = (props: IProps) => {
+    const classes = useStyles(props)
+    const [playingVideo, setPlayingVideo] = useState(0)
 
     const onVideoClick = (index: number) => {
-        setPlayingVideo(index);
-    };
+        setPlayingVideo(index)
+    }
 
     return (
         <Grid container className={classes.container}>
             <Grid item xs={8} className={classes.videoPlayer}>
-                <YouTube videoId={props.videos[playingVideo].videoId}
-                         className={classes.videoPlayer}
-                         containerClassName={classes.videoPlayer} />
+                <YouTube
+                    videoId={props.videos[playingVideo].videoId}
+                    className={classes.videoPlayer}
+                    containerClassName={classes.videoPlayer}
+                />
             </Grid>
             <Grid item xs={4} className={classes.sideVideoContainer}>
                 <div>
                     <Grid container>
-                    {
-                        props.videos.map((video: Video, index: number) => {
+                        {props.videos.map((video: Video, index: number) => {
                             return (
                                 <Grid item xs={12} key={index}>
-                                    <div onClick={() => onVideoClick(index)} className={classes.sideVideo}>
+                                    <div
+                                        tabIndex={0}
+                                        role="button"
+                                        onClick={() => onVideoClick(index)}
+                                        onKeyDown={() => onVideoClick(index)}
+                                        className={classes.sideVideo}
+                                    >
                                         <Grid container>
                                             <Grid item xs={6}>
                                                 <div className={classes.imageContainer}>
-                                                    <img className={classes.image} src={video.thumbnail} alt={video.title} />
+                                                    <img
+                                                        className={classes.image}
+                                                        src={video.thumbnail}
+                                                        alt={video.title}
+                                                    />
                                                 </div>
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Typography className={classes.title} gutterBottom variant='subtitle1'>
-                                                    <Box fontWeight='fontWeightBold'>
+                                                <Typography
+                                                    className={classes.title}
+                                                    gutterBottom
+                                                    variant="subtitle1"
+                                                >
+                                                    <Box fontWeight="fontWeightBold">
                                                         {video.title}
                                                     </Box>
                                                 </Typography>
@@ -96,18 +111,17 @@ const VideoPlayer = (props: IProps) => {
                                         </Grid>
                                     </div>
                                 </Grid>
-                            );
-                        })
-                    }
+                            )
+                        })}
                     </Grid>
                 </div>
             </Grid>
         </Grid>
-    );
-};
+    )
+}
 
 VideoPlayer.defaultProps = {
-    height: 70
-};
+    height: 70,
+}
 
-export default VideoPlayer;
+export default VideoPlayer

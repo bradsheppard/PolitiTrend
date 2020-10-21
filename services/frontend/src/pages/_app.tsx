@@ -1,25 +1,25 @@
-import React from 'react';
-import App from 'next/app';
-import Head from 'next/head';
-import { ThemeProvider } from '@material-ui/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../utils/theme';
-import Globals from '../utils/Globals';
-import Bar from '../components/bar/Bar';
-import TransparentJumbo from '../components/common/TransparentJumbo';
-import Footer from '../components/footer/Footer';
+import React from 'react'
+import App from 'next/app'
+import Head from 'next/head'
+import { ThemeProvider } from '@material-ui/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import theme from '../utils/theme'
+import Globals from '../utils/Globals'
+import Bar from '../components/bar/Bar'
+import TransparentJumbo from '../components/common/TransparentJumbo'
+import Footer from '../components/footer/Footer'
 
 export default class MyApp extends App {
-    componentDidMount() {
+    componentDidMount(): void {
         // Remove the server-side injected CSS.
-        const jssStyles = document.querySelector('#jss-server-side');
+        const jssStyles = document.querySelector('#jss-server-side')
         if (jssStyles && jssStyles.parentNode) {
-            jssStyles.parentNode.removeChild(jssStyles);
+            jssStyles.parentNode.removeChild(jssStyles)
         }
     }
 
-    render() {
-        const { Component, pageProps } = this.props;
+    render(): JSX.Element {
+        const { Component, pageProps } = this.props
 
         return (
             <React.Fragment>
@@ -32,13 +32,13 @@ export default class MyApp extends App {
                     <Bar />
                     <TransparentJumbo />
                     <Component {...pageProps} />
-                    <Footer/>
+                    <Footer />
                 </ThemeProvider>
             </React.Fragment>
-        );
+        )
     }
 }
 
 function capitalize(word: string) {
-    return word.charAt(0).toUpperCase() + word.slice(1);
+    return word.charAt(0).toUpperCase() + word.slice(1)
 }

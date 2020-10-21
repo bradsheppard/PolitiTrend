@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Card as MuiCard } from '@material-ui/core';
-import { PropsWithChildren } from 'react';
+import * as React from 'react'
+import { Card as MuiCard } from '@material-ui/core'
+import { PropsWithChildren } from 'react'
 
-interface IProps extends PropsWithChildren<{}> {}
+type IProps = PropsWithChildren<unknown>
 
-const Card = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
+const Card: React.FC = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
     return (
-        <MuiCard className={props.className} variant='outlined'>
+        <MuiCard className={props.className} variant="outlined">
             {props.children}
         </MuiCard>
-    );
-};
+    )
+}
 
-export default Card;
+export default Card

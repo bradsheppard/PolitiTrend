@@ -1,8 +1,8 @@
 interface SearchNewsArticleDto {
-    limit?: number;
-    offset?: number;
-    limitPerPolitician?: number;
-    politician?: number;
+    limit?: number
+    offset?: number
+    limitPerPolitician?: number
+    politician?: number
 }
 
-export default SearchNewsArticleDto;
+export default SearchNewsArticleDto

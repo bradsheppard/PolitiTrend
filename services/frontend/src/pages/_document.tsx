@@ -1,10 +1,10 @@
-import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
-import { ServerStyleSheets } from '@material-ui/styles';
-import theme from '../utils/theme';
+import React from 'react'
+import Document, { Head, Main, NextScript } from 'next/document'
+import { ServerStyleSheets } from '@material-ui/styles'
+import theme from '../utils/theme'
 
 class MyDocument extends Document {
-    render() {
+    render(): JSX.Element {
         return (
             <html lang="en">
                 <Head>
@@ -15,19 +15,25 @@ class MyDocument extends Document {
                     />
                     {/* PWA primary color */}
                     <meta name="theme-color" content={theme.palette.primary.main} />
-                    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-                    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet" />
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap"
+                        rel="stylesheet"
+                    />
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+                        rel="stylesheet"
+                    />
                 </Head>
                 <body>
                     <Main />
                     <NextScript />
                 </body>
             </html>
-        );
+        )
     }
 }
 
-MyDocument.getInitialProps = async ctx => {
+MyDocument.getInitialProps = async (ctx) => {
     // Resolution order
     //
     // On the server:
@@ -51,15 +57,15 @@ MyDocument.getInitialProps = async ctx => {
     // 4. page.render
 
     // Render app and page and get the context of the page with collected side effects.
-    const sheets = new ServerStyleSheets();
-    const originalRenderPage = ctx.renderPage;
+    const sheets = new ServerStyleSheets()
+    const originalRenderPage = ctx.renderPage
 
     ctx.renderPage = () =>
         originalRenderPage({
-            enhanceApp: App => props => sheets.collect(<App {...props} />),
-        });
+            enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+        })
 
-    const initialProps = await Document.getInitialProps(ctx);
+    const initialProps = await Document.getInitialProps(ctx)
 
     return {
         ...initialProps,
@@ -70,7 +76,7 @@ MyDocument.getInitialProps = async ctx => {
                 {sheets.getStyleElement()}
             </React.Fragment>,
         ],
-    };
-};
+    }
+}
 
-export default MyDocument;
+export default MyDocument

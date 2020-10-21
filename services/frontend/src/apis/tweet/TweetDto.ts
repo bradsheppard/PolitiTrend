@@ -1,8 +1,8 @@
 interface TweetDto {
-	id: number;
-	tweetId: string;
-	tweetText: string;
-	politicians: number[];
+    id: number
+    tweetId: string
+    tweetText: string
+    politicians: number[]
 }
 
-export default TweetDto;
+export default TweetDto

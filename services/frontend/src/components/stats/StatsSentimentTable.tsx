@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+import * as React from 'react'
+import { useEffect, useState } from 'react'
 import {
     Checkbox,
     createStyles,
@@ -13,40 +13,40 @@ import {
     TableRow,
     TableSortLabel,
     Theme,
-    withStyles
-} from '@material-ui/core';
-import { Line as NivoLine } from '@nivo/line';
-import SentimentApi from '../../apis/sentiment/SentimentApi';
-import { makeStyles } from '@material-ui/styles';
+    withStyles,
+} from '@material-ui/core'
+import { Line as NivoLine } from '@nivo/line'
+import SentimentApi from '../../apis/sentiment/SentimentApi'
+import { makeStyles } from '@material-ui/styles'
 
 interface IProps {
-    politicians: Politician[];
+    politicians: Politician[]
 }
 
 interface Point {
-    x: string;
-    y: number;
+    x: string
+    y: number
 }
 
 interface Line {
-    id: number;
-    data: Point[];
+    id: number
+    data: Point[]
 }
 
 interface Politician {
-    id: number;
-    name: string;
-    party: string;
-    sentiment?: number;
+    id: number
+    name: string
+    party: string
+    sentiment?: number
 }
 
 interface Row {
-    id: number;
-    name: string;
-    party: string;
-    sentiment?: number;
-    display: boolean;
-    line?: Line;
+    id: number
+    name: string
+    party: string
+    sentiment?: number
+    display: boolean
+    line?: Line
 }
 
 const StyledTableRow = withStyles((theme: Theme) =>
@@ -56,8 +56,8 @@ const StyledTableRow = withStyles((theme: Theme) =>
                 backgroundColor: theme.palette.action.hover,
             },
         },
-    }),
-)(TableRow);
+    })
+)(TableRow)
 
 const StyledTableCell = withStyles((theme: Theme) =>
     createStyles({
@@ -65,18 +65,18 @@ const StyledTableCell = withStyles((theme: Theme) =>
             backgroundColor: theme.palette.secondary.dark,
             color: theme.palette.common.white,
             fontWeight: 'bold',
-            fontSize: 14
+            fontSize: 14,
         },
         body: {
             fontSize: 14,
             height: theme.spacing(1),
             paddingTop: 0,
-            paddingBottom: 0
+            paddingBottom: 0,
         },
-    }),
-)(TableCell);
+    })
+)(TableCell)
 
-type Order = 'asc' | 'desc';
+type Order = 'asc' | 'desc'
 
 const useStyles = makeStyles({
     visuallyHidden: {
@@ -90,69 +90,66 @@ const useStyles = makeStyles({
         top: 20,
         width: 1,
     },
-});
+})
 
 interface EnhancedTableProps {
-    classes: ReturnType<typeof useStyles>;
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Row) => void;
-    order: Order;
-    orderBy: string;
+    classes: ReturnType<typeof useStyles>
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Row) => void
+    order: Order
+    orderBy: string
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if(!a[orderBy] && b[orderBy]) {
+    if (!a[orderBy] && b[orderBy]) {
         return 1
     }
-    if(a[orderBy] && !b[orderBy]) {
-        return -1;
+    if (a[orderBy] && !b[orderBy]) {
+        return -1
     }
     if (b[orderBy] < a[orderBy]) {
-        return -1;
+        return -1
     }
     if (b[orderBy] > a[orderBy]) {
-        return 1;
+        return 1
     }
-    return 0;
+    return 0
 }
 
-function getComparator<T>(
-    order: Order,
-    orderBy: keyof T,
-): (a: T, b: T) => number {
+function getComparator<T>(order: Order, orderBy: keyof T): (a: T, b: T) => number {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
+        : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
 function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+    const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
     stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
+        const order = comparator(a[0], b[0])
+        if (order !== 0) return order
+        return a[1] - b[1]
+    })
+    return stabilizedThis.map((el) => el[0])
 }
 
 interface HeadCell {
-    disablePadding: boolean;
-    id: keyof Row;
-    label: string;
+    disablePadding: boolean
+    id: keyof Row
+    label: string
 }
 
 const headCells: HeadCell[] = [
-    {id: 'id', disablePadding: false, label: 'ID' },
+    { id: 'id', disablePadding: false, label: 'ID' },
     { id: 'name', disablePadding: false, label: 'Politician' },
     { id: 'party', disablePadding: false, label: 'Party' },
     { id: 'sentiment', disablePadding: false, label: 'Current Sentiment' },
     { id: 'display', disablePadding: false, label: 'Display' },
-];
+]
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-    const { classes, order, orderBy, onRequestSort } = props;
+    const { classes, order, orderBy, onRequestSort } = props
     const createSortHandler = (property: keyof Row) => (event: React.MouseEvent<unknown>) => {
-        onRequestSort(event, property);
-    };
+        onRequestSort(event, property)
+    }
 
     return (
         <TableHead>
@@ -160,7 +157,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align='left'
+                        align="left"
                         padding={headCell.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -172,98 +169,100 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                             {headCell.label}
                             {orderBy === headCell.id ? (
                                 <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
+                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                </span>
                             ) : null}
                         </TableSortLabel>
                     </TableCell>
                 ))}
             </TableRow>
         </TableHead>
-    );
+    )
 }
 
-const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
-    const classes = useStyles();
-    const [page, setPage] = useState(0);
-    const [order, setOrder] = useState<Order>('desc');
-    const [orderBy, setOrderBy] = useState<keyof Row>('display');
+const StatsSentimentTable: React.FC<IProps> = (
+    props: IProps & React.HTMLAttributes<HTMLDivElement>
+) => {
+    const classes = useStyles()
+    const [page, setPage] = useState(0)
+    const [order, setOrder] = useState<Order>('desc')
+    const [orderBy, setOrderBy] = useState<keyof Row>('display')
 
-    const initialRows: Row[] = props.politicians.map(politician => {
+    const initialRows: Row[] = props.politicians.map((politician) => {
         const row: Row = {
             id: politician.id,
             display: politician.id === 101 || politician.id === 102,
             name: politician.name,
             sentiment: politician.sentiment,
-            party: politician.party
-        };
+            party: politician.party,
+        }
 
-        return row;
-    });
+        return row
+    })
 
     useEffect(() => {
-        (async () => {
-            await updateLines();
-        })();
-    }, []);
+        ;(async () => {
+            await updateLines()
+        })()
+    }, [])
 
-    const [rows, setRows] = useState<Row[]>(initialRows);
+    const [rows, setRows] = useState<Row[]>(initialRows)
 
     const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Row) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
+        const isAsc = orderBy === property && order === 'asc'
+        setOrder(isAsc ? 'desc' : 'asc')
+        setOrderBy(property)
+    }
 
     const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
+        setPage(newPage)
+    }
 
     const handleCheckboxClicked = async (index: number) => {
-        const newRows = rows.slice(0);
+        const newRows = rows.slice(0)
 
-        for(const row of newRows) {
-            if(row.id === index) {
-                row.display = !row.display;
+        for (const row of newRows) {
+            if (row.id === index) {
+                row.display = !row.display
             }
         }
 
-        await updateLines();
-    };
+        await updateLines()
+    }
 
     const updateLines = async () => {
-        const newRows = rows.slice(0);
+        const newRows = rows.slice(0)
 
-        for(const row of newRows) {
-            if(!row.line && row.display) {
-                row.line = await addLine(row.id);
+        for (const row of newRows) {
+            if (!row.line && row.display) {
+                row.line = await addLine(row.id)
             }
         }
 
-        setRows(newRows);
+        setRows(newRows)
     }
 
     const scaleSentiment = (sentiment: number) => {
-        return (sentiment * 5 + 5).toFixed(1);
-    };
+        return (sentiment * 5 + 5).toFixed(1)
+    }
 
     const addLine = async (id: number) => {
-        const politicianSentiments = await SentimentApi.getHistoryForPolitician(id);
-        const data = politicianSentiments.map(sentiment => {
-            const date = new Date(sentiment.dateTime);
+        const politicianSentiments = await SentimentApi.getHistoryForPolitician(id)
+        const data = politicianSentiments.map((sentiment) => {
+            const date = new Date(sentiment.dateTime)
             return {
                 x: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-                y: sentiment.sentiment
-            };
-        });
+                y: sentiment.sentiment,
+            }
+        })
         const line: Line = {
             id: id,
-            data: data
-        };
-        return line;
-    };
+            data: data,
+        }
+        return line
+    }
 
-    const numRows = 6;
+    const numRows = 6
 
     return (
         <Grid container>
@@ -271,13 +270,13 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                 <NivoLine
                     height={400}
                     width={1600}
-                    data={rows.filter(x => x.line && x.display).map(x => x.line as Line)}
+                    data={rows.filter((x) => x.line && x.display).map((x) => x.line as Line)}
                     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                     xScale={{
                         type: 'time',
                         format: '%Y-%m-%d',
                         useUTC: false,
-                        precision: 'day'
+                        precision: 'day',
                     }}
                     xFormat="time:%Y-%m-%d"
                     yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
@@ -296,14 +295,14 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                         tickRotation: 0,
                         legend: 'Sentiment',
                         legendOffset: -40,
-                        legendPosition: 'middle'
+                        legendPosition: 'middle',
                     }}
                     colors={{ scheme: 'dark2' }}
                     pointSize={8}
                     pointColor={{ theme: 'background' }}
                     pointBorderWidth={3}
                     pointBorderColor={{ from: 'serieColor' }}
-                    pointLabel='sentiment'
+                    pointLabel="sentiment"
                     pointLabelYOffset={-12}
                     lineWidth={3}
                     useMesh={true}
@@ -312,12 +311,13 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
             <Grid item xs={12}>
                 <div>
                     <TableContainer>
-                        <Table size='small'>
+                        <Table size="small">
                             <EnhancedTableHead
                                 classes={classes}
                                 order={order}
                                 orderBy={orderBy}
-                                onRequestSort={handleRequestSort} />
+                                onRequestSort={handleRequestSort}
+                            />
                             <TableBody>
                                 {stableSort<Row>(rows, getComparator<Row>(order, orderBy))
                                     .slice(page * numRows, page * numRows + numRows)
@@ -326,11 +326,22 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                                             <StyledTableCell>{row.id}</StyledTableCell>
                                             <StyledTableCell>{row.name}</StyledTableCell>
                                             <StyledTableCell>{row.party}</StyledTableCell>
-                                            <StyledTableCell>{row.sentiment ? scaleSentiment(row.sentiment) : 'N/A'}</StyledTableCell>
-                                            <StyledTableCell><Checkbox size='small' checked={row.display} onChange={async () => await handleCheckboxClicked(row.id)} /></StyledTableCell>
+                                            <StyledTableCell>
+                                                {row.sentiment
+                                                    ? scaleSentiment(row.sentiment)
+                                                    : 'N/A'}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                <Checkbox
+                                                    size="small"
+                                                    checked={row.display}
+                                                    onChange={async () =>
+                                                        await handleCheckboxClicked(row.id)
+                                                    }
+                                                />
+                                            </StyledTableCell>
                                         </StyledTableRow>
-                                    ))
-                                }
+                                    ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -345,7 +356,7 @@ const StatsSentimentTable = (props: IProps & React.HTMLAttributes<HTMLDivElement
                 </div>
             </Grid>
         </Grid>
-    );
-};
+    )
+}
 
-export default StatsSentimentTable;
+export default StatsSentimentTable

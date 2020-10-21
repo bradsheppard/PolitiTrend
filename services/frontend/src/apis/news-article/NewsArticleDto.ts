@@ -1,12 +1,12 @@
-import PoliticianDto from '../politician/PoliticianDto';
+import PoliticianDto from '../politician/PoliticianDto'
 
 interface NewsArticleDto {
-    id: number;
-    url: string;
-    source: string;
-    summary: string;
-    dateTime: string;
-    politicians: PoliticianDto[];
+    id: number
+    url: string
+    source: string
+    summary: string
+    dateTime: string
+    politicians: PoliticianDto[]
 }
 
-export default NewsArticleDto;
+export default NewsArticleDto

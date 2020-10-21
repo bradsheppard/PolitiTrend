@@ -1,9 +1,10 @@
 interface StatePartyAffiliationDto {
-    state: string;
+    state: string
     affiliations: {
-        democratic: number;
-        republican: number;
+        democratic: number
+        republican: number
     }
+    sampleSize: number
 }
 
-export default StatePartyAffiliationDto;
+export default StatePartyAffiliationDto

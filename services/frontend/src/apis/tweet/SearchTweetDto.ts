@@ -1,7 +1,7 @@
 interface SearchTweetDto {
-	limit?: number;
-	limitPerPolitician?: number;
-	politician?: number;
+    limit?: number
+    limitPerPolitician?: number
+    politician?: number
 }
 
-export default SearchTweetDto;
+export default SearchTweetDto

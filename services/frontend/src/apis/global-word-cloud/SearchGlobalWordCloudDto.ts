@@ -1,5 +1,5 @@
 interface SearchGlobalWordCloudDto {
-    limit?: number;
+    limit?: number
 }
 
-export default SearchGlobalWordCloudDto;
+export default SearchGlobalWordCloudDto

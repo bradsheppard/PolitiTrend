@@ -1,6 +1,6 @@
 interface SearchPoliticianWordCloudDto {
-    limit?: number;
-    politician?: number;
+    limit?: number
+    politician?: number
 }
 
-export default SearchPoliticianWordCloudDto;
+export default SearchPoliticianWordCloudDto

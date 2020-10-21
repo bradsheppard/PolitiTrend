@@ -1,27 +1,25 @@
-import * as React from 'react';
-import { Box, Link as MuiLink, Typography } from '@material-ui/core';
+import * as React from 'react'
+import { Box, Link as MuiLink, Typography } from '@material-ui/core'
 
 interface IProps {
     newsArticle: NewsArticle
 }
 
 interface NewsArticle {
-    title: string;
-    url: string;
+    title: string
+    url: string
 }
 
-const PoliticiansNewsArticleListItem = (props: IProps) => {
+const PoliticiansNewsArticleListItem: React.FC<IProps> = (props: IProps) => {
     return (
-        <MuiLink href={props.newsArticle.url} underline='none'>
+        <MuiLink href={props.newsArticle.url} underline="none">
             <div>
-                <Typography gutterBottom variant='h6' color='textPrimary'>
-                    <Box fontWeight='fontWeightBold'>
-                        {props.newsArticle.title}
-                    </Box>
+                <Typography gutterBottom variant="h6" color="textPrimary">
+                    <Box fontWeight="fontWeightBold">{props.newsArticle.title}</Box>
                 </Typography>
             </div>
         </MuiLink>
-    );
-};
+    )
+}
 
-export default PoliticiansNewsArticleListItem;
+export default PoliticiansNewsArticleListItem

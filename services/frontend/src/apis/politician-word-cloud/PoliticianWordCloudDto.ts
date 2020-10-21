@@ -1,11 +1,11 @@
 interface PoliticianWordCloudDto {
-    words: WordDto[];
-    politician: number;
+    words: WordDto[]
+    politician: number
 }
 
 interface WordDto {
-    word: string;
-    count: number;
+    word: string
+    count: number
 }
 
-export default PoliticianWordCloudDto;
+export default PoliticianWordCloudDto

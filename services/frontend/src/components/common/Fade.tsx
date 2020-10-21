@@ -1,30 +1,28 @@
-import * as React from 'react';
-import { Fade as MuiFade } from '@material-ui/core';
-import { PropsWithChildren, useState } from 'react';
-import { Waypoint } from 'react-waypoint';
+import * as React from 'react'
+import { Fade as MuiFade } from '@material-ui/core'
+import { PropsWithChildren, useState } from 'react'
+import { Waypoint } from 'react-waypoint'
 
-interface IProps extends PropsWithChildren<{}> {}
+type IProps = PropsWithChildren<unknown>
 
-const Fade = (props: IProps) => {
-    const [visible, setVisible] = useState(false);
+const Fade: React.FC<IProps> = (props: IProps) => {
+    const [visible, setVisible] = useState(false)
 
     const onEnter = () => {
-        setVisible(true);
-    };
+        setVisible(true)
+    }
 
     const onExit = () => {
-        setVisible(false);
-    };
+        setVisible(false)
+    }
 
     return (
         <Waypoint onEnter={onEnter} onLeave={onExit}>
             <MuiFade timeout={2000} in={visible}>
-                <div>
-                    {props.children}
-                </div>
+                <div>{props.children}</div>
             </MuiFade>
         </Waypoint>
     )
-};
+}
 
-export default Fade;
+export default Fade

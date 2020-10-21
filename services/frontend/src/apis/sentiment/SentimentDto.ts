@@ -1,7 +1,7 @@
 interface SentimentDto {
-    politician: number;
-    dateTime: string;
-    sentiment: number;
+    politician: number
+    dateTime: string
+    sentiment: number
 }
 
-export default SentimentDto;
+export default SentimentDto

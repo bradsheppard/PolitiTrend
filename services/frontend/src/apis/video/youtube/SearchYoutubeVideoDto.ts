@@ -1,7 +1,7 @@
 interface SearchYoutubeVideoDto {
-    limit?: number;
-    offset?: number;
-    politician?: number;
+    limit?: number
+    offset?: number
+    politician?: number
 }
 
-export default SearchYoutubeVideoDto;
+export default SearchYoutubeVideoDto

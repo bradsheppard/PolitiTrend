@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { createStyles, Theme, Typography } from '@material-ui/core';
-import { politicianNameToImagePath } from '../../utils/ImagePath';
-import { makeStyles } from '@material-ui/styles';
-import clsx from 'clsx';
+import * as React from 'react'
+import { createStyles, Theme, Typography } from '@material-ui/core'
+import { politicianNameToImagePath } from '../../utils/ImagePath'
+import { makeStyles } from '@material-ui/styles'
+import clsx from 'clsx'
 
 interface IProps {
-    politician: Politician;
+    politician: Politician
 }
 
 interface Politician {
-    id: number;
-    name: string;
-    party: string;
-    role: string;
+    id: number
+    name: string
+    party: string
+    role: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,39 +33,45 @@ const useStyles = makeStyles((theme: Theme) =>
             overflow: 'hidden',
             borderRadius: '50%',
             height: theme.spacing(40),
-            width: theme.spacing(40)
+            width: theme.spacing(40),
         },
         textContainer: {
-            float: 'left'
+            float: 'left',
         },
         container: {
             clear: 'both',
-            overflow: 'auto'
-        }
+            overflow: 'auto',
+        },
     })
-);
+)
 
-const PoliticiansGridListItem = (props: IProps & React.HTMLAttributes<HTMLDivElement>) => {
-    const classes = useStyles();
+const PoliticiansGridListItem: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
+    props: IProps & React.HTMLAttributes<HTMLDivElement>
+) => {
+    const classes = useStyles()
 
     return (
         <div className={clsx(classes.container, props.className)}>
             <div className={classes.imageContainer}>
-                <img src={politicianNameToImagePath(props.politician.name)} alt={props.politician.name} className={classes.image} />
+                <img
+                    src={politicianNameToImagePath(props.politician.name)}
+                    alt={props.politician.name}
+                    className={classes.image}
+                />
             </div>
             <div className={classes.textContainer}>
-                <Typography variant='h4' color='textPrimary'>
+                <Typography variant="h4" color="textPrimary">
                     {props.politician.name}
                 </Typography>
-                <Typography variant='subtitle1' color='textSecondary'>
+                <Typography variant="subtitle1" color="textSecondary">
                     {props.politician.party}
                 </Typography>
-                <Typography variant='subtitle1' color='textSecondary'>
+                <Typography variant="subtitle1" color="textSecondary">
                     {props.politician.role}
                 </Typography>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default PoliticiansGridListItem;
+export default PoliticiansGridListItem

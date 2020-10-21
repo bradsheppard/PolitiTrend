@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
+import * as React from 'react'
+import { makeStyles } from '@material-ui/styles'
+import { Typography } from '@material-ui/core'
 
 interface IProps {
-    video: Video;
+    video: Video
 }
 
 interface Video {
-    title: string;
-    videoId: string;
-    thumbnail: string;
+    title: string
+    videoId: string
+    thumbnail: string
 }
 
 const useStyles = makeStyles({
@@ -20,28 +20,32 @@ const useStyles = makeStyles({
         top: '-100%',
         bottom: '-100%',
         left: '-100%',
-        right: '-100%'
+        right: '-100%',
     },
     imageContainer: {
         position: 'relative',
         overflow: 'hidden',
-        height: '20em'
+        height: '20em',
     },
-});
+})
 
-const Video = (props: IProps) => {
-    const classes = useStyles();
+const Video: React.FC<IProps> = (props: IProps) => {
+    const classes = useStyles()
 
     return (
         <div>
             <div className={classes.imageContainer}>
-                <img className={classes.image} src={props.video.thumbnail} alt={props.video.title} />
+                <img
+                    className={classes.image}
+                    src={props.video.thumbnail}
+                    alt={props.video.title}
+                />
             </div>
-            <Typography variant='h4' color='textPrimary'>
+            <Typography variant="h4" color="textPrimary">
                 {props.video.title}
             </Typography>
         </div>
-    );
+    )
 }
 
-export default Video;
+export default Video

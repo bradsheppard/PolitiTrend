@@ -1,22 +1,21 @@
-import * as React from 'react';
-import WordCloud from '../common/WordCloud';
+import * as React from 'react'
+import WordCloud from '../common/WordCloud'
 
 interface IProps {
-    wordCounts: WordCount[];
+    wordCounts: WordCount[]
 }
 
 interface WordCount {
-    word: string;
-    count: number;
+    word: string
+    count: number
 }
 
-const PoliticianStatsFeed = (props: IProps) => {
-
+const PoliticianStatsFeed: React.ReactFragment = (props: IProps) => {
     return (
         <React.Fragment>
             <WordCloud wordCounts={props.wordCounts} />
         </React.Fragment>
     )
-};
+}
 
-export default PoliticianStatsFeed;
+export default PoliticianStatsFeed

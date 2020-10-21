@@ -1,10 +1,10 @@
 interface GlobalWordCloudDto {
-    words: WordDto[];
+    words: WordDto[]
 }
 
 interface WordDto {
-    word: string;
-    count: number;
+    word: string
+    count: number
 }
 
-export default GlobalWordCloudDto;
+export default GlobalWordCloudDto
