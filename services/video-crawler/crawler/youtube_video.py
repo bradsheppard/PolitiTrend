@@ -1,5 +1,7 @@
 import requests
 import json
+import html
+
 from dateutil import parser
 from typing import List
 from dataclasses import dataclass
@@ -20,14 +22,16 @@ class YoutubeVideo:
         return self.videoId == other.videoId and \
                self.title == other.title and \
                self.thumbnail == other.thumbnail and \
-               (parser.parse(self.dateTime) - parser.parse(other.dateTime)).total_seconds() < 1
+               (parser.parse(self.dateTime) - parser.parse(other.dateTime)) \
+               .total_seconds() < 1
 
 
 class YoutubeVideoRepository:
 
     def __init__(self):
         self._host = 'http://video/youtube'
-        self._message_bus = MessageBus('queue-kafka-bootstrap', 'video-youtube-video-created')
+        self._message_bus = MessageBus('queue-kafka-bootstrap',
+                                       'video-youtube-video-created')
 
     def get_all(self) -> List[YoutubeVideo]:
         res = requests.get(self._host)
@@ -38,7 +42,7 @@ class YoutubeVideoRepository:
         for entry in body:
             youtube_video = YoutubeVideo(
                 videoId=entry['videoId'],
-                title=entry['title'],
+                title=html.unescape(entry['title']),
                 politicians=entry['politicians'],
                 dateTime=entry['dateTime'],
                 thumbnail=entry['thumbnail']
@@ -49,7 +53,8 @@ class YoutubeVideoRepository:
         return youtube_videos
 
     def insert(self, youtube_video: YoutubeVideo):
-        serialized = json.dumps(youtube_video.__dict__, default=lambda o: o.__dict__)
+        serialized = json.dumps(youtube_video.__dict__, 
+                                default=lambda o: o.__dict__)
         self._message_bus.send(str.encode(serialized))
 
 
@@ -63,7 +68,8 @@ class YoutubeVideoCrawler:
             'Accept': 'application/json'
         }
 
-    def get(self, politician: Politician, politicians: List[Politician]) -> List[YoutubeVideo]:
+    def get(self, politician: Politician,
+            politicians: List[Politician]) -> List[YoutubeVideo]:
         querystring = {
             'type': 'video',
             'q': politician.name,
@@ -72,7 +78,12 @@ class YoutubeVideoCrawler:
             'maxResults': 50,
             'fields': 'items(id,snippet(title, thumbnails, publishedAt))'
         }
-        response = requests.request('GET', self._url, headers=self._headers, params=querystring)
+        response = requests.request('GET', self._url, headers=self._headers,
+                                    params=querystring)
+
+        if response.status_code != 200:
+            raise RuntimeError(response.text)
+
         body = json.loads(response.text)
 
         youtube_videos = []
@@ -83,16 +94,18 @@ class YoutubeVideoCrawler:
             youtube_video = YoutubeVideo(
                 videoId=item['id']['videoId'],
                 thumbnail=item['snippet']['thumbnails']['high']['url'],
-                title=title,
+                title=html.unescape(title),
                 politicians=self.extract_politicians(title, politicians),
                 dateTime=item['snippet']['publishedAt']
             )
+
             youtube_videos.append(youtube_video)
 
         return youtube_videos
 
     @staticmethod
-    def extract_politicians(text: str, politicians: List[Politician]) -> List[int]:
+    def extract_politicians(text: str, politicians: List[Politician]) \
+            -> List[int]:
         results = []
         for politician in politicians:
             if politician.name in text:
