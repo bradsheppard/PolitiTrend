@@ -1,10 +1,12 @@
-import pytest
+# pylint: disable=redefined-outer-name
+
 import time
-from datetime import datetime, timezone
+
+import pytest
 
 from crawler.config import config
 from crawler.politician import Politician
-from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository, YoutubeVideo
+from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
 
 
 @pytest.fixture
@@ -20,16 +22,8 @@ def test_get(youtube_video_crawler: YoutubeVideoCrawler):
     assert len(youtube_videos) > 0
 
 
-def test_insert_and_get():
+def test_insert_and_get(youtube_video):
     repository = YoutubeVideoRepository()
-
-    youtube_video = YoutubeVideo(
-        '123',
-        'Test Video',
-        'thumb.jps',
-        datetime.now(timezone.utc).isoformat(),
-        [1, 2],
-    )
 
     repository.insert(youtube_video)
 
@@ -38,4 +32,3 @@ def test_insert_and_get():
 
     assert len(inserted_youtube_videos) > 0
     assert youtube_video == inserted_youtube_videos[0]
-

@@ -1,3 +1,7 @@
+"""
+Main file for kicking off the crawler job
+"""
+
 from typing import List
 
 from sqlalchemy import create_engine
@@ -6,11 +10,10 @@ from sqlalchemy.orm import sessionmaker
 from crawler.config import config
 from crawler.job import JobRepository
 from crawler.orchestrator import Orchestrator
-from crawler.politician import PoliticianRepository, Politician
+from crawler.politician import get_all, Politician
 from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
 
-politician_repository = PoliticianRepository()
-politicians: List[Politician] = politician_repository.get_all()
+politicians: List[Politician] = get_all()
 
 youtube_video_crawler = YoutubeVideoCrawler(config.api_key)
 youtube_repository = YoutubeVideoRepository()

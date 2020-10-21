@@ -5,6 +5,7 @@ from crawler.politician import Politician
 from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
 
 
+# pylint: disable=too-few-public-methods
 class Orchestrator:
 
     def __init__(self,
@@ -19,7 +20,8 @@ class Orchestrator:
         latest_job = self._job_repository.get_latest()
         politician_id = latest_job.politician if latest_job is not None else politicians[0].num
 
-        start_index = next(i for i, politician in enumerate(politicians) if politician.num is politician_id) + 1
+        start_index = next(i for i, politician in enumerate(politicians)
+                           if politician.num is politician_id) + 1
         reshaped_politicians = politicians[start_index:] + politicians[:start_index]
 
         for politician in reshaped_politicians:
@@ -30,6 +32,7 @@ class Orchestrator:
                     self._youtube_video_repository.insert(youtube_video)
                 job = Job(politician=politician.num)
                 self._job_repository.insert(job)
+            # pylint: disable=broad-except
             except Exception as ex:
                 print("Exception. Finished at " + str(politician.num) + " " + politician.name)
                 print(ex)

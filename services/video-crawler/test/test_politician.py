@@ -1,7 +1,6 @@
-from crawler.politician import PoliticianRepository
+from crawler.politician import get_all
 
 
 def test_get_all():
-    repository = PoliticianRepository()
-    politicians = repository.get_all()
+    politicians = get_all()
     assert len(politicians) > 0

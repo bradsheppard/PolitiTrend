@@ -2,4 +2,4 @@
 
 alembic upgrade head
 
-python -u crawler.py
+python -u app.py

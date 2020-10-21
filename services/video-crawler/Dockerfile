@@ -14,6 +14,6 @@ COPY test test
 
 COPY crawler crawler
 
-COPY crawler.py start.sh config.ini alembic.ini ./
+COPY app.py start.sh config.ini alembic.ini ./
 
 CMD ["./start.sh"]

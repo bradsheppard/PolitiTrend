@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 import html
 
 from dateutil import parser
@@ -9,6 +9,7 @@ from crawler.message_bus import MessageBus
 from crawler.politician import Politician
 
 
+# pylint: disable=invalid-name
 @dataclass()
 class YoutubeVideo:
     videoId: str
@@ -53,7 +54,7 @@ class YoutubeVideoRepository:
         return youtube_videos
 
     def insert(self, youtube_video: YoutubeVideo):
-        serialized = json.dumps(youtube_video.__dict__, 
+        serialized = json.dumps(youtube_video.__dict__,
                                 default=lambda o: o.__dict__)
         self._message_bus.send(str.encode(serialized))
 
