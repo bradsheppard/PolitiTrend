@@ -6,6 +6,7 @@ from typing import List
 
 @dataclass()
 class Politician:
+    # pylint: disable=invalid-name
     num: int
     name: str
 

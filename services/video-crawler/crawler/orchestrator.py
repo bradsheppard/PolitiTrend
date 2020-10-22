@@ -5,9 +5,8 @@ from crawler.politician import Politician
 from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
 
 
-# pylint: disable=too-few-public-methods
 class Orchestrator:
-
+    # pylint: disable=too-few-public-methods
     def __init__(self,
                  youtube_video_crawler: YoutubeVideoCrawler,
                  youtube_video_respository: YoutubeVideoRepository,

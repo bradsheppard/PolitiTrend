@@ -7,9 +7,8 @@ from sqlalchemy.orm import Session
 Base = declarative_base()
 
 
-# pylint: disable=too-few-public-methods
 class Job(Base):
-
+    # pylint: disable=too-few-public-methods
     __tablename__ = 'Job'
 
     id = Column(Integer, primary_key=True)

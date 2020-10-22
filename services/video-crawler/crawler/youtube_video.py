@@ -9,9 +9,9 @@ from crawler.message_bus import MessageBus
 from crawler.politician import Politician
 
 
-# pylint: disable=invalid-name
 @dataclass()
 class YoutubeVideo:
+    # pylint: disable=invalid-name
     videoId: str
     title: str
     thumbnail: str
