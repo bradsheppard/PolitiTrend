@@ -8,12 +8,13 @@ from state_party_affiliation_analytic.path_translator import get_s3_path
 from state_party_affiliation_analytic.config import config
 from state_party_affiliation_analytic.dataframe import compute_party_sentiments
 from state_party_affiliation_analytic.message_bus import MessageBus
-from state_party_affiliation_analytic.politician import PoliticianRepository
-from state_party_affiliation_analytic.state_party_affiliation import StatePartyAffiliation, from_dataframe
+from state_party_affiliation_analytic.politician import get_all
+from state_party_affiliation_analytic.state_party_affiliation \
+    import StatePartyAffiliation, from_dataframe
 
 
-def enqueue_state_party_affiliation(state_party_affiliation: StatePartyAffiliation):
-    serialized = json.dumps(state_party_affiliation.__dict__, default=lambda o: o.__dict__)
+def enqueue_state_party_affiliation(affiliation: StatePartyAffiliation):
+    serialized = json.dumps(affiliation.__dict__, default=lambda o: o.__dict__)
     message_queue.send(str.encode(serialized))
 
 
@@ -25,8 +26,7 @@ if __name__ == "__main__":
 
     message_queue = MessageBus(config.queue_host, config.queue_topic)
 
-    politician_repository = PoliticianRepository()
-    politicians = politician_repository.get_all()
+    politicians = get_all()
 
     paths = [get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
 
@@ -45,6 +45,7 @@ if __name__ == "__main__":
             try:
                 df = dd.read_json(path, storage_options=storage_options)
                 dfs.append(df)
+            # pylint: disable=broad-except
             except Exception:
                 print('Error reading path ' + path)
 

@@ -10,6 +10,7 @@ class Affiliations:
     democratic: float
 
 
+# pylint: disable=invalid-name
 @dataclass
 class StatePartyAffiliation:
     state: str
@@ -29,5 +30,5 @@ def from_dataframe(df: pd.DataFrame) -> List[StatePartyAffiliation]:
         )
 
         state_party_affiliations.append(state_party_affiliation)
-    
+
     return state_party_affiliations

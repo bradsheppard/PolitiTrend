@@ -1,4 +1,5 @@
 aiohttp==3.6.2
+astroid==2.4.2
 async-timeout==3.0.1
 attrs==19.3.0
 beautifulsoup4==4.9.1
@@ -17,6 +18,7 @@ dask==2.23.0
 dask-kubernetes==0.10.1
 distributed==2.23.0
 docutils==0.15.2
+en-core-web-sm==2.3.0
 feedfinder2==0.0.4
 feedparser==5.2.1
 fsspec==0.7.4
@@ -24,6 +26,7 @@ geograpy3==0.1.2
 google-auth==1.18.0
 HeapDict==1.0.1
 idna==2.9
+isort==5.6.4
 jellyfish==0.8.2
 jieba3k==0.35.1
 Jinja2==2.11.2
@@ -32,9 +35,11 @@ joblib==0.15.1
 kafka-python==2.0.1
 kubernetes==11.0.0
 kubernetes-asyncio==11.3.0
+lazy-object-proxy==1.4.3
 locket==0.2.0
 lxml==4.5.1
 MarkupSafe==1.1.1
+mccabe==0.6.1
 more-itertools==8.4.0
 msgpack==1.0.0
 multidict==4.7.6
@@ -55,6 +60,7 @@ py==1.9.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycountry==19.8.18
+pylint==2.6.0
 pyparsing==2.4.7
 pytest==5.4.3
 python-dateutil==2.8.1
@@ -75,6 +81,7 @@ tblib==1.6.0
 thinc==7.4.1
 tinysegmenter==0.3
 tldextract==2.2.2
+toml==0.10.1
 toolz==0.10.0
 tornado==6.0.4
 tqdm==4.46.1
@@ -84,5 +91,6 @@ vaderSentiment==3.3.2
 wasabi==0.7.0
 wcwidth==0.2.5
 websocket-client==0.57.0
+wrapt==1.12.1
 yarl==1.4.2
 zict==2.0.0

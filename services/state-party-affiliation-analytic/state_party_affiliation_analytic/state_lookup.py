@@ -22,7 +22,7 @@ def get_state(location: str) -> Union[str, None]:
 
     for region in regions:
         for _, row in state_dataframe.iterrows():
-            if region == row['State'] or region == row['Abbreviation']:
+            if region in (row['State'], row['Abbreviation']):
                 return row['Abbreviation']
 
     return None

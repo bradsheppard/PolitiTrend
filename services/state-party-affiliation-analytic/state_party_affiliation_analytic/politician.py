@@ -10,19 +10,17 @@ class Politician:
     party: str
 
 
-class PoliticianRepository:
+HOST = 'http://politician'
 
-    def __init__(self):
-        self._host = 'http://politician'
 
-    def get_all(self) -> List[Politician]:
-        res = requests.get(self._host)
-        json = res.json()
+def get_all() -> List[Politician]:
+    res = requests.get(HOST)
+    json = res.json()
 
-        politicians = []
+    politicians = []
 
-        for entry in json:
-            politician = Politician(entry['id'], entry['name'], entry['party'])
-            politicians.append(politician)
+    for entry in json:
+        politician = Politician(entry['id'], entry['name'], entry['party'])
+        politicians.append(politician)
 
-        return politicians
+    return politicians

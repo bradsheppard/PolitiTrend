@@ -1,5 +1,6 @@
+# pylint: disable=redefined-outer-name
+
 import pytest
-import pandas
 
 import dask.dataframe as dd
 import pandas as pd
@@ -9,15 +10,15 @@ from state_party_affiliation_analytic.politician import Politician
 
 
 @pytest.fixture
-def df():
+def dataframe():
     tweet_texts = ['Bob Young is great!', 'John Smith is great!']
     locations = ['Kentucky', 'New York']
-    pandas_df = pandas.DataFrame({
+    pandas_dataframe = pd.DataFrame({
         'tweetText': tweet_texts,
         'location': locations
     }, columns=['tweetText', 'location'])
-    df = dd.from_pandas(pandas_df, npartitions=1)
-    return df
+    dataframe = dd.from_pandas(pandas_dataframe, npartitions=1)
+    return dataframe
 
 
 @pytest.fixture
@@ -30,14 +31,11 @@ def politicians():
     return politicians
 
 
-def test_can_compute_sentiments(df, politicians):
-    computed_df = compute_party_sentiments(df, politicians)
+def test_can_compute_sentiments(dataframe, politicians, index):
+    computed_df = compute_party_sentiments(dataframe, politicians)
 
-    arrays = [['Democratic', 'Democratic', 'Republican', 'Republican'], ['count', 'mean', 'count', 'mean']]
-    tuples = list(zip(*arrays))
+    pandas_dataframe = pd.DataFrame([[1, 0, 1, 0.6588], [1, 0.6588, 1, 0]],
+                                    columns=index, index=['KY', 'NY'])
 
-    index = pd.MultiIndex.from_tuples(tuples)
-
-    pandas_df = pd.DataFrame([[1, 0, 1, 0.6588], [1, 0.6588, 1, 0]], columns=index, index=['KY', 'NY'])
-
-    pandas.testing.assert_frame_equal(pandas_df, computed_df.compute(), check_like=True, check_dtype=False)
+    pd.testing.assert_frame_equal(pandas_dataframe, computed_df.compute(),
+                                  check_like=True, check_dtype=False)

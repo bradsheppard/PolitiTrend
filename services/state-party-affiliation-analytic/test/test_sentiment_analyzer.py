@@ -1,3 +1,5 @@
+# pylint: disable=redefined-outer-name
+
 import pytest
 
 from state_party_affiliation_analytic.politician import Politician
@@ -23,7 +25,8 @@ def test_get_party_sentiments_repeated_party(politicians):
     negative_score = get_party_sentiments([negative_sentence], politicians)
     mean_score = get_party_sentiments([mean_sentence], politicians)
 
-    assert mean_score[0]['Democrat'] == (positive_score[0]['Democrat'] + negative_score[0]['Democrat']) / 2
+    assert mean_score[0]['Democrat'] == \
+           (positive_score[0]['Democrat'] + negative_score[0]['Democrat']) / 2
 
 
 def test_get_party_sentiments_postive_sentence(politicians):

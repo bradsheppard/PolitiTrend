@@ -1,15 +1,12 @@
 import pandas as pd
 
-from state_party_affiliation_analytic.state_party_affiliation import StatePartyAffiliation, from_dataframe, Affiliations
+from state_party_affiliation_analytic.state_party_affiliation \
+    import StatePartyAffiliation, from_dataframe, Affiliations
 
 
-def test_from_dataframe():
-    arrays = [['Democratic', 'Democratic', 'Republican', 'Republican'], ['count', 'mean', 'count', 'mean']]
-    tuples = list(zip(*arrays))
-
-    index = pd.MultiIndex.from_tuples(tuples)
-
-    pandas_df = pd.DataFrame([[1, 0, 1, 0.6588], [1, 0.6588, 1, 0]], columns=index, index=['KY', 'NY'])
+def test_from_dataframe(index):
+    pandas_df = pd.DataFrame([[1, 0, 1, 0.6588], [1, 0.6588, 1, 0]],
+                             columns=index, index=['KY', 'NY'])
 
     print(pandas_df.head())
 

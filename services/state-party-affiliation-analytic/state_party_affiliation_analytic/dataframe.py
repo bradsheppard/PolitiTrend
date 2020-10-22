@@ -7,21 +7,24 @@ from state_party_affiliation_analytic.sentiment_analyzer import get_party_sentim
 from state_party_affiliation_analytic.state_lookup import get_state
 
 
-def get_sentiments_for_partition(df: dd.DataFrame, politicians):
-    tweets = df['tweetText']
+def get_sentiments_for_partition(dataframe: dd.DataFrame, politicians):
+    tweets = dataframe['tweetText']
     sentiments = get_party_sentiments(tweets, politicians)
     return sentiments
 
 
-def compute_party_sentiments(df: dd.DataFrame, politicians: List[Politician]) -> dd.DataFrame:
-    df['sentiment'] = df.map_partitions(get_sentiments_for_partition, politicians)
-    df['state'] = df['location'].map(get_state)
-    df = df.assign(
-        Democratic=df['sentiment'].map(lambda x: x['Democratic'] if 'Democratic' in x else 0),
-        Republican=df['sentiment'].map(lambda x: x['Republican'] if 'Republican' in x else 0)
+def compute_party_sentiments(dataframe: dd.DataFrame,
+                             politicians: List[Politician]) -> dd.DataFrame:
+    dataframe['sentiment'] = dataframe.map_partitions(get_sentiments_for_partition, politicians)
+    dataframe['state'] = dataframe['location'].map(get_state)
+    dataframe = dataframe.assign(
+        Democratic=dataframe['sentiment'].map(
+            lambda x: x['Democratic'] if 'Democratic' in x else 0),
+        Republican=dataframe['sentiment'].map(
+            lambda x: x['Republican'] if 'Republican' in x else 0)
     )
 
-    df = df.groupby(['state']) \
+    dataframe = dataframe.groupby(['state']) \
         .agg({'Democratic': ['count', 'mean'], 'Republican': ['count', 'mean']})
 
-    return df
+    return dataframe

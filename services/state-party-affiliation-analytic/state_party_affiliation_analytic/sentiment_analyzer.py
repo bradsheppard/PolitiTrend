@@ -11,7 +11,8 @@ nlp = spacy.load('en', disable=['ner', 'entity_linker', 'textcat', 'entity_ruler
                                 'merge_entities'])
 
 
-def get_party_sentiments(statements: List[str], subjects: List[Politician] = None) -> List[Dict[str, float]]:
+def get_party_sentiments(statements: List[str],
+                         subjects: List[Politician] = None) -> List[Dict[str, float]]:
     results_list = []
     for doc in nlp.pipe(statements):
         results = {}
@@ -25,7 +26,7 @@ def get_party_sentiments(statements: List[str], subjects: List[Politician] = Non
                     max_length = len(subject)
 
             for key in pos_subjects:
-                if len(pos_subjects[key]) == max_length and max_length is not 0:
+                if len(pos_subjects[key]) == max_length and max_length != 0:
                     if key not in results:
                         results[key] = [score]
                     else:
