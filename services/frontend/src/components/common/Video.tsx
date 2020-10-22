@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { Typography } from '@material-ui/core'
+import { Typography, Link as MuiLink } from '@material-ui/core'
 
 interface IProps {
     video: Video
@@ -33,7 +33,7 @@ const Video: React.FC<IProps> = (props: IProps) => {
     const classes = useStyles()
 
     return (
-        <div>
+        <MuiLink href={`http://www.youtube.com/watch?v=${props.video.videoId}`} underline="none">
             <div className={classes.imageContainer}>
                 <img
                     className={classes.image}
@@ -44,7 +44,7 @@ const Video: React.FC<IProps> = (props: IProps) => {
             <Typography variant="h4" color="textPrimary">
                 {props.video.title}
             </Typography>
-        </div>
+        </MuiLink>
     )
 }
 
