@@ -8,7 +8,6 @@ from state_party_affiliation_analytic.state_lookup import get_state
 
 
 def get_sentiments_for_partition(dataframe: dd.DataFrame, politicians):
-    print(dataframe.head())
     tweets = dataframe['tweetText']
     sentiments = get_party_sentiments(tweets, politicians)
     return sentiments

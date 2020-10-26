@@ -1,4 +1,5 @@
 import spacy
+import math
 from typing import Dict, List
 import networkx as nx
 from functional import seq
@@ -16,6 +17,7 @@ def get_party_sentiments(statements: List[str],
                          subjects: List[Politician] = None) -> List[Dict[str, float]]:
     # pylint: disable=cell-var-from-loop
     # pylint: disable=too-many-locals
+    # pylint: disable=too-many-branches
     results_list = []
     for doc in nlp.pipe(statements):
         results = {}
@@ -44,9 +46,12 @@ def get_party_sentiments(statements: List[str],
             for word in pos_words:
                 for entity in entities:
                     names = entity.split()
-                    shortest_path = min(
-                        [nx.dijkstra_path_length(
-                            graph, source=word, target=name) for name in names])
+                    try:
+                        shortest_path = min(
+                            [nx.dijkstra_path_length(
+                                graph, source=word, target=name) for name in names])
+                    except nx.NetworkXNoPath:
+                        shortest_path = math.inf
                     path_lengths[entity] += shortest_path
 
             shortest_length = min(path_lengths.values())
