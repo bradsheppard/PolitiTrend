@@ -1,6 +1,10 @@
 service	:= state-party-affiliation-analytic
 tag	:= 1.0.0
 
+.PHONY: lint
+lint:
+	pylint app.py state_party_affiliation_analytic/ test/ --rcfile .pylintrc
+
 .PHONY: build
 build:
 	docker build -t $(service):$(tag) .
