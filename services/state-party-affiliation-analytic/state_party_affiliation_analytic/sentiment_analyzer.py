@@ -30,7 +30,6 @@ def get_party_sentiments(statements: List[str],
                 .list()
 
             if len(entities) == 0:
-                results_list.append(results)
                 continue
 
             graph = nx.Graph()
