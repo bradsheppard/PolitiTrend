@@ -16,6 +16,8 @@ cssselect==1.1.0
 cymem==2.0.3
 dask==2.23.0
 dask-kubernetes==0.10.1
+decorator==4.4.2
+dill==0.3.2
 distributed==2.23.0
 docutils==0.15.2
 feedfinder2==0.0.4
@@ -43,6 +45,7 @@ more-itertools==8.4.0
 msgpack==1.0.0
 multidict==4.7.6
 murmurhash==1.0.2
+networkx==2.5
 newspaper3k==0.2.8
 nltk==3.5
 numpy==1.18.1
@@ -59,6 +62,7 @@ py==1.9.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycountry==19.8.18
+pyfunctional==1.4.2
 pylint==2.6.0
 pyparsing==2.4.7
 pytest==5.4.3
@@ -76,6 +80,7 @@ sortedcontainers==2.2.2
 soupsieve==2.0.1
 spacy==2.3.0
 srsly==1.0.2
+tabulate==0.8.7
 tblib==1.6.0
 thinc==7.4.1
 tinysegmenter==0.3
