@@ -8,14 +8,10 @@ RUN pip3 install -r requirements.txt
 
 RUN python3 -m spacy download en
 
-COPY app.py .
-
-COPY config.ini .
+COPY app.py config.ini run.sh ./
 
 COPY sentiment_analytic sentiment_analytic
 
 COPY lib lib
-
-COPY run.sh .
 
 CMD ["./run.sh"]

@@ -1,7 +1,6 @@
-from sentiment_analytic.model.politician import PoliticianRepository
+from sentiment_analytic.politician import get_all
 
 
 def test_get_all():
-    repository = PoliticianRepository()
-    politicians = repository.get_all()
+    politicians = get_all()
     assert len(politicians) > 0
