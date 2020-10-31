@@ -15,7 +15,7 @@ spec:
     image: "{{ .Values.global.registry }}/{{ .Values.image.sentimentAnalytic.repository }}:{{ .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.image.sentimentAnalytic.pullPolicy }}
     mainApplicationFile: "local:///app/app.py"
-    sparkVersion: "2.4.5"
+    sparkVersion: "3.0.0"
     restartPolicy:
       type: Never
     driver:
@@ -23,7 +23,7 @@ spec:
       coreLimit: "1000m"
       memory: "512m"
       labels:
-        version: 2.4.5
+        version: 3.0.0
       serviceAccount: operators-spark
     executor:
       coreRequest: "200m"
@@ -31,10 +31,9 @@ spec:
       instances: 2
       memory: "512m"
       labels:
-        version: 2.4.5
+        version: 3.0.0
     deps:
       jars:
         - local:///app/lib/hadoop-aws-2.7.3.jar
         - https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar
-        - https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.11/2.4.5/spark-sql-kafka-0-10_2.11-2.4.5.jar
-        - https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.0.0/kafka-clients-2.0.0.jar
+        - https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.0.1/spark-sql-kafka-0-10_2.12-3.0.1.jar
