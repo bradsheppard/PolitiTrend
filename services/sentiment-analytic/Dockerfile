@@ -17,5 +17,3 @@ COPY app.py config.ini run.sh ./
 COPY sentiment_analytic sentiment_analytic
 
 COPY lib lib
-
-CMD ["./run.sh"]

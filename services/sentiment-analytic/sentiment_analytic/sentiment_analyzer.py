@@ -44,7 +44,7 @@ def udf_generator(subjects: List[Politician]):
         pdf['politicianSentiments'] = politician_sentiments
         pdf['sentiments'] = sentiments
 
-        return pdf
+        return pdf[['tweetText', 'politicians', 'politicianSentiments', 'sentiments']]
 
     return pandas_udf_sentiment
 
