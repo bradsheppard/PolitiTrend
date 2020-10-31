@@ -1,9 +1,9 @@
 dependencies:
 - name: sparkoperator
   repository: http://storage.googleapis.com/kubernetes-charts-incubator
-  version: 0.6.6
+  version: 0.8.4
 - name: strimzi-kafka-operator
   repository: https://strimzi.io/charts
-  version: 0.16.2
-digest: sha256:8eae486abcfa78698ea13991c02ed93a60d44e5bca54eabffc2936175e5f93cb
-generated: "2020-03-09T21:51:35.713017238-02:30"
+  version: 0.20.0
+digest: sha256:2077abd78af70da4f1ad7977e92d1dd4b7c2912b8a9f710138a90d9cb93726e5
+generated: "2020-10-29T23:56:00.843976241-02:30"
