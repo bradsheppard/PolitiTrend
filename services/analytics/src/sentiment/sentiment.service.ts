@@ -27,8 +27,9 @@ export class SentimentService {
 				},
 				'politician': '$politician'
 			},
-			total: { $sum: 1 },
 			sampleSize: { $sum: '$sampleSize' },
+			total: { $sum: 1 },
+			avgSampleSize: { $avg: '$sampleSize' },
 			weightedSentiment: { $sum: {$multiply: ['$sentiment', '$sampleSize']} }
 		}
 	}
@@ -68,7 +69,7 @@ export class SentimentService {
 				$project: {
 					_id: false,
 					sentiment: {$divide: ['$weightedSentiment', '$sampleSize']},
-					sampleSize: true,
+					sampleSize: '$avgSampleSize',
 					politician: '$_id.politician',
 					dateTime: '$_id.dateTime'
 				}

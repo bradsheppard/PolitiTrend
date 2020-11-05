@@ -218,7 +218,7 @@ describe('Sentiment (e2e)', () => {
 		const expectedResponse = [
 			{
 				politician: 1,
-				sampleSize: 300,
+				sampleSize: 150,
 				sentiment: 3
 			}
 		];
@@ -284,13 +284,13 @@ describe('Sentiment (e2e)', () => {
 		const expectedResponse = [
 			{
 				politician: 1,
-				sampleSize: 300,
+				sampleSize: 150,
 				sentiment: 3,
 				dateTime: currentDate
 			},
 			{
 				politician: 1,
-				sampleSize: 2000,
+				sampleSize: 1000,
 				sentiment: 3.25,
 				dateTime: yesterday
 			}
