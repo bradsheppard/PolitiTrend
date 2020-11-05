@@ -7,20 +7,24 @@ import { EventPattern } from '@nestjs/microservices';
 
 @Controller('global-word-cloud')
 export class GlobalWordCloudController {
-	constructor(private globalWordCloudService: GlobalWordCloudService) {}
+    constructor(private globalWordCloudService: GlobalWordCloudService) {}
 
-	@Get()
-	async findAll(@Query() searchGlobalWordCloudDto: SearchGlobalWordCloudDto): Promise<GlobalWordCloud[]> {
-		return await this.globalWordCloudService.find(searchGlobalWordCloudDto);
-	}
+    @Get()
+    async findAll(
+        @Query() searchGlobalWordCloudDto: SearchGlobalWordCloudDto,
+    ): Promise<GlobalWordCloud[]> {
+        return await this.globalWordCloudService.find(searchGlobalWordCloudDto);
+    }
 
-	@Post()
-	async create(@Body() createGlobalWordCloudDto: CreateGlobalWordCloudDto): Promise<GlobalWordCloud> {
-		return await this.globalWordCloudService.create(createGlobalWordCloudDto);
-	}
+    @Post()
+    async create(
+        @Body() createGlobalWordCloudDto: CreateGlobalWordCloudDto,
+    ): Promise<GlobalWordCloud> {
+        return await this.globalWordCloudService.create(createGlobalWordCloudDto);
+    }
 
-	@EventPattern('analytics-global-word-cloud-created')
-	async handleGlobalWordCloudCreated(createGlobalWordCloudDto: CreateGlobalWordCloudDto) {
-		await this.globalWordCloudService.create(createGlobalWordCloudDto);
-	}
+    @EventPattern('analytics-global-word-cloud-created')
+    async handleGlobalWordCloudCreated(createGlobalWordCloudDto: CreateGlobalWordCloudDto) {
+        await this.globalWordCloudService.create(createGlobalWordCloudDto);
+    }
 }

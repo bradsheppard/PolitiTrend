@@ -7,24 +7,24 @@ import { SentimentModule } from './sentiment/sentiment.module';
 import { StatePartyAffiliationModule } from './state-party-affiliation/state-party-affiliation.module';
 
 @Module({
-	imports: [
-		MongooseModule.forRootAsync({
-			imports: [ConfigModule.forRoot()],
-			useFactory: async (configService: ConfigService) => {
-				return {
-					useFindAndModify: false,
-					uri: configService.get<string>('MONGODB_URI'),
-					useNewUrlParser: true,
-					useUnifiedTopology: true,
-					useCreateIndex: true
-				}
-			},
-			inject: [ConfigService]
-		}),
-		PoliticianWordCloudModule,
-		GlobalWordCloudModule,
-		SentimentModule,
-		StatePartyAffiliationModule
-	]
+    imports: [
+        MongooseModule.forRootAsync({
+            imports: [ConfigModule.forRoot()],
+            useFactory: async (configService: ConfigService) => {
+                return {
+                    useFindAndModify: false,
+                    uri: configService.get<string>('MONGODB_URI'),
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true,
+                    useCreateIndex: true,
+                };
+            },
+            inject: [ConfigService],
+        }),
+        PoliticianWordCloudModule,
+        GlobalWordCloudModule,
+        SentimentModule,
+        StatePartyAffiliationModule,
+    ],
 })
 export class AppModule {}

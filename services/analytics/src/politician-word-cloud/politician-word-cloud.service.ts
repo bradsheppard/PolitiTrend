@@ -7,37 +7,39 @@ import { SearchPoliticianWordCloudDto } from './dtos/search-politician-word-clou
 
 @Injectable()
 export class PoliticianWordCloudService {
+    constructor(
+        @InjectModel('PoliticianWordCloud')
+        private readonly politicianWordCloudModel: Model<PoliticianWordCloud>,
+    ) {}
 
-	constructor(@InjectModel('PoliticianWordCloud') private readonly politicianWordCloudModel: Model<PoliticianWordCloud>) {}
+    async create(createWordCloudDto: CreatePoliticianWordCloudDto): Promise<PoliticianWordCloud> {
+        const createdWordCloud = new this.politicianWordCloudModel(createWordCloudDto);
+        return await createdWordCloud.save();
+    }
 
-	async create(createWordCloudDto: CreatePoliticianWordCloudDto): Promise<PoliticianWordCloud> {
-		const createdWordCloud = new this.politicianWordCloudModel(createWordCloudDto);
-		return await createdWordCloud.save()
-	}
+    async find(searchWordCloudDto: SearchPoliticianWordCloudDto): Promise<PoliticianWordCloud[]> {
+        const queryObject: FilterQuery<PoliticianWordCloud> = {};
 
-	async find(searchWordCloudDto: SearchPoliticianWordCloudDto): Promise<PoliticianWordCloud[]> {
-		const queryObject: FilterQuery<PoliticianWordCloud> = {};
+        if (searchWordCloudDto.politician) {
+            queryObject.politician = searchWordCloudDto.politician;
+        }
 
-		if (searchWordCloudDto.politician) {
-			queryObject.politician = searchWordCloudDto.politician;
-		}
+        let query = this.politicianWordCloudModel.find(queryObject);
 
-		let query = this.politicianWordCloudModel.find(queryObject);
+        if (searchWordCloudDto.limit) {
+            query = query.limit(searchWordCloudDto.limit);
+        }
 
-		if (searchWordCloudDto.limit) {
-			query = query.limit(searchWordCloudDto.limit);
-		}
+        if (searchWordCloudDto.offset) {
+            query = query.skip(searchWordCloudDto.offset);
+        }
 
-		if (searchWordCloudDto.offset) {
-			query = query.skip(searchWordCloudDto.offset);
-		}
+        query = query.sort({ dateTime: 'desc' });
 
-		query = query.sort({dateTime: 'desc'});
+        return await query.exec();
+    }
 
-		return await query.exec();
-	}
-
-	async delete(): Promise<void> {
-		await this.politicianWordCloudModel.deleteMany({}).exec();
-	}
+    async delete(): Promise<void> {
+        await this.politicianWordCloudModel.deleteMany({}).exec();
+    }
 }

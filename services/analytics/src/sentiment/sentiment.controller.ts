@@ -7,20 +7,20 @@ import { SearchSentimentDto } from './dtos/search-sentiment.dto';
 
 @Controller('sentiment')
 export class SentimentController {
-	constructor(private sentimentService: SentimentService) {}
+    constructor(private sentimentService: SentimentService) {}
 
-	@Get()
-	async findAll(@Query() searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
-		return await this.sentimentService.find(searchSentimentDto);
-	}
+    @Get()
+    async findAll(@Query() searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+        return await this.sentimentService.find(searchSentimentDto);
+    }
 
-	@Post()
-	async create(@Body() createSentimentDto: CreateSentimentDto): Promise<Sentiment> {
-		return await this.sentimentService.create(createSentimentDto);
-	}
+    @Post()
+    async create(@Body() createSentimentDto: CreateSentimentDto): Promise<Sentiment> {
+        return await this.sentimentService.create(createSentimentDto);
+    }
 
-	@EventPattern('analytics-sentiment-created')
-	async handleSentimentCreated(createSentimentDto: CreateSentimentDto): Promise<Sentiment> {
-		return await this.sentimentService.create(createSentimentDto);
-	}
+    @EventPattern('analytics-sentiment-created')
+    async handleSentimentCreated(createSentimentDto: CreateSentimentDto): Promise<Sentiment> {
+        return await this.sentimentService.create(createSentimentDto);
+    }
 }

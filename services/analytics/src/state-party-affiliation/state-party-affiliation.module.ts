@@ -5,8 +5,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { StatePartyAffiliationSchema } from './schemas/state-party-affiliation.schema';
 
 @Module({
-	imports: [MongooseModule.forFeature([{ name: 'StatePartyAffiliation', schema: StatePartyAffiliationSchema }])],
-	controllers: [StatePartyAffiliationController],
-	providers: [StatePartyAffiliationService],
+    imports: [
+        MongooseModule.forFeature([
+            {
+                name: 'StatePartyAffiliation',
+                schema: StatePartyAffiliationSchema,
+            },
+        ]),
+    ],
+    controllers: [StatePartyAffiliationController],
+    providers: [StatePartyAffiliationService],
 })
 export class StatePartyAffiliationModule {}

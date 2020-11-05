@@ -1,25 +1,25 @@
-import * as mongoose from 'mongoose'
+import * as mongoose from 'mongoose';
 
 const SentimentSchema = new mongoose.Schema({
-	politician: Number,
-	sentiment: Number,
-	sampleSize: Number,
-	dateTime: {
-		type: Date,
-		default: Date.now
-	},
+    politician: Number,
+    sentiment: Number,
+    sampleSize: Number,
+    dateTime: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
-SentimentSchema.index({dateTime: -1});
+SentimentSchema.index({ dateTime: -1 });
 
-SentimentSchema.index({politician: 1, dateTime: -1});
+SentimentSchema.index({ politician: 1, dateTime: -1 });
 
 SentimentSchema.set('toJSON', {
-	transform: (doc, ret) => {
-		ret.id = ret._id;
-		delete ret._id;
-		delete  ret.__v;
-	}
+    transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+    },
 });
 
-export { SentimentSchema }
+export { SentimentSchema };

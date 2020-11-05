@@ -5,9 +5,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PoliticianWordCloudSchema } from './schemas/politician-word-cloud.schema';
 
 @Module({
-	imports: [MongooseModule.forFeature([{ name: 'PoliticianWordCloud', schema: PoliticianWordCloudSchema }])],
-	controllers: [PoliticianWordCloudController],
-	providers: [PoliticianWordCloudService],
+    imports: [
+        MongooseModule.forFeature([
+            { name: 'PoliticianWordCloud', schema: PoliticianWordCloudSchema },
+        ]),
+    ],
+    controllers: [PoliticianWordCloudController],
+    providers: [PoliticianWordCloudService],
 })
-export class PoliticianWordCloudModule {
-}
+export class PoliticianWordCloudModule {}

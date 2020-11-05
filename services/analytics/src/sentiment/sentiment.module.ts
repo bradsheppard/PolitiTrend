@@ -5,8 +5,8 @@ import { SentimentController } from './sentiment.controller';
 import { SentimentService } from './sentiment.service';
 
 @Module({
-	imports: [MongooseModule.forFeature([{ name: 'Sentiment', schema: SentimentSchema }])],
-	controllers: [SentimentController],
-	providers: [SentimentService],
+    imports: [MongooseModule.forFeature([{ name: 'Sentiment', schema: SentimentSchema }])],
+    controllers: [SentimentController],
+    providers: [SentimentService],
 })
 export class SentimentModule {}

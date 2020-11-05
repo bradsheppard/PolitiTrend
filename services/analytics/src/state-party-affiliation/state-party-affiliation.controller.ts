@@ -7,20 +7,26 @@ import { SearchStatePartyAffiliationDto } from './dtos/search-state-party-affili
 
 @Controller('state-party-affiliation')
 export class StatePartyAffiliationController {
-	constructor(private statePartyAffiliationService: StatePartyAffiliationService) {}
+    constructor(private statePartyAffiliationService: StatePartyAffiliationService) {}
 
-	@Get()
-	async findAll(@Query() searchStatePartyAffiliationDto: SearchStatePartyAffiliationDto): Promise<StatePartyAffiliation[]> {
-		return await this.statePartyAffiliationService.find(searchStatePartyAffiliationDto);
-	}
+    @Get()
+    async findAll(
+        @Query() searchStatePartyAffiliationDto: SearchStatePartyAffiliationDto,
+    ): Promise<StatePartyAffiliation[]> {
+        return await this.statePartyAffiliationService.find(searchStatePartyAffiliationDto);
+    }
 
-	@Post()
-	async create(@Body() createStatePartyAffiliation: CreateStatePartyAffiliationDto): Promise<StatePartyAffiliation> {
-		return await this.statePartyAffiliationService.create(createStatePartyAffiliation);
-	}
+    @Post()
+    async create(
+        @Body() createStatePartyAffiliation: CreateStatePartyAffiliationDto,
+    ): Promise<StatePartyAffiliation> {
+        return await this.statePartyAffiliationService.create(createStatePartyAffiliation);
+    }
 
-	@EventPattern('analytics-state-party-affiliation-created')
-	async handleStatePartyAffiliationCreated(@Body() createStatePartyAffiliation: CreateStatePartyAffiliationDto): Promise<StatePartyAffiliation> {
-		return await this.statePartyAffiliationService.create(createStatePartyAffiliation);
-	}
+    @EventPattern('analytics-state-party-affiliation-created')
+    async handleStatePartyAffiliationCreated(
+        @Body() createStatePartyAffiliation: CreateStatePartyAffiliationDto,
+    ): Promise<StatePartyAffiliation> {
+        return await this.statePartyAffiliationService.create(createStatePartyAffiliation);
+    }
 }

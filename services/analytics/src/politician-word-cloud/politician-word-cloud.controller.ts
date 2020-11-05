@@ -7,26 +7,29 @@ import { PoliticianWordCloud } from './interfaces/politician-word-cloud.interfac
 
 @Controller('politician-word-cloud')
 export class PoliticianWordCloudController {
+    constructor(private politicianWordCloudService: PoliticianWordCloudService) {}
 
-	constructor(private politicianWordCloudService: PoliticianWordCloudService) {}
+    @Get('health')
+    async health(): Promise<string> {
+        return 'Okay';
+    }
 
-	@Get('health')
-	async health(): Promise<string> {
-		return 'Okay';
-	}
+    @Get()
+    async findAll(
+        @Query() searchPoliticianWordCloudDto: SearchPoliticianWordCloudDto,
+    ): Promise<PoliticianWordCloud[]> {
+        return await this.politicianWordCloudService.find(searchPoliticianWordCloudDto);
+    }
 
-	@Get()
-	async findAll(@Query() searchPoliticianWordCloudDto: SearchPoliticianWordCloudDto): Promise<PoliticianWordCloud[]> {
-		return await this.politicianWordCloudService.find(searchPoliticianWordCloudDto);
-	}
+    @Post()
+    async create(
+        @Body() createPoliticianWordCloudDto: CreatePoliticianWordCloudDto,
+    ): Promise<PoliticianWordCloud> {
+        return await this.politicianWordCloudService.create(createPoliticianWordCloudDto);
+    }
 
-	@Post()
-	async create(@Body() createPoliticianWordCloudDto: CreatePoliticianWordCloudDto): Promise<PoliticianWordCloud> {
-		return await this.politicianWordCloudService.create(createPoliticianWordCloudDto);
-	}
-
-	@EventPattern('analytics-politician-word-cloud-created')
-	async handleWordCloudCreated(createPoliticianWordCloudDto: CreatePoliticianWordCloudDto) {
-		await this.politicianWordCloudService.create(createPoliticianWordCloudDto);
-	}
+    @EventPattern('analytics-politician-word-cloud-created')
+    async handleWordCloudCreated(createPoliticianWordCloudDto: CreatePoliticianWordCloudDto) {
+        await this.politicianWordCloudService.create(createPoliticianWordCloudDto);
+    }
 }
