@@ -1,4 +1,4 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsDate, IsInt, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateStatePartyAffiliationDto {
@@ -8,6 +8,10 @@ export class CreateStatePartyAffiliationDto {
 	@IsInt()
 	@Type(() => Number)
 	sampleSize: number;
+
+	@IsDate()
+	@Type(() => Date)
+	dateTime?: Date;
 
 	affiliations: Affiliations;
 }

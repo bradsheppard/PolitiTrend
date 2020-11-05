@@ -1,16 +1,17 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { StatePartyAffiliation } from './interfaces/state-party-affiliation.interface';
 import { StatePartyAffiliationService } from './state-party-affiliation.service';
 import { CreateStatePartyAffiliationDto } from './dtos/create-state-party-affiliation-dto';
 import { EventPattern } from '@nestjs/microservices';
+import { SearchStatePartyAffiliationDto } from './dtos/search-state-party-affiliation.dto';
 
 @Controller('state-party-affiliation')
 export class StatePartyAffiliationController {
 	constructor(private statePartyAffiliationService: StatePartyAffiliationService) {}
 
 	@Get()
-	async findAll(): Promise<StatePartyAffiliation[]> {
-		return await this.statePartyAffiliationService.findAll();
+	async findAll(@Query() searchStatePartyAffiliationDto: SearchStatePartyAffiliationDto): Promise<StatePartyAffiliation[]> {
+		return await this.statePartyAffiliationService.find(searchStatePartyAffiliationDto);
 	}
 
 	@Post()
