@@ -52,12 +52,14 @@ const StatsMap: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
                             const state = allStates.find((s) => s.id === geo.id)
                             if (!state) return
                             const statePartyAffiliation = lookupStatePartyAffiliation(state.abv)
-                            if (!statePartyAffiliation) return
 
-                            let color = '#333333'
+                            let color = '#c4c4c4'
                             let party = 'Neutral'
 
-                            if (statePartyAffiliation.sampleSize > MIN_SAMPLE_SIZE) {
+                            if (
+                                statePartyAffiliation &&
+                                statePartyAffiliation.sampleSize > MIN_SAMPLE_SIZE
+                            ) {
                                 if (
                                     statePartyAffiliation.affiliations.democratic >
                                     statePartyAffiliation.affiliations.republican
