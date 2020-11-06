@@ -21,17 +21,14 @@ class Tweet:
 
 class TweetCrawler:
 
-    def __init__(self, consumer_key: str, consumer_secret: str,
-                 access_token: str, access_token_secret: str):
-        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-        auth.set_access_token(access_token, access_token_secret)
-
+    def __init__(self, consumer_key: str, consumer_secret: str):
+        auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
         self._api = tweepy.API(auth)
 
     def get(self, politician: Politician, politicians: List[Politician], **kwargs) -> List[Tweet]:
         tweepy_results = tweepy\
             .Cursor(self._api.search, q=politician.name, lang='en', result_type='mixed',
-                    tweet_mode='extended', count=100,
+                    tweet_mode='extended', count=100, api_root='/2',
                     since_id=kwargs.get('min_tweet_id'), max_id=kwargs.get('max_tweet_id')) \
             .items(100)
 

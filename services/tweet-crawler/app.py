@@ -11,8 +11,7 @@ from crawler.orchestrator import Orchestrator
 
 politicians: List[Politician] = get_all()
 
-tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret,
-                             config.twitter_access_token, config.twitter_access_token_secret)
+tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret)
 tweet_repository = TweetRepository()
 
 engine = create_engine(config.sql_connection_string)

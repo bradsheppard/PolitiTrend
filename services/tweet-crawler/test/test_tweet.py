@@ -13,8 +13,7 @@ from crawler.tweet import TweetRepository, Tweet, TweetCrawler
 
 @pytest.fixture
 def tweet_crawler():
-    tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret,
-                                 config.twitter_access_token, config.twitter_access_token_secret)
+    tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret)
     return tweet_crawler
 
 
