@@ -14,6 +14,7 @@ const StatePartyAffiliationSchema = new mongoose.Schema({
 });
 
 StatePartyAffiliationSchema.index({ state: 1, dateTime: -1 });
+StatePartyAffiliationSchema.index({dateTime: -1})
 
 StatePartyAffiliationSchema.set('toJSON', {
     transform: (doc, ret) => {
