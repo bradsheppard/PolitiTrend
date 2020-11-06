@@ -8,6 +8,7 @@ sql_config = config_parser['sql']
 
 
 class Config:
+    # pylint: disable=too-many-instance-attributes
 
     def __init__(self):
         self.twitter_consumer_key = None

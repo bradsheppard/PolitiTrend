@@ -1,9 +1,11 @@
+# pylint: disable=redefined-outer-name
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from crawler.config import config
-from crawler.model.job import JobRepository, Job
+from crawler.job import JobRepository, Job
 
 
 @pytest.fixture

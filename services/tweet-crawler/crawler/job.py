@@ -8,7 +8,7 @@ Base = declarative_base()
 
 
 class Job(Base):
-
+    # pylint: disable=too-few-public-methods
     __tablename__ = 'Job'
 
     id = Column(Integer, primary_key=True)
@@ -32,7 +32,8 @@ class JobRepository:
         return job
 
     def get_latest_for_politician(self, politician_id: int):
-        job = self._session.query(Job).filter_by(politician=politician_id).order_by(Job.id.desc()).first()
+        job = self._session.query(Job).filter_by(politician=politician_id) \
+            .order_by(Job.id.desc()).first()
         return job
 
     def delete_all(self):

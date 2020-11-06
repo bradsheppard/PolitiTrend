@@ -1,12 +1,12 @@
-from typing import List
+from typing import List, Union
 
-from crawler.model.job import JobRepository, Job
-from crawler.model.politician import Politician
-from crawler.model.tweet import TweetRepository, TweetCrawler
+from crawler.job import JobRepository, Job
+from crawler.politician import Politician
+from crawler.tweet import TweetRepository, TweetCrawler
 
 
 class Orchestrator:
-
+    # pylint: disable=too-few-public-methods
     def __init__(self,
                  tweet_crawler: TweetCrawler,
                  tweet_respository: TweetRepository,
@@ -36,7 +36,8 @@ class Orchestrator:
         self._job_repository.insert(new_job)
 
     @staticmethod
-    def _lookup_politician_id(name, politicians: List[Politician]) -> int:
+    def _lookup_politician_id(name, politicians: List[Politician]) -> Union[None, int]:
         politician = list(filter(lambda x: x.name == name, politicians))
         if len(politician) > 0:
             return politician[0].num
+        return None

@@ -1,9 +1,9 @@
 import datetime
 from unittest.mock import Mock
 
-from crawler.model.job import Job
-from crawler.model.politician import Politician
-from crawler.model.tweet import Tweet
+from crawler.job import Job
+from crawler.politician import Politician
+from crawler.tweet import Tweet
 from crawler.orchestrator import Orchestrator
 
 
@@ -31,7 +31,8 @@ def test_crawl_all():
 
     orchestrator.crawl_all(mock_politicians[0], mock_politicians)
 
-    mock_tweet_crawler.get.assert_called_once_with(mock_politicians[0], mock_politicians, min_tweet_id='20')
+    mock_tweet_crawler.get.assert_called_once_with(
+        mock_politicians[0], mock_politicians, min_tweet_id='20')
     mock_tweet_repository.insert.assert_called_once()
 
 
@@ -52,7 +53,8 @@ def test_crawl_all_no_results():
 
     orchestrator.crawl_all(mock_politicians[0], mock_politicians)
 
-    mock_tweet_crawler.get.assert_called_once_with(mock_politicians[0], mock_politicians, min_tweet_id='20')
+    mock_tweet_crawler.get.assert_called_once_with(
+        mock_politicians[0], mock_politicians, min_tweet_id='20')
     mock_tweet_repository.insert.assert_not_called()
 
 
@@ -78,5 +80,6 @@ def test_crawl_all_no_job():
 
     orchestrator.crawl_all(mock_politicians[0], mock_politicians)
 
-    mock_tweet_crawler.get.assert_called_once_with(mock_politicians[0], mock_politicians, min_tweet_id='1')
+    mock_tweet_crawler.get.assert_called_once_with(
+        mock_politicians[0], mock_politicians, min_tweet_id='1')
     mock_tweet_repository.insert.assert_called_once()

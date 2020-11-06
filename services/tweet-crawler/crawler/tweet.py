@@ -6,11 +6,12 @@ import requests
 import tweepy
 
 from crawler.message_bus import MessageBus
-from crawler.model.politician import Politician
+from crawler.politician import Politician
 
 
 @dataclass
 class Tweet:
+    # pylint: disable=invalid-name
     politicians: List[int]
     dateTime: str
     tweetId: str
@@ -20,7 +21,8 @@ class Tweet:
 
 class TweetCrawler:
 
-    def __init__(self, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str):
+    def __init__(self, consumer_key: str, consumer_secret: str,
+                 access_token: str, access_token_secret: str):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
 

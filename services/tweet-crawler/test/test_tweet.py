@@ -1,3 +1,5 @@
+# pylint: disable=redefined-outer-name
+
 import pytest
 import datetime
 import time
@@ -5,8 +7,8 @@ import string
 import random
 from dateutil import parser
 from crawler.config import config
-from crawler.model.politician import Politician
-from crawler.model.tweet import TweetRepository, Tweet, TweetCrawler
+from crawler.politician import Politician
+from crawler.tweet import TweetRepository, Tweet, TweetCrawler
 
 
 @pytest.fixture
@@ -60,7 +62,8 @@ def test_insert_and_get():
         if (
                 inserted_tweet.tweetText == tweet.tweetText and
                 inserted_tweet.politicians[0] == tweet.politicians[0] and
-                parser.parse(inserted_tweet.dateTime).replace(tzinfo=None).isoformat(' ', 'seconds') ==
+                parser.parse(inserted_tweet.dateTime).replace(tzinfo=None)
+                .isoformat(' ', 'seconds') ==
                 parser.parse(tweet.dateTime).replace(tzinfo=None).isoformat(' ', 'seconds')
         ):
             match = True

@@ -4,13 +4,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from crawler.config import config
-from crawler.model.job import JobRepository
-from crawler.model.politician import Politician, PoliticianRepository
-from crawler.model.tweet import TweetCrawler, TweetRepository
+from crawler.job import JobRepository
+from crawler.politician import Politician, get_all
+from crawler.tweet import TweetCrawler, TweetRepository
 from crawler.orchestrator import Orchestrator
 
-politician_repository = PoliticianRepository()
-politicians: List[Politician] = politician_repository.get_all()
+politicians: List[Politician] = get_all()
 
 tweet_crawler = TweetCrawler(config.twitter_consumer_key, config.twitter_consumer_secret,
                              config.twitter_access_token, config.twitter_access_token_secret)
