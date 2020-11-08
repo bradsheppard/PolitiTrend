@@ -1,5 +1,6 @@
 import json
 
+import dask
 import dask.dataframe as dd
 from dask.distributed import Client
 from dask_kubernetes import KubeCluster
@@ -50,7 +51,7 @@ if __name__ == "__main__":
                 print('Error reading path ' + path)
 
         combined_df = dd.concat(dfs)
-        combined_df = combined_df.repartition(npartitions=config.analytic_num_partitions)
+        combined_df = combined_df.repartition(partition_size=config.analytic_partition_size)
 
         result = compute_party_sentiments(combined_df, politicians)
 

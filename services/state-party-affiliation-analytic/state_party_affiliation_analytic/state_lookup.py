@@ -18,7 +18,11 @@ def get_state(location: str) -> Union[str, None]:
     if not location:
         return None
 
-    regions = geograpy.get_place_context(text=location).regions
+    try:
+        regions = geograpy.get_place_context(text=location).regions
+    except AttributeError as err:
+        print('Attribute error: {0}'.format(err))
+        return None
 
     for region in regions:
         for _, row in state_dataframe.iterrows():

@@ -11,12 +11,13 @@ queue_config = config_parser['queue']
 
 @dataclass()
 class Config:
+    # pylint: disable=too-many-instance-attributes
     s3_username: str
     s3_password: str
     s3_url: str
     analytic_lookback_days: int
     analytic_num_workers: int
-    analytic_num_partitions: int
+    analytic_partition_size: int
     queue_host: str
     queue_topic: str
 
@@ -27,7 +28,7 @@ config = Config(
     s3_url=s3_config['url'],
     analytic_lookback_days=int(analytic_config['lookback_days']),
     analytic_num_workers=int(analytic_config['num_workers']),
-    analytic_num_partitions=int(analytic_config['num_partitions']),
+    analytic_partition_size=int(analytic_config['partition_size']),
     queue_host=queue_config['url'],
     queue_topic=queue_config['topic']
 )
