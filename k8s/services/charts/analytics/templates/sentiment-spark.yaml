@@ -29,7 +29,7 @@ spec:
       coreRequest: "200m"
       coreLimit: "400m"
       instances: 2
-      memory: "512m"
+      memory: 2G
       labels:
         version: 3.0.0
     deps:
