@@ -23,9 +23,9 @@ appVersion: 1.16.0
 dependencies:
   - name: sparkoperator
     condition: sparkoperator.enabled
-    version: 0.8.4
+    version: 0.8.5
     repository: http://storage.googleapis.com/kubernetes-charts-incubator
   - name: strimzi-kafka-operator
     condition: strimzi-kafka-operator.enabled
-    version: '>=0.1.0'
+    version: 0.16.2
     repository: https://strimzi.io/charts
