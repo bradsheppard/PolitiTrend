@@ -4,6 +4,7 @@ from typing import List
 
 import requests
 import tweepy
+from retrying import retry
 
 from crawler.message_bus import MessageBus
 from crawler.politician import Politician
@@ -25,6 +26,7 @@ class TweetCrawler:
         auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
         self._api = tweepy.API(auth)
 
+    @retry(stop_max_attempt_number=3, wait_fixed=3000)
     def get(self, politician: Politician, politicians: List[Politician], **kwargs) -> List[Tweet]:
         tweepy_results = tweepy\
             .Cursor(self._api.search, q=politician.name, lang='en', result_type='mixed',

@@ -3,6 +3,7 @@
 import pytest
 import datetime
 import time
+from datetime import timedelta
 import string
 import random
 from dateutil import parser
@@ -39,11 +40,12 @@ def test_get_with_politicians(tweet_crawler):
 
 def test_insert_and_get():
     repository = TweetRepository()
+    tomorrow = datetime.datetime.now() + timedelta(days=1)
 
     tweet = Tweet(
         tweetId='1',
         tweetText=random_string(),
-        dateTime=datetime.datetime.now().isoformat(' ', 'seconds'),
+        dateTime=tomorrow.isoformat(' ', 'seconds'),
         politicians=[1],
         location='Test location'
     )
