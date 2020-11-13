@@ -51,6 +51,7 @@ if __name__ == "__main__":
 
         combined_df = dd.concat(dfs)
         combined_df = combined_df.repartition(partition_size=config.analytic_partition_size)
+        combined_df = combined_df.persist()
 
         result = compute_party_sentiments(combined_df, politicians)
 
