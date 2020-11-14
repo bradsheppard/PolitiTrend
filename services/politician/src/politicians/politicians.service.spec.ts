@@ -11,26 +11,31 @@ describe('PoliticiansService', () => {
 	let id = 1;
 
 	function createPolitician(): Politician {
+		id++;
 		return {
 			party: 'republican',
 			id,
 			name: `Test ${id}`,
-			role: Role.SENATOR
-		}
+			role: Role.SENATOR,
+			active: true,
+		};
 	}
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [PoliticiansService,
+			providers: [
+				PoliticiansService,
 				{
 					provide: getRepositoryToken(Politician),
 					useClass: Repository,
-				}
+				},
 			],
 		}).compile();
 
 		service = module.get<PoliticiansService>(PoliticiansService);
-		repository = module.get<Repository<Politician>>(getRepositoryToken(Politician));
+		repository = module.get<Repository<Politician>>(
+			getRepositoryToken(Politician),
+		);
 	});
 
 	it('should be defined', () => {
@@ -51,5 +56,27 @@ describe('PoliticiansService', () => {
 		const retrievedPolitician = await service.getOne(politician.id);
 
 		expect(retrievedPolitician).toEqual(politician);
+	});
+
+	it('Can insert', async () => {
+		const politician = createPolitician();
+		jest.spyOn(repository, 'create').mockReturnValueOnce(politician);
+		jest.spyOn(repository, 'save').mockResolvedValueOnce(politician);
+		const createdPolitician = await service.insert(politician);
+
+		expect(createdPolitician).toEqual(politician);
+	});
+
+	it('Can update', async () => {
+		const politician = createPolitician();
+		jest.spyOn(repository, 'create').mockReturnValueOnce(politician);
+		jest.spyOn(repository, 'update').mockImplementation();
+		jest.spyOn(repository, 'findOne').mockResolvedValueOnce(politician);
+		const updatedPolitician = await service.update(
+			politician.id,
+			politician,
+		);
+
+		expect(updatedPolitician).toEqual(politician);
 	});
 });

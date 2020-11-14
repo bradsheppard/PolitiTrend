@@ -10,8 +10,8 @@ import { join } from 'path';
 		PoliticiansModule,
 		ServeStaticModule.forRoot({
 			rootPath: join(__dirname, '..', 'images'),
-			serveRoot: '/images'
-		})
+			serveRoot: '/images',
+		}),
 	],
 })
 export class AppModule {}

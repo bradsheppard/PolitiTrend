@@ -1,14 +1,15 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 export enum Role {
 	SENATOR = 'Senator',
 	PRESIDENT = 'President',
-	PRESIDENTIAL_CANDIDATE = 'Presidential Candidate'
+	PRESIDENTIAL_CANDIDATE = 'Presidential Candidate',
+	CONGRESSMAN = 'Congressman',
 }
 
 @Entity()
 export default class Politician {
-	@PrimaryColumn()
+	@PrimaryGeneratedColumn()
 	id: number;
 
 	@Column()
@@ -19,7 +20,11 @@ export default class Politician {
 
 	@Column({
 		type: 'enum',
-		enum: Role
+		enum: Role,
 	})
-	role: Role
+	role: Role;
+
+	@Index()
+	@Column({ default: true })
+	active: boolean;
 }

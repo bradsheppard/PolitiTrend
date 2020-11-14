@@ -3,23 +3,60 @@ import { promisify } from 'util';
 import { Injectable } from '@nestjs/common';
 import { CreatePoliticianDto } from '../dto/create-politician.dto';
 import Politician, { Role } from '../politicians.entity';
+import { PoliticiansService } from '../politicians.service';
 
 const readFileAsync = promisify(readFile);
 
 @Injectable()
 class PoliticianSeeder {
+	constructor(private politicianService: PoliticiansService) {}
 
-	static index: number = 1;
+	async updatePoliticianList(newPoliticians: CreatePoliticianDto[]) {
+		const currentPoliticians = await this.politicianService.get();
 
-	static async getPoliticians(): Promise<Politician[]> {
-		const sentators = await PoliticianSeeder.processFile(__dirname + '/../../../data/senators.csv', Role.SENATOR);
-		const presidents = await PoliticianSeeder.processFile(__dirname + '/../../../data/presidents.csv', Role.PRESIDENT);
-		const presidentialsCandidates = await PoliticianSeeder.processFile(__dirname + '/../../../data/presidential_candidates.csv', Role.PRESIDENTIAL_CANDIDATE);
+		for (const newPolitician of newPoliticians) {
+			const matchingPolitician = currentPoliticians.find(
+				x => x.name === newPolitician.name,
+			);
+
+			if (matchingPolitician)
+				await this.politicianService.update(
+					matchingPolitician.id,
+					newPolitician,
+				);
+			else await this.politicianService.insert(newPolitician);
+		}
+
+		for (const currentPolitician of currentPoliticians) {
+			const matchingPolitician = newPoliticians.find(
+				x => x.name === currentPolitician.name,
+			);
+
+			if (!matchingPolitician) await this.politicianService.deleteOne(currentPolitician.id);
+		}
+	}
+
+	static async getPoliticiansFromDataFiles(): Promise<Politician[]> {
+		const sentators = await PoliticianSeeder.processFile(
+			__dirname + '/../../../data/senators.csv',
+			Role.SENATOR,
+		);
+		const presidents = await PoliticianSeeder.processFile(
+			__dirname + '/../../../data/presidents.csv',
+			Role.PRESIDENT,
+		);
+		const presidentialsCandidates = await PoliticianSeeder.processFile(
+			__dirname + '/../../../data/presidential_candidates.csv',
+			Role.PRESIDENTIAL_CANDIDATE,
+		);
 
 		return [...presidents, ...presidentialsCandidates, ...sentators];
 	}
 
-	private static async processFile(file: string, role: Role): Promise<Politician[]> {
+	private static async processFile(
+		file: string,
+		role: Role,
+	): Promise<Politician[]> {
 		const fileContents = await readFileAsync(file, 'utf8');
 		const lines = fileContents.split('\n');
 
@@ -32,25 +69,24 @@ class PoliticianSeeder {
 				continue;
 			}
 
-			const politician = PoliticianSeeder.convert(line, PoliticianSeeder.index, role);
+			const politician = PoliticianSeeder.convert(line, role);
 
-			if(!politician.name)
+			if (!politician.name) {
 				continue;
+			}
 
 			results.push(politician);
-			PoliticianSeeder.index++;
 		}
 
-		return results
+		return results;
 	}
 
-	private static convert(line: string, index: number, role: Role): CreatePoliticianDto {
+	private static convert(line: string, role: Role): CreatePoliticianDto {
 		const [name, party] = line.split(',');
 		return {
-			id: index,
 			name,
 			party,
-			role
+			role,
 		};
 	}
 }
