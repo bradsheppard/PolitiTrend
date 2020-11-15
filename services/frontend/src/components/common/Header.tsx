@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { createStyles, Theme, Typography } from '@material-ui/core'
 import { PropsWithChildren } from 'react'
-import Divider from '../common/Divider'
+import Divider from './Divider'
 import { makeStyles } from '@material-ui/styles'
 
 type IProps = PropsWithChildren<unknown>
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const HomeHeader: React.FC<IProps> = (props: IProps) => {
+const Header: React.FC<IProps> = (props: IProps) => {
     const classes = useStyles()
 
     return (
@@ -27,4 +27,4 @@ const HomeHeader: React.FC<IProps> = (props: IProps) => {
     )
 }
 
-export default HomeHeader
+export default Header

@@ -25,9 +25,7 @@ export default async function handle(
     const newsArticleAxiosResponse = await axios.get<NewsArticle[]>('http://news-article', {
         params: req.query,
     })
-    const politicianAxiosResponse = await axios.get<Politician[]>('http://politician', {
-        params: req.query,
-    })
+    const politicianAxiosResponse = await axios.get<Politician[]>('http://politician')
 
     const newsArticles = newsArticleAxiosResponse.data.map((newsArticleDto) => {
         const politicians = politicianAxiosResponse.data.filter((politicianDto) =>

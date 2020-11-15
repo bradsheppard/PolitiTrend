@@ -3,7 +3,7 @@ import * as React from 'react'
 import ContentContainer from '../components/common/ContentContainer'
 import NewsArticleComponent from '../components/common/NewsArticle'
 import NewsArticleApi from '../apis/news-article/NewsArticleApi'
-import HomeHeader from '../components/home/HomeHeader'
+import Header from '../components/common/Header'
 import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi'
 import HomeElectionMatchup from '../components/home/HomeElectionMatchup'
 import SentimentApi from '../apis/sentiment/SentimentApi'
@@ -134,7 +134,7 @@ class App extends React.Component<IProps> {
                             </div>
                         </Grid>
                         <Grid item xs={12}>
-                            <HomeHeader>NEWS ARTICLES</HomeHeader>
+                            <Header>NEWS ARTICLES</Header>
                         </Grid>
                         {this.props.mainNewsArticles.map((newsArticle, index) => {
                             return (
@@ -146,7 +146,7 @@ class App extends React.Component<IProps> {
                             )
                         })}
                         <Grid item xs={12}>
-                            <HomeHeader>TRENDING VIDEOS</HomeHeader>
+                            <Header>TRENDING VIDEOS</Header>
                         </Grid>
                         {this.props.youtubeVideos.map((video, index) => {
                             return (
