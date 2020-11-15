@@ -44,7 +44,7 @@ const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
         <React.Fragment>
             <Grid container>
                 <Grid item xs={12}>
-                    {RoleHeader('Presidents')}
+                    {RoleHeader('PRESIDENTS')}
                 </Grid>
                 {presidents.map((politician: Politician, index: number) => {
                     return (
@@ -68,7 +68,7 @@ const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
             </Grid>
             <Grid container>
                 <Grid item xs={12}>
-                    {RoleHeader('Senators')}
+                    {RoleHeader('SENATORS')}
                 </Grid>
                 {senators.map((politician: Politician, index: number) => {
                     return (
