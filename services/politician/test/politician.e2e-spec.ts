@@ -29,7 +29,9 @@ beforeAll(async () => {
 	}).compile();
 
 	app = moduleFixture.createNestApplication();
-	app.useGlobalPipes(new ValidationPipe({ transform: true, skipMissingProperties: true }));
+	app.useGlobalPipes(
+		new ValidationPipe({ transform: true, skipMissingProperties: true }),
+	);
 
 	service = moduleFixture.get<PoliticiansService>(PoliticiansService);
 	seeder = moduleFixture.get<PoliticianSeeder>(PoliticianSeeder);
@@ -57,28 +59,28 @@ describe('PoliticianController (e2e)', () => {
 			name: 'Active Politician',
 			party: 'Republican',
 			role: Role.SENATOR,
-			active: true
+			active: true,
 		};
 		const inactivePolitician: CreatePoliticianDto = {
 			name: 'Inactive Politician',
 			party: 'Republican',
 			role: Role.SENATOR,
-			active: false
+			active: false,
 		};
 
 		await Promise.all([
 			service.insert(activePolitician),
-			service.insert(inactivePolitician)
+			service.insert(inactivePolitician),
 		]);
 
 		const res = await request(app.getHttpServer()).get('/?active=true');
 		const politicians = res.body as Politician[];
 
-		delete politicians[0].id
+		delete politicians[0].id;
 
-		expect(res.status).toEqual(200)
+		expect(res.status).toEqual(200);
 		expect(politicians.length).toEqual(1);
-		expect(politicians[0]).toEqual(activePolitician)
+		expect(politicians[0]).toEqual(activePolitician);
 	});
 
 	it('/ (POST)', async () => {
@@ -213,14 +215,14 @@ describe('PoliticianSeeder (e2e)', () => {
 				name: 'Politician 1',
 				party: 'Republican',
 				active: true,
-				role: Role.SENATOR
+				role: Role.SENATOR,
 			},
 			{
 				name: 'Politician 2',
 				party: 'Republican',
 				active: true,
-				role: Role.SENATOR
-			}
+				role: Role.SENATOR,
+			},
 		];
 
 		const existingPoliticians: CreatePoliticianDto[] = [
@@ -228,14 +230,14 @@ describe('PoliticianSeeder (e2e)', () => {
 				name: 'Politician 1',
 				party: 'Democratic',
 				active: true,
-				role: Role.SENATOR
+				role: Role.SENATOR,
 			},
 			{
 				name: 'Politician 3',
 				party: 'Republican',
 				active: true,
-				role: Role.SENATOR
-			}
+				role: Role.SENATOR,
+			},
 		];
 
 		const expectedPoliticians: CreatePoliticianDto[] = [
@@ -243,20 +245,20 @@ describe('PoliticianSeeder (e2e)', () => {
 				name: 'Politician 1',
 				party: 'Republican',
 				active: true,
-				role: Role.SENATOR
+				role: Role.SENATOR,
 			},
 			{
 				name: 'Politician 2',
 				party: 'Republican',
 				active: true,
-				role: Role.SENATOR
+				role: Role.SENATOR,
 			},
 			{
 				name: 'Politician 3',
 				party: 'Republican',
 				active: false,
-				role: Role.SENATOR
-			}
+				role: Role.SENATOR,
+			},
 		];
 
 		for (const existingPolitician of existingPoliticians) {

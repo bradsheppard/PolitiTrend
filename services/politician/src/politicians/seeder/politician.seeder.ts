@@ -19,12 +19,14 @@ class PoliticianSeeder {
 				x => x.name === newPolitician.name,
 			);
 
-			if (matchingPolitician)
+			if (matchingPolitician) {
 				await this.politicianService.update(
 					matchingPolitician.id,
 					newPolitician,
 				);
-			else await this.politicianService.insert(newPolitician);
+			} else {
+				await this.politicianService.insert(newPolitician);
+			}
 		}
 
 		for (const currentPolitician of currentPoliticians) {
@@ -34,7 +36,10 @@ class PoliticianSeeder {
 
 			if (!matchingPolitician) {
 				currentPolitician.active = false;
-				await this.politicianService.update(currentPolitician.id, currentPolitician);
+				await this.politicianService.update(
+					currentPolitician.id,
+					currentPolitician,
+				);
 			}
 		}
 	}
