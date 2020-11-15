@@ -45,7 +45,7 @@ describe('PoliticiansService', () => {
 	it('Can get politicians', async () => {
 		const politician = createPolitician();
 		jest.spyOn(repository, 'find').mockResolvedValueOnce([politician]);
-		const politicians = await service.get();
+		const politicians = await service.get({});
 
 		expect(politicians.length).toBeGreaterThan(0);
 	});

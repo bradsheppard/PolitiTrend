@@ -12,7 +12,7 @@ class PoliticianSeeder {
 	constructor(private politicianService: PoliticiansService) {}
 
 	async updatePoliticianList(newPoliticians: CreatePoliticianDto[]) {
-		const currentPoliticians = await this.politicianService.get();
+		const currentPoliticians = await this.politicianService.get({});
 
 		for (const newPolitician of newPoliticians) {
 			const matchingPolitician = currentPoliticians.find(
@@ -32,7 +32,10 @@ class PoliticianSeeder {
 				x => x.name === currentPolitician.name,
 			);
 
-			if (!matchingPolitician) await this.politicianService.deleteOne(currentPolitician.id);
+			if (!matchingPolitician) {
+				currentPolitician.active = false;
+				await this.politicianService.update(currentPolitician.id, currentPolitician);
+			}
 		}
 	}
 
@@ -50,7 +53,7 @@ class PoliticianSeeder {
 			Role.PRESIDENTIAL_CANDIDATE,
 		);
 
-		return [...presidents, ...presidentialsCandidates, ...sentators];
+		return [...sentators, ...presidents, ...presidentialsCandidates];
 	}
 
 	private static async processFile(

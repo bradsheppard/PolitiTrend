@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import Politician from './politicians.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
+import { SearchPoliticianDto } from './dto/search-politician.dto';
 
 @Injectable()
 export class PoliticiansService {
@@ -11,8 +12,8 @@ export class PoliticiansService {
 		private readonly repository: Repository<Politician>,
 	) {}
 
-	async get(): Promise<Politician[]> {
-		return await this.repository.find();
+	async get(searchPoliticianDto: SearchPoliticianDto): Promise<Politician[]> {
+		return await this.repository.find(searchPoliticianDto);
 	}
 
 	async getOne(id: number): Promise<Politician | null> {

@@ -6,19 +6,20 @@ import {
 	HttpStatus,
 	Param,
 	Post,
-	Put,
+	Put, Query,
 } from '@nestjs/common';
 import { PoliticiansService } from './politicians.service';
 import Politician, { Role } from './politicians.entity';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
+import { SearchPoliticianDto } from './dto/search-politician.dto';
 
 @Controller()
 export class PoliticiansController {
 	constructor(private politicianService: PoliticiansService) {}
 
 	@Get()
-	async getPoliticians(): Promise<Politician[]> {
-		return await this.politicianService.get();
+	async getPoliticians(@Query() searchPoliticianDto: SearchPoliticianDto): Promise<Politician[]> {
+		return await this.politicianService.get(searchPoliticianDto);
 	}
 
 	@Get(':id')

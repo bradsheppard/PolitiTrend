@@ -5,9 +5,11 @@ import { AppModule } from '../src/app.module';
 import { CreatePoliticianDto } from '../src/politicians/dto/create-politician.dto';
 import { PoliticiansService } from '../src/politicians/politicians.service';
 import Politician, { Role } from '../src/politicians/politicians.entity';
+import PoliticianSeeder from '../src/politicians/seeder/politician.seeder';
 
 let app: INestApplication;
 let service: PoliticiansService;
+let seeder: PoliticianSeeder;
 
 let id = 1;
 
@@ -27,8 +29,11 @@ beforeAll(async () => {
 	}).compile();
 
 	app = moduleFixture.createNestApplication();
-	app.useGlobalPipes(new ValidationPipe({ transform: true }));
+	app.useGlobalPipes(new ValidationPipe({ transform: true, skipMissingProperties: true }));
+
 	service = moduleFixture.get<PoliticiansService>(PoliticiansService);
+	seeder = moduleFixture.get<PoliticianSeeder>(PoliticianSeeder);
+
 	await app.init();
 });
 
@@ -45,6 +50,35 @@ describe('PoliticianController (e2e)', () => {
 		const response = await request(app.getHttpServer()).get('/');
 
 		expect(response.status).toEqual(200);
+	});
+
+	it('/active=true (GET)', async () => {
+		const activePolitician: CreatePoliticianDto = {
+			name: 'Active Politician',
+			party: 'Republican',
+			role: Role.SENATOR,
+			active: true
+		};
+		const inactivePolitician: CreatePoliticianDto = {
+			name: 'Inactive Politician',
+			party: 'Republican',
+			role: Role.SENATOR,
+			active: false
+		};
+
+		await Promise.all([
+			service.insert(activePolitician),
+			service.insert(inactivePolitician)
+		]);
+
+		const res = await request(app.getHttpServer()).get('/?active=true');
+		const politicians = res.body as Politician[];
+
+		delete politicians[0].id
+
+		expect(res.status).toEqual(200)
+		expect(politicians.length).toEqual(1);
+		expect(politicians[0]).toEqual(activePolitician)
 	});
 
 	it('/ (POST)', async () => {
@@ -89,7 +123,7 @@ describe('PoliticianController (e2e)', () => {
 	});
 });
 
-describe('TweetService (e2e)', () => {
+describe('PoliticianService (e2e)', () => {
 	it('Can get all', async () => {
 		const politician1 = createPoliticianDto();
 		const politician2 = createPoliticianDto();
@@ -97,7 +131,7 @@ describe('TweetService (e2e)', () => {
 		const firstInsert = await service.insert(politician1);
 		const secondInsert = await service.insert(politician2);
 
-		const tweets = await service.get();
+		const tweets = await service.get({});
 
 		expect(tweets).toEqual([firstInsert, secondInsert]);
 	});
@@ -128,7 +162,7 @@ describe('TweetService (e2e)', () => {
 	});
 
 	it('Can get when nothing exists', async () => {
-		const tweets = await service.get();
+		const tweets = await service.get({});
 
 		expect(tweets).toHaveLength(0);
 	});
@@ -152,11 +186,88 @@ describe('TweetService (e2e)', () => {
 
 		await service.deleteOne(insertedPolitician2.id);
 
-		const politicians = await service.get();
+		const politicians = await service.get({});
 
 		expect(politicians.length).toEqual(1);
 		expect(politicians[0]).toEqual(
 			Object.assign(politician1, { id: politicians[0].id }),
 		);
+	});
+});
+
+describe('PoliticianSeeder (e2e)', () => {
+	it('Seed from empty', async () => {
+		const newPoliticians = [createPoliticianDto(), createPoliticianDto()];
+
+		await seeder.updatePoliticianList(newPoliticians);
+
+		const politicians = await service.get({});
+		politicians.forEach(x => delete x.id);
+
+		expect(politicians).toEqual(newPoliticians);
+	});
+
+	it('Seed with existing', async () => {
+		const newPoliticians: CreatePoliticianDto[] = [
+			{
+				name: 'Politician 1',
+				party: 'Republican',
+				active: true,
+				role: Role.SENATOR
+			},
+			{
+				name: 'Politician 2',
+				party: 'Republican',
+				active: true,
+				role: Role.SENATOR
+			}
+		];
+
+		const existingPoliticians: CreatePoliticianDto[] = [
+			{
+				name: 'Politician 1',
+				party: 'Democratic',
+				active: true,
+				role: Role.SENATOR
+			},
+			{
+				name: 'Politician 3',
+				party: 'Republican',
+				active: true,
+				role: Role.SENATOR
+			}
+		];
+
+		const expectedPoliticians: CreatePoliticianDto[] = [
+			{
+				name: 'Politician 1',
+				party: 'Republican',
+				active: true,
+				role: Role.SENATOR
+			},
+			{
+				name: 'Politician 2',
+				party: 'Republican',
+				active: true,
+				role: Role.SENATOR
+			},
+			{
+				name: 'Politician 3',
+				party: 'Republican',
+				active: false,
+				role: Role.SENATOR
+			}
+		];
+
+		for (const existingPolitician of existingPoliticians) {
+			await service.insert(existingPolitician);
+		}
+
+		await seeder.updatePoliticianList(newPoliticians);
+
+		const politicians = await service.get({});
+		politicians.forEach(x => delete x.id);
+
+		expect(politicians).toEqual(expectedPoliticians);
 	});
 });

@@ -42,7 +42,7 @@ describe('Politicians Controller', () => {
 			},
 		];
 		jest.spyOn(service, 'get').mockImplementation(async () => result);
-		expect(await controller.getPoliticians()).toBe(result);
+		expect(await controller.getPoliticians({})).toBe(result);
 	});
 
 	it('Can get single', async () => {
