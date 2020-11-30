@@ -47,14 +47,17 @@ class JobRepository:
         ))
         return query.all()
 
-    def get_latest_time_for_politicians(self, politicians: List[Politician]) -> Dict[Politician, datetime.datetime]:
+    def get_latest_time_for_politicians(self, politicians: List[Politician]) \
+            -> Dict[Politician, datetime.datetime]:
         result = {}
         jobs = self.get_latest_per_politician()
 
         for politician in politicians:
-            matching_job = seq(jobs).find(lambda x: x.politician == politician.num)
+            matching_job = seq(jobs).find(lambda x, p=politician: x.politician == p.num)
             if matching_job is not None:
                 result[politician] = matching_job.timestamp
+            else:
+                result[politician] = datetime.datetime(1, 1, 1, 0, 0)
 
         return result
 

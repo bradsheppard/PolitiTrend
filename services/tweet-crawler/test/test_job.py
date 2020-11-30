@@ -1,4 +1,5 @@
 # pylint: disable=redefined-outer-name
+from datetime import datetime
 
 import pytest
 from sqlalchemy import create_engine
@@ -90,11 +91,12 @@ def test_get_latest_time_for_politicians(job_repository: JobRepository):
     job_repository.insert(job2)
     job_repository.insert(job3)
 
-    politician_jobs = job_repository.get_latest_time_for_politicians([politician1, politician2, politician3])
+    politician_jobs = job_repository.get_latest_time_for_politicians(
+        [politician1, politician2, politician3])
 
     assert politician_jobs[politician1] == job1.timestamp
     assert politician_jobs[politician2] == job3.timestamp
-    assert politician3 not in politician_jobs
+    assert politician_jobs[politician3] == datetime(1, 1, 1, 0, 0)
 
 
 def assert_job(expected: Job, actual: Job):
