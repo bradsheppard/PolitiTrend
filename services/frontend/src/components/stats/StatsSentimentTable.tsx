@@ -30,7 +30,7 @@ interface Point {
 }
 
 interface Line {
-    id: number
+    id: string
     data: Point[]
 }
 
@@ -237,7 +237,7 @@ const StatsSentimentTable: React.FC<IProps> = (
 
         for (const row of newRows) {
             if (!row.line && row.display) {
-                row.line = await addLine(row.id)
+                row.line = await addLine(row)
             }
         }
 
@@ -248,8 +248,8 @@ const StatsSentimentTable: React.FC<IProps> = (
         return parseFloat((sentiment * 5 + 5).toFixed(1))
     }
 
-    const addLine = async (id: number) => {
-        const politicianSentiments = await SentimentApi.getHistoryForPolitician(id)
+    const addLine = async (row: Row) => {
+        const politicianSentiments = await SentimentApi.getHistoryForPolitician(row.id)
         const data = politicianSentiments.map((sentiment) => {
             const date = new Date(sentiment.dateTime)
             return {
@@ -258,7 +258,7 @@ const StatsSentimentTable: React.FC<IProps> = (
             }
         })
         const line: Line = {
-            id: id,
+            id: row.name,
             data: data,
         }
         return line
@@ -272,7 +272,7 @@ const StatsSentimentTable: React.FC<IProps> = (
                 <Box height={400}>
                     <NivoLine
                         data={rows.filter((x) => x.line && x.display).map((x) => x.line as Line)}
-                        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+                        margin={{ top: 50, right: 200, bottom: 50, left: 60 }}
                         xScale={{
                             type: 'time',
                             format: '%Y-%m-%d',
@@ -284,11 +284,11 @@ const StatsSentimentTable: React.FC<IProps> = (
                                 anchor: 'bottom-right',
                                 direction: 'column',
                                 justify: false,
-                                translateX: 100,
+                                translateX: 180,
                                 translateY: 0,
                                 itemsSpacing: 0,
                                 itemDirection: 'left-to-right',
-                                itemWidth: 80,
+                                itemWidth: 160,
                                 itemHeight: 20,
                                 itemOpacity: 0.75,
                                 symbolSize: 12,
