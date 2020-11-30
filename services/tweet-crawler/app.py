@@ -5,9 +5,9 @@ from sqlalchemy.orm import sessionmaker
 
 from crawler.config import config
 from crawler.job import JobRepository
+from crawler.orchestrator import Orchestrator
 from crawler.politician import Politician, get_all
 from crawler.tweet import TweetCrawler, TweetRepository
-from crawler.orchestrator import Orchestrator
 
 politicians: List[Politician] = get_all()
 
@@ -20,8 +20,18 @@ session = session_maker()
 
 job_repository = JobRepository(session)
 
-orchestrator = Orchestrator(tweet_crawler, tweet_repository, job_repository)
+latest_jobs = job_repository.get_latest_time_for_politicians(politicians)
+sorted_jobs = sorted(latest_jobs.items(), key=lambda x: x[1])
 
-for politician in politicians:
+orchestrator = Orchestrator(tweet_crawler, tweet_repository, job_repository)
+batch_size = config.crawler_size
+i = 1
+
+for politician, job in sorted_jobs:
+    if i > batch_size:
+        break
+
     print('Crawling for ' + politician.name)
     orchestrator.crawl_all(politician, politicians)
+
+    i = i + 1

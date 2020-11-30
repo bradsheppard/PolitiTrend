@@ -1,14 +1,14 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import requests
 from typing import List
 
 
-@dataclass()
+@dataclass(unsafe_hash=True)
 class Politician:
     # pylint: disable=invalid-name
-    num: int
-    name: str
+    num: int = field(hash=True)
+    name: str = field(hash=True)
 
 
 HOST = 'http://politician'
