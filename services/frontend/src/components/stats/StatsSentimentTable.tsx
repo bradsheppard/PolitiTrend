@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import {
+    Box,
     Checkbox,
     createStyles,
     Grid,
@@ -15,7 +16,7 @@ import {
     Theme,
     withStyles,
 } from '@material-ui/core'
-import { Line as NivoLine } from '@nivo/line'
+import { ResponsiveLine as NivoLine } from '@nivo/line'
 import SentimentApi from '../../apis/sentiment/SentimentApi'
 import { makeStyles } from '@material-ui/styles'
 
@@ -193,7 +194,8 @@ const StatsSentimentTable: React.FC<IProps> = (
             id: politician.id,
             display: politician.id === 101 || politician.id === 102,
             name: politician.name,
-            sentiment: politician.sentiment,
+            sentiment:
+                politician.sentiment !== undefined ? scaleSentiment(politician.sentiment) : 0,
             party: politician.party,
         }
 
@@ -243,7 +245,7 @@ const StatsSentimentTable: React.FC<IProps> = (
     }
 
     const scaleSentiment = (sentiment: number) => {
-        return (sentiment * 5 + 5).toFixed(1)
+        return parseFloat((sentiment * 5 + 5).toFixed(1))
     }
 
     const addLine = async (id: number) => {
@@ -252,7 +254,7 @@ const StatsSentimentTable: React.FC<IProps> = (
             const date = new Date(sentiment.dateTime)
             return {
                 x: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-                y: sentiment.sentiment,
+                y: scaleSentiment(sentiment.sentiment),
             }
         })
         const line: Line = {
@@ -267,46 +269,46 @@ const StatsSentimentTable: React.FC<IProps> = (
     return (
         <Grid container>
             <Grid item xs={12}>
-                <NivoLine
-                    height={400}
-                    width={1600}
-                    data={rows.filter((x) => x.line && x.display).map((x) => x.line as Line)}
-                    margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-                    xScale={{
-                        type: 'time',
-                        format: '%Y-%m-%d',
-                        useUTC: false,
-                        precision: 'day',
-                    }}
-                    xFormat="time:%Y-%m-%d"
-                    yScale={{ type: 'linear', min: -1, max: 1, stacked: false, reverse: false }}
-                    axisTop={null}
-                    axisRight={null}
-                    axisBottom={{
-                        format: '%b %d',
-                        tickValues: 'every 2 days',
-                        legend: 'time scale',
-                        legendOffset: -12,
-                    }}
-                    axisLeft={{
-                        orient: 'left',
-                        tickSize: 5,
-                        tickPadding: 5,
-                        tickRotation: 0,
-                        legend: 'Sentiment',
-                        legendOffset: -40,
-                        legendPosition: 'middle',
-                    }}
-                    colors={{ scheme: 'dark2' }}
-                    pointSize={8}
-                    pointColor={{ theme: 'background' }}
-                    pointBorderWidth={3}
-                    pointBorderColor={{ from: 'serieColor' }}
-                    pointLabel="sentiment"
-                    pointLabelYOffset={-12}
-                    lineWidth={3}
-                    useMesh={true}
-                />
+                <Box height={400}>
+                    <NivoLine
+                        data={rows.filter((x) => x.line && x.display).map((x) => x.line as Line)}
+                        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+                        xScale={{
+                            type: 'time',
+                            format: '%Y-%m-%d',
+                            useUTC: false,
+                            precision: 'day',
+                        }}
+                        xFormat="time:%Y-%m-%d"
+                        yScale={{ type: 'linear', min: 1, max: 10, stacked: false, reverse: false }}
+                        axisTop={null}
+                        axisRight={null}
+                        axisBottom={{
+                            format: '%b %d',
+                            tickValues: 'every 2 days',
+                            legend: 'time scale',
+                            legendOffset: -12,
+                        }}
+                        axisLeft={{
+                            orient: 'left',
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: 'Sentiment',
+                            legendOffset: -40,
+                            legendPosition: 'middle',
+                        }}
+                        colors={{ scheme: 'dark2' }}
+                        pointSize={8}
+                        pointColor={{ theme: 'background' }}
+                        pointBorderWidth={3}
+                        pointBorderColor={{ from: 'serieColor' }}
+                        pointLabel="sentiment"
+                        pointLabelYOffset={-12}
+                        lineWidth={3}
+                        useMesh={true}
+                    />
+                </Box>
             </Grid>
             <Grid item xs={12}>
                 <div>
