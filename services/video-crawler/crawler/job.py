@@ -1,8 +1,12 @@
 import datetime
+from typing import List, Dict
 
-from sqlalchemy import Column, Integer, DateTime
+from functional import seq
+from sqlalchemy import Column, Integer, DateTime, func, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
+
+from crawler.politician import Politician
 
 Base = declarative_base()
 
@@ -32,6 +36,32 @@ class JobRepository:
     def get_latest(self) -> Job:
         job = self._session.query(Job).order_by(Job.id.desc()).first()
         return job
+
+    def get_latest_per_politician(self) -> List[Job]:
+        subq = self._session.query(
+            Job.politician,
+            func.max(Job.timestamp).label('maxdate')
+        ).group_by(Job.politician).subquery('t2')
+
+        query = self._session.query(Job).join(subq, and_(
+            Job.politician == subq.c.politician,
+            Job.timestamp == subq.c.maxdate
+        ))
+        return query.all()
+
+    def get_latest_time_for_politicians(self, politicians: List[Politician]) \
+            -> Dict[Politician, datetime.datetime]:
+        result = {}
+        jobs = self.get_latest_per_politician()
+
+        for politician in politicians:
+            matching_job = seq(jobs).find(lambda x, p=politician: x.politician == p.num)
+            if matching_job is not None:
+                result[politician] = matching_job.timestamp
+            else:
+                result[politician] = datetime.datetime(1, 1, 1, 0, 0)
+
+        return result
 
     def delete_all(self):
         self._session.query(Job).delete()

@@ -11,7 +11,7 @@ from crawler.youtube_video import YoutubeVideoCrawler, YoutubeVideoRepository
 
 @pytest.fixture
 def youtube_video_crawler():
-    youtube_video_crawler = YoutubeVideoCrawler(config.api_key)
+    youtube_video_crawler = YoutubeVideoCrawler(config.youtube_api_key)
     return youtube_video_crawler
 
 
