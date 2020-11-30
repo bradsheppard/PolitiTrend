@@ -3,8 +3,8 @@ import urllib
 from politician_scrapper.model import Politician
 
 
-class PoliticianSpider(scrapy.Spider):
-    name = 'politician'
+class SenatorSpider(scrapy.Spider):
+    name = 'senator'
 
     start_urls = ['https://en.wikipedia.org/wiki/List_of_current_United_States_senators']
 
@@ -19,23 +19,25 @@ class PoliticianSpider(scrapy.Spider):
                 continue
 
             politician = Politician(politician_name, party, img)
-            print(politician)
+            print(politician.name + ',' + politician.party)
             img_page = 'https://en.wikipedia.org' + str(img)
 
             yield scrapy.Request(url=img_page, callback=self.callback_factory(politician_name))
 
-    def callback_factory(self, politician):
-        return lambda x: self.parse_sub_page(x, politician)
+    @staticmethod
+    def callback_factory(politician):
+        return lambda x: SenatorSpider.parse_sub_page(x, politician)
 
-    def parse_sub_page(self, response, politician_name):
+    @staticmethod
+    def parse_sub_page(response, politician_name):
         img = response.css('.fullImageLink img').xpath('@src').get()
         img = 'https:' + img
 
         try:
-            PoliticianSpider.download_image(img, politician_name)
+            SenatorSpider.download_image(img, politician_name)
         except Exception as er:
             print('error ', er)
 
     @staticmethod
     def download_image(img, politician_name):
-        urllib.request.urlretrieve(str(img), str(politician_name).replace(' ', '_') + '.jpg')
+        urllib.request.urlretrieve(str(img), 'images/senators/' + str(politician_name).replace(' ', '_') + '.jpg')
