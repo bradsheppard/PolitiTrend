@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+
+  dps:
+    image: defreitas/dns-proxy-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/resolv.conf:/etc/resolv.conf
+    environment:
+      - MG_LOG_LEVEL=ERROR
+    hostname: dns.mageddo
+    networks:
+      dps:
+        ipv4_address: 172.0.0.10
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+    restart: always
+    command: server /data
+    volumes:
+      - minio_data:/data
+    dns:
+      - 172.0.0.10
+    environment:
+      - MINIO_ACCESS_KEY=brad1234
+      - MINIO_SECRET_KEY=brad1234
+      - HOSTNAMES=minio
+
+volumes:
+  minio_data:
+    driver: local
+
+networks:
+  dps:
+    ipam:
+      config:
+        - subnet: 172.0.0.0/24

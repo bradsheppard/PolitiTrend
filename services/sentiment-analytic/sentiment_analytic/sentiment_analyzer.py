@@ -16,9 +16,11 @@ from sentiment_analytic.politician import Politician
 sentiment_analyzer = SentimentIntensityAnalyzer()
 json_schema = StructType([
     StructField('tweetText', StringType()),
+    StructField('tweetId', StringType()),
     StructField('politicians', ArrayType(LongType())),
     StructField('politicianSentiments', ArrayType(LongType())),
-    StructField('sentiments', ArrayType(FloatType()))
+    StructField('sentiments', ArrayType(FloatType())),
+    StructField('dateTime', StringType())
 ])
 
 
@@ -44,7 +46,8 @@ def udf_generator(subjects: List[Politician]):
         pdf['politicianSentiments'] = politician_sentiments
         pdf['sentiments'] = sentiments
 
-        return pdf[['tweetText', 'politicians', 'politicianSentiments', 'sentiments']]
+        return pdf[['tweetText', 'tweetId', 'politicians',
+                    'politicianSentiments', 'sentiments', 'dateTime']]
 
     return pandas_udf_sentiment
 
@@ -132,13 +135,7 @@ def _match_politicians(text, politicians) -> List[Politician]:
     return results
 
 
-def compute_sentiments(iterator, politicians: List[Politician]):
-    return [get_entity_sentiments(x, politicians) for x in iterator]
-
-
-def analyze(dataframe: DataFrame, subjects: List[Politician]) -> DataFrame:
-    dataframe = dataframe.groupBy('politicians').applyInPandas(udf_generator(subjects), json_schema)
-
+def to_results_dataframe(dataframe: DataFrame) -> DataFrame:
     sentiment_dataframe = dataframe \
         .withColumn('vars', explode(arrays_zip('politicianSentiments', 'sentiments'))) \
         .selectExpr('tweetText', 'vars.politicianSentiments as politician',
@@ -149,3 +146,10 @@ def analyze(dataframe: DataFrame, subjects: List[Politician]) -> DataFrame:
         .withColumnRenamed('count(sentiment)', 'sampleSize')
 
     return sentiment_dataframe
+
+
+def analyze(dataframe: DataFrame, subjects: List[Politician]) -> DataFrame:
+    dataframe = dataframe.groupBy('politicians') \
+        .applyInPandas(udf_generator(subjects), json_schema)
+
+    return dataframe

@@ -15,3 +15,6 @@ push:
 	docker tag $(service):$(tag) $(DOCKER_REGISTRY)/$(service):$(tag)
 	docker push $(DOCKER_REGISTRY)/$(service):$(tag)
 
+.PHONY: make_buckets
+make_buckets:
+	mc mb s3/tweets s3/sentiment-analytic-analyzed-tweets

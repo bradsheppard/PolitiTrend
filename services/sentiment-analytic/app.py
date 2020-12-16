@@ -1,12 +1,12 @@
 from typing import List
 
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.functions import col
 
-from sentiment_analytic.config import config
-from sentiment_analytic.path_translator import get_s3_path
-from sentiment_analytic.config_reader import load_config
+from sentiment_analytic.config import config, load_spark_config
 from sentiment_analytic.politician import Politician, get_all
-from sentiment_analytic.sentiment_analyzer import analyze
+from sentiment_analytic.tweet_repository import TweetRepository
+from sentiment_analytic.sentiment_analyzer import analyze, to_results_dataframe
 
 
 def main():
@@ -15,28 +15,26 @@ def main():
     spark = SparkSession.builder \
         .getOrCreate()
 
-    load_config(spark.sparkContext)
+    load_spark_config(spark.sparkContext)
 
-    paths = [get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
+    tweet_repository = TweetRepository(spark)
 
-    dataframe = None
+    tweets = tweet_repository.read_tweets().persist()
+    analyzed_tweets = tweet_repository.read_analyzed_tweets('analyzed-tweets').persist()
 
-    for path in paths:
-        try:
-            current_dataframe = spark.read.json(path)
-            if dataframe is None:
-                dataframe = current_dataframe
-            else:
-                dataframe = dataframe.union(current_dataframe)
-        # pylint: disable=broad-except
-        except Exception as ex:
-            print(ex)
+    tweets_to_analyze = tweets.join(analyzed_tweets, 'tweetId', 'left_anti')
+    tweets_already_analyzed = analyzed_tweets.alias('analyzed')\
+        .join(tweets.alias('tweets'), 'tweetId', 'inner')\
+        .select([col('analyzed.'+xx) for xx in analyzed_tweets.columns])
 
-    dataframe.persist()
+    tweet_sentiments: DataFrame = analyze(tweets_to_analyze, politicians).persist()
 
-    sentiment_dataframe: DataFrame = analyze(dataframe, politicians).persist()
+    tweet_sentiments = tweet_sentiments.unionByName(tweets_already_analyzed)
+    result_dataframe: DataFrame = to_results_dataframe(tweet_sentiments)
 
-    sentiment_dataframe.selectExpr('to_json(struct(*)) AS value') \
+    TweetRepository.write_analyzed_tweets(tweet_sentiments, 'temp')
+
+    result_dataframe.selectExpr('to_json(struct(*)) AS value') \
         .write \
         .format('kafka') \
         .option('kafka.bootstrap.servers', config.kafka_bootstrap_server) \
@@ -46,4 +44,18 @@ def main():
     spark.stop()
 
 
+def transfer_results_to_bucket():
+    spark = SparkSession.builder \
+        .getOrCreate()
+
+    load_spark_config(spark.sparkContext)
+    tweet_repository = TweetRepository(spark)
+
+    tweets = tweet_repository.read_analyzed_tweets('temp')
+    TweetRepository.write_analyzed_tweets(tweets, 'analyzed-tweets')
+
+    spark.stop()
+
+
 main()
+transfer_results_to_bucket()
