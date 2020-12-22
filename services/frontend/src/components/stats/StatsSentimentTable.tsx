@@ -189,6 +189,10 @@ const StatsSentimentTable: React.FC<IProps> = (
     const [order, setOrder] = useState<Order>('desc')
     const [orderBy, setOrderBy] = useState<keyof Row>('display')
 
+    const scaleSentiment = (sentiment: number) => {
+        return parseFloat((sentiment * 5 + 5).toFixed(1))
+    }
+
     const initialRows: Row[] = props.politicians.map((politician) => {
         const row: Row = {
             id: politician.id,
@@ -242,10 +246,6 @@ const StatsSentimentTable: React.FC<IProps> = (
         }
 
         setRows(newRows)
-    }
-
-    const scaleSentiment = (sentiment: number) => {
-        return parseFloat((sentiment * 5 + 5).toFixed(1))
     }
 
     const addLine = async (row: Row) => {
@@ -356,7 +356,7 @@ const StatsSentimentTable: React.FC<IProps> = (
                                             <StyledTableCell>{row.party}</StyledTableCell>
                                             <StyledTableCell>
                                                 {row.sentiment
-                                                    ? scaleSentiment(row.sentiment)
+                                                    ? row.sentiment
                                                     : 'N/A'}
                                             </StyledTableCell>
                                             <StyledTableCell>
