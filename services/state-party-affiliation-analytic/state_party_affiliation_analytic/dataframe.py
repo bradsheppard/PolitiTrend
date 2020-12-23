@@ -24,7 +24,10 @@ def compute_party_sentiments(dataframe: dd.DataFrame,
             lambda x: x['Republican'] if 'Republican' in x else 0)
     )
 
+    return dataframe
+
+
+def to_result_dataframe(dataframe: dd.DataFrame) -> dd.DataFrame:
     dataframe = dataframe.groupby(['state']) \
         .agg({'Democratic': ['count', 'mean'], 'Republican': ['count', 'mean']})
-
     return dataframe

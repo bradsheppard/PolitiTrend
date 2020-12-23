@@ -43,21 +43,18 @@ def politicians():
     return politicians
 
 
-def test_can_compute_sentiments(dataframe, politicians, index):
+def test_can_compute_sentiments(dataframe, politicians):
     computed_df = compute_party_sentiments(dataframe, politicians)
 
-    pandas_dataframe = pd.DataFrame([[1, 0, 1, 0.6588], [1, 0.6588, 1, 0]],
-                                    columns=index, index=['KY', 'NY'])
+    tweet_texts = ['Yup', 'Yessir']
+    locations = ['Kentucky', 'New York']
+    sentiments = [1.9, 1.2]
 
-    pd.testing.assert_frame_equal(pandas_dataframe, computed_df.compute(),
-                                  check_like=True, check_dtype=False)
-
-
-def test_can_compute_sentiments_no_entities(no_entity_dataframe, politicians, index):
-    computed_df = compute_party_sentiments(no_entity_dataframe, politicians)
-
-    pandas_dataframe = pd.DataFrame([[1, 0, 1, 0.0], [1, 0.0, 1, 0]],
-                                    columns=index, index=['KY', 'NY'])
+    pandas_dataframe = pd.DataFrame({
+        'tweetText': tweet_texts,
+        'location': locations,
+        'sentiment': sentiments
+    }, columns=['tweetText', 'location', 'sentiment'])
 
     pd.testing.assert_frame_equal(pandas_dataframe, computed_df.compute(),
                                   check_like=True, check_dtype=False)

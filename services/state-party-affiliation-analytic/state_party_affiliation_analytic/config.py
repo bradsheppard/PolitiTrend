@@ -14,6 +14,8 @@ class Config:
     # pylint: disable=too-many-instance-attributes
     s3_username: str
     s3_password: str
+    s3_tweet_bucket: str
+    s3_analyzed_tweets_bucket: str
     s3_url: str
     analytic_lookback_days: int
     analytic_num_workers: int
@@ -25,6 +27,8 @@ class Config:
 config = Config(
     s3_username=s3_config['username'],
     s3_password=s3_config['password'],
+    s3_tweet_bucket=s3_config['tweet_bucket'],
+    s3_analyzed_tweets_bucket=s3_config['analyzed_tweet_bucket'],
     s3_url=s3_config['url'],
     analytic_lookback_days=int(analytic_config['lookback_days']),
     analytic_num_workers=int(analytic_config['num_workers']),
