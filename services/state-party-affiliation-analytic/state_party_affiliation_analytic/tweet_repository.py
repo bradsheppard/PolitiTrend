@@ -60,6 +60,7 @@ class TweetRepository:
             df = dd.read_json(f's3://{config.s3_analyzed_tweets_bucket}/*', storage_options=self._storage_options)
             return df
         except Exception as ex:
+            print('Error reading analyzed tweets')
             print(ex)
             pandas_dataframe = pd.DataFrame({
                 'tweetText': [],

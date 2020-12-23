@@ -1,9 +1,9 @@
 import json
 import dask.dataframe as dd
+import pandas as pd
 
 from dask.dataframe import DataFrame
 from dask.distributed import Client
-from dask_kubernetes import KubeCluster
 
 from state_party_affiliation_analytic.config import config
 from state_party_affiliation_analytic.dataframe import compute_party_sentiments, to_result_dataframe
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         analyzed_tweets_df = analyzed_tweets_df.repartition(partition_size=config.analytic_partition_size)
         analyzed_tweets_df = analyzed_tweets_df.persist()
 
-        combined_df = tweets_df.merge(analyzed_tweets_df, on=['tweetId'], how='left', indicator=True)
+        combined_df = tweets_df.merge(analyzed_tweets_df[['tweetId']], on=['tweetId'], how='left', indicator=True)
         tweets_to_analyze = combined_df[combined_df['_merge'] == 'left_only']
 
         result = compute_party_sentiments(tweets_to_analyze, politicians)
