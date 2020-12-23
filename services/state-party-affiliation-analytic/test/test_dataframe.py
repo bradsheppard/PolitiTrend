@@ -46,15 +46,40 @@ def politicians():
 def test_can_compute_sentiments(dataframe, politicians):
     computed_df = compute_party_sentiments(dataframe, politicians)
 
-    tweet_texts = ['Yup', 'Yessir']
+    tweet_texts = ['Bob Young is great!', 'John Smith is great!']
     locations = ['Kentucky', 'New York']
-    sentiments = [1.9, 1.2]
+    sentiments = [{'Republican': 0.6588}, {'Democratic': 0.6588}]
+    states = ['KY', 'NY']
 
     pandas_dataframe = pd.DataFrame({
         'tweetText': tweet_texts,
         'location': locations,
-        'sentiment': sentiments
-    }, columns=['tweetText', 'location', 'sentiment'])
+        'sentiment': sentiments,
+        'state': states,
+        'Democratic': [0.0, 0.6588],
+        'Republican': [0.6588, 0.0]
+    }, columns=['tweetText', 'location', 'sentiment', 'state', 'Democratic', 'Republican'])
+
+    pd.testing.assert_frame_equal(pandas_dataframe, computed_df.compute(),
+                                  check_like=True, check_dtype=False)
+
+
+def test_can_compute_sentiment_no_entity(no_entity_dataframe, politicians):
+    computed_df = compute_party_sentiments(no_entity_dataframe, politicians)
+
+    tweet_texts = ['Yup', 'Yessir']
+    locations = ['Kentucky', 'New York']
+    sentiments = [{}, {}]
+    states = ['KY', 'NY']
+
+    pandas_dataframe = pd.DataFrame({
+        'tweetText': tweet_texts,
+        'location': locations,
+        'sentiment': sentiments,
+        'state': states,
+        'Democratic': [0.0, 0.0],
+        'Republican': [0.0, 0.0]
+    }, columns=['tweetText', 'location', 'sentiment', 'state', 'Democratic', 'Republican'])
 
     pd.testing.assert_frame_equal(pandas_dataframe, computed_df.compute(),
                                   check_like=True, check_dtype=False)
