@@ -10,18 +10,6 @@ from state_party_affiliation_analytic.politician import Politician
 
 
 @pytest.fixture
-def dataframe():
-    tweet_texts = ['Bob Young is great!', 'John Smith is great!']
-    locations = ['Kentucky', 'New York']
-    pandas_dataframe = pd.DataFrame({
-        'tweetText': tweet_texts,
-        'location': locations
-    }, columns=['tweetText', 'location'])
-    dataframe = dd.from_pandas(pandas_dataframe, npartitions=1)
-    return dataframe
-
-
-@pytest.fixture
 def no_entity_dataframe():
     tweet_texts = ['Yup', 'Yessir']
     locations = ['Kentucky', 'New York']

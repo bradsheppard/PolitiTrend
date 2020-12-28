@@ -2,6 +2,9 @@ import dask.dataframe as dd
 import pandas as pd
 from datetime import datetime, timedelta
 
+import boto3
+from botocore.client import Config
+
 from dask.dataframe import DataFrame
 
 from state_party_affiliation_analytic.config import config
@@ -17,6 +20,12 @@ class TweetRepository:
                 "endpoint_url": config.s3_url
             }
         }
+        self._s3 = boto3.resource('s3',
+                    endpoint_url=config.s3_url,
+                    aws_access_key_id=config.s3_username,
+                    aws_secret_access_key=config.s3_password,
+                    config=Config(signature_version='s3v4'),
+                    region_name='us-east-1')
 
     @staticmethod
     def index():
@@ -36,8 +45,8 @@ class TweetRepository:
 
         for path in paths:
             try:
-                df = dd.read_json(path, storage_options=self._storage_options)
-                dfs.append(df)
+                current_df = dd.read_json(path, storage_options=self._storage_options)
+                dfs.append(current_df)
             # pylint: disable=broad-except
             except Exception:
                 print('Error reading path ' + path)
@@ -52,13 +61,20 @@ class TweetRepository:
                                     f'hour={str(now.day).zfill(2)}/*.json',
                    storage_options=self._storage_options)
 
-    def write_analyzed_tweets(self, tweet_dataframe: DataFrame):
-        dd.to_json(tweet_dataframe, f's3://{config.s3_analyzed_tweets_bucket}/*', storage_options=self._storage_options)
+    def write_analyzed_tweets(self, tweet_dataframe: DataFrame, folder: str):
+        dd.to_json(tweet_dataframe, f's3://{config.s3_analyzed_tweets_bucket}/{folder}/*',
+                   storage_options=self._storage_options)
 
-    def read_analyzed_tweets(self) -> DataFrame:
+    def delete_analyzed_tweets(self, folder: str):
+        bucket = self._s3.Bucket(config.s3_analyzed_tweets_bucket)
+        bucket.objects.filter(Prefix=f'{folder}/').delete()
+
+    def read_analyzed_tweets(self, folder: str) -> DataFrame:
         try:
-            df = dd.read_json(f's3://{config.s3_analyzed_tweets_bucket}/*', storage_options=self._storage_options)
-            return df
+            dataframe = dd.read_json(f's3://{config.s3_analyzed_tweets_bucket}/{folder}/*',
+                              storage_options=self._storage_options)
+            return dataframe
+        # pylint: disable=broad-except
         except Exception as ex:
             print('Error reading analyzed tweets')
             print(ex)
