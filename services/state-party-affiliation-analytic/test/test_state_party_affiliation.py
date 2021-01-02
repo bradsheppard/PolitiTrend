@@ -2,11 +2,12 @@ import pandas as pd
 
 from state_party_affiliation_analytic.state_party_affiliation \
     import StatePartyAffiliation, from_dataframe, Affiliations
+from state_party_affiliation_analytic.tweet_repository import TweetRepository
 
 
-def test_from_dataframe(index):
+def test_from_dataframe():
     pandas_df = pd.DataFrame([[1, 0, 1, 0.6588], [1, 0.6588, 1, 0]],
-                             columns=index, index=['KY', 'NY'])
+                             columns=TweetRepository.index(), index=['KY', 'NY'])
 
     print(pandas_df.head())
 
