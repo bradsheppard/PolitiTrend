@@ -31,36 +31,36 @@ if __name__ == "__main__":
 
     politicians = get_all()
 
-    with Client(kube_cluster) as client:
-        tweet_repository.delete_analyzed_tweets('temp')
-        tweets_df: DataFrame = tweet_repository.read_tweets()
-        tweets_df = tweets_df.repartition(partition_size=config.analytic_partition_size)
-        tweets_df = tweets_df.persist()
+    client = Client(kube_cluster)
 
-        analyzed_tweets_df = tweet_repository.read_analyzed_tweets('analyzed-tweets')
-        analyzed_tweets_df = analyzed_tweets_df \
-            .repartition(partition_size=config.analytic_partition_size)
-        analyzed_tweets_df = analyzed_tweets_df.persist()
+    tweet_repository.delete_analyzed_tweets('temp')
+    tweets_df: DataFrame = tweet_repository.read_tweets()
+    tweets_df = tweets_df.repartition(partition_size=config.analytic_partition_size)
+    tweets_df = tweets_df.persist()
 
-        combined_df = tweets_df \
-            .merge(analyzed_tweets_df[['tweetId']], on=['tweetId'], how='left', indicator=True)
-        tweets_to_analyze = combined_df[combined_df['_merge'] == 'left_only']
+    analyzed_tweets_df = tweet_repository.read_analyzed_tweets('analyzed-tweets')
+    analyzed_tweets_df = analyzed_tweets_df \
+        .repartition(partition_size=config.analytic_partition_size)
+    analyzed_tweets_df = analyzed_tweets_df.persist()
 
-        result = compute_party_sentiments(tweets_to_analyze, politicians)
-        tweets_already_analyzed = combined_df[combined_df['_merge'] == 'both']
+    combined_df = tweets_df \
+        .merge(analyzed_tweets_df[['tweetId']], on=['tweetId'], how='left', indicator=True)
+    tweets_to_analyze = combined_df[combined_df['_merge'] == 'left_only']
 
-        result = dd.concat([result, tweets_already_analyzed])
-        result = result.repartition(partition_size=config.analytic_partition_size)
-        tweet_repository.write_analyzed_tweets(result, 'temp')
+    result = compute_party_sentiments(tweets_to_analyze, politicians)
+    tweets_already_analyzed = combined_df[combined_df['_merge'] == 'both']
 
-        result = to_result_dataframe(result)
+    result = dd.concat([result, tweets_already_analyzed])
+    result = result.repartition(partition_size=config.analytic_partition_size)
+    tweet_repository.write_analyzed_tweets(result, 'temp')
 
-        state_party_affiliations = from_dataframe(result)
+    result = to_result_dataframe(result)
 
-        for state_party_affiliation in state_party_affiliations:
-            enqueue_state_party_affiliation(state_party_affiliation)
+    state_party_affiliations = from_dataframe(result)
 
-    with Client(kube_cluster) as client:
-        tweet_repository.delete_analyzed_tweets('analyzed-tweets')
-        analyzed_tweets_df = tweet_repository.read_analyzed_tweets('temp')
-        tweet_repository.write_analyzed_tweets(analyzed_tweets_df, 'analyzed-tweets')
+    for state_party_affiliation in state_party_affiliations:
+        enqueue_state_party_affiliation(state_party_affiliation)
+
+    tweet_repository.delete_analyzed_tweets('analyzed-tweets')
+    analyzed_tweets_df = tweet_repository.read_analyzed_tweets('temp')
+    tweet_repository.write_analyzed_tweets(analyzed_tweets_df, 'analyzed-tweets')
