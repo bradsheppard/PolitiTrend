@@ -26,8 +26,6 @@ class TweetRepository:
     def read_tweets(self) -> DataFrame:
         paths = [TweetRepository._get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
 
-        paths = [paths[0]]
-
         tweets = None
 
         for path in paths:
