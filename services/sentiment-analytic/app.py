@@ -19,8 +19,14 @@ def main():
 
     tweet_repository = TweetRepository(spark)
 
-    tweets = tweet_repository.read_tweets().persist()
-    analyzed_tweets = tweet_repository.read_analyzed_tweets('analyzed-tweets').persist()
+    tweets = tweet_repository\
+        .read_tweets()\
+        .drop_duplicates(['tweetId'])\
+        .persist()
+    analyzed_tweets = tweet_repository\
+        .read_analyzed_tweets('analyzed-tweets')\
+        .drop_duplicates(['tweetId'])\
+        .persist()
 
     tweets_to_analyze = tweets.join(analyzed_tweets, 'tweetId', 'left_anti')
     tweets_already_analyzed = analyzed_tweets.alias('analyzed')\
@@ -29,7 +35,9 @@ def main():
 
     tweet_sentiments: DataFrame = analyze(tweets_to_analyze, politicians).persist()
 
-    tweet_sentiments = tweet_sentiments.unionByName(tweets_already_analyzed)
+    tweet_sentiments = tweet_sentiments\
+        .unionByName(tweets_already_analyzed)\
+        .repartition(config.analytic_num_partitions)
     result_dataframe: DataFrame = to_results_dataframe(tweet_sentiments)
 
     TweetRepository.write_analyzed_tweets(tweet_sentiments, 'temp')

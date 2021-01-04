@@ -39,6 +39,7 @@ class Config:
     s3a_endpoint: str
     s3a_ssl_enabled: str
     analytic_lookback_days: int
+    analytic_num_partitions: int
     kafka_bootstrap_server: str
     kafka_topic: str
 
@@ -53,6 +54,7 @@ config = Config(
     s3a_config['fs.s3a.endpoint'],
     s3a_config['fs.s3a.connection.ssl.enabled'],
     int(analytic_config['lookback_days']),
+    int(analytic_config['num_partitions']),
     kafka_config['bootstrap_server'],
     kafka_config['topic']
 )
