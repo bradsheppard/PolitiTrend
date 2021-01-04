@@ -82,7 +82,7 @@ class TweetRepository:
                 'tweetText': [],
                 'location': [],
                 'tweetId': []
-            }, columns=['tweetText', 'location', 'tweetId'])
+            }, columns=['tweetText', 'location', 'tweetId', 'sentiment', 'state'])
             dataframe = dd.from_pandas(pandas_dataframe, npartitions=1)
             return dataframe
 

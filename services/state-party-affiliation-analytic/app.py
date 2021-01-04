@@ -44,14 +44,18 @@ if __name__ == "__main__":
     analyzed_tweets_df = analyzed_tweets_df.persist()
 
     combined_df = tweets_df \
-        .merge(analyzed_tweets_df[['tweetId']], on=['tweetId'], how='left', indicator=True)
+        .merge(analyzed_tweets_df[['tweetId', 'sentiment', 'state']], on=['tweetId'], how='left', indicator=True)
+    combined_df = combined_df.drop_duplicates(subset=['tweetId'])
     tweets_to_analyze = combined_df[combined_df['_merge'] == 'left_only']
 
-    result = compute_party_sentiments(tweets_to_analyze, politicians)
+    sentiment_results = compute_party_sentiments(tweets_to_analyze, politicians)
     tweets_already_analyzed = combined_df[combined_df['_merge'] == 'both']
 
-    result = dd.concat([result, tweets_already_analyzed])
+    result = dd.concat([sentiment_results, tweets_already_analyzed])
     result = result.repartition(partition_size=config.analytic_partition_size)
+
+    del result['_merge']
+
     tweet_repository.write_analyzed_tweets(result, 'temp')
 
     result = to_result_dataframe(result)
