@@ -59,7 +59,9 @@ def transfer_results_to_bucket():
     load_spark_config(spark.sparkContext)
     tweet_repository = TweetRepository(spark)
 
-    tweets = tweet_repository.read_analyzed_tweets('temp')
+    tweets = tweet_repository\
+        .read_analyzed_tweets('temp')\
+        .repartition(config.analytic_num_partitions)
     TweetRepository.write_analyzed_tweets(tweets, 'analyzed-tweets')
 
     spark.stop()
