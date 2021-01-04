@@ -18,6 +18,10 @@ spec:
     sparkVersion: "3.0.0"
     restartPolicy:
       type: Never
+    volumes:
+      - name: secret-volume
+        secret:
+          secretName: sentiment-analytic-secret
     driver:
       cores: 1
       coreLimit: "1000m"
@@ -25,6 +29,10 @@ spec:
       labels:
         version: 3.0.0
       serviceAccount: operators-spark
+      volumeMounts:
+        - name: secret-volume
+          mountPath: /app/config.ini
+          subPath: config.ini
     executor:
       coreRequest: "200m"
       coreLimit: "400m"
