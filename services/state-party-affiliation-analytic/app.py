@@ -35,24 +35,27 @@ if __name__ == "__main__":
 
     tweet_repository.delete_analyzed_tweets('temp')
     tweets_df: DataFrame = tweet_repository.read_tweets()
-    tweets_df = tweets_df.repartition(partition_size=config.analytic_partition_size)
+    tweets_df = tweets_df.repartition(npartitions=config.analytic_num_partitions)
     tweets_df = tweets_df.persist()
 
     analyzed_tweets_df = tweet_repository.read_analyzed_tweets('analyzed-tweets')
     analyzed_tweets_df = analyzed_tweets_df \
-        .repartition(partition_size=config.analytic_partition_size)
+        .repartition(npartitions=config.analytic_num_partitions)
     analyzed_tweets_df = analyzed_tweets_df.persist()
 
     combined_df = tweets_df \
         .merge(analyzed_tweets_df[['tweetId', 'sentiment', 'state']], on=['tweetId'], how='left', indicator=True)
     combined_df = combined_df.drop_duplicates(subset=['tweetId'])
-    tweets_to_analyze = combined_df[combined_df['_merge'] == 'left_only']
+    tweets_to_analyze = combined_df[combined_df['_merge'] == 'left_only']\
+        .repartition(npartitions=config.analytic_num_partitions)\
 
-    sentiment_results = compute_party_sentiments(tweets_to_analyze, politicians)
+    sentiment_results = compute_party_sentiments(tweets_to_analyze, politicians)\
+        .persist()
+
     tweets_already_analyzed = combined_df[combined_df['_merge'] == 'both']
 
     result = dd.concat([sentiment_results, tweets_already_analyzed])
-    result = result.repartition(partition_size=config.analytic_partition_size)
+    result = result.repartition(npartitions=config.analytic_num_partitions)
 
     del result['_merge']
 

@@ -19,7 +19,7 @@ class Config:
     s3_url: str
     analytic_lookback_days: int
     analytic_num_workers: int
-    analytic_partition_size: int
+    analytic_num_partitions: int
     queue_host: str
     queue_topic: str
 
@@ -32,7 +32,7 @@ config = Config(
     s3_url=s3_config['url'],
     analytic_lookback_days=int(analytic_config['lookback_days']),
     analytic_num_workers=int(analytic_config['num_workers']),
-    analytic_partition_size=int(analytic_config['partition_size']),
+    analytic_num_partitions=int(analytic_config['num_partitions']),
     queue_host=queue_config['url'],
     queue_topic=queue_config['topic']
 )
