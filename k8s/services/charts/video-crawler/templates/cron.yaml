@@ -6,7 +6,7 @@ metadata:
     {{- include "video-crawler.labels" . | nindent 4 }}
 spec:
   schedule: "{{ .Values.cron.schedule }}"
-  successfulJobsHistoryLimit: 0
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 2
   concurrencyPolicy: Forbid
   jobTemplate:
