@@ -2,7 +2,7 @@ import { createStyles, Grid, Theme } from '@material-ui/core'
 import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi'
-import SentimentApi from '../apis/sentiment/SentimentApi'
+import PoliticianSentimentApi from '../apis/politician-sentiment/PoliticianSentimentApi'
 import PoliticianApi from '../apis/politician/PoliticianApi'
 import StatsSentimentTable from '../components/stats/StatsSentimentTable'
 import StatsCard from '../components/stats/StatsCard'
@@ -109,7 +109,7 @@ Stats.getInitialProps = async function (): Promise<IProps> {
     const [politicians, wordClouds, sentiments, statePartyAffiliations] = await Promise.all([
         PoliticianApi.get(),
         GlobalWordCloudApi.get({ limit: 1 }),
-        SentimentApi.get(),
+        PoliticianSentimentApi.get(),
         StatePartyAffiliationApi.get(),
     ])
 

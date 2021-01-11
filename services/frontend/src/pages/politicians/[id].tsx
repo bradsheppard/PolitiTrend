@@ -7,7 +7,7 @@ import PoliticianHeader from '../../components/politician/PoliticianHeader'
 import PoliticianFeed from '../../components/politician/PoliticianFeed'
 import { makeStyles } from '@material-ui/styles'
 import PoliticianWordCloudApi from '../../apis/politician-word-cloud/PoliticianWordCloudApi'
-import SentimentApi from '../../apis/sentiment/SentimentApi'
+import PoliticianSentimentApi from '../../apis/politician-sentiment/PoliticianSentimentApi'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -83,7 +83,7 @@ PoliticianPage.getInitialProps = async function (context: NextPageContext): Prom
         const [politicianDto, politicianWordCloudDtos, sentimentDtos] = await Promise.all([
             PoliticianApi.getOne(parseInt(id)),
             PoliticianWordCloudApi.get({ politician: parseInt(id), limit: 1 }),
-            SentimentApi.getHistoryForPolitician(parseInt(id)),
+            PoliticianSentimentApi.getHistoryForPolitician(parseInt(id)),
         ])
 
         if (politicianDto == null || politicianWordCloudDtos === null || sentimentDtos === null)

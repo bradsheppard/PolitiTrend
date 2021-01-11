@@ -11,7 +11,7 @@ import StatePartyAffiliationApi from '../apis/state-party-affiliation/StateParty
 import StatsMap from '../components/stats/StatsMap'
 import StatsSentimentTable from '../components/stats/StatsSentimentTable'
 import PoliticianApi from '../apis/politician/PoliticianApi'
-import SentimentApi from '../apis/sentiment/SentimentApi'
+import PoliticianSentimentApi from '../apis/politician-sentiment/PoliticianSentimentApi'
 
 interface NewsArticle {
     image: string
@@ -100,7 +100,7 @@ class App extends React.Component<IProps> {
             NewsArticleApi.get({ limit: 6 }),
             GlobalWordCloudApi.get({ limit: 1 }),
             StatePartyAffiliationApi.get(),
-            SentimentApi.get(),
+            PoliticianSentimentApi.get(),
         ])
 
         const politicianSentiments = politiciansDtos.reduce<Politician[]>((result, politician) => {

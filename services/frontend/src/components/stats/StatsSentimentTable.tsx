@@ -17,7 +17,7 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { ResponsiveLine as NivoLine } from '@nivo/line'
-import SentimentApi from '../../apis/sentiment/SentimentApi'
+import PoliticianSentimentApi from '../../apis/politician-sentiment/PoliticianSentimentApi'
 import { makeStyles } from '@material-ui/styles'
 
 interface IProps {
@@ -249,7 +249,7 @@ const StatsSentimentTable: React.FC<IProps> = (
     }
 
     const addLine = async (row: Row) => {
-        const politicianSentiments = await SentimentApi.getHistoryForPolitician(row.id)
+        const politicianSentiments = await PoliticianSentimentApi.getHistoryForPolitician(row.id)
         const data = politicianSentiments.map((sentiment) => {
             const date = new Date(sentiment.dateTime)
             return {
