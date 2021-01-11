@@ -2,14 +2,14 @@ import * as React from 'react'
 import NewsArticleApi from '../../apis/news-article/NewsArticleApi'
 import NewsArticleDto from '../../apis/news-article/NewsArticleDto'
 import NewsArticleComponent from '../common/NewsArticle'
-import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core'
+import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
 
 const styles = (theme: Theme) =>
     createStyles({
         content: {
-            marginBottom: theme.spacing(6),
-            marginTop: theme.spacing(2),
+            margin: theme.spacing(4),
+            height: `calc(100% - ${theme.spacing(8)}px)`,
         },
         pagination: {
             display: 'flex',
@@ -55,7 +55,7 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
     async componentDidMount() {
         const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({
             politician: this.props.politician,
-            limit: 5,
+            limit: 6,
         })
 
         this.setState({
@@ -66,8 +66,8 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
     async handleChange(_: React.ChangeEvent<unknown>, value: number) {
         const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({
             politician: this.props.politician,
-            limit: 5,
-            offset: 5 * (value - 1),
+            limit: 6,
+            offset: 6 * (value - 1),
         })
 
         this.setState({
@@ -85,13 +85,17 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
                     page={this.state.page}
                     onChange={this.handleChange.bind(this)}
                 />
-                {this.state.newsArticles.map((newsArticle: NewsArticle, index: number) => {
-                    return (
-                        <div className={this.props.classes.content} key={index}>
-                            <NewsArticleComponent newsArticle={newsArticle} />
-                        </div>
-                    )
-                })}
+                <Grid container direction="row" justify="center" alignItems="stretch">
+                    {this.state.newsArticles.map((newsArticle: NewsArticle, index: number) => {
+                        return (
+                            <Grid item xs={12} md={6} key={index}>
+                                <div className={this.props.classes.content} key={index}>
+                                    <NewsArticleComponent newsArticle={newsArticle} />
+                                </div>
+                            </Grid>
+                        )
+                    })}
+                </Grid>
             </div>
         )
     }

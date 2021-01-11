@@ -355,9 +355,7 @@ const StatsSentimentTable: React.FC<IProps> = (
                                             <StyledTableCell>{row.name}</StyledTableCell>
                                             <StyledTableCell>{row.party}</StyledTableCell>
                                             <StyledTableCell>
-                                                {row.sentiment
-                                                    ? row.sentiment
-                                                    : 'N/A'}
+                                                {row.sentiment ? row.sentiment : 'N/A'}
                                             </StyledTableCell>
                                             <StyledTableCell>
                                                 <Checkbox

@@ -1,12 +1,41 @@
 import * as React from 'react'
-import { createStyles, Tab, Tabs, Theme } from '@material-ui/core'
-import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed'
-import PoliticianTweetFeed from './PoliticianTweetFeed'
+import { Box, createStyles, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import PoliticianVideoFeed from './PoliticianVideoFeed'
+import Header from '../common/Header'
+import WordCloud from '../common/WordCloud'
+import { ResponsiveLine as NivoLine } from '@nivo/line'
+import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed'
 
 interface IProps {
+    politician: Politician
+    wordCounts: WordCount[]
+    sentiments: Sentiment[]
+}
+
+interface Politician {
+    id: number
+    name: string
+}
+
+interface WordCount {
+    word: string
+    count: number
+}
+
+interface Sentiment {
     politician: number
+    dateTime: string
+    sentiment: number
+}
+
+interface Line {
+    id: string
+    data: Point[]
+}
+
+interface Point {
+    x: string
+    y: number
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -14,45 +43,104 @@ const useStyles = makeStyles((theme: Theme) =>
         feedContainer: {
             minHeight: theme.spacing(200),
         },
+        wordCloud: {
+            margin: theme.spacing(4),
+            minHeight: theme.spacing(50),
+        },
     })
 )
 
 const PoliticianFeed: React.FC<IProps> = (props: IProps) => {
-    const [tabValue, setTabValue] = React.useState(0)
     const classes = useStyles()
 
-    const { politician } = props
-
-    const handleTabChange = (_event: React.ChangeEvent<unknown>, newValue: number) => {
-        setTabValue(newValue)
+    const scaleSentiment = (sentiment: number) => {
+        return parseFloat((sentiment * 5 + 5).toFixed(1))
     }
 
-    function a11yProps(index: number) {
+    const data = props.sentiments.map((sentiment) => {
+        const date = new Date(sentiment.dateTime)
         return {
-            id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
+            x: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+            y: scaleSentiment(sentiment.sentiment),
         }
-    }
-
-    function renderFeed(index: number) {
-        switch (index) {
-            case 0:
-                return <PoliticianNewsArticleFeed politician={politician} />
-            case 1:
-                return <PoliticianTweetFeed politician={politician} />
-            case 2:
-                return <PoliticianVideoFeed politician={politician} />
-        }
+    })
+    const line: Line = {
+        id: props.politician.name,
+        data: data,
     }
 
     return (
         <React.Fragment>
-            <Tabs value={tabValue} onChange={handleTabChange} centered>
-                <Tab label="News Articles" {...a11yProps(0)} />
-                <Tab label="Tweets" {...a11yProps(1)} />
-                <Tab label="Videos" {...a11yProps(2)} />
-            </Tabs>
-            <div className={classes.feedContainer}>{renderFeed(tabValue)}</div>
+            <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
+            <Header>SENTIMENT</Header>
+            <Box height={400}>
+                <NivoLine
+                    data={[line]}
+                    margin={{ top: 50, right: 200, bottom: 50, left: 60 }}
+                    xScale={{
+                        type: 'time',
+                        format: '%Y-%m-%d',
+                        useUTC: false,
+                        precision: 'day',
+                    }}
+                    legends={[
+                        {
+                            anchor: 'bottom-right',
+                            direction: 'column',
+                            justify: false,
+                            translateX: 180,
+                            translateY: 0,
+                            itemsSpacing: 0,
+                            itemDirection: 'left-to-right',
+                            itemWidth: 160,
+                            itemHeight: 20,
+                            itemOpacity: 0.75,
+                            symbolSize: 12,
+                            symbolShape: 'circle',
+                            symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                            effects: [
+                                {
+                                    on: 'hover',
+                                    style: {
+                                        itemBackground: 'rgba(0, 0, 0, .03)',
+                                        itemOpacity: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    ]}
+                    xFormat="time:%Y-%m-%d"
+                    yScale={{ type: 'linear', min: 1, max: 10, stacked: false, reverse: false }}
+                    axisTop={null}
+                    axisRight={null}
+                    axisBottom={{
+                        format: '%b %d',
+                        tickValues: 'every 2 days',
+                        legend: 'time scale',
+                        legendOffset: -12,
+                    }}
+                    axisLeft={{
+                        orient: 'left',
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                        legend: 'Sentiment',
+                        legendOffset: -40,
+                        legendPosition: 'middle',
+                    }}
+                    colors={{ scheme: 'dark2' }}
+                    pointSize={8}
+                    pointColor={{ theme: 'background' }}
+                    pointBorderWidth={3}
+                    pointBorderColor={{ from: 'serieColor' }}
+                    pointLabel="sentiment"
+                    pointLabelYOffset={-12}
+                    lineWidth={3}
+                    useMesh={true}
+                />
+            </Box>
+            <Header>NEWS ARTICLES</Header>
+            <PoliticianNewsArticleFeed politician={props.politician.id} />
         </React.Fragment>
     )
 }

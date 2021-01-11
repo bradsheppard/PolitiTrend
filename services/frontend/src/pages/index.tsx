@@ -4,12 +4,14 @@ import ContentContainer from '../components/common/ContentContainer'
 import NewsArticleComponent from '../components/common/NewsArticle'
 import NewsArticleApi from '../apis/news-article/NewsArticleApi'
 import Header from '../components/common/Header'
-import YoutubeVideoApi from '../apis/video/youtube/YoutubeVideoApi'
-import HomeElectionMatchup from '../components/home/HomeElectionMatchup'
-import SentimentApi from '../apis/sentiment/SentimentApi'
-import PoliticianApi from '../apis/politician/PoliticianApi'
 import HomeMainHeader from '../components/home/HomeMainHeader'
-import Video from '../components/common/Video'
+import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi'
+import WordCloud from '../components/common/WordCloud'
+import StatePartyAffiliationApi from '../apis/state-party-affiliation/StatePartyAffiliationApi'
+import StatsMap from '../components/stats/StatsMap'
+import StatsSentimentTable from '../components/stats/StatsSentimentTable'
+import PoliticianApi from '../apis/politician/PoliticianApi'
+import SentimentApi from '../apis/sentiment/SentimentApi'
 
 interface NewsArticle {
     image: string
@@ -23,17 +25,9 @@ interface NewsArticle {
     }[]
 }
 
-interface YoutubeVideo {
-    title: string
-    videoId: string
-    thumbnail: string
-}
-
-interface Politician {
-    name: string
-    party: string
-    sentiment: number
-    role: string
+interface WordCount {
+    word: string
+    count: number
 }
 
 const styles = (theme: Theme) =>
@@ -53,13 +47,37 @@ const styles = (theme: Theme) =>
         video: {
             margin: theme.spacing(4),
         },
+        wordCloud: {
+            margin: theme.spacing(4),
+            minHeight: theme.spacing(50),
+        },
+        map: {
+            maxWidth: '70em',
+            margin: '0 auto',
+        },
     })
 
+interface StatePartyAffiliation {
+    state: string
+    affiliations: {
+        democratic: number
+        republican: number
+    }
+    sampleSize: number
+}
+
+interface Politician {
+    id: number
+    name: string
+    party: string
+    sentiment?: number
+}
+
 interface IProps extends WithStyles<typeof styles> {
+    politicians: Politician[]
     mainNewsArticles: NewsArticle[]
-    youtubeVideos: YoutubeVideo[]
-    incumbent: Politician
-    challenger: Politician
+    wordCounts: WordCount[]
+    statePartyAffiliations: StatePartyAffiliation[]
 }
 
 class App extends React.Component<IProps> {
@@ -71,47 +89,36 @@ class App extends React.Component<IProps> {
     }
 
     static async getInitialProps() {
-        const incumbentId = 101
-        const challengerId = 102
-
         const [
+            politiciansDtos,
             newsArticleDtos,
-            youtubeVideoDtos,
-            incumbentSentimentDto,
-            challengerSentimentDto,
-            politicianDtos,
+            wordCloudDto,
+            statePartyAffiliationDtos,
+            sentimentDtos,
         ] = await Promise.all([
-            NewsArticleApi.get({ limit: 6 }),
-            YoutubeVideoApi.get({ limit: 6 }),
-            SentimentApi.getHistoryForPolitician(incumbentId),
-            SentimentApi.getHistoryForPolitician(challengerId),
             PoliticianApi.get(),
+            NewsArticleApi.get({ limit: 6 }),
+            GlobalWordCloudApi.get({ limit: 1 }),
+            StatePartyAffiliationApi.get(),
+            SentimentApi.get(),
         ])
 
-        const incumbentPoliticianDto = politicianDtos.find((x) => x.id === incumbentId)
-        const challengerPoliticianDto = politicianDtos.find((x) => x.id === challengerId)
-
-        if (!incumbentPoliticianDto || !challengerPoliticianDto) return {}
-
-        const incumbent: Politician = {
-            name: incumbentPoliticianDto.name,
-            party: incumbentPoliticianDto.party,
-            sentiment: incumbentSentimentDto[0].sentiment,
-            role: incumbentPoliticianDto.role,
-        }
-
-        const challenger: Politician = {
-            name: challengerPoliticianDto.name,
-            party: challengerPoliticianDto.party,
-            sentiment: challengerSentimentDto[0].sentiment,
-            role: challengerPoliticianDto.role,
-        }
+        const politicianSentiments = politiciansDtos.reduce<Politician[]>((result, politician) => {
+            const sentiment = sentimentDtos.find((x) => x.politician == politician.id)
+            result.push({
+                id: politician.id,
+                name: politician.name,
+                party: politician.party,
+                sentiment: sentiment ? sentiment.sentiment : undefined,
+            })
+            return result
+        }, [])
 
         return {
+            politicians: politicianSentiments,
             mainNewsArticles: newsArticleDtos,
-            youtubeVideos: youtubeVideoDtos,
-            incumbent,
-            challenger,
+            wordCounts: wordCloudDto.length > 0 ? wordCloudDto[0].words : [],
+            statePartyAffiliations: statePartyAffiliationDtos,
         }
     }
 
@@ -123,15 +130,11 @@ class App extends React.Component<IProps> {
                 <ContentContainer>
                     <Grid container direction="row" justify="center" alignItems="stretch">
                         <Grid item xs={12}>
-                            <HomeMainHeader>ELECTION MATCHUP</HomeMainHeader>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <div className={classes.electionMatchup}>
-                                <HomeElectionMatchup
-                                    incumbent={this.props.incumbent}
-                                    challenger={this.props.challenger}
-                                />
-                            </div>
+                            <HomeMainHeader>TRENDING</HomeMainHeader>
+                            <WordCloud
+                                wordCounts={this.props.wordCounts}
+                                className={classes.wordCloud}
+                            />
                         </Grid>
                         <Grid item xs={12}>
                             <Header>NEWS ARTICLES</Header>
@@ -146,17 +149,16 @@ class App extends React.Component<IProps> {
                             )
                         })}
                         <Grid item xs={12}>
-                            <Header>TRENDING VIDEOS</Header>
+                            <Header>SENTIMENT BY STATE</Header>
+                            <StatsMap
+                                className={classes.map}
+                                statePartyAffiliations={this.props.statePartyAffiliations}
+                            />
                         </Grid>
-                        {this.props.youtubeVideos.map((video, index) => {
-                            return (
-                                <Grid item xs={12} md={4} key={index}>
-                                    <div className={classes.video}>
-                                        <Video video={video} />
-                                    </div>
-                                </Grid>
-                            )
-                        })}
+                        <Grid item xs={12}>
+                            <Header>SENTIMENT BY POLITICIAN</Header>
+                            <StatsSentimentTable politicians={this.props.politicians} />
+                        </Grid>
                     </Grid>
                 </ContentContainer>
             </React.Fragment>

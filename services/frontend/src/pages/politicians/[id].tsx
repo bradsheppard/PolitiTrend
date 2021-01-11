@@ -6,6 +6,8 @@ import PoliticianApi from '../../apis/politician/PoliticianApi'
 import PoliticianHeader from '../../components/politician/PoliticianHeader'
 import PoliticianFeed from '../../components/politician/PoliticianFeed'
 import { makeStyles } from '@material-ui/styles'
+import PoliticianWordCloudApi from '../../apis/politician-word-cloud/PoliticianWordCloudApi'
+import SentimentApi from '../../apis/sentiment/SentimentApi'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,10 +31,24 @@ interface Politician {
     name: string
     party: string
     sentiment: number
+    role: string
+}
+
+interface WordCount {
+    word: string
+    count: number
+}
+
+interface Sentiment {
+    politician: number
+    dateTime: string
+    sentiment: number
 }
 
 interface IProps {
     politician: Politician | null
+    wordCount: WordCount[]
+    sentiments: Sentiment[]
 }
 
 const PoliticianPage: NextPage<IProps> = (props: IProps) => {
@@ -45,11 +61,15 @@ const PoliticianPage: NextPage<IProps> = (props: IProps) => {
         <React.Fragment>
             <ContentContainer>
                 <Grid container className={classes.profile} direction="row" justify="center">
-                    <Grid item sm={3}>
+                    <Grid item sm={12}>
                         <PoliticianHeader politician={politician} />
                     </Grid>
-                    <Grid item sm={9} className={classes.content}>
-                        <PoliticianFeed politician={politician.id} />
+                    <Grid item sm={12} className={classes.content}>
+                        <PoliticianFeed
+                            politician={politician}
+                            wordCounts={props.wordCount}
+                            sentiments={props.sentiments}
+                        />
                     </Grid>
                 </Grid>
             </ContentContainer>
@@ -60,11 +80,17 @@ const PoliticianPage: NextPage<IProps> = (props: IProps) => {
 PoliticianPage.getInitialProps = async function (context: NextPageContext): Promise<IProps> {
     const { id } = context.query
     if (typeof id === 'string') {
-        const [politicianDto] = await Promise.all([PoliticianApi.getOne(id)])
+        const [politicianDto, politicianWordCloudDtos, sentimentDtos] = await Promise.all([
+            PoliticianApi.getOne(parseInt(id)),
+            PoliticianWordCloudApi.get({ politician: parseInt(id), limit: 1 }),
+            SentimentApi.getHistoryForPolitician(parseInt(id)),
+        ])
 
-        if (!politicianDto)
+        if (politicianDto == null || politicianWordCloudDtos === null || sentimentDtos === null)
             return {
                 politician: null,
+                wordCount: [],
+                sentiments: [],
             }
 
         const politician: Politician = {
@@ -72,14 +98,19 @@ PoliticianPage.getInitialProps = async function (context: NextPageContext): Prom
             name: politicianDto.name,
             party: politicianDto.party,
             sentiment: 5,
+            role: politicianDto.role,
         }
 
         return {
             politician,
+            wordCount: politicianWordCloudDtos[0].words,
+            sentiments: sentimentDtos,
         }
     } else {
         return {
             politician: null,
+            wordCount: [],
+            sentiments: [],
         }
     }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Box, Card, createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Card, createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
 import PoliticianAvatar from './PoliticianAvatar'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -19,6 +19,7 @@ interface Politician {
     name: string
     party: string
     sentiment: number
+    role: string
 }
 
 interface IProps {
@@ -35,11 +36,14 @@ const PoliticianHeader: React.FC<IProps> = (props: IProps) => {
                 <PoliticianAvatar politician={politician} />
             </Grid>
             <Grid item sm={12}>
-                <Typography variant="h4" color="textPrimary" className={classes.profileParagraph}>
-                    {politician.name}
+                <Typography variant="h4" color="textPrimary">
+                    {props.politician.name}
                 </Typography>
-                <Typography variant="h6" color="textPrimary" className={classes.profileParagraph}>
-                    <Box fontWeight="fontWeightBold">{politician.party}</Box>
+                <Typography variant="subtitle1" color="textSecondary">
+                    {props.politician.party}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                    {props.politician.role}
                 </Typography>
             </Grid>
         </Card>
