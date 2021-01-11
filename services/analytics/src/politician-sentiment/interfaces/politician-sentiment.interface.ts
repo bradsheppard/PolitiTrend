@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export interface Sentiment extends Document {
+export interface PoliticianSentiment extends Document {
     politician: number;
     sentiment: number;
     sampleSize: number;

@@ -3,8 +3,9 @@ import { PoliticianWordCloudModule } from './politician-word-cloud/politician-wo
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GlobalWordCloudModule } from './global-word-cloud/global-word-cloud.module';
-import { SentimentModule } from './sentiment/sentiment.module';
+import { PoliticianSentimentModule } from './politician-sentiment/politician-sentiment.module';
 import { StatePartyAffiliationModule } from './state-party-affiliation/state-party-affiliation.module';
+import { PartySentimentModule } from './party-sentiment/party-sentiment.module';
 
 @Module({
     imports: [
@@ -23,8 +24,9 @@ import { StatePartyAffiliationModule } from './state-party-affiliation/state-par
         }),
         PoliticianWordCloudModule,
         GlobalWordCloudModule,
-        SentimentModule,
+        PoliticianSentimentModule,
         StatePartyAffiliationModule,
+        PartySentimentModule,
     ],
 })
 export class AppModule {}

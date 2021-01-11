@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-const SentimentSchema = new mongoose.Schema({
+const PoliticianSentimentSchema = new mongoose.Schema({
     politician: Number,
     sentiment: Number,
     sampleSize: Number,
@@ -10,11 +10,11 @@ const SentimentSchema = new mongoose.Schema({
     },
 });
 
-SentimentSchema.index({ dateTime: -1 });
+PoliticianSentimentSchema.index({ dateTime: -1 });
 
-SentimentSchema.index({ politician: 1, dateTime: -1 });
+PoliticianSentimentSchema.index({ politician: 1, dateTime: -1 });
 
-SentimentSchema.set('toJSON', {
+PoliticianSentimentSchema.set('toJSON', {
     transform: (doc, ret) => {
         ret.id = ret._id;
         delete ret._id;
@@ -22,4 +22,4 @@ SentimentSchema.set('toJSON', {
     },
 });
 
-export { SentimentSchema };
+export { PoliticianSentimentSchema };

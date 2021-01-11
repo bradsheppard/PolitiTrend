@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { StatePartyAffiliation } from './interfaces/state-party-affiliation.interface';
 import { CreateStatePartyAffiliationDto } from './dtos/create-state-party-affiliation-dto';
-import { SearchSentimentDto } from '../sentiment/dtos/search-sentiment.dto';
+import { SearchStatePartyAffiliationDto } from './dtos/search-state-party-affiliation.dto';
 
 @Injectable()
 export class StatePartyAffiliationService {
@@ -12,10 +12,10 @@ export class StatePartyAffiliationService {
         private readonly statePartyAffiliationModel: Model<StatePartyAffiliation>,
     ) {}
 
-    async find(searchSentimentDto: SearchSentimentDto): Promise<StatePartyAffiliation[]> {
-        if (searchSentimentDto.resample) return await this.findWithResampling(searchSentimentDto);
+    async find(searchStatePartyAffiliationDto: SearchStatePartyAffiliationDto): Promise<StatePartyAffiliation[]> {
+        if (searchStatePartyAffiliationDto.resample) return await this.findWithResampling(searchStatePartyAffiliationDto);
 
-        return await this.findWithoutResampling(searchSentimentDto);
+        return await this.findWithoutResampling(searchStatePartyAffiliationDto);
     }
 
     private static generateGroupClause(resamplingRate: number) {
@@ -52,36 +52,36 @@ export class StatePartyAffiliationService {
         };
     }
 
-    private static generateMatchFilter(searchSentimentDto: SearchSentimentDto) {
+    private static generateMatchFilter(searchStatePartyAffiliationDto: SearchStatePartyAffiliationDto) {
         const filter: any = {};
 
-        if (searchSentimentDto.start && searchSentimentDto.end)
+        if (searchStatePartyAffiliationDto.start && searchStatePartyAffiliationDto.end)
             filter.dateTime = {
-                $lte: searchSentimentDto.end,
-                $gte: searchSentimentDto.start,
+                $lte: searchStatePartyAffiliationDto.end,
+                $gte: searchStatePartyAffiliationDto.start,
             };
-        else if (searchSentimentDto.start)
+        else if (searchStatePartyAffiliationDto.start)
             filter.dateTime = {
-                $gte: searchSentimentDto.start,
+                $gte: searchStatePartyAffiliationDto.start,
             };
-        else if (searchSentimentDto.end)
+        else if (searchStatePartyAffiliationDto.end)
             filter.dateTime = {
-                $lte: searchSentimentDto.end,
+                $lte: searchStatePartyAffiliationDto.end,
             };
 
         return filter;
     }
 
     private async findWithResampling(
-        searchSentimentDto: SearchSentimentDto,
+        searchStatePartyAffiliationDto: SearchStatePartyAffiliationDto,
     ): Promise<StatePartyAffiliation[]> {
         const aggregations: any[] = [
             {
-                $match: StatePartyAffiliationService.generateMatchFilter(searchSentimentDto),
+                $match: StatePartyAffiliationService.generateMatchFilter(searchStatePartyAffiliationDto),
             },
             {
                 $group: StatePartyAffiliationService.generateGroupClause(
-                    searchSentimentDto.resample,
+                    searchStatePartyAffiliationDto.resample,
                 ),
             },
             {
@@ -108,10 +108,10 @@ export class StatePartyAffiliationService {
             },
         ];
 
-        if (searchSentimentDto.minSampleSize)
+        if (searchStatePartyAffiliationDto.minSampleSize)
             aggregations.splice(3, 0, {
                 $match: {
-                    sampleSize: { $gte: searchSentimentDto.minSampleSize },
+                    sampleSize: { $gte: searchStatePartyAffiliationDto.minSampleSize },
                 },
             });
 
@@ -121,11 +121,11 @@ export class StatePartyAffiliationService {
     }
 
     private async findWithoutResampling(
-        searchSentimentDto: SearchSentimentDto,
+        searchStatePartyAffiliationDto: SearchStatePartyAffiliationDto,
     ): Promise<StatePartyAffiliation[]> {
         const aggregations: any[] = [
             {
-                $match: StatePartyAffiliationService.generateMatchFilter(searchSentimentDto),
+                $match: StatePartyAffiliationService.generateMatchFilter(searchStatePartyAffiliationDto),
             },
             {
                 $sort: {
@@ -135,10 +135,10 @@ export class StatePartyAffiliationService {
             },
         ];
 
-        if (searchSentimentDto.minSampleSize)
+        if (searchStatePartyAffiliationDto.minSampleSize)
             aggregations.splice(3, 0, {
                 $match: {
-                    sampleSize: { $gte: searchSentimentDto.minSampleSize },
+                    sampleSize: { $gte: searchStatePartyAffiliationDto.minSampleSize },
                 },
             });
 

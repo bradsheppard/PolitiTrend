@@ -1,7 +1,7 @@
 import { IsDate, IsInt, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateSentimentDto {
+export class CreatePoliticianSentimentDto {
     @IsInt()
     @Type(() => Number)
     politician: number;

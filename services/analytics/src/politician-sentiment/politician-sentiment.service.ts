@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Sentiment } from './interfaces/sentiment.interface';
-import { CreateSentimentDto } from './dtos/create-sentiment.dto';
-import { SearchSentimentDto } from './dtos/search-sentiment.dto';
+import { PoliticianSentiment } from './interfaces/politician-sentiment.interface';
+import { CreatePoliticianSentimentDto } from './dtos/create-politician-sentiment.dto';
+import { SearchPoliticianSentimentDto } from './dtos/search-politician-sentiment.dto';
 
 @Injectable()
-export class SentimentService {
+export class PoliticianSentimentService {
     constructor(
-        @InjectModel('Sentiment')
-        private readonly sentimentModel: Model<Sentiment>,
+        @InjectModel('PoliticianSentiment')
+        private readonly politicianSentimentModel: Model<PoliticianSentiment>,
     ) {}
 
-    async create(createSentimentDto: CreateSentimentDto): Promise<Sentiment> {
-        const createSentiment = new this.sentimentModel(createSentimentDto);
+    async create(createSentimentDto: CreatePoliticianSentimentDto): Promise<PoliticianSentiment> {
+        const createSentiment = new this.politicianSentimentModel(createSentimentDto);
         return await createSentiment.save();
     }
 
@@ -44,7 +44,7 @@ export class SentimentService {
         };
     }
 
-    private static generateMatchFilter(searchSentimentDto: SearchSentimentDto) {
+    private static generateMatchFilter(searchSentimentDto: SearchPoliticianSentimentDto) {
         const filter: any = {};
 
         if (searchSentimentDto.politician) filter.politician = searchSentimentDto.politician;
@@ -66,13 +66,13 @@ export class SentimentService {
         return filter;
     }
 
-    async findWithResampling(searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+    async findWithResampling(searchSentimentDto: SearchPoliticianSentimentDto): Promise<PoliticianSentiment[]> {
         const aggregations: any[] = [
             {
-                $match: SentimentService.generateMatchFilter(searchSentimentDto),
+                $match: PoliticianSentimentService.generateMatchFilter(searchSentimentDto),
             },
             {
-                $group: SentimentService.generateGroupClause(searchSentimentDto.resample),
+                $group: PoliticianSentimentService.generateGroupClause(searchSentimentDto.resample),
             },
             {
                 $project: {
@@ -100,15 +100,15 @@ export class SentimentService {
                 },
             });
 
-        const query = this.sentimentModel.aggregate(aggregations);
+        const query = this.politicianSentimentModel.aggregate(aggregations);
 
         return await query.exec();
     }
 
-    async findWithoutResampling(searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+    async findWithoutResampling(searchSentimentDto: SearchPoliticianSentimentDto): Promise<PoliticianSentiment[]> {
         const aggregations: any[] = [
             {
-                $match: SentimentService.generateMatchFilter(searchSentimentDto),
+                $match: PoliticianSentimentService.generateMatchFilter(searchSentimentDto),
             },
             {
                 $sort: {
@@ -125,18 +125,18 @@ export class SentimentService {
                 },
             });
 
-        const query = this.sentimentModel.aggregate(aggregations);
+        const query = this.politicianSentimentModel.aggregate(aggregations);
 
         return await query.exec();
     }
 
-    async find(searchSentimentDto: SearchSentimentDto): Promise<Sentiment[]> {
+    async find(searchSentimentDto: SearchPoliticianSentimentDto): Promise<PoliticianSentiment[]> {
         if (searchSentimentDto.resample) return await this.findWithResampling(searchSentimentDto);
 
         return await this.findWithoutResampling(searchSentimentDto);
     }
 
     async delete(): Promise<void> {
-        await this.sentimentModel.deleteMany({}).exec();
+        await this.politicianSentimentModel.deleteMany({}).exec();
     }
 }

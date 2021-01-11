@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SentimentController } from './sentiment.controller';
+import { PoliticianSentimentController } from './politician-sentiment.controller';
 import { getModelToken } from '@nestjs/mongoose';
-import { SentimentService } from './sentiment.service';
-import { Sentiment } from './interfaces/sentiment.interface';
-import { CreateSentimentDto } from './dtos/create-sentiment.dto';
+import { PoliticianSentimentService } from './politician-sentiment.service';
+import { PoliticianSentiment } from './interfaces/politician-sentiment.interface';
+import { CreatePoliticianSentimentDto } from './dtos/create-politician-sentiment.dto';
 
 describe('Sentiment Controller', () => {
-    let controller: SentimentController;
-    let service: SentimentService;
+    let controller: PoliticianSentimentController;
+    let service: PoliticianSentimentService;
 
     let id = 0;
 
-    function createSentiment(): Sentiment {
+    function createSentiment(): PoliticianSentiment {
         id++;
         return {
             id,
@@ -19,10 +19,10 @@ describe('Sentiment Controller', () => {
             sentiment: id,
             dateTime: new Date(),
             sampleSize: id + 100,
-        } as Sentiment;
+        } as PoliticianSentiment;
     }
 
-    function createSentimentDto(): CreateSentimentDto {
+    function createSentimentDto(): CreatePoliticianSentimentDto {
         id++;
         return {
             politician: id,
@@ -33,18 +33,18 @@ describe('Sentiment Controller', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            controllers: [SentimentController],
+            controllers: [PoliticianSentimentController],
             providers: [
-                SentimentService,
+                PoliticianSentimentService,
                 {
-                    provide: getModelToken('Sentiment'),
+                    provide: getModelToken('PoliticianSentiment'),
                     useValue: {},
                 },
             ],
         }).compile();
 
-        controller = module.get<SentimentController>(SentimentController);
-        service = module.get<SentimentService>(SentimentService);
+        controller = module.get<PoliticianSentimentController>(PoliticianSentimentController);
+        service = module.get<PoliticianSentimentService>(PoliticianSentimentService);
     });
 
     it('should be defined', () => {
