@@ -6,6 +6,8 @@ metadata:
 spec:
   schedule: "@every 6h"
   concurrencyPolicy: Forbid
+  successfulRunHistoryLimit: 1
+  failedRunHistoryLimit: 2
   template:
     type: Python
     pythonVersion: '3'
