@@ -41,7 +41,8 @@ class Config:
     analytic_lookback_days: int
     analytic_num_partitions: int
     kafka_bootstrap_server: str
-    kafka_topic: str
+    kafka_politician_sentiment_topic: str
+    kafka_party_sentiment_topic: str
 
 
 config = Config(
@@ -56,5 +57,6 @@ config = Config(
     int(analytic_config['lookback_days']),
     int(analytic_config['num_partitions']),
     kafka_config['bootstrap_server'],
-    kafka_config['topic']
+    kafka_config['politician_sentiment_topic'],
+    kafka_config['party_sentiment_topic']
 )

@@ -20,8 +20,8 @@ def tweet_repository(spark_session: SparkSession):
 @pytest.fixture
 def politicians():
     politicians: List[Politician] = [
-        Politician(1, 'Jim Johnson'),
-        Politician(2, 'Jill Smith')
+        Politician(1, 'Jim Johnson', 'Republican'),
+        Politician(2, 'Jill Smith', 'Democratic')
     ]
 
     return politicians

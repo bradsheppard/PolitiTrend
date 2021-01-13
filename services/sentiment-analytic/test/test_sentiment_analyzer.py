@@ -6,7 +6,8 @@ import pandas as pd
 import pytest
 
 from sentiment_analytic.politician import Politician
-from sentiment_analytic.sentiment_analyzer import analyze, to_results_dataframe
+from sentiment_analytic.sentiment_analyzer import analyze, to_politician_sentiment_dataframe, \
+    to_party_sentiment_dataframe
 from sentiment_analytic.sentiment_analyzer import get_entity_sentiments
 
 
@@ -45,8 +46,8 @@ def test_data():
 @pytest.fixture
 def politicians():
     politicians: List[Politician] = [
-        Politician(1, 'Bob Young'),
-        Politician(2, 'John Smith')
+        Politician(1, 'Bob Young', 'Republican'),
+        Politician(2, 'John Smith', 'Democratic')
     ]
 
     return politicians
@@ -60,6 +61,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'politicians': [1],
             'politicianSentiments': [1],
             'sentiments': [0.6248999834060669],
+            'parties': ['Republican'],
             'dateTime': '2020-11-06 04:57:45'
         },
         {
@@ -68,6 +70,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'politicians': [2],
             'politicianSentiments': [2],
             'sentiments': [-0.3612000048160553],
+            'parties': ['Democratic'],
             'dateTime': '2020-11-07 04:57:45'
         },
         {
@@ -76,6 +79,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'politicians': [1, 2],
             'politicianSentiments': [1, 2],
             'sentiments': [0.6248999834060669, 0.6248999834060669],
+            'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-05 04:57:45'
         },
         {
@@ -84,6 +88,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'politicians': [1, 2],
             'politicianSentiments': [1, 2],
             'sentiments': [-0.3612000048160553, 0.6248999834060669],
+            'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-08 04:57:45'
         }
     ]
@@ -126,7 +131,7 @@ def test_get_entity_sentiments_non_specific_subject(politicians):
     assert 2 not in predictions[0]
 
 
-def test_to_results_dataframe(spark_session, politicians, test_data):
+def test_to_politician_sentiment_dataframe(spark_session, politicians, test_data):
     expected_data = [
         {
             'sentiment': 0.2961999873320262,
@@ -142,7 +147,30 @@ def test_to_results_dataframe(spark_session, politicians, test_data):
 
     dataframe = spark_session.createDataFrame(test_data)
 
-    ouput_dataframe = to_results_dataframe(analyze(dataframe, politicians)).toPandas()
+    ouput_dataframe = to_politician_sentiment_dataframe(analyze(dataframe, politicians)).toPandas()
+    expected_dataframe = spark_session.createDataFrame(expected_data).toPandas()
+
+    pd.testing.assert_frame_equal(
+        expected_dataframe, ouput_dataframe, check_like=True, check_dtype=False)
+
+
+def test_to_party_sentiment_dataframe(spark_session, politicians, test_data):
+    expected_data = [
+        {
+            'sentiment': 0.2961999873320262,
+            'party': 'Republican',
+            'sampleSize': 3
+        },
+        {
+            'sentiment': 0.2961999873320262,
+            'party': 'Democratic',
+            'sampleSize': 3
+        }
+    ]
+
+    dataframe = spark_session.createDataFrame(test_data)
+
+    ouput_dataframe = to_party_sentiment_dataframe(analyze(dataframe, politicians)).toPandas()
     expected_dataframe = spark_session.createDataFrame(expected_data).toPandas()
 
     pd.testing.assert_frame_equal(

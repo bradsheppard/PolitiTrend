@@ -19,6 +19,7 @@ json_schema = StructType([
     StructField('tweetId', StringType()),
     StructField('politicians', ArrayType(LongType())),
     StructField('politicianSentiments', ArrayType(LongType())),
+    StructField('parties', ArrayType(StringType())),
     StructField('sentiments', ArrayType(FloatType())),
     StructField('dateTime', StringType())
 ])
@@ -31,23 +32,31 @@ def udf_generator(subjects: List[Politician]):
         computed_sentiments = get_entity_sentiments(tweets, subjects)
         politician_sentiments = []
         sentiments = []
+        parties = []
 
         for computed_sentiment in computed_sentiments:
             tweet_politician_sentiments = []
             tweet_sentiments = []
-            for num in computed_sentiment.keys():
-                tweet_politician_sentiments.append(num)
-            for val in computed_sentiment.values():
-                tweet_sentiments.append(val)
+            tweet_parties = []
+
+            for politician_id in computed_sentiment.keys():
+                politician = seq(subjects)\
+                    .find(lambda x, search_id=politician_id:  x.id == search_id)
+                tweet_politician_sentiments.append(politician_id)
+                tweet_parties.append(politician.party)
+            for sentiment in computed_sentiment.values():
+                tweet_sentiments.append(sentiment)
 
             sentiments.append(tweet_sentiments)
             politician_sentiments.append(tweet_politician_sentiments)
+            parties.append(tweet_parties)
 
         pdf['politicianSentiments'] = politician_sentiments
         pdf['sentiments'] = sentiments
+        pdf['parties'] = parties
 
         return pdf[['tweetText', 'tweetId', 'politicians',
-                    'politicianSentiments', 'sentiments', 'dateTime']]
+                    'politicianSentiments', 'sentiments', 'parties', 'dateTime']]
 
     return pandas_udf_sentiment
 
@@ -103,10 +112,10 @@ def get_entity_sentiments(statements: List[str],
             for entity in relevant_entities:
                 politicians = _match_politicians(entity, subjects)
                 for politician in politicians:
-                    if politician.num not in results:
-                        results[politician.num] = [score]
+                    if politician.id not in results:
+                        results[politician.id] = [score]
                     else:
-                        results[politician.num].append(score)
+                        results[politician.id].append(score)
 
         for key in results:
             results[key] = mean(results[key])
@@ -135,12 +144,25 @@ def _match_politicians(text, politicians) -> List[Politician]:
     return results
 
 
-def to_results_dataframe(dataframe: DataFrame) -> DataFrame:
+def to_politician_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
     sentiment_dataframe = dataframe \
         .withColumn('vars', explode(arrays_zip('politicianSentiments', 'sentiments'))) \
         .selectExpr('tweetText', 'vars.politicianSentiments as politician',
                     'vars.sentiments as sentiment') \
         .groupBy('politician') \
+        .agg(F.avg('sentiment'), F.count('sentiment')) \
+        .withColumnRenamed('avg(sentiment)', 'sentiment') \
+        .withColumnRenamed('count(sentiment)', 'sampleSize')
+
+    return sentiment_dataframe
+
+
+def to_party_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
+    sentiment_dataframe = dataframe \
+        .withColumn('vars', explode(arrays_zip('parties', 'sentiments'))) \
+        .selectExpr('tweetText', 'vars.parties as party',
+                    'vars.sentiments as sentiment') \
+        .groupBy('party') \
         .agg(F.avg('sentiment'), F.count('sentiment')) \
         .withColumnRenamed('avg(sentiment)', 'sentiment') \
         .withColumnRenamed('count(sentiment)', 'sampleSize')

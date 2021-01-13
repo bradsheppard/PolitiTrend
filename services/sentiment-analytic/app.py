@@ -6,7 +6,8 @@ from pyspark.sql.functions import col
 from sentiment_analytic.config import config, load_spark_config
 from sentiment_analytic.politician import Politician, get_all
 from sentiment_analytic.tweet_repository import TweetRepository
-from sentiment_analytic.sentiment_analyzer import analyze, to_results_dataframe
+from sentiment_analytic.sentiment_analyzer import analyze, to_politician_sentiment_dataframe, \
+    to_party_sentiment_dataframe
 
 
 def main():
@@ -34,19 +35,26 @@ def main():
         .select([col('analyzed.'+xx) for xx in analyzed_tweets.columns])
 
     tweet_sentiments: DataFrame = analyze(tweets_to_analyze, politicians).persist()
-
     tweet_sentiments = tweet_sentiments\
         .unionByName(tweets_already_analyzed)\
         .repartition(config.analytic_num_partitions)
-    result_dataframe: DataFrame = to_results_dataframe(tweet_sentiments)
+
+    politician_sentiment_dataframe: DataFrame = to_politician_sentiment_dataframe(tweet_sentiments)
+    party_sentiment_dataframe: DataFrame = to_party_sentiment_dataframe(tweet_sentiments)
 
     TweetRepository.write_analyzed_tweets(tweet_sentiments, 'temp')
 
-    result_dataframe.selectExpr('to_json(struct(*)) AS value') \
+    politician_sentiment_dataframe.selectExpr('to_json(struct(*)) AS value') \
         .write \
         .format('kafka') \
         .option('kafka.bootstrap.servers', config.kafka_bootstrap_server) \
-        .option('topic', config.kafka_topic) \
+        .option('topic', config.kafka_politician_sentiment_topic) \
+        .save()
+    party_sentiment_dataframe.selectExpr('to_json(struct(*)) AS value') \
+        .write \
+        .format('kafka') \
+        .option('kafka.bootstrap.servers', config.kafka_bootstrap_server) \
+        .option('topic', config.kafka_party_sentiment_topic) \
         .save()
 
     spark.stop()
