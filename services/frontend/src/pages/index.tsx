@@ -4,7 +4,6 @@ import ContentContainer from '../components/common/ContentContainer'
 import NewsArticleComponent from '../components/common/NewsArticle'
 import NewsArticleApi from '../apis/news-article/NewsArticleApi'
 import Header from '../components/common/Header'
-import HomeMainHeader from '../components/home/HomeMainHeader'
 import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi'
 import WordCloud from '../components/common/WordCloud'
 import StatePartyAffiliationApi from '../apis/state-party-affiliation/StatePartyAffiliationApi'
@@ -12,9 +11,10 @@ import StatsMap from '../components/stats/StatsMap'
 import StatsSentimentTable from '../components/stats/StatsSentimentTable'
 import PoliticianApi from '../apis/politician/PoliticianApi'
 import PoliticianSentimentApi from '../apis/politician-sentiment/PoliticianSentimentApi'
+import HomePartySentiment from '../components/home/HomePartySentiment'
+import PartySentimentApi from '../apis/party-sentiment/PartySentimentApi'
 
 interface NewsArticle {
-    image: string
     summary: string
     url: string
     source: string
@@ -75,6 +75,8 @@ interface Politician {
 
 interface IProps extends WithStyles<typeof styles> {
     politicians: Politician[]
+    republicanSentiment: number
+    democraticSentiment: number
     mainNewsArticles: NewsArticle[]
     wordCounts: WordCount[]
     statePartyAffiliations: StatePartyAffiliation[]
@@ -94,17 +96,19 @@ class App extends React.Component<IProps> {
             newsArticleDtos,
             wordCloudDto,
             statePartyAffiliationDtos,
-            sentimentDtos,
+            politicianSentimentDtos,
+            partySentimentDtos,
         ] = await Promise.all([
             PoliticianApi.get(),
             NewsArticleApi.get({ limit: 6 }),
             GlobalWordCloudApi.get({ limit: 1 }),
             StatePartyAffiliationApi.get(),
             PoliticianSentimentApi.get(),
+            PartySentimentApi.get(),
         ])
 
         const politicianSentiments = politiciansDtos.reduce<Politician[]>((result, politician) => {
-            const sentiment = sentimentDtos.find((x) => x.politician == politician.id)
+            const sentiment = politicianSentimentDtos.find((x) => x.politician == politician.id)
             result.push({
                 id: politician.id,
                 name: politician.name,
@@ -114,11 +118,16 @@ class App extends React.Component<IProps> {
             return result
         }, [])
 
+        const democraticSentiment = partySentimentDtos.find((x) => x.party === 'Democratic')
+        const republicanSentiment = partySentimentDtos.find((x) => x.party === 'Republican')
+
         return {
             politicians: politicianSentiments,
             mainNewsArticles: newsArticleDtos,
             wordCounts: wordCloudDto.length > 0 ? wordCloudDto[0].words : [],
             statePartyAffiliations: statePartyAffiliationDtos,
+            democraticSentiment: democraticSentiment ? democraticSentiment.sentiment : 0,
+            republicanSentiment: republicanSentiment ? republicanSentiment.sentiment : 0,
         }
     }
 
@@ -130,7 +139,13 @@ class App extends React.Component<IProps> {
                 <ContentContainer>
                     <Grid container direction="row" justify="center" alignItems="stretch">
                         <Grid item xs={12}>
-                            <HomeMainHeader>TRENDING</HomeMainHeader>
+                            <HomePartySentiment
+                                democraticSentiment={this.props.democraticSentiment}
+                                republicanSentiment={this.props.republicanSentiment}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Header>TRENDING</Header>
                             <WordCloud
                                 wordCounts={this.props.wordCounts}
                                 className={classes.wordCloud}
