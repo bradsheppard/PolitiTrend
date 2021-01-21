@@ -29,8 +29,6 @@ interface StatePartyAffiliation {
     sampleSize: number
 }
 
-const MIN_SAMPLE_SIZE = 100
-
 const StatsMap: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
     props: IProps & React.HTMLAttributes<HTMLDivElement>
 ) => {
@@ -56,10 +54,7 @@ const StatsMap: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
                             let color = '#c4c4c4'
                             let party = 'Neutral'
 
-                            if (
-                                statePartyAffiliation &&
-                                statePartyAffiliation.sampleSize > MIN_SAMPLE_SIZE
-                            ) {
+                            if (statePartyAffiliation) {
                                 if (
                                     statePartyAffiliation.affiliations.democratic >
                                     statePartyAffiliation.affiliations.republican
