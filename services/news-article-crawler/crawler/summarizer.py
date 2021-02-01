@@ -11,7 +11,7 @@ class Summarizer:
                                     tokenizer="facebook/bart-large-cnn", framework="tf")
 
     def summarize(self, input_text: str) -> str:
-        summary = self._summarizer(input_text, min_length=10, max_length=30)
+        summary = self._summarizer(input_text, max_length=20)
         return summary[0]['summary_text']
 
     def summarize_all(self, inputs: List[str]) -> List[str]:
@@ -19,7 +19,7 @@ class Summarizer:
 
         for i in range(0, len(inputs), Summarizer.batch_size):
             batch = inputs[i:i+Summarizer.batch_size]
-            summarys = list(map(lambda x: x['summary_text'], self._summarizer(batch, min_length=10, max_length=30)))
+            summarys = list(map(lambda x: x['summary_text'], self._summarizer(batch, max_length=20)))
             results.extend(summarys)
 
         return results
