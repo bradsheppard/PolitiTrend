@@ -1,43 +1,26 @@
 from typing import List
-
-import tensorflow.compat.v1 as tf
-import tensorflow_hub as hub
-import tensorflow_text as text
+from transformers import pipeline
 
 
 class Summarizer:
 
-    batch_size = 1
+    batch_size = 5
 
     def __init__(self):
-        g = tf.Graph()
-        with g.as_default():
-            text_input = tf.placeholder(dtype=tf.string, shape=[None])
-            summarizer = hub.Module('https://tfhub.dev/google/bertseq2seq/roberta24_bbc/1', name='summarizer')
-            summarization = summarizer(text_input)
-            init_op = tf.group([tf.global_variables_initializer(), tf.tables_initializer()])
-        g.finalize()
+        self._summarizer = pipeline("summarization", model="facebook/bart-large-cnn",
+                                    tokenizer="facebook/bart-large-cnn", framework="tf")
 
-        session = tf.Session(graph=g)
-        session.run(init_op)
+    def summarize(self, input_text: str) -> str:
+        summary = self._summarizer(input_text, min_length=10, max_length=30)
+        return summary[0]['summary_text']
 
-        self._session = session
-        self._summarization = summarization
-        self._text_input = text_input
-
-    def summarize(self, input_text: str):
-        returned_bytes = self._session.run(self._summarization, feed_dict={self._text_input: [input_text]})[0]
-        return self._decode(returned_bytes)
-
-    def summarize_all(self, inputs: List[str]):
+    def summarize_all(self, inputs: List[str]) -> List[str]:
         results = []
 
         for i in range(0, len(inputs), Summarizer.batch_size):
             batch = inputs[i:i+Summarizer.batch_size]
-
-            returned_bytes = self._session.run(self._summarization, feed_dict={self._text_input: batch})
-            strings = list(map(self._decode, returned_bytes))
-            results.extend(strings)
+            summarys = list(map(lambda x: x['summary_text'], self._summarizer(batch, min_length=10, max_length=30)))
+            results.extend(summarys)
 
         return results
 
