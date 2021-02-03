@@ -19,7 +19,7 @@ def test_summarize(summarizer):
 
 def test_summarize_all(summarizer):
     text1 = 'Donald trump did something today that was pretty awful. He got rid of healthcare.'
-    text2 = text1
+    text2 = 'Bernie Sanders is awesome.'
     summaries = summarizer.summarize_all([text1, text2])
 
     assert len(summaries) == 2
