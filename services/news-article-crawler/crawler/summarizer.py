@@ -1,6 +1,6 @@
 import spacy
 
-from typing import List
+from typing import List, Union
 from transformers import pipeline
 
 
@@ -12,10 +12,10 @@ class Summarizer:
         self._summarizer = pipeline("summarization", model="facebook/bart-large-cnn",
                                     tokenizer="facebook/bart-large-cnn", framework="tf")
 
-    def summarize(self, input_text: str) -> str:
+    def summarize(self, input_text: str) -> Union[str, None]:
         return self.summarize_all([input_text])[0]
 
-    def summarize_all(self, inputs: List[str]) -> List[str]:
+    def summarize_all(self, inputs: List[str]) -> List[Union[str, None]]:
         results = []
 
         for i in range(0, len(inputs), Summarizer.batch_size):
@@ -35,12 +35,15 @@ class Summarizer:
         return results
 
     @staticmethod
-    def _pick_most_relevant(sentences: List[str]) -> str:
+    def _pick_most_relevant(sentences: List[str]) -> Union[str, None]:
         resulting_sentence = ''
 
         for sentence in sentences:
             if len(sentence) > len(resulting_sentence):
                 resulting_sentence = sentence
+
+        if resulting_sentence == '':
+            return None
 
         return resulting_sentence
 

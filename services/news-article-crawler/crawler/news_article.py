@@ -94,6 +94,9 @@ class NewsArticleCrawler:
             stripped_description = NewsArticleCrawler._stip_html_tags(article['description'])
             summary = summaries[index]
 
+            if summary is None:
+                continue
+
             if len(extracted_politicians) == 0:
                 extracted_politicians = [politician.num]
 
