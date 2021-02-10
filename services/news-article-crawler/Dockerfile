@@ -4,7 +4,7 @@ ENV PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/conda/bin:$
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y python3.7 python3-pip curl
+RUN apt-get update && apt-get install -y python3.7 python3-pip curl gcc libpq-dev python3.7-dev
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 
@@ -14,14 +14,16 @@ RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python get-pip.py --force-reinstall && \
     rm get-pip.py
 
-COPY requirements.txt crawler.py config.ini ./
+COPY requirements.txt crawler.py config.ini start.sh alembic.ini ./
 
 RUN pip3 install -r requirements.txt
 
 RUN python -m spacy download en
 
+COPY alembic alembic
+
 COPY crawler crawler
 
 COPY test test
 
-CMD ["python", "-u", "./crawler.py"]
+CMD ["./start.sh"]

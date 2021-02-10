@@ -1,29 +1,45 @@
+import sys
 import timeit
 from typing import List
+from dependency_injector.wiring import inject, Provide
 
 from crawler.container import Container
-from crawler.politician import Politician
+from crawler.job import JobRepository, Job
+from crawler.news_article import NewsArticleCrawler, NewsArticleRepository
+from crawler.politician import Politician, PoliticianRepository
 
-container = Container()
 
-politician_repository = container.politician_repository()
-news_article_repository = container.news_article_repository()
-news_article_crawler = container.news_article_crawler()
+@inject
+def main(
+        politician_repository: PoliticianRepository = Provide[Container.politician_repository],
+        news_article_repository: NewsArticleRepository = Provide[Container.news_article_repository],
+        news_article_crawler: NewsArticleCrawler = Provide[Container.news_article_crawler],
+        job_repository: JobRepository = Provide[Container.job_repository]
+) -> None:
+    politicians: List[Politician] = politician_repository.get_all()
 
-politicians: List[Politician] = politician_repository.get_all()
+    latest_jobs = job_repository.get_latest_time_for_politicians(politicians)
+    sorted_jobs = sorted(latest_jobs.items(), key=lambda x: x[1])
 
-start = timeit.default_timer()
+    start = timeit.default_timer()
 
-for politician in politicians:
-    print('Crawling for ' + politician.name)
-    try:
-        results = news_article_crawler.get(politician, politicians)
-        for result in results:
-            news_article_repository.insert(result)
-    except Exception as ex:
-        print('Error occurred while crawling ' + politician.name)
-        print(ex)
+    for politician, job in sorted_jobs:
+        print('Crawling for ' + politician.name)
+        try:
+            results = news_article_crawler.get(politician, politicians)
+            for result in results:
+                news_article_repository.insert(result)
+            job_repository.insert(Job(politician=politician.num))
+        except Exception as ex:
+            print('Error occurred while crawling ' + politician.name)
+            print(ex)
 
-end = timeit.default_timer()
+    end = timeit.default_timer()
+    print('Total time: ', end - start)
 
-print('Total time: ', end - start)
+
+if __name__ == '__main__':
+    container = Container()
+    container.wire(modules=[sys.modules[__name__]])
+
+    main()

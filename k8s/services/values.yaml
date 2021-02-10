@@ -18,7 +18,7 @@ news-article:
   enabled: true
 
 news-article-crawler:
-  enabled: false
+  enabled: true
 
 analytics:
   enabled: true

@@ -6,6 +6,7 @@ metadata:
     {{- include "news-article-crawler.labels" . | nindent 4 }}
 spec:
   schedule: "{{ .Values.cron.schedule }}"
+  suspend: true
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 2
   concurrencyPolicy: Forbid

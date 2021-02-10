@@ -35,3 +35,29 @@ resources:
     cpu: 1
     memory: 5Gi
 
+postgresql:
+
+  nameOverride: news-article-crawler-postgresql
+
+
+  fullnameOverride: news-article-crawler-postgresql
+
+  ## PostgreSQL admin user
+  ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
+  postgresqlUsername: postgres
+
+  ## PostgreSQL password
+  ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  existingSecret: news-article-crawler-postgres-secret
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 60m
+    limits:
+      memory: 64Mi
+      cpu: 60m
