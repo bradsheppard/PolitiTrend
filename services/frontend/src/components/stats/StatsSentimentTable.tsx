@@ -272,7 +272,7 @@ const StatsSentimentTable: React.FC<IProps> = (
                 <Box height={400}>
                     <NivoLine
                         data={rows.filter((x) => x.line && x.display).map((x) => x.line as Line)}
-                        margin={{ top: 50, right: 200, bottom: 50, left: 60 }}
+                        margin={{ top: 50, right: 150, bottom: 50, left: 60 }}
                         xScale={{
                             type: 'time',
                             format: '%Y-%m-%d',

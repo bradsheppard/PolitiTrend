@@ -32,8 +32,8 @@ interface WordCount {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         wordCloud: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
+            marginTop: theme.spacing(2),
+            marginBottom: theme.spacing(2),
             minHeight: theme.spacing(50),
         },
         formControl: {
@@ -65,10 +65,10 @@ const StatsWordCloud: React.FC<IProps> = (props: IProps) => {
 
     return (
         <Grid container alignItems="center" justify="center">
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
                 <WordCloud wordCounts={wordCounts} className={classes.wordCloud} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
                 <PieChart
                     categories={wordCounts.map((x) => {
                         return { name: x.word, value: x.count }

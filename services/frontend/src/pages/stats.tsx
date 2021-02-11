@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: theme.palette.primary.main,
         },
         card: {
-            margin: theme.spacing(4),
+            marginTop: theme.spacing(4),
+            marginBottom: theme.spacing(4),
         },
         wordCloud: {
             marginTop: theme.spacing(6),
@@ -71,7 +72,7 @@ const Stats: NextPage<IProps> = (props: IProps) => {
 
     return (
         <Grid container justify="center">
-            <Grid item xs={10}>
+            <Grid item xs={12} md={10}>
                 <StatsCard
                     title="TRENDING HASHTAGS"
                     description={trendingHashtagsDescription}
@@ -80,7 +81,7 @@ const Stats: NextPage<IProps> = (props: IProps) => {
                     <StatsWordCloud wordCounts={props.wordCounts} politicians={props.politicians} />
                 </StatsCard>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={12} md={10}>
                 <StatsCard
                     title="SOCIAL MEDIA SENTIMENT"
                     description={socialMediaSentimentDescription}
@@ -89,7 +90,7 @@ const Stats: NextPage<IProps> = (props: IProps) => {
                     <StatsSentimentTable politicians={props.politicians} />
                 </StatsCard>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={12} md={10}>
                 <StatsCard
                     title="STATE MATCHUP"
                     description={stateAffiliationDescription}
