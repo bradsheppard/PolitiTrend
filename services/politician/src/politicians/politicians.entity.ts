@@ -4,6 +4,7 @@ export enum Role {
 	SENATOR = 'Senator',
 	PRESIDENT = 'President',
 	PRESIDENTIAL_CANDIDATE = 'Presidential Candidate',
+	FORMER_PRESIDENT = 'Former President',
 	CONGRESSMAN = 'Congressman',
 }
 
