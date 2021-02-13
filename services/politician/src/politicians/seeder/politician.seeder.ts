@@ -51,7 +51,7 @@ class PoliticianSeeder {
 		);
 		const congressmembers = await PoliticianSeeder.processFile(
 			__dirname + '/../../../data/congressmembers.csv',
-			Role.CONGRESSMAN,
+			Role.CONGRESSMEMBER,
 		);
 		const presidents = await PoliticianSeeder.processFile(
 			__dirname + '/../../../data/presidents.csv',
@@ -66,7 +66,13 @@ class PoliticianSeeder {
 			Role.FORMER_PRESIDENT,
 		);
 
-		return [...sentators, ...congressmembers, ...presidents, ...presidentialsCandidates, ...formerPresidents];
+		return [
+			...sentators,
+			...congressmembers,
+			...presidents,
+			...presidentialsCandidates,
+			...formerPresidents,
+		];
 	}
 
 	private static async processFile(
