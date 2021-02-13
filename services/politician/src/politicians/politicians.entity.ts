@@ -5,7 +5,7 @@ export enum Role {
 	PRESIDENT = 'President',
 	PRESIDENTIAL_CANDIDATE = 'Presidential Candidate',
 	FORMER_PRESIDENT = 'Former President',
-	CONGRESSMEMBER = 'Congressmember',
+	CONGRESSMAN = 'Congressman',
 }
 
 @Entity()

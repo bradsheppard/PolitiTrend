@@ -110,7 +110,7 @@ describe('PoliticianController (e2e)', () => {
 		const updatedPoliticianDto: CreatePoliticianDto = {
 			name: 'Politician 1 Updated',
 			party: 'Party 1 Updated',
-			role: Role.CONGRESSMEMBER,
+			role: Role.CONGRESSMAN,
 			active: true,
 		};
 
@@ -151,7 +151,7 @@ describe('PoliticianService (e2e)', () => {
 		const updatedPoliticianDto: CreatePoliticianDto = {
 			name: 'Politician 1 Updated',
 			party: 'Party 1 Updated',
-			role: Role.CONGRESSMEMBER,
+			role: Role.CONGRESSMAN,
 			active: true,
 		};
 
