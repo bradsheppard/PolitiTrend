@@ -37,8 +37,12 @@ const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
     const classes = useStyles()
     const senators = props.politicians.filter((x) => x.role === 'Senator')
     const presidents = props.politicians.filter(
-        (x) => x.role === 'President' || x.role === 'Presidential Candidate'
+        (x) =>
+            x.role === 'President' ||
+            x.role === 'Presidential Candidate' ||
+            x.role === 'Former President'
     )
+    const congressmembers = props.politicians.filter((x) => x.role === 'Congressman')
 
     return (
         <React.Fragment>
@@ -71,6 +75,30 @@ const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
                     {RoleHeader('SENATORS')}
                 </Grid>
                 {senators.map((politician: Politician, index: number) => {
+                    return (
+                        <Grid item xs={12} md={6} key={index}>
+                            <Link
+                                href="/politicians/[id]"
+                                passHref
+                                as={`/politicians/${politician.id}`}
+                            >
+                                <MuiLink>
+                                    <PoliticiansGridListItem
+                                        politician={politician}
+                                        key={index}
+                                        className={classes.container}
+                                    />
+                                </MuiLink>
+                            </Link>
+                        </Grid>
+                    )
+                })}
+            </Grid>
+            <Grid container>
+                <Grid item xs={12}>
+                    {RoleHeader('CONGRESS MEMBERS')}
+                </Grid>
+                {congressmembers.map((politician: Politician, index: number) => {
                     return (
                         <Grid item xs={12} md={6} key={index}>
                             <Link

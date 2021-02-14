@@ -3,6 +3,7 @@ import { createStyles, Theme, Typography } from '@material-ui/core'
 import { politicianNameToImagePath } from '../../utils/ImagePath'
 import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
+import Image from 'next/image'
 
 interface IProps {
     politician: Politician
@@ -53,10 +54,11 @@ const PoliticiansGridListItem: React.FC<IProps & React.HTMLAttributes<HTMLDivEle
     return (
         <div className={clsx(classes.container, props.className)}>
             <div className={classes.imageContainer}>
-                <img
+                <Image
                     src={politicianNameToImagePath(props.politician.name)}
                     alt={props.politician.name}
-                    className={classes.image}
+                    layout="fill"
+                    objectFit="cover"
                 />
             </div>
             <div className={classes.textContainer}>
