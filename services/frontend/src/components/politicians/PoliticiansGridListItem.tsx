@@ -40,8 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
             float: 'left',
         },
         container: {
-            clear: 'both',
-            overflow: 'auto',
+            display: 'flex',
         },
     })
 )
