@@ -1,9 +1,5 @@
 minio:
   enabled: true
-  buckets:
-    - name: tweets
-      policy: none
-      purge: false
   accessKey: brad1234
   secretKey: brad1234
   nameOverride: minio
