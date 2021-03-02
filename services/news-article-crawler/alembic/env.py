@@ -1,5 +1,4 @@
 from logging.config import fileConfig
-from crawler.config import config as app_config
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -9,8 +8,6 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option('sqlalchemy.url', app_config.sql_connection_string)
-
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
@@ -18,7 +15,10 @@ fileConfig(config.config_file_name)
 import os, sys
 sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), '..')))
 from crawler.job import Job
+from crawler.config import config as app_config
 target_metadata = Job.metadata
+
+config.set_main_option('sqlalchemy.url', app_config.sql_connection_string)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
