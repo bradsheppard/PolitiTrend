@@ -3,11 +3,11 @@ include {
 }
 
 dependency "networking" {
-  config_path = "../networking"
+  config_path = "..//networking"
 }
 
 terraform {
-  source = "../../../modules/kubernetes-cluster"
+  source = "../../../..//modules/kubernetes-cluster"
 }
 
 inputs = {

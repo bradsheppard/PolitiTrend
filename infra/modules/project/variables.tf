@@ -1,3 +1,3 @@
 variable "name" {}
 
-variable "billing_acccount" {}
+variable "billing_account" {}

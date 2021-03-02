@@ -1,12 +1,17 @@
 terraform {
-  extra_arguments "conditional_vars" {
-    commands = [
-      "apply",
-      "plan"
-    ]
+  source = "../../..//modules/project"
+}
 
-    required_var_files = [
-      "${get_terragrunt_dir()}/project.tfvars",
-    ]
+inputs = {
+  billing_account = "01BED7-340A56-12F88F"
+  name = "voyce"
+}
+
+remote_state {
+  backend = "local"
+  generate = {
+    path = "backend.tf"
+    if_exists = "overwrite_terragrunt"
   }
+  config = {}
 }

@@ -5,9 +5,9 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket = "remote-state-dev"
+    bucket = "voyce-remote-state"
     prefix = "${path_relative_to_include()}"
-    project = "voyce866d5d9a"
+    project = "voyce258cb34c"
     location = "us-east1"
   }
 }
@@ -17,11 +17,11 @@ generate "provider" {
   if_exists = "overwrite_terragrunt"
 
   contents = <<EOF
-provider "google" {
-  project = "voyce866d5d9a"
+provider google {
+  project = "voyce258cb34c"
 }
-provider "google-beta" {
-  project = "voyce866d5d9a"
+provider google-beta {
+  project = "voyce258cb34c"
 }
 EOF
 }

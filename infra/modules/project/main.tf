@@ -7,7 +7,7 @@ resource "google_project" "project" {
   name       = var.name
   project_id = random_id.id.hex
   auto_create_network = false
-  billing_account = var.billing_acccount
+  billing_account = var.billing_account
 }
 
 resource "google_project_service" "gke-api" {
