@@ -6,3 +6,4 @@
 **/.terraform.lock.hcl
 **/backend.tf
 **/providers.tf
+**/*.tfvars
