@@ -21,12 +21,12 @@ export class PartySentimentService {
 		return {
 			_id: {
 				dateTime: {
-					$subtract: [
+					$add: [
 						'$dateTime',
 						{
 							$mod: [
 								{
-									$toLong: '$dateTime',
+									$subtract: ['$$NOW', '$dateTime'],
 								},
 								resamplingRate,
 							],

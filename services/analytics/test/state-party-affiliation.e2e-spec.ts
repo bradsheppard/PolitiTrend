@@ -200,6 +200,74 @@ describe('State Party Affiliation (e2e)', () => {
         }
     });
 
+    it('/state-party-affiliation?resample=172800000 (GET) Multiple days with two day resampling', async () => {
+        const millisecondsInDay = 24 * 60 * 60 * 1000;
+        const halfDayAgo = new Date(Date.now() - 0.5 * millisecondsInDay);
+        const fourDaysAgo = new Date(Date.now() - 4 * millisecondsInDay);
+
+        const statePartyAffiliationDto1: CreateStatePartyAffiliationDto = {
+            sampleSize: 100,
+            affiliations: {
+                democratic: 0,
+                republican: 1,
+            },
+            dateTime: halfDayAgo,
+            state: 'Texas',
+        };
+        const statePartyAffiliationDto2: CreateStatePartyAffiliationDto = {
+            sampleSize: 200,
+            affiliations: {
+                democratic: 6,
+                republican: 4,
+            },
+            state: 'Texas',
+        };
+        const statePartyAffiliationDto3: CreateStatePartyAffiliationDto = {
+            sampleSize: 200,
+            affiliations: {
+                democratic: 6,
+                republican: 4,
+            },
+            state: 'Texas',
+            dateTime: fourDaysAgo
+        }
+
+        await Promise.all([
+            service.create(statePartyAffiliationDto1),
+            service.create(statePartyAffiliationDto2),
+            service.create(statePartyAffiliationDto3),
+        ]);
+
+        const expectedResponse = [
+            {
+                state: 'Texas',
+                sampleSize: 150,
+                affiliations: {
+                    democratic: 4,
+                    republican: 3,
+                },
+            },
+            {
+                state: 'Texas',
+                sampleSize: 200,
+                affiliations: {
+                    democratic: 6,
+                    republican: 4,
+                },
+            },
+        ];
+
+        const response = await request(app.getHttpServer()).get(
+            '/state-party-affiliation?resample=172800000',
+        );
+
+        expect(response.status).toEqual(200);
+        expect(response.body.length).toEqual(2);
+        for (let i = 0; i < response.body.length; i++) {
+            equals(response.body[i], expectedResponse[i]);
+        }
+    });
+
     it('/state-party-affiliation?minSampleSize=3', async () => {
         const statePartyAffiliationDto1: CreateStatePartyAffiliationDto = {
             sampleSize: 1,

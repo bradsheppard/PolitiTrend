@@ -315,7 +315,7 @@ describe('Politician Sentiment (e2e)', () => {
         expect(response.body.length).toEqual(expectedResponse.length);
 
         for (let i = 0; i < response.body.length; i++) {
-            equalsWithDate(response.body[i], expectedResponse[i]);
+            equals(response.body[i], expectedResponse[i]);
         }
     });
 
