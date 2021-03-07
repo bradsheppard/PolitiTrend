@@ -35,16 +35,19 @@ if __name__ == "__main__":
 
     tweet_repository.delete_analyzed_tweets('temp')
     tweets_df: DataFrame = tweet_repository.read_tweets()
+    tweets_df = tweets_df.set_index('tweetId')
     tweets_df = tweets_df.repartition(npartitions=config.analytic_num_partitions)
     tweets_df = tweets_df.persist()
 
     analyzed_tweets_df = tweet_repository.read_analyzed_tweets('analyzed-tweets')
+    analyzed_tweets_df.set_index('tweetId')
     analyzed_tweets_df = analyzed_tweets_df \
         .repartition(npartitions=config.analytic_num_partitions)
     analyzed_tweets_df = analyzed_tweets_df.persist()
 
     combined_df = tweets_df \
-        .merge(analyzed_tweets_df[['tweetId', 'sentiment', 'state']], on=['tweetId'], how='left', indicator=True)
+        .merge(analyzed_tweets_df[['tweetId', 'state', 'democratic', 'republican']],
+               how='left', on='tweetId', indicator=True)
     combined_df = combined_df.drop_duplicates(subset=['tweetId'])
     tweets_to_analyze = combined_df[combined_df['_merge'] == 'left_only']\
         .repartition(npartitions=config.analytic_num_partitions)\

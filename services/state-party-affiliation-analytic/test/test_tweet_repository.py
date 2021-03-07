@@ -33,5 +33,7 @@ def test_delete_analyzed_tweets(dataframe):
 
     resulting_dataframe = tweet_repository.read_analyzed_tweets('test')
 
-    pd.testing.assert_frame_equal(pd.DataFrame({}, columns=['tweetText', 'location', 'tweetId']),
+    pd.testing.assert_frame_equal(pd.DataFrame({},
+                                               columns=['tweetText', 'location', 'tweetId',
+                                                        'state', 'democratic', 'republican']),
                                   resulting_dataframe.compute(), check_like=True, check_dtype=False)

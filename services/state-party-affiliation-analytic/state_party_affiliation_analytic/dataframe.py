@@ -18,16 +18,19 @@ def compute_party_sentiments(dataframe: dd.DataFrame,
     dataframe['sentiment'] = dataframe.map_partitions(get_sentiments_for_partition, politicians)
     dataframe['state'] = dataframe['location'].map(get_state)
     dataframe = dataframe.assign(
-        Democratic=dataframe['sentiment'].map(
+        democratic=dataframe['sentiment'].map(
             lambda x: x['Democratic'] if 'Democratic' in x else 0),
-        Republican=dataframe['sentiment'].map(
+        republican=dataframe['sentiment'].map(
             lambda x: x['Republican'] if 'Republican' in x else 0)
     )
+
+    dataframe = dataframe.drop('sentiment', axis=1)
 
     return dataframe
 
 
 def to_result_dataframe(dataframe: dd.DataFrame) -> dd.DataFrame:
     dataframe = dataframe.groupby(['state']) \
-        .agg({'Democratic': ['count', 'mean'], 'Republican': ['count', 'mean']})
+        .agg({'democratic': 'mean', 'republican': 'mean', 'tweetText': 'count'}) \
+        .rename(columns={'tweetText': 'count'})
     return dataframe

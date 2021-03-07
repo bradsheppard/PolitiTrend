@@ -11,6 +11,16 @@ from state_party_affiliation_analytic.config import config
 
 
 class TweetRepository:
+    _DTYPES = {
+        'dateTime': 'datetime64[ns]',
+        'democratic': 'float64',
+        'republican': 'float64',
+        'location': 'object',
+        'politicians': 'object',
+        'state': 'object',
+        'tweetId': 'int64',
+        'tweetText': 'object'
+    }
 
     def __init__(self):
         self._storage_options = {
@@ -21,22 +31,11 @@ class TweetRepository:
             }
         }
         self._s3 = boto3.resource('s3',
-                    endpoint_url=config.s3_url,
-                    aws_access_key_id=config.s3_username,
-                    aws_secret_access_key=config.s3_password,
-                    config=Config(signature_version='s3v4'),
-                    region_name='us-east-1')
-
-    @staticmethod
-    def index():
-        arrays = [
-            ['Democratic', 'Democratic', 'Republican', 'Republican'],
-            ['count', 'mean', 'count', 'mean']
-        ]
-        tuples = list(zip(*arrays))
-
-        index = pd.MultiIndex.from_tuples(tuples)
-        return index
+                                  endpoint_url=config.s3_url,
+                                  aws_access_key_id=config.s3_username,
+                                  aws_secret_access_key=config.s3_password,
+                                  config=Config(signature_version='s3v4'),
+                                  region_name='us-east-1')
 
     def read_tweets(self) -> DataFrame:
         dfs = []
@@ -62,8 +61,24 @@ class TweetRepository:
                    storage_options=self._storage_options)
 
     def write_analyzed_tweets(self, tweet_dataframe: DataFrame, folder: str):
+        tweet_dataframe = TweetRepository._cull_empty_partitions(tweet_dataframe)
         dd.to_json(tweet_dataframe, f's3://{config.s3_analyzed_tweets_bucket}/{folder}/*',
                    storage_options=self._storage_options)
+
+    @staticmethod
+    def _cull_empty_partitions(dataframe):
+        partitions = list(dataframe.map_partitions(len).compute())
+        df_delayed = dataframe.to_delayed()
+        df_delayed_new = list()
+        pempty = None
+        for index, length in enumerate(partitions):
+            if length == 0:
+                pempty = dataframe.get_partition(index)
+            else:
+                df_delayed_new.append(df_delayed[index])
+        if pempty is not None:
+            dataframe = dd.from_delayed(df_delayed_new, meta=pempty)
+        return dataframe
 
     def delete_analyzed_tweets(self, folder: str):
         bucket = self._s3.Bucket(config.s3_analyzed_tweets_bucket)
@@ -72,7 +87,7 @@ class TweetRepository:
     def read_analyzed_tweets(self, folder: str) -> DataFrame:
         try:
             dataframe = dd.read_json(f's3://{config.s3_analyzed_tweets_bucket}/{folder}/*',
-                              storage_options=self._storage_options)
+                                     storage_options=self._storage_options)
             return dataframe
         # pylint: disable=broad-except
         except Exception as ex:
@@ -81,8 +96,11 @@ class TweetRepository:
             pandas_dataframe = pd.DataFrame({
                 'tweetText': [],
                 'location': [],
-                'tweetId': []
-            }, columns=['tweetText', 'location', 'tweetId', 'sentiment', 'state'])
+                'tweetId': [],
+                'democratic': [],
+                'republican': [],
+                'state': []
+            }, columns=['tweetText', 'location', 'tweetId', 'republican', 'democratic', 'state'])
             dataframe = dd.from_pandas(pandas_dataframe, npartitions=1)
             return dataframe
 

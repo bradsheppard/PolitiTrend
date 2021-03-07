@@ -25,8 +25,8 @@ def from_dataframe(df: pd.DataFrame) -> List[StatePartyAffiliation]:
         state_party_affiliation = StatePartyAffiliation(
             index,
             Affiliations(
-                row['Republican']['mean'], row['Democratic']['mean']),
-            max(row['Republican']['count'], row['Democratic']['count'])
+                row['republican'], row['democratic']),
+            row['count']
         )
 
         state_party_affiliations.append(state_party_affiliation)
