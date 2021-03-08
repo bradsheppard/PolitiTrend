@@ -10,7 +10,7 @@ RUN curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E4
 
 RUN apt-get update && apt-get install -y sbt
 
-COPY src src
+COPY src/main/scala src/main/scala
 
 COPY lib lib
 
