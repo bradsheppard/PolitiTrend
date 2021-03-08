@@ -7,10 +7,10 @@ export default async function handle(
     res: NextApiResponse<StatePartyAffiliationDto[]>
 ): Promise<void> {
     req.query.minSampleSize = '100'
-    req.query.resample = '864000000'
+    req.query.resample = '86400000'
 
     const start = new Date()
-    start.setDate(start.getDate() - 10)
+    start.setDate(start.getDate() - 1)
 
     if (!req.query.start) req.query.start = start.toISOString()
 
