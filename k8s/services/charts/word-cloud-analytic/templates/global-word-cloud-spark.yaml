@@ -18,6 +18,10 @@ spec:
     mainClass: com.voyce.globalwordcloud.GlobalWordCloudAnalytic
     mainApplicationFile: "local:///app/word-cloud-analytic.jar"
     sparkVersion: "2.4.5"
+    volumes:
+      - name: secret-volume
+        secret:
+          secretName: word-cloud-analytic-secret
     restartPolicy:
       type: Never
     driver:
@@ -27,6 +31,10 @@ spec:
       labels:
         version: 2.4.5
       serviceAccount: operators-spark
+      volumeMounts:
+        - name: secret-volume
+          mountPath: /app/application.properties
+          subPath: application.properties
     executor:
       coreRequest: "200m"
       coreLimit: "400m"
