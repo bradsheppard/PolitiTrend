@@ -3,11 +3,10 @@ import { createStyles, Grid, Theme, Typography } from '@material-ui/core'
 import { NextPage, NextPageContext } from 'next'
 import ContentContainer from '../../components/common/ContentContainer'
 import PoliticianApi from '../../apis/politician/PoliticianApi'
-import PoliticianHeader from '../../components/politician/PoliticianHeader'
-import PoliticianFeed from '../../components/politician/PoliticianFeed'
 import { makeStyles } from '@material-ui/styles'
 import PoliticianWordCloudApi from '../../apis/politician-word-cloud/PoliticianWordCloudApi'
 import PoliticianSentimentApi from '../../apis/politician-sentiment/PoliticianSentimentApi'
+import dynamic from 'next/dynamic'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,6 +50,11 @@ interface IProps {
     sentiments: Sentiment[]
 }
 
+const DynamicPoliticianheader = dynamic(
+    () => import('../../components/politician/PoliticianHeader')
+)
+const DynamicPoliticianFeed = dynamic(() => import('../../components/politician/PoliticianFeed'))
+
 const PoliticianPage: NextPage<IProps> = (props: IProps) => {
     if (!props.politician) return <Typography>Not Found</Typography>
 
@@ -62,10 +66,10 @@ const PoliticianPage: NextPage<IProps> = (props: IProps) => {
             <ContentContainer>
                 <Grid container className={classes.profile} direction="row" justify="center">
                     <Grid item sm={12}>
-                        <PoliticianHeader politician={politician} />
+                        <DynamicPoliticianheader politician={politician} />
                     </Grid>
                     <Grid item sm={12} className={classes.content}>
-                        <PoliticianFeed
+                        <DynamicPoliticianFeed
                             politician={politician}
                             wordCounts={props.wordCount}
                             sentiments={props.sentiments}

@@ -4,12 +4,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi'
 import PoliticianSentimentApi from '../apis/politician-sentiment/PoliticianSentimentApi'
 import PoliticianApi from '../apis/politician/PoliticianApi'
-import StatsSentimentTable from '../components/stats/StatsSentimentTable'
-import StatsCard from '../components/stats/StatsCard'
-import StatsWordCloud from '../components/stats/StatsWordCloud'
-import StatsMap from '../components/stats/StatsMap'
 import StatePartyAffiliationApi from '../apis/state-party-affiliation/StatePartyAffiliationApi'
 import { NextPage } from 'next'
+import dynamic from 'next/dynamic'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -67,40 +64,48 @@ const socialMediaSentimentDescription =
 const stateAffiliationDescription =
     'Democratic/Republican favorability per-state based on social media posts.'
 
+const DynamicWordCloud = dynamic(() => import('../components/stats/StatsWordCloud'))
+const DynamicSentimentTable = dynamic(() => import('../components/stats/StatsSentimentTable'))
+const DynamicStatsMap = dynamic(() => import('../components/stats/StatsMap'))
+const DynamicStatsCard = dynamic(() => import('../components/stats/StatsCard'))
+
 const Stats: NextPage<IProps> = (props: IProps) => {
     const classes = useStyles()
 
     return (
         <Grid container justify="center">
             <Grid item xs={12} md={10}>
-                <StatsCard
+                <DynamicStatsCard
                     title="TRENDING HASHTAGS"
                     description={trendingHashtagsDescription}
                     className={classes.card}
                 >
-                    <StatsWordCloud wordCounts={props.wordCounts} politicians={props.politicians} />
-                </StatsCard>
+                    <DynamicWordCloud
+                        wordCounts={props.wordCounts}
+                        politicians={props.politicians}
+                    />
+                </DynamicStatsCard>
             </Grid>
             <Grid item xs={12} md={10}>
-                <StatsCard
+                <DynamicStatsCard
                     title="SOCIAL MEDIA SENTIMENT"
                     description={socialMediaSentimentDescription}
                     className={classes.card}
                 >
-                    <StatsSentimentTable politicians={props.politicians} />
-                </StatsCard>
+                    <DynamicSentimentTable politicians={props.politicians} />
+                </DynamicStatsCard>
             </Grid>
             <Grid item xs={12} md={10}>
-                <StatsCard
+                <DynamicStatsCard
                     title="STATE MATCHUP"
                     description={stateAffiliationDescription}
                     className={classes.card}
                 >
-                    <StatsMap
+                    <DynamicStatsMap
                         className={classes.map}
                         statePartyAffiliations={props.statePartyAffiliations}
                     />
-                </StatsCard>
+                </DynamicStatsCard>
             </Grid>
         </Grid>
     )

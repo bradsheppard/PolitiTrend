@@ -3,7 +3,7 @@ import PoliticianApi from '../../apis/politician/PoliticianApi'
 import { createStyles, Grid, TextField, Theme, withStyles, WithStyles } from '@material-ui/core'
 import ContentContainer from '../../components/common/ContentContainer'
 import _ from 'lodash'
-import PoliticianGridList from '../../components/politicians/PoliticiansGridList'
+import dynamic from 'next/dynamic'
 
 const style = (theme: Theme) =>
     createStyles({
@@ -28,6 +28,10 @@ interface IProps extends WithStyles<typeof style> {
 interface IState {
     politicians: Politician[]
 }
+
+const DynamicPoliticianGridList = dynamic(
+    () => import('../../components/politicians/PoliticiansGridList')
+)
 
 class Index extends React.Component<IProps, IState> {
     constructor(props: IProps) {
@@ -79,7 +83,7 @@ class Index extends React.Component<IProps, IState> {
                             </Grid>
                         </Grid>
                         <Grid item sm={12}>
-                            <PoliticianGridList politicians={this.state.politicians} />
+                            <DynamicPoliticianGridList politicians={this.state.politicians} />
                         </Grid>
                     </Grid>
                 </ContentContainer>

@@ -1,40 +1,36 @@
-FROM node:10-alpine AS builder
+FROM node:12-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json .
-
-COPY package-lock.json .
+COPY package.json package-lock.json tsconfig.json ./
 
 RUN npm install
-
-COPY public public
-
-COPY tsconfig.json .
 
 COPY src src
 
 RUN npm run build
 
 
-FROM node:10-alpine AS app
+FROM node:12-alpine AS app
 
 WORKDIR /app
 
-COPY --from=builder /app/.next .next
-
-COPY --from=builder /app/public public
+COPY package.json ./
 
 COPY --from=builder /app/node_modules node_modules
 
-COPY package.json .
+COPY --from=builder /app/.next .next
 
 EXPOSE 3000
 
 USER node
 
 
+FROM builder AS tester
+
+CMD ["npm", "run", "test"]
+
+
 FROM app AS runner
 
-CMD ["npm", "start"]
-
+CMD ["npm", "run", "start:prod"]
