@@ -30,6 +30,7 @@ spec:
             httpGet:
               path: /api/ping
               port: http
+            initialDelaySeconds: 30
           readinessProbe:
             httpGet:
               path: /api/ping

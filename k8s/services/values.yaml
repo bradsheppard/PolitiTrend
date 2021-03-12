@@ -24,16 +24,16 @@ analytics:
   enabled: true
 
 frontend:
-  enabled: false
+  enabled: true
 
 kafka:
   enabled: true
 
 video:
-  enabled: true
+  enabled: false
 
 video-crawler:
-  enabled: true
+  enabled: false
 
 word-cloud-analytic:
   enabled: true
