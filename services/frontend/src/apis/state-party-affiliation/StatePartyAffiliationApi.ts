@@ -1,9 +1,8 @@
-import { url } from '../Utils'
 import StatePartyAffiliationDto from './StatePartyAffiliationDto'
 import axios, { AxiosInstance } from 'axios'
 
 class StatePartyAffiliationApi {
-    private static url = `http://${url}/api/statepartyaffiliations`
+    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/statepartyaffiliations`
 
     static async get(): Promise<StatePartyAffiliationDto[]> {
         const axiosInstance = this.createAxiosInstance()

@@ -2,7 +2,7 @@ FROM node:12-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json tsconfig.json ./
+COPY package.json package-lock.json tsconfig.json .env ./
 
 RUN npm install
 
@@ -15,7 +15,9 @@ FROM node:12-alpine AS app
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json next.config.js ./
+
+COPY public public
 
 COPY --from=builder /app/node_modules node_modules
 
@@ -33,4 +35,4 @@ CMD ["npm", "run", "test"]
 
 FROM app AS runner
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "start"]

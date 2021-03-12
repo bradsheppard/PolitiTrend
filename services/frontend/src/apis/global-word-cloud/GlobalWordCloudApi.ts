@@ -1,10 +1,9 @@
-import { url } from '../Utils'
 import GlobalWordCloudDto from './GlobalWordCloudDto'
 import SearchGlobalWordCloudDto from './SearchGlobalWordCloudDto'
 import axios, { AxiosInstance } from 'axios'
 
 class GlobalWordCloudApi {
-    private static url = `http://${url}/api/globalwordclouds`
+    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/globalwordclouds`
 
     static async get(searchWordCloudDto?: SearchGlobalWordCloudDto): Promise<GlobalWordCloudDto[]> {
         const axiosInstance = this.createAxiosInstance()

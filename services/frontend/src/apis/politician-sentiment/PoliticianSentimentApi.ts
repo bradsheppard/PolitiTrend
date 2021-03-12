@@ -1,9 +1,8 @@
-import { url } from '../Utils'
 import axios, { AxiosInstance } from 'axios'
 import PoliticianSentimentDto from './PoliticianSentimentDto'
 
 class PoliticianSentimentApi {
-    private static url = `http://${url}/api/politiciansentiment`
+    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/politiciansentiment`
     private static LOOKBACK_DAYS = 30
 
     static async get(): Promise<PoliticianSentimentDto[]> {

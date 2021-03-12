@@ -1,10 +1,9 @@
 import axios, { AxiosInstance } from 'axios'
 import TweetDto from './TweetDto'
 import SearchTweetDto from './SearchTweetDto'
-import { url } from '../Utils'
 
 class TweetApi {
-    private static url = `http://${url}/api/tweets`
+    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/tweets`
 
     static async get(searchTweetDto?: SearchTweetDto): Promise<TweetDto[]> {
         const axiosInstance = this.createAxiosInstance()

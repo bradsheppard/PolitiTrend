@@ -1,10 +1,9 @@
-import { url } from '../../Utils'
 import SearchYoutubeVideoDto from './SearchYoutubeVideoDto'
 import axios, { AxiosInstance } from 'axios'
 import YoutubeVideoDto from './YoutubeVideoDto'
 
 class YoutubeVideoApi {
-    private static url = `http://${url}/api/videos/youtube`
+    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/videos/youtube`
 
     static async get(searchYoutubeVideoDto: SearchYoutubeVideoDto): Promise<YoutubeVideoDto[]> {
         const axiosInstance = this.createAxiosInstance()

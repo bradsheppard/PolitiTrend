@@ -9,3 +9,5 @@
 
 # production server output
 /dist
+
+.env.local

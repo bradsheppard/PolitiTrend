@@ -1,9 +1,9 @@
 import * as React from 'react'
-import PoliticiansGridListItem from './PoliticiansGridListItem'
 import { createStyles, Grid, Theme, Link as MuiLink, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import Link from 'next/link'
 import Header from '../common/Header'
+import dynamic from 'next/dynamic'
 
 interface IProps {
     politicians: Politician[]
@@ -33,6 +33,8 @@ const RoleHeader = (title: string) => {
     )
 }
 
+const DynamicPoliticianGridListItem = dynamic(() => import('./PoliticiansGridListItem'))
+
 const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
     const classes = useStyles()
     const senators = props.politicians.filter((x) => x.role === 'Senator')
@@ -59,7 +61,7 @@ const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
                                 as={`/politicians/${politician.id}`}
                             >
                                 <MuiLink>
-                                    <PoliticiansGridListItem
+                                    <DynamicPoliticianGridListItem
                                         politician={politician}
                                         key={index}
                                         className={classes.container}
@@ -83,7 +85,7 @@ const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
                                 as={`/politicians/${politician.id}`}
                             >
                                 <MuiLink>
-                                    <PoliticiansGridListItem
+                                    <DynamicPoliticianGridListItem
                                         politician={politician}
                                         key={index}
                                         className={classes.container}
@@ -107,7 +109,7 @@ const PoliticiansGridList: React.FC<IProps> = (props: IProps) => {
                                 as={`/politicians/${politician.id}`}
                             >
                                 <MuiLink>
-                                    <PoliticiansGridListItem
+                                    <DynamicPoliticianGridListItem
                                         politician={politician}
                                         key={index}
                                         className={classes.container}

@@ -1,10 +1,9 @@
-import { url } from '../Utils'
 import axios, { AxiosInstance } from 'axios'
 import NewsArticleDto from './NewsArticleDto'
 import SearchNewsArticleDto from './SearchNewsArticleDto'
 
 class NewsArticleApi {
-    private static url = `http://${url}/api/newsarticles`
+    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/newsarticles`
 
     static async get(searchNewsArticleDto?: SearchNewsArticleDto): Promise<NewsArticleDto[]> {
         const axiosInstance = this.createAxiosInstance()

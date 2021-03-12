@@ -1,10 +1,9 @@
-import { url } from '../Utils'
 import axios, { AxiosInstance } from 'axios'
 import SearchPoliticianWordCloudDto from '../politician-word-cloud/SearchPoliticianWordCloudDto'
 import PoliticianWordCloudDto from '../politician-word-cloud/PoliticianWordCloudDto'
 
 class PoliticianWordCloudApi {
-    private static url = `http://${url}/api/politicianwordclouds`
+    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/politicianwordclouds`
 
     static async get(
         searchWordCloudDto?: SearchPoliticianWordCloudDto
