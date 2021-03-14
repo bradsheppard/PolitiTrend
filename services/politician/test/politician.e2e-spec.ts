@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { CreatePoliticianDto } from '../src/politicians/dto/create-politician.dto';
@@ -19,6 +19,16 @@ function createPoliticianDto() {
 		name: `Politician ${id}`,
 		party: `Party ${id}`,
 		role: Role.SENATOR.toString(),
+		active: true,
+	} as CreatePoliticianDto;
+}
+
+function createPoliticianDtoByRole(role: Role) {
+	id++;
+	return {
+		name: `Politician ${id}`,
+		party: `Party ${id}`,
+		role: role.toString(),
 		active: true,
 	} as CreatePoliticianDto;
 }
@@ -81,6 +91,50 @@ describe('PoliticianController (e2e)', () => {
 		expect(res.status).toEqual(200);
 		expect(politicians.length).toEqual(1);
 		expect(politicians[0]).toEqual(activePolitician);
+	});
+
+	it('/role[]=Senator (GET)', async () => {
+		const senator = createPoliticianDtoByRole(Role.SENATOR);
+		const congressman = createPoliticianDtoByRole(Role.CONGRESSMAN);
+
+		const [insertedSenator] = await Promise.all([
+			service.insert(senator),
+			service.insert(congressman),
+		]);
+
+		const res = await request(app.getHttpServer()).get('/?role[]=Senator');
+		const politicians = res.body as Politician[];
+
+		expect(res.status).toEqual(HttpStatus.OK);
+		expect(politicians.length).toEqual(1);
+		expect(politicians).toContainEqual(insertedSenator);
+	});
+
+	it('/role[]=Senator&role[]=Congressman (GET)', async () => {
+		const senator = createPoliticianDtoByRole(Role.SENATOR);
+		const congressman = createPoliticianDtoByRole(Role.CONGRESSMAN);
+		const president = createPoliticianDtoByRole(Role.PRESIDENT);
+
+		const [insertedSenator, insertedCongressman] = await Promise.all([
+			service.insert(senator),
+			service.insert(congressman),
+			service.insert(president),
+		]);
+
+		const res = await request(app.getHttpServer()).get(
+			'/?role[]=Senator&role[]=Congressman',
+		);
+		const politicians = res.body as Politician[];
+
+		expect(res.status).toEqual(HttpStatus.OK);
+		expect(politicians.length).toEqual(2);
+		expect(politicians).toContainEqual(insertedSenator);
+		expect(politicians).toContainEqual(insertedCongressman);
+	});
+
+	it('/role[]=invalid (GET)', async () => {
+		const res = await request(app.getHttpServer()).get('/?role[]=invalid');
+		expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
 	});
 
 	it('/ (POST)', async () => {
@@ -175,6 +229,41 @@ describe('PoliticianService (e2e)', () => {
 
 		const retrievedPolitician = await service.getOne(insertedPolitician.id);
 		expect(retrievedPolitician).toEqual(insertedPolitician);
+	});
+
+	it('Can get by role', async () => {
+		const senator = createPoliticianDtoByRole(Role.SENATOR);
+		const congressman = createPoliticianDtoByRole(Role.CONGRESSMAN);
+
+		const [insertedSenator] = await Promise.all([
+			service.insert(senator),
+			service.insert(congressman),
+		]);
+
+		const retrievedPoliticians = await service.get({
+			role: [Role.SENATOR],
+		});
+		expect(retrievedPoliticians).toHaveLength(1);
+		expect(retrievedPoliticians).toContainEqual(insertedSenator);
+	});
+
+	it('Can get by multiple roles', async () => {
+		const senator = createPoliticianDtoByRole(Role.SENATOR);
+		const congressman = createPoliticianDtoByRole(Role.CONGRESSMAN);
+		const president = createPoliticianDtoByRole(Role.PRESIDENT);
+
+		const [insertedSenator, insertedCongressman] = await Promise.all([
+			service.insert(senator),
+			service.insert(congressman),
+			service.insert(president),
+		]);
+
+		const retrievedPoliticians = await service.get({
+			role: [Role.SENATOR, Role.CONGRESSMAN],
+		});
+		expect(retrievedPoliticians).toHaveLength(2);
+		expect(retrievedPoliticians).toContainEqual(insertedSenator);
+		expect(retrievedPoliticians).toContainEqual(insertedCongressman);
 	});
 
 	it('Can delete one', async () => {

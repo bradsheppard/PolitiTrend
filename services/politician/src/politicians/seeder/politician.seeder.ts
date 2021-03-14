@@ -66,7 +66,13 @@ class PoliticianSeeder {
 			Role.FORMER_PRESIDENT,
 		);
 
-		return [...sentators, ...congressmembers, ...presidents, ...presidentialsCandidates, ...formerPresidents];
+		return [
+			...sentators,
+			...congressmembers,
+			...presidents,
+			...presidentialsCandidates,
+			...formerPresidents,
+		];
 	}
 
 	private static async processFile(

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import Politician from './politicians.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
@@ -13,7 +13,12 @@ export class PoliticiansService {
 	) {}
 
 	async get(searchPoliticianDto: SearchPoliticianDto): Promise<Politician[]> {
-		return await this.repository.find(searchPoliticianDto);
+		const searchParams: any = searchPoliticianDto;
+		if (searchPoliticianDto.role) {
+			searchParams.role = In(searchPoliticianDto.role);
+		}
+
+		return await this.repository.find({ where: searchParams });
 	}
 
 	async getOne(id: number): Promise<Politician | null> {
