@@ -4,6 +4,7 @@ import Politician from './politicians.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
 import { SearchPoliticianDto } from './dto/search-politician.dto';
+import { ResponseDto } from './dto/response.dto';
 
 @Injectable()
 export class PoliticiansService {
@@ -45,12 +46,22 @@ export class PoliticiansService {
 		return queryParams;
 	}
 
-	async get(searchPoliticianDto: SearchPoliticianDto): Promise<Politician[]> {
+	private static toReponseDto(result: [Politician[], number]): ResponseDto {
+		return {
+			data: result[0],
+			meta: {
+				count: result[1],
+			},
+		};
+	}
+
+	async get(searchPoliticianDto: SearchPoliticianDto): Promise<ResponseDto> {
 		const queryParams = PoliticiansService.buildQueryParams(
 			searchPoliticianDto,
 		);
 
-		return await this.repository.find(queryParams);
+		const result = await this.repository.findAndCount(queryParams);
+		return PoliticiansService.toReponseDto(result);
 	}
 
 	async getOne(id: number): Promise<Politician | null> {

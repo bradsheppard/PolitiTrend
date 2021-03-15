@@ -6,6 +6,7 @@ import { CreatePoliticianDto } from '../src/politicians/dto/create-politician.dt
 import { PoliticiansService } from '../src/politicians/politicians.service';
 import Politician, { Role } from '../src/politicians/politicians.entity';
 import PoliticianSeeder from '../src/politicians/seeder/politician.seeder';
+import { ResponseDto } from '../src/politicians/dto/response.dto';
 
 let app: INestApplication;
 let service: PoliticiansService;
@@ -84,13 +85,13 @@ describe('PoliticianController (e2e)', () => {
 		]);
 
 		const res = await request(app.getHttpServer()).get('/?active=true');
-		const politicians = res.body as Politician[];
+		const responseDto = res.body as ResponseDto;
 
-		delete politicians[0].id;
+		delete responseDto.data[0].id;
 
 		expect(res.status).toEqual(200);
-		expect(politicians.length).toEqual(1);
-		expect(politicians[0]).toEqual(activePolitician);
+		expect(responseDto.data.length).toEqual(1);
+		expect(responseDto.data[0]).toEqual(activePolitician);
 	});
 
 	it('/role[]=Senator (GET)', async () => {
@@ -103,11 +104,11 @@ describe('PoliticianController (e2e)', () => {
 		]);
 
 		const res = await request(app.getHttpServer()).get('/?role[]=Senator');
-		const politicians = res.body as Politician[];
+		const responseDto = res.body as ResponseDto;
 
 		expect(res.status).toEqual(HttpStatus.OK);
-		expect(politicians.length).toEqual(1);
-		expect(politicians).toContainEqual(insertedSenator);
+		expect(responseDto.data.length).toEqual(1);
+		expect(responseDto.data).toContainEqual(insertedSenator);
 	});
 
 	it('/role[]=Senator&role[]=Congressman (GET)', async () => {
@@ -124,12 +125,12 @@ describe('PoliticianController (e2e)', () => {
 		const res = await request(app.getHttpServer()).get(
 			'/?role[]=Senator&role[]=Congressman',
 		);
-		const politicians = res.body as Politician[];
+		const responseDto = res.body as ResponseDto;
 
 		expect(res.status).toEqual(HttpStatus.OK);
-		expect(politicians.length).toEqual(2);
-		expect(politicians).toContainEqual(insertedSenator);
-		expect(politicians).toContainEqual(insertedCongressman);
+		expect(responseDto.data.length).toEqual(2);
+		expect(responseDto.data).toContainEqual(insertedSenator);
+		expect(responseDto.data).toContainEqual(insertedCongressman);
 	});
 
 	it('/role[]=invalid (GET)', async () => {
@@ -147,12 +148,13 @@ describe('PoliticianController (e2e)', () => {
 		await service.insert(politician3);
 
 		const res = await request(app.getHttpServer()).get('/?limit=2');
-		const politicians = res.body as Politician[];
+		const responseDto = res.body as ResponseDto;
 
 		expect(res.status).toEqual(HttpStatus.OK);
-		expect(politicians.length).toEqual(2);
-		expect(politicians).toContainEqual(insertedPolitician1);
-		expect(politicians).toContainEqual(insertedPolitician2);
+		expect(responseDto.data.length).toEqual(2);
+		expect(responseDto.meta.count).toEqual(3);
+		expect(responseDto.data).toContainEqual(insertedPolitician1);
+		expect(responseDto.data).toContainEqual(insertedPolitician2);
 	});
 
 	it('/limit=2&offset=1 (GET)', async () => {
@@ -167,12 +169,13 @@ describe('PoliticianController (e2e)', () => {
 		const res = await request(app.getHttpServer()).get(
 			'/?limit=2&offset=1',
 		);
-		const politicians = res.body as Politician[];
+		const responseDto = res.body as ResponseDto;
 
 		expect(res.status).toEqual(HttpStatus.OK);
-		expect(politicians.length).toEqual(2);
-		expect(politicians).toContainEqual(insertedPolitician2);
-		expect(politicians).toContainEqual(insertedPolitician3);
+		expect(responseDto.data.length).toEqual(2);
+		expect(responseDto.meta.count).toEqual(3);
+		expect(responseDto.data).toContainEqual(insertedPolitician2);
+		expect(responseDto.data).toContainEqual(insertedPolitician3);
 	});
 
 	it('/ (POST)', async () => {
@@ -225,9 +228,9 @@ describe('PoliticianService (e2e)', () => {
 		const firstInsert = await service.insert(politician1);
 		const secondInsert = await service.insert(politician2);
 
-		const tweets = await service.get({});
+		const responseDto = await service.get({});
 
-		expect(tweets).toEqual([firstInsert, secondInsert]);
+		expect(responseDto.data).toEqual([firstInsert, secondInsert]);
 	});
 
 	it('Can update', async () => {
@@ -256,9 +259,9 @@ describe('PoliticianService (e2e)', () => {
 	});
 
 	it('Can get when nothing exists', async () => {
-		const tweets = await service.get({});
+		const responseDto = await service.get({});
 
-		expect(tweets).toHaveLength(0);
+		expect(responseDto.data).toHaveLength(0);
 	});
 
 	it('Can get', async () => {
@@ -278,11 +281,11 @@ describe('PoliticianService (e2e)', () => {
 			service.insert(congressman),
 		]);
 
-		const retrievedPoliticians = await service.get({
+		const responseDto = await service.get({
 			role: [Role.SENATOR],
 		});
-		expect(retrievedPoliticians).toHaveLength(1);
-		expect(retrievedPoliticians).toContainEqual(insertedSenator);
+		expect(responseDto.data).toHaveLength(1);
+		expect(responseDto.data).toContainEqual(insertedSenator);
 	});
 
 	it('Can get by multiple roles', async () => {
@@ -296,12 +299,12 @@ describe('PoliticianService (e2e)', () => {
 			service.insert(president),
 		]);
 
-		const retrievedPoliticians = await service.get({
+		const responseDto = await service.get({
 			role: [Role.SENATOR, Role.CONGRESSMAN],
 		});
-		expect(retrievedPoliticians).toHaveLength(2);
-		expect(retrievedPoliticians).toContainEqual(insertedSenator);
-		expect(retrievedPoliticians).toContainEqual(insertedCongressman);
+		expect(responseDto.data).toHaveLength(2);
+		expect(responseDto.data).toContainEqual(insertedSenator);
+		expect(responseDto.data).toContainEqual(insertedCongressman);
 	});
 
 	it('Can delete one', async () => {
@@ -315,11 +318,11 @@ describe('PoliticianService (e2e)', () => {
 
 		await service.deleteOne(insertedPolitician2.id);
 
-		const politicians = await service.get({});
+		const responseDto = await service.get({});
 
-		expect(politicians.length).toEqual(1);
-		expect(politicians[0]).toEqual(
-			Object.assign(politician1, { id: politicians[0].id }),
+		expect(responseDto.data.length).toEqual(1);
+		expect(responseDto.data[0]).toEqual(
+			Object.assign(politician1, { id: responseDto.data[0].id }),
 		);
 	});
 });
@@ -330,10 +333,10 @@ describe('PoliticianSeeder (e2e)', () => {
 
 		await seeder.updatePoliticianList(newPoliticians);
 
-		const politicians = await service.get({});
-		politicians.forEach(x => delete x.id);
+		const responseDto = await service.get({});
+		responseDto.data.forEach(x => delete x.id);
 
-		expect(politicians).toEqual(newPoliticians);
+		expect(responseDto.data).toEqual(newPoliticians);
 	});
 
 	it('Seed with existing', async () => {
@@ -394,9 +397,9 @@ describe('PoliticianSeeder (e2e)', () => {
 
 		await seeder.updatePoliticianList(newPoliticians);
 
-		const politicians = await service.get({});
-		politicians.forEach(x => delete x.id);
+		const responseDto = await service.get({});
+		responseDto.data.forEach(x => delete x.id);
 
-		expect(politicians).toEqual(expectedPoliticians);
+		expect(responseDto.data).toEqual(expectedPoliticians);
 	});
 });

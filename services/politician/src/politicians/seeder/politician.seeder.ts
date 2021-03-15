@@ -12,7 +12,7 @@ class PoliticianSeeder {
 	constructor(private politicianService: PoliticiansService) {}
 
 	async updatePoliticianList(newPoliticians: CreatePoliticianDto[]) {
-		const currentPoliticians = await this.politicianService.get({});
+		const currentPoliticians = (await this.politicianService.get({})).data;
 
 		for (const newPolitician of newPoliticians) {
 			const matchingPolitician = currentPoliticians.find(

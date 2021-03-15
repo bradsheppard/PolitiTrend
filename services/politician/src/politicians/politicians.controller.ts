@@ -13,6 +13,7 @@ import { PoliticiansService } from './politicians.service';
 import Politician from './politicians.entity';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
 import { SearchPoliticianDto } from './dto/search-politician.dto';
+import { ResponseDto } from './dto/response.dto';
 
 @Controller()
 export class PoliticiansController {
@@ -21,7 +22,7 @@ export class PoliticiansController {
 	@Get()
 	async getPoliticians(
 		@Query() searchPoliticianDto: SearchPoliticianDto,
-	): Promise<Politician[]> {
+	): Promise<ResponseDto> {
 		return await this.politicianService.get(searchPoliticianDto);
 	}
 

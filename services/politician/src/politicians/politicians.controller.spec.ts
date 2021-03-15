@@ -31,16 +31,21 @@ describe('Politicians Controller', () => {
 	});
 
 	it('can get all', async () => {
-		const result = [
-			{
-				id: 1,
-				name: 'Test Name',
-				sentiment: 0,
-				party: 'Republican',
-				role: Role.SENATOR,
-				active: true,
+		const result = {
+			data: [
+				{
+					id: 1,
+					name: 'Test Name',
+					sentiment: 0,
+					party: 'Republican',
+					role: Role.SENATOR,
+					active: true,
+				},
+			],
+			meta: {
+				count: 1,
 			},
-		];
+		};
 		jest.spyOn(service, 'get').mockImplementation(async () => result);
 		expect(await controller.getPoliticians({})).toBe(result);
 	});
