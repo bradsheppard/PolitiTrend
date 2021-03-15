@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { FindManyOptions, In, Repository } from 'typeorm';
 import Politician from './politicians.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
@@ -12,13 +12,45 @@ export class PoliticiansService {
 		private readonly repository: Repository<Politician>,
 	) {}
 
-	async get(searchPoliticianDto: SearchPoliticianDto): Promise<Politician[]> {
-		const searchParams: any = searchPoliticianDto;
+	private static buildQueryParams(
+		searchPoliticianDto: SearchPoliticianDto,
+	): FindManyOptions<Politician> {
+		const queryParams: FindManyOptions<Politician> = {};
+
+		const limit = searchPoliticianDto.limit;
+		const offset = searchPoliticianDto.offset;
+
+		delete searchPoliticianDto.limit;
+		delete searchPoliticianDto.offset;
+
 		if (searchPoliticianDto.role) {
-			searchParams.role = In(searchPoliticianDto.role);
+			const role = searchPoliticianDto.role;
+			delete searchPoliticianDto.role;
+			queryParams.where = { role: In(role), ...searchPoliticianDto };
+		} else {
+			queryParams.where = searchPoliticianDto;
 		}
 
-		return await this.repository.find({ where: searchParams });
+		if (limit) {
+			queryParams.take = limit;
+		}
+		if (offset) {
+			queryParams.skip = offset;
+		}
+
+		queryParams.order = {
+			id: 'ASC',
+		};
+
+		return queryParams;
+	}
+
+	async get(searchPoliticianDto: SearchPoliticianDto): Promise<Politician[]> {
+		const queryParams = PoliticiansService.buildQueryParams(
+			searchPoliticianDto,
+		);
+
+		return await this.repository.find(queryParams);
 	}
 
 	async getOne(id: number): Promise<Politician | null> {

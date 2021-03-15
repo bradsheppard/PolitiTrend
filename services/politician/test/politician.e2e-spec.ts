@@ -137,6 +137,44 @@ describe('PoliticianController (e2e)', () => {
 		expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
 	});
 
+	it('/limit=2 (GET)', async () => {
+		const politician1 = createPoliticianDto();
+		const politician2 = createPoliticianDto();
+		const politician3 = createPoliticianDto();
+
+		const insertedPolitician1 = await service.insert(politician1);
+		const insertedPolitician2 = await service.insert(politician2);
+		await service.insert(politician3);
+
+		const res = await request(app.getHttpServer()).get('/?limit=2');
+		const politicians = res.body as Politician[];
+
+		expect(res.status).toEqual(HttpStatus.OK);
+		expect(politicians.length).toEqual(2);
+		expect(politicians).toContainEqual(insertedPolitician1);
+		expect(politicians).toContainEqual(insertedPolitician2);
+	});
+
+	it('/limit=2&offset=1 (GET)', async () => {
+		const politician1 = createPoliticianDto();
+		const politician2 = createPoliticianDto();
+		const politician3 = createPoliticianDto();
+
+		await service.insert(politician1);
+		const insertedPolitician2 = await service.insert(politician2);
+		const insertedPolitician3 = await service.insert(politician3);
+
+		const res = await request(app.getHttpServer()).get(
+			'/?limit=2&offset=1',
+		);
+		const politicians = res.body as Politician[];
+
+		expect(res.status).toEqual(HttpStatus.OK);
+		expect(politicians.length).toEqual(2);
+		expect(politicians).toContainEqual(insertedPolitician2);
+		expect(politicians).toContainEqual(insertedPolitician3);
+	});
+
 	it('/ (POST)', async () => {
 		const politicianDto = createPoliticianDto();
 		const res = await request(app.getHttpServer())
@@ -337,15 +375,15 @@ describe('PoliticianSeeder (e2e)', () => {
 				role: Role.SENATOR,
 			},
 			{
-				name: 'Politician 2',
-				party: 'Republican',
-				active: true,
-				role: Role.SENATOR,
-			},
-			{
 				name: 'Politician 3',
 				party: 'Republican',
 				active: false,
+				role: Role.SENATOR,
+			},
+			{
+				name: 'Politician 2',
+				party: 'Republican',
+				active: true,
 				role: Role.SENATOR,
 			},
 		];

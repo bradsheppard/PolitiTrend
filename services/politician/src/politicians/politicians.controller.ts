@@ -10,7 +10,7 @@ import {
 	Query,
 } from '@nestjs/common';
 import { PoliticiansService } from './politicians.service';
-import Politician, { Role } from './politicians.entity';
+import Politician from './politicians.entity';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
 import { SearchPoliticianDto } from './dto/search-politician.dto';
 
