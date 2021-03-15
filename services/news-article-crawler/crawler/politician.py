@@ -16,7 +16,7 @@ class PoliticianRepository:
 
     def get_all(self) -> List[Politician]:
         res = requests.get(self._host)
-        json = res.json()
+        json = res.json()['data']
 
         politicians = []
 
