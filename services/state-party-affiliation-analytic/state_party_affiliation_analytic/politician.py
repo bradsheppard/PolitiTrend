@@ -15,7 +15,7 @@ HOST = 'http://politician'
 
 def get_all() -> List[Politician]:
     res = requests.get(HOST)
-    json = res.json()
+    json = res.json()['data']
 
     politicians = []
 
