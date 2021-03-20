@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import StatePartyAffiliationDto from '../../apis/state-party-affiliation/StatePartyAffiliationDto'
+import StatePartyAffiliation from '../../apis/model/StatePartyAffiliation'
 
 export default async function handle(
     req: NextApiRequest,
-    res: NextApiResponse<StatePartyAffiliationDto[]>
+    res: NextApiResponse<StatePartyAffiliation[]>
 ): Promise<void> {
     req.query.minSampleSize = '100'
     req.query.resample = '86400000'
@@ -14,7 +14,7 @@ export default async function handle(
 
     if (!req.query.start) req.query.start = start.toISOString()
 
-    const axiosResponse = await axios.get<StatePartyAffiliationDto[]>(
+    const axiosResponse = await axios.get<StatePartyAffiliation[]>(
         'http://analytics/state-party-affiliation',
         { params: req.query }
     )

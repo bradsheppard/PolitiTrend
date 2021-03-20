@@ -1,15 +1,19 @@
 import axios, { AxiosInstance } from 'axios'
-import SearchPoliticianWordCloudDto from '../politician-word-cloud/SearchPoliticianWordCloudDto'
-import PoliticianWordCloudDto from '../politician-word-cloud/PoliticianWordCloudDto'
+import PoliticianWordCloud from './model/PoliticianWordCloud'
+
+interface SearchPoliticianWordCloudDto {
+    limit?: number
+    politician?: number
+}
 
 class PoliticianWordCloudApi {
     private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/politicianwordclouds`
 
     static async get(
         searchWordCloudDto?: SearchPoliticianWordCloudDto
-    ): Promise<PoliticianWordCloudDto[]> {
+    ): Promise<PoliticianWordCloud[]> {
         const axiosInstance = this.createAxiosInstance()
-        const res = await axiosInstance.get<PoliticianWordCloudDto[]>('', {
+        const res = await axiosInstance.get<PoliticianWordCloud[]>('', {
             params: searchWordCloudDto,
         })
         return res.data

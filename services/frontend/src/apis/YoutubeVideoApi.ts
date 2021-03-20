@@ -1,13 +1,18 @@
-import SearchYoutubeVideoDto from './SearchYoutubeVideoDto'
 import axios, { AxiosInstance } from 'axios'
-import YoutubeVideoDto from './YoutubeVideoDto'
+import YoutubeVideo from './model/YoutubeVideo'
+
+interface SearchYoutubeVideoDto {
+    limit?: number
+    offset?: number
+    politician?: number
+}
 
 class YoutubeVideoApi {
     private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/videos/youtube`
 
-    static async get(searchYoutubeVideoDto: SearchYoutubeVideoDto): Promise<YoutubeVideoDto[]> {
+    static async get(searchYoutubeVideoDto: SearchYoutubeVideoDto): Promise<YoutubeVideo[]> {
         const axiosInstance = this.createAxiosInstance()
-        const res = await axiosInstance.get<YoutubeVideoDto[]>('', {
+        const res = await axiosInstance.get<YoutubeVideo[]>('', {
             params: searchYoutubeVideoDto,
         })
         return res.data

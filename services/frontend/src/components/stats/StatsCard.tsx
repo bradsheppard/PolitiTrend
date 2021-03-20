@@ -20,13 +20,13 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-interface IProps extends PropsWithChildren<unknown> {
+interface Props extends PropsWithChildren<unknown> {
     title: string
     description: string
 }
 
-const StatsCard: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
-    props: IProps & React.HTMLAttributes<HTMLDivElement>
+const StatsCard: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
+    props: Props & React.HTMLAttributes<HTMLDivElement>
 ) => {
     const classes = useStyles()
 

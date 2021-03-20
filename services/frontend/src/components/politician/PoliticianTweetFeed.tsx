@@ -1,23 +1,23 @@
 import * as React from 'react'
 import { Tweet as TweetWidget } from 'react-twitter-widgets'
-import TweetDto from '../../apis/tweet/TweetDto'
-import TweetApi from '../../apis/tweet/TweetApi'
+import Tweet from '../../apis/model/Tweet'
+import TweetApi from '../../apis/TweetApi'
 
 interface Tweet {
     tweetId: string
     tweetText: string
 }
 
-interface IProps {
+interface Props {
     politician: number
 }
 
-interface IState {
+interface State {
     tweets: Tweet[]
 }
 
-class PoliticianTweetFeed extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+class PoliticianTweetFeed extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props)
         this.state = {
             tweets: [],
@@ -26,7 +26,7 @@ class PoliticianTweetFeed extends React.Component<IProps, IState> {
 
     async componentDidMount(): Promise<void> {
         const { politician } = this.props
-        const tweetDtos: TweetDto[] = await TweetApi.get({ politician, limit: 10 })
+        const tweetDtos: Tweet[] = await TweetApi.get({ politician, limit: 10 })
         const tweets = tweetDtos.map((x) => {
             return { tweetId: x.tweetId } as Tweet
         })

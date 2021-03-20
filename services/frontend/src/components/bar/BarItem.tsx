@@ -13,11 +13,11 @@ const styles = (theme: Theme) =>
         },
     })
 
-interface IProps extends WithStyles<typeof styles>, PropsWithChildren<unknown> {
+interface Props extends WithStyles<typeof styles>, PropsWithChildren<unknown> {
     link: string
 }
 
-const BarItem = (props: IProps) => {
+const BarItem = (props: Props) => {
     const { classes, link } = props
 
     return (

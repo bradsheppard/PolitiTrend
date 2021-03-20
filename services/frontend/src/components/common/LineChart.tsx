@@ -1,7 +1,7 @@
 import { Chart } from 'react-google-charts'
 import * as React from 'react'
 
-interface IProps {
+interface Props {
     data: TimeValue[]
     xAxis: string
     yAxis: string
@@ -12,7 +12,7 @@ interface TimeValue {
     value: number
 }
 
-const LineChart: React.FC<IProps> = (props: IProps) => {
+const LineChart: React.FC<Props> = (props: Props) => {
     const lineChartData = props.data.map((x) => [x.date, x.value])
 
     return (

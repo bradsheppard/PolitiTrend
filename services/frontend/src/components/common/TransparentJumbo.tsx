@@ -17,9 +17,9 @@ const style = () =>
         },
     })
 
-interface IProps extends WithStyles<typeof style>, PropsWithChildren<unknown> {}
+interface Props extends WithStyles<typeof style>, PropsWithChildren<unknown> {}
 
-const TransparentJumbo = (props: IProps) => {
+const TransparentJumbo = (props: Props) => {
     const { classes } = props
 
     return (

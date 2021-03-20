@@ -8,7 +8,7 @@ import TwitterIcon from '@material-ui/icons/Twitter'
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
         container: {
-            backgroundColor: '#000000',
+            backgroundColor: 'rgb(26,27,31)',
             color: '#ffffff',
             paddingTop: theme.spacing(4),
             paddingBottom: theme.spacing(4),

@@ -17,10 +17,10 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { ResponsiveLine as NivoLine } from '@nivo/line'
-import PoliticianSentimentApi from '../../apis/politician-sentiment/PoliticianSentimentApi'
+import PoliticianSentimentApi from '../../apis/PoliticianSentimentApi'
 import { makeStyles } from '@material-ui/styles'
 
-interface IProps {
+interface Props {
     politicians: Politician[]
 }
 
@@ -181,8 +181,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     )
 }
 
-const StatsSentimentTable: React.FC<IProps> = (
-    props: IProps & React.HTMLAttributes<HTMLDivElement>
+const StatsSentimentTable: React.FC<Props> = (
+    props: Props & React.HTMLAttributes<HTMLDivElement>
 ) => {
     const classes = useStyles()
     const [page, setPage] = useState(0)

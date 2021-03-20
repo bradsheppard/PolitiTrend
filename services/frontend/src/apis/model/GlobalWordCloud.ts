@@ -1,4 +1,4 @@
-interface GlobalWordCloudDto {
+interface GlobalWordCloud {
     words: WordDto[]
 }
 
@@ -7,4 +7,4 @@ interface WordDto {
     count: number
 }
 
-export default GlobalWordCloudDto
+export default GlobalWordCloud

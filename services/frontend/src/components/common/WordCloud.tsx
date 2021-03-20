@@ -22,12 +22,12 @@ interface WordCount {
     count: number
 }
 
-interface IProps {
+interface Props {
     wordCounts: WordCount[]
 }
 
-const WordCloud: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
-    props: IProps & React.HTMLAttributes<HTMLDivElement>
+const WordCloud: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
+    props: Props & React.HTMLAttributes<HTMLDivElement>
 ) => {
     const words = props.wordCounts.map((x) => {
         return {

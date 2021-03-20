@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import PoliticianDto from '../../../apis/politician/PoliticianDto'
+import Politician from '../../../apis/model/Politician'
 
 export default async function handle(
     req: NextApiRequest,
-    res: NextApiResponse<PoliticianDto>
+    res: NextApiResponse<Politician>
 ): Promise<void> {
     const {
         query: { id },
     } = req
-    const politicianAxiosResponse = await axios.get<PoliticianDto>(`http://politician/${id}`)
+    const politicianAxiosResponse = await axios.get<Politician>(`http://politician/${id}`)
     res.json(politicianAxiosResponse.data)
 }

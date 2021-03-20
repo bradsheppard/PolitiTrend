@@ -3,7 +3,7 @@ import { Box, createStyles, Grid, Slider, Theme, Typography, withStyles } from '
 import { makeStyles } from '@material-ui/styles'
 import { scaleQuantize } from 'd3-scale'
 
-interface IProps {
+interface Props {
     democraticSentiment: number
     republicanSentiment: number
 }
@@ -111,7 +111,7 @@ const getSummary = (sentimentDifference: number) => {
     return summary
 }
 
-const HomePartySentiment: React.FC<IProps> = (props: IProps) => {
+const HomePartySentiment: React.FC<Props> = (props: Props) => {
     const sentimentDifference =
         props.democraticSentiment * 5 + 5 - (props.republicanSentiment * 5 + 5)
 

@@ -16,10 +16,10 @@ const styles = (theme: Theme) =>
         },
     })
 
-type IProps = WithStyles<typeof styles>
+type Props = WithStyles<typeof styles>
 
-class About extends React.Component<IProps> {
-    constructor(props: IProps) {
+class About extends React.Component<Props> {
+    constructor(props: Props) {
         super(props)
     }
 

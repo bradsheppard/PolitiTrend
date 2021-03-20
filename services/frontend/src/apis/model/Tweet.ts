@@ -1,8 +1,8 @@
-interface TweetDto {
+interface Tweet {
     id: number
     tweetId: string
     tweetText: string
     politicians: number[]
 }
 
-export default TweetDto
+export default Tweet

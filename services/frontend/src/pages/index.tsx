@@ -2,17 +2,18 @@ import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/
 import * as React from 'react'
 import ContentContainer from '../components/common/ContentContainer'
 import NewsArticleComponent from '../components/common/NewsArticle'
-import NewsArticleApi from '../apis/news-article/NewsArticleApi'
+import NewsArticleApi from '../apis/NewsArticleApi'
 import Header from '../components/common/Header'
-import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi'
+import GlobalWordCloudApi from '../apis/GlobalWordCloudApi'
 import WordCloud from '../components/common/WordCloud'
-import StatePartyAffiliationApi from '../apis/state-party-affiliation/StatePartyAffiliationApi'
+import StatePartyAffiliationApi from '../apis/StatePartyAffiliationApi'
 import StatsMap from '../components/stats/StatsMap'
 import StatsSentimentTable from '../components/stats/StatsSentimentTable'
-import PoliticianApi from '../apis/politician/PoliticianApi'
-import PoliticianSentimentApi from '../apis/politician-sentiment/PoliticianSentimentApi'
+import PoliticianApi from '../apis/PoliticianApi'
+import PoliticianSentimentApi from '../apis/PoliticianSentimentApi'
 import HomePartySentiment from '../components/home/HomePartySentiment'
-import PartySentimentApi from '../apis/party-sentiment/PartySentimentApi'
+import PartySentimentApi from '../apis/PartySentimentApi'
+import StatePartyAffiliation from '../apis/model/StatePartyAffiliation'
 
 interface NewsArticle {
     summary: string
@@ -57,15 +58,6 @@ const styles = (theme: Theme) =>
         },
     })
 
-interface StatePartyAffiliation {
-    state: string
-    affiliations: {
-        democratic: number
-        republican: number
-    }
-    sampleSize: number
-}
-
 interface Politician {
     id: number
     name: string
@@ -73,7 +65,7 @@ interface Politician {
     sentiment?: number
 }
 
-interface IProps extends WithStyles<typeof styles> {
+interface Props extends WithStyles<typeof styles> {
     politicians: Politician[]
     republicanSentiment: number
     democraticSentiment: number
@@ -82,8 +74,8 @@ interface IProps extends WithStyles<typeof styles> {
     statePartyAffiliations: StatePartyAffiliation[]
 }
 
-class App extends React.Component<IProps> {
-    constructor(props: IProps) {
+class App extends React.Component<Props> {
+    constructor(props: Props) {
         super(props)
         this.state = {
             mainNewsArticleVisibility: Array(props.mainNewsArticles.length).fill(false),

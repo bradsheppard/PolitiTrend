@@ -1,4 +1,4 @@
-interface PoliticianWordCloudDto {
+interface PoliticianWordCloud {
     words: WordDto[]
     politician: number
 }
@@ -8,4 +8,4 @@ interface WordDto {
     count: number
 }
 
-export default PoliticianWordCloudDto
+export default PoliticianWordCloud

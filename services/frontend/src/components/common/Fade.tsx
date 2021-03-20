@@ -3,9 +3,9 @@ import { Fade as MuiFade } from '@material-ui/core'
 import { PropsWithChildren, useState } from 'react'
 import { Waypoint } from 'react-waypoint'
 
-type IProps = PropsWithChildren<unknown>
+type Props = PropsWithChildren<unknown>
 
-const Fade: React.FC<IProps> = (props: IProps) => {
+const Fade: React.FC<Props> = (props: Props) => {
     const [visible, setVisible] = useState(false)
 
     const onEnter = () => {

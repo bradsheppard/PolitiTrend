@@ -1,16 +1,21 @@
 import * as React from 'react'
-import PoliticianApi from '../../apis/politician/PoliticianApi'
-import { createStyles, Grid, TextField, Theme, withStyles, WithStyles } from '@material-ui/core'
+import PoliticianApi from '../../apis/PoliticianApi'
+import {
+    createStyles,
+    Grid,
+    Link as MuiLink,
+    Typography,
+    withStyles,
+    WithStyles,
+} from '@material-ui/core'
 import ContentContainer from '../../components/common/ContentContainer'
-import _ from 'lodash'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 
-const style = (theme: Theme) =>
+const style = () =>
     createStyles({
-        search: {
-            width: '100%',
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
+        more: {
+            float: 'right',
         },
     })
 
@@ -21,11 +26,7 @@ interface Politician {
     role: string
 }
 
-interface IProps extends WithStyles<typeof style> {
-    politicians: Politician[]
-}
-
-interface IState {
+interface Props extends WithStyles<typeof style> {
     politicians: Politician[]
 }
 
@@ -33,23 +34,26 @@ const DynamicPoliticianGridList = dynamic(
     () => import('../../components/politicians/PoliticiansGridList')
 )
 
-class Index extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props)
+interface MoreProps {
+    link: string
+    className: string
+}
 
-        this.state = {
-            politicians: props.politicians,
-        }
-    }
+const MoreLink = (props: MoreProps) => {
+    return (
+        <div className={props.className}>
+            <Link href={props.link} passHref>
+                <MuiLink>
+                    <Typography variant="h5" color="primary">
+                        MORE...
+                    </Typography>
+                </MuiLink>
+            </Link>
+        </div>
+    )
+}
 
-    debounedHandle = _.debounce((event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({
-            politicians: this.props.politicians.filter((politician: Politician) =>
-                politician.name.toLowerCase().includes(event.target.value.toLowerCase())
-            ),
-        })
-    }, 1000)
-
+class Index extends React.Component<Props> {
     static async getInitialProps() {
         const politicians = await PoliticianApi.get()
 
@@ -58,32 +62,36 @@ class Index extends React.Component<IProps, IState> {
         }
     }
 
-    handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
-        event.persist()
-        this.debounedHandle(event)
-    }
-
     render() {
         const { classes } = this.props
+
+        const senators = this.props.politicians.filter((x) => x.role === 'Senator').slice(0, 6)
+        const presidents = this.props.politicians.filter(
+            (x) =>
+                x.role === 'President' ||
+                x.role === 'Presidential Candidate' ||
+                x.role === 'Former President'
+        )
+        const congressmembers = this.props.politicians
+            .filter((x) => x.role === 'Congressman')
+            .slice(0, 6)
 
         return (
             <React.Fragment>
                 <ContentContainer>
                     <Grid container>
                         <Grid item sm={12}>
-                            <Grid container alignItems="center" justify="center">
-                                <Grid item sm={12}>
-                                    <TextField
-                                        className={classes.search}
-                                        label="Name"
-                                        variant="outlined"
-                                        onChange={this.handleSearchChange.bind(this)}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item sm={12}>
-                            <DynamicPoliticianGridList politicians={this.state.politicians} />
+                            <DynamicPoliticianGridList
+                                politicians={presidents}
+                                title="PRESIDENTS"
+                            />
+                            <DynamicPoliticianGridList politicians={senators} title="SENATORS" />
+                            <MoreLink link="/senators" className={classes.more} />
+                            <DynamicPoliticianGridList
+                                politicians={congressmembers}
+                                title="CONGRESS MEMBERS"
+                            />
+                            <MoreLink link="/congressmembers" className={classes.more} />
                         </Grid>
                     </Grid>
                 </ContentContainer>

@@ -6,7 +6,7 @@ import WordCloud from '../common/WordCloud'
 import { ResponsiveLine as NivoLine } from '@nivo/line'
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed'
 
-interface IProps {
+interface Props {
     politician: Politician
     wordCounts: WordCount[]
     sentiments: Sentiment[]
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const PoliticianFeed: React.FC<IProps> = (props: IProps) => {
+const PoliticianFeed: React.FC<Props> = (props: Props) => {
     const classes = useStyles()
 
     const scaleSentiment = (sentiment: number) => {

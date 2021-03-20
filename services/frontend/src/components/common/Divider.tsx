@@ -5,15 +5,15 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles({
     divider: {
         backgroundColor: 'black',
-        height: (props: IProps) => (props.thickness ? props.thickness : 3),
+        height: (props: Props) => (props.thickness ? props.thickness : 3),
     },
 })
 
-interface IProps {
+interface Props {
     thickness?: number
 }
 
-const Divider: React.FC<IProps> = (props: IProps) => {
+const Divider: React.FC<Props> = (props: Props) => {
     const classes = useStyles(props)
 
     return <MuiDivider className={classes.divider} />

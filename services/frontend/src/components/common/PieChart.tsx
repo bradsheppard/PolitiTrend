@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Chart } from 'react-google-charts'
 
-interface IProps {
+interface Props {
     categories: Category[]
 }
 
@@ -10,7 +10,7 @@ interface Category {
     value: number
 }
 
-const PieChart: React.FC<IProps> = (props: IProps) => {
+const PieChart: React.FC<Props> = (props: Props) => {
     const lineChartData = props.categories.map((x) => [x.name, x.value])
 
     return (

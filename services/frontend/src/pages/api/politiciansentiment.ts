@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import PoliticianSentimentDto from '../../apis/politician-sentiment/PoliticianSentimentDto'
+import PoliticianSentiment from '../../apis/model/PoliticianSentiment'
 
 export default async function handle(
     req: NextApiRequest,
-    res: NextApiResponse<PoliticianSentimentDto[]>
+    res: NextApiResponse<PoliticianSentiment[]>
 ): Promise<void> {
     req.query.minSampleSize = '200'
     req.query.resample = '86400000'
@@ -14,7 +14,7 @@ export default async function handle(
 
     if (!req.query.start) req.query.start = start.toISOString()
 
-    const axiosResponse = await axios.get<PoliticianSentimentDto[]>(
+    const axiosResponse = await axios.get<PoliticianSentiment[]>(
         'http://analytics/politician-sentiment',
         {
             params: req.query,

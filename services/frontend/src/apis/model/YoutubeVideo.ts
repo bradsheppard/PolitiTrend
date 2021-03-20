@@ -1,4 +1,4 @@
-interface YoutubeVideoDto {
+interface YoutubeVideo {
     id: string
     videoId: string
     dateTime: string
@@ -6,4 +6,4 @@ interface YoutubeVideoDto {
     title: string
 }
 
-export default YoutubeVideoDto
+export default YoutubeVideo

@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import TweetDto from '../../apis/tweet/TweetDto'
+import Tweet from '../../apis/model/Tweet'
 
 export default async function handle(
     req: NextApiRequest,
-    res: NextApiResponse<TweetDto[]>
+    res: NextApiResponse<Tweet[]>
 ): Promise<void> {
-    const tweetAxiosResponse = await axios.get<TweetDto[]>('http://tweet', { params: req.query })
+    const tweetAxiosResponse = await axios.get<Tweet[]>('http://tweet', { params: req.query })
     res.json(tweetAxiosResponse.data)
 }

@@ -22,11 +22,11 @@ interface Politician {
     role: string
 }
 
-interface IProps {
+interface Props {
     politician: Politician
 }
 
-const PoliticianHeader: React.FC<IProps> = (props: IProps) => {
+const PoliticianHeader: React.FC<Props> = (props: Props) => {
     const { politician } = props
     const classes = useStyles()
 

@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react'
 import Divider from './Divider'
 import { makeStyles } from '@material-ui/styles'
 
-type IProps = PropsWithChildren<unknown>
+type Props = PropsWithChildren<unknown>
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const Header: React.FC<IProps> = (props: IProps) => {
+const Header: React.FC<Props> = (props: Props) => {
     const classes = useStyles()
 
     return (

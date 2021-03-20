@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { createStyles, Theme, Typography } from '@material-ui/core'
 
-type IProps = PropsWithChildren<unknown>
+type Props = PropsWithChildren<unknown>
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const HomeMainHeader: React.FC = (props: IProps) => {
+const HomeMainHeader: React.FC = (props: Props) => {
     const classes = useStyles()
 
     return (

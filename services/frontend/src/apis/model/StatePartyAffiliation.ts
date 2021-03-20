@@ -1,4 +1,4 @@
-interface StatePartyAffiliationDto {
+interface StatePartyAffiliation {
     state: string
     affiliations: {
         democratic: number
@@ -7,4 +7,4 @@ interface StatePartyAffiliationDto {
     sampleSize: number
 }
 
-export default StatePartyAffiliationDto
+export default StatePartyAffiliation

@@ -1,7 +1,7 @@
-interface PartySentimentDto {
+interface PartySentiment {
     party: string
     dateTime: string
     sentiment: number
 }
 
-export default PartySentimentDto
+export default PartySentiment

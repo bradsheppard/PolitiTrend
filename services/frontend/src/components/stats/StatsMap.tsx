@@ -16,7 +16,7 @@ const democraticScale = scaleQuantize<string>()
     .domain([0, 0.05])
     .range(['#99aacd', '#8299cd', '#6483cd', '#4e74cd', '#3463cd'])
 
-interface IProps {
+interface Props {
     statePartyAffiliations: StatePartyAffiliation[]
 }
 
@@ -29,8 +29,8 @@ interface StatePartyAffiliation {
     sampleSize: number
 }
 
-const StatsMap: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
-    props: IProps & React.HTMLAttributes<HTMLDivElement>
+const StatsMap: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
+    props: Props & React.HTMLAttributes<HTMLDivElement>
 ) => {
     const [tooltip, setTooltip] = useState('')
 

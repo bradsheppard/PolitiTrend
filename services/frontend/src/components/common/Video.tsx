@@ -2,7 +2,7 @@ import * as React from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Typography, Link as MuiLink } from '@material-ui/core'
 
-interface IProps {
+interface Props {
     video: Video
 }
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
     },
 })
 
-const Video: React.FC<IProps> = (props: IProps) => {
+const Video: React.FC<Props> = (props: Props) => {
     const classes = useStyles()
 
     return (

@@ -5,12 +5,11 @@ import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import Image from 'next/image'
 
-interface IProps {
+interface Props {
     politician: Politician
 }
 
 interface Politician {
-    id: number
     name: string
     party: string
     role: string
@@ -45,8 +44,8 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const PoliticiansGridListItem: React.FC<IProps & React.HTMLAttributes<HTMLDivElement>> = (
-    props: IProps & React.HTMLAttributes<HTMLDivElement>
+const PoliticiansGridListItem: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
+    props: Props & React.HTMLAttributes<HTMLDivElement>
 ) => {
     const classes = useStyles()
 

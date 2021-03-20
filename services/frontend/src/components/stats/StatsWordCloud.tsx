@@ -12,9 +12,9 @@ import WordCloud from '../common/WordCloud'
 import PieChart from '../common/PieChart'
 import { makeStyles } from '@material-ui/styles'
 import { useState } from 'react'
-import PoliticianWordCloudApi from '../../apis/politician-word-cloud/PoliticianWordCloudApi'
+import PoliticianWordCloudApi from '../../apis/PoliticianWordCloudApi'
 
-interface IProps {
+interface Props {
     wordCounts: WordCount[]
     politicians: Politician[]
 }
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const StatsWordCloud: React.FC<IProps> = (props: IProps) => {
+const StatsWordCloud: React.FC<Props> = (props: Props) => {
     const classes = useStyles()
     const [politician, setPolitician] = useState(-1)
     const [wordCounts, setWordCounts] = useState(props.wordCounts)

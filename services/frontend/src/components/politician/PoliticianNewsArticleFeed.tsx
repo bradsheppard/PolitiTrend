@@ -1,6 +1,6 @@
 import * as React from 'react'
-import NewsArticleApi from '../../apis/news-article/NewsArticleApi'
-import NewsArticleDto from '../../apis/news-article/NewsArticleDto'
+import NewsArticleApi from '../../apis/NewsArticleApi'
+import NewsArticle from '../../apis/model/NewsArticle'
 import NewsArticleComponent from '../common/NewsArticle'
 import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
@@ -32,18 +32,18 @@ interface Politician {
     party: string
 }
 
-interface IProps extends WithStyles<typeof styles> {
+interface Props extends WithStyles<typeof styles> {
     politician: number
 }
 
-interface IState {
+interface State {
     newsArticles: NewsArticle[]
     politicians: Politician[]
     page: number
 }
 
-class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+class PoliticianNewsArticleFeed extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props)
         this.state = {
             newsArticles: [],
@@ -53,7 +53,7 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
     }
 
     async componentDidMount() {
-        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({
+        const newsArticleDtos: NewsArticle[] = await NewsArticleApi.get({
             politician: this.props.politician,
             limit: 6,
         })
@@ -64,7 +64,7 @@ class PoliticianNewsArticleFeed extends React.Component<IProps, IState> {
     }
 
     async handleChange(_: React.ChangeEvent<unknown>, value: number) {
-        const newsArticleDtos: NewsArticleDto[] = await NewsArticleApi.get({
+        const newsArticleDtos: NewsArticle[] = await NewsArticleApi.get({
             politician: this.props.politician,
             limit: 6,
             offset: 6 * (value - 1),

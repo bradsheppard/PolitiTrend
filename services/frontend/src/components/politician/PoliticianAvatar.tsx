@@ -8,7 +8,7 @@ interface Politician {
     sentiment: number
 }
 
-interface IProps {
+interface Props {
     politician: Politician
 }
 
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const PoliticianAvatar: React.FC<IProps> = (props: IProps) => {
+const PoliticianAvatar: React.FC<Props> = (props: Props) => {
     const { politician } = props
     const classes = useStyles()
 

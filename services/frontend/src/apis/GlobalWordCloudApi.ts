@@ -1,13 +1,16 @@
-import GlobalWordCloudDto from './GlobalWordCloudDto'
-import SearchGlobalWordCloudDto from './SearchGlobalWordCloudDto'
+import GlobalWordCloud from './model/GlobalWordCloud'
 import axios, { AxiosInstance } from 'axios'
+
+interface SearchGlobalWordCloudDto {
+    limit?: number
+}
 
 class GlobalWordCloudApi {
     private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/globalwordclouds`
 
-    static async get(searchWordCloudDto?: SearchGlobalWordCloudDto): Promise<GlobalWordCloudDto[]> {
+    static async get(searchWordCloudDto?: SearchGlobalWordCloudDto): Promise<GlobalWordCloud[]> {
         const axiosInstance = this.createAxiosInstance()
-        const res = await axiosInstance.get<GlobalWordCloudDto[]>('', {
+        const res = await axiosInstance.get<GlobalWordCloud[]>('', {
             params: searchWordCloudDto,
         })
         return res.data

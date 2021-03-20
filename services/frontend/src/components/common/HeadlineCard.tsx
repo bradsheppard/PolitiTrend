@@ -9,7 +9,7 @@ import {
     withStyles,
 } from '@material-ui/core'
 
-interface IProps extends WithStyles<typeof style> {
+interface Props extends WithStyles<typeof style> {
     header: string
     body: string
     className?: string
@@ -22,7 +22,7 @@ const style = (theme: Theme) =>
         },
     })
 
-const HeadlineCard = (props: IProps) => {
+const HeadlineCard = (props: Props) => {
     return (
         <Card className={props.className} raised={true}>
             <CardContent>

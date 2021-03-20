@@ -1,10 +1,10 @@
 import { createStyles, Grid, Theme } from '@material-ui/core'
 import * as React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import GlobalWordCloudApi from '../apis/global-word-cloud/GlobalWordCloudApi'
-import PoliticianSentimentApi from '../apis/politician-sentiment/PoliticianSentimentApi'
-import PoliticianApi from '../apis/politician/PoliticianApi'
-import StatePartyAffiliationApi from '../apis/state-party-affiliation/StatePartyAffiliationApi'
+import GlobalWordCloudApi from '../apis/GlobalWordCloudApi'
+import PoliticianSentimentApi from '../apis/PoliticianSentimentApi'
+import PoliticianApi from '../apis/PoliticianApi'
+import StatePartyAffiliationApi from '../apis/StatePartyAffiliationApi'
 import { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-interface IProps {
+interface Props {
     wordCounts: WordCount[]
     politicians: Politician[]
     statePartyAffiliations: StatePartyAffiliation[]
@@ -69,7 +69,7 @@ const DynamicSentimentTable = dynamic(() => import('../components/stats/StatsSen
 const DynamicStatsMap = dynamic(() => import('../components/stats/StatsMap'))
 const DynamicStatsCard = dynamic(() => import('../components/stats/StatsCard'))
 
-const Stats: NextPage<IProps> = (props: IProps) => {
+const Stats: NextPage<Props> = (props: Props) => {
     const classes = useStyles()
 
     return (
@@ -111,7 +111,7 @@ const Stats: NextPage<IProps> = (props: IProps) => {
     )
 }
 
-Stats.getInitialProps = async function (): Promise<IProps> {
+Stats.getInitialProps = async function (): Promise<Props> {
     const [politicians, wordClouds, sentiments, statePartyAffiliations] = await Promise.all([
         PoliticianApi.get(),
         GlobalWordCloudApi.get({ limit: 1 }),

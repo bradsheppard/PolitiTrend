@@ -18,7 +18,7 @@ interface Politician {
     party: string
 }
 
-interface IProps {
+interface Props {
     newsArticle: NewsArticle
 }
 
@@ -45,7 +45,7 @@ const capitalize = (inputString: string) => {
     return inputString.replace(/\b\w/g, (l) => l.toUpperCase())
 }
 
-const NewsArticle: React.FC<IProps> = (props: IProps) => {
+const NewsArticle: React.FC<Props> = (props: Props) => {
     const classes = useStyles()
 
     return (

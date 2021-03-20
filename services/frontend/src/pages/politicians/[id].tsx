@@ -2,10 +2,10 @@ import * as React from 'react'
 import { createStyles, Grid, Theme, Typography } from '@material-ui/core'
 import { NextPage, NextPageContext } from 'next'
 import ContentContainer from '../../components/common/ContentContainer'
-import PoliticianApi from '../../apis/politician/PoliticianApi'
+import PoliticianApi from '../../apis/PoliticianApi'
 import { makeStyles } from '@material-ui/styles'
-import PoliticianWordCloudApi from '../../apis/politician-word-cloud/PoliticianWordCloudApi'
-import PoliticianSentimentApi from '../../apis/politician-sentiment/PoliticianSentimentApi'
+import PoliticianWordCloudApi from '../../apis/PoliticianWordCloudApi'
+import PoliticianSentimentApi from '../../apis/PoliticianSentimentApi'
 import dynamic from 'next/dynamic'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,7 +44,7 @@ interface Sentiment {
     sentiment: number
 }
 
-interface IProps {
+interface Props {
     politician: Politician | null
     wordCount: WordCount[]
     sentiments: Sentiment[]
@@ -55,7 +55,7 @@ const DynamicPoliticianheader = dynamic(
 )
 const DynamicPoliticianFeed = dynamic(() => import('../../components/politician/PoliticianFeed'))
 
-const PoliticianPage: NextPage<IProps> = (props: IProps) => {
+const PoliticianPage: NextPage<Props> = (props: Props) => {
     if (!props.politician) return <Typography>Not Found</Typography>
 
     const { politician } = props
@@ -81,7 +81,7 @@ const PoliticianPage: NextPage<IProps> = (props: IProps) => {
     )
 }
 
-PoliticianPage.getInitialProps = async function (context: NextPageContext): Promise<IProps> {
+PoliticianPage.getInitialProps = async function (context: NextPageContext): Promise<Props> {
     const { id } = context.query
     if (typeof id === 'string') {
         const [politicianDto, politicianWordCloudDtos, sentimentDtos] = await Promise.all([

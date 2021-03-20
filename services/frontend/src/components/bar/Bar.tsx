@@ -38,11 +38,7 @@ const Header: React.FC = () => {
 
     return (
         <React.Fragment>
-            <AppBar
-                position="fixed"
-                color="secondary"
-                style={{ backgroundColor: 'rgba(0,0,0,0.9)' }}
-            >
+            <AppBar position="fixed" color="secondary">
                 <ContentContainer>
                     <Toolbar>
                         <div className={classes.title}>

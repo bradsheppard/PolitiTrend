@@ -1,12 +1,12 @@
-import StatePartyAffiliationDto from './StatePartyAffiliationDto'
+import StatePartyAffiliation from './model/StatePartyAffiliation'
 import axios, { AxiosInstance } from 'axios'
 
 class StatePartyAffiliationApi {
     private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/statepartyaffiliations`
 
-    static async get(): Promise<StatePartyAffiliationDto[]> {
+    static async get(): Promise<StatePartyAffiliation[]> {
         const axiosInstance = this.createAxiosInstance()
-        const res = await axiosInstance.get<StatePartyAffiliationDto[]>('')
+        const res = await axiosInstance.get<StatePartyAffiliation[]>('')
         return res.data
     }
 

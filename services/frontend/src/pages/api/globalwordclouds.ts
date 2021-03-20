@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import GlobalWordCloudDto from '../../apis/global-word-cloud/GlobalWordCloudDto'
+import GlobalWordCloud from '../../apis/model/GlobalWordCloud'
 
 export default async function handle(
     req: NextApiRequest,
-    res: NextApiResponse<GlobalWordCloudDto[]>
+    res: NextApiResponse<GlobalWordCloud[]>
 ): Promise<void> {
-    const axiosResponse = await axios.get<GlobalWordCloudDto[]>(
+    const axiosResponse = await axios.get<GlobalWordCloud[]>(
         'http://analytics/global-word-cloud',
         { params: req.query }
     )
