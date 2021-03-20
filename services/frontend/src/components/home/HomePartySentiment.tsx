@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Box, createStyles, Grid, Slider, Theme, Typography, withStyles } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { scaleQuantize } from 'd3-scale'
+import tinygradient from 'tinygradient'
+import Globals from '../../utils/Globals'
 
 interface Props {
     democraticSentiment: number
@@ -76,13 +78,30 @@ const sliderMarks = [
     },
 ]
 
+const gray = '#c4c4c4'
+
+const blueGradient = tinygradient(Globals.blue, gray)
+const redGradient = tinygradient(Globals.red, gray)
+
 const republicanScale = scaleQuantize<string>()
-    .domain([0, 5])
-    .range(['#cc9b98', '#cc7372', '#cc5959', '#cc4542', '#CC2C26'])
+    .domain([0, 0.05])
+    .range([
+        redGradient.rgbAt(0.8).toHexString(),
+        redGradient.rgbAt(0.6).toHexString(),
+        redGradient.rgbAt(0.4).toHexString(),
+        redGradient.rgbAt(0.2).toHexString(),
+        redGradient.rgbAt(0).toHexString(),
+    ])
 
 const democraticScale = scaleQuantize<string>()
-    .domain([5, 10])
-    .range(['#99aacd', '#8299cd', '#6483cd', '#4e74cd', '#3463cd'])
+    .domain([0, 0.05])
+    .range([
+        blueGradient.rgbAt(0.8).toHexString(),
+        blueGradient.rgbAt(0.6).toHexString(),
+        blueGradient.rgbAt(0.4).toHexString(),
+        blueGradient.rgbAt(0.2).toHexString(),
+        blueGradient.rgbAt(0).toHexString(),
+    ])
 
 const getColor = (sentimentDifference: number) => {
     let color = '#a7a7a7'

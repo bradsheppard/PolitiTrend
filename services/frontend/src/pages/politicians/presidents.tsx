@@ -1,6 +1,6 @@
 import * as React from 'react'
-import PoliticianApi from '../apis/PoliticianApi'
-import ContentContainer from '../components/common/ContentContainer'
+import PoliticianApi from '../../apis/PoliticianApi'
+import ContentContainer from '../../components/common/ContentContainer'
 import { Grid } from '@material-ui/core'
 import dynamic from 'next/dynamic'
 import { NextPage } from 'next'
@@ -17,7 +17,7 @@ interface Politician {
 }
 
 const DynamicPoliticianGridList = dynamic(
-    () => import('../components/politicians/PoliticiansGridList')
+    () => import('../../components/politicians/PoliticiansGridList')
 )
 
 const Presidents: NextPage<Props> = (props: Props) => {

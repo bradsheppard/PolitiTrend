@@ -5,16 +5,34 @@ import allStates from './allstates.json'
 import { scaleQuantize } from 'd3-scale'
 import { useState } from 'react'
 import ReactTooltip from 'react-tooltip'
+import Globals from '../../utils/Globals'
+import tinygradient from 'tinygradient'
 
 const geoUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json'
+const gray = '#c4c4c4'
+
+const blueGradient = tinygradient(Globals.blue, gray)
+const redGradient = tinygradient(Globals.red, gray)
 
 const republicanScale = scaleQuantize<string>()
     .domain([0, 0.05])
-    .range(['#cc9b98', '#cc7372', '#cc5959', '#cc4542', '#CC2C26'])
+    .range([
+        redGradient.rgbAt(0.8).toHexString(),
+        redGradient.rgbAt(0.6).toHexString(),
+        redGradient.rgbAt(0.4).toHexString(),
+        redGradient.rgbAt(0.2).toHexString(),
+        redGradient.rgbAt(0).toHexString(),
+    ])
 
 const democraticScale = scaleQuantize<string>()
     .domain([0, 0.05])
-    .range(['#99aacd', '#8299cd', '#6483cd', '#4e74cd', '#3463cd'])
+    .range([
+        blueGradient.rgbAt(0.8).toHexString(),
+        blueGradient.rgbAt(0.6).toHexString(),
+        blueGradient.rgbAt(0.4).toHexString(),
+        blueGradient.rgbAt(0.2).toHexString(),
+        blueGradient.rgbAt(0).toHexString(),
+    ])
 
 interface Props {
     statePartyAffiliations: StatePartyAffiliation[]

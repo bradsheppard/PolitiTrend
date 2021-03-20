@@ -51,7 +51,7 @@ interface Props {
 }
 
 const DynamicPoliticianheader = dynamic(
-    () => import('../../components/politician/PoliticianHeader')
+    () => import('../../components/politician/PoliticianTop')
 )
 const DynamicPoliticianFeed = dynamic(() => import('../../components/politician/PoliticianFeed'))
 

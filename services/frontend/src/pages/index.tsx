@@ -1,7 +1,7 @@
 import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
 import * as React from 'react'
 import ContentContainer from '../components/common/ContentContainer'
-import NewsArticleComponent from '../components/common/NewsArticle'
+import NewsArticleComponent from '../components/home/HomeNewsArticle'
 import NewsArticleApi from '../apis/NewsArticleApi'
 import Header from '../components/common/Header'
 import GlobalWordCloudApi from '../apis/GlobalWordCloudApi'

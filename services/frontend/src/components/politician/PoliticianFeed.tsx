@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Box, createStyles, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import Header from '../common/Header'
 import WordCloud from '../common/WordCloud'
 import { ResponsiveLine as NivoLine } from '@nivo/line'
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed'
+import PoliticianHeader from './PoliticianHeader'
 
 interface Props {
     politician: Politician
@@ -72,7 +72,7 @@ const PoliticianFeed: React.FC<Props> = (props: Props) => {
     return (
         <React.Fragment>
             <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
-            <Header>SENTIMENT</Header>
+            <PoliticianHeader>SENTIMENT</PoliticianHeader>
             <Box height={400}>
                 <NivoLine
                     data={[line]}
@@ -139,7 +139,7 @@ const PoliticianFeed: React.FC<Props> = (props: Props) => {
                     useMesh={true}
                 />
             </Box>
-            <Header>NEWS ARTICLES</Header>
+            <PoliticianHeader>NEWS ARTICLES</PoliticianHeader>
             <PoliticianNewsArticleFeed politician={props.politician.id} />
         </React.Fragment>
     )

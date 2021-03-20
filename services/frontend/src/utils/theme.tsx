@@ -1,9 +1,10 @@
 import { createMuiTheme } from '@material-ui/core'
+import Globals from './Globals'
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: 'rgb(36,55,134)',
+            main: Globals.blue,
         },
         secondary: {
             main: 'rgb(26,27,31)',

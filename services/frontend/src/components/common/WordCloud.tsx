@@ -1,10 +1,11 @@
 import * as React from 'react'
 import ReactWordcloud, { MinMaxPair, Scale, Spiral, Word } from 'react-wordcloud'
+import Globals from '../../utils/Globals'
 
 const wordCloudOptions = {
     enableTooltip: false,
     deterministic: true,
-    colors: ['black', '#cc2c26', '#3463cd'],
+    colors: ['black', Globals.red, Globals.blue],
     fontSizes: [30, 55] as MinMaxPair,
     fontFamily: 'Raleway',
     fontWeight: '900',

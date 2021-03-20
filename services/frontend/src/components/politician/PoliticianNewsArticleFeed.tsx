@@ -1,8 +1,8 @@
 import * as React from 'react'
 import NewsArticleApi from '../../apis/NewsArticleApi'
-import NewsArticleComponent from '../common/NewsArticle'
 import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
+import PoliticianNewsArticle from './PoliticianNewsArticle'
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -89,7 +89,7 @@ class PoliticianNewsArticleFeed extends React.Component<Props, State> {
                         return (
                             <Grid item xs={12} md={6} key={index}>
                                 <div className={this.props.classes.content} key={index}>
-                                    <NewsArticleComponent newsArticle={newsArticle} />
+                                    <PoliticianNewsArticle newsArticle={newsArticle} />
                                 </div>
                             </Grid>
                         )

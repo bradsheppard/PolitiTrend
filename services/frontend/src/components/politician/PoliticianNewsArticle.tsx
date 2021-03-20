@@ -45,20 +45,20 @@ const capitalize = (inputString: string) => {
     return inputString.replace(/\b\w/g, (l) => l.toUpperCase())
 }
 
-const NewsArticle: React.FC<Props> = (props: Props) => {
+const PoliticianNewsArticle: React.FC<Props> = (props: Props) => {
     const classes = useStyles()
 
     return (
         <MuiLink href={props.newsArticle.url} className={classes.paper} underline="none">
             <div className={classes.container}>
                 <div>
-                    <Typography gutterBottom variant="h4" color="textPrimary">
+                    <Typography gutterBottom variant="h5" color="primary">
                         {capitalize(props.newsArticle.summary)}
                     </Typography>
-                    <Typography gutterBottom variant="subtitle1" color="textSecondary">
+                    <Typography gutterBottom variant="subtitle2" color="textSecondary">
                         {toDate(props.newsArticle.dateTime)}
                     </Typography>
-                    <Typography gutterBottom variant="subtitle1" color="textSecondary">
+                    <Typography gutterBottom variant="subtitle2" color="textSecondary">
                         Source: {props.newsArticle.source}
                     </Typography>
                 </div>
@@ -77,4 +77,4 @@ const NewsArticle: React.FC<Props> = (props: Props) => {
     )
 }
 
-export default NewsArticle
+export default PoliticianNewsArticle
