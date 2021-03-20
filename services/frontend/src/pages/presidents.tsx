@@ -38,9 +38,9 @@ const Presidents: NextPage<Props> = (props: Props) => {
 }
 
 Presidents.getInitialProps = async (): Promise<Props> => {
-    const presidents = await PoliticianApi.getPresidents()
+    const responseDto = await PoliticianApi.getPresidents()
     return {
-        presidents,
+        presidents: responseDto.data,
     }
 }
 

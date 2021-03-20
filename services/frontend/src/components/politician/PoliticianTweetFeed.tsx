@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Tweet as TweetWidget } from 'react-twitter-widgets'
-import Tweet from '../../apis/model/Tweet'
 import TweetApi from '../../apis/TweetApi'
 
 interface Tweet {

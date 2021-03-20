@@ -1,6 +1,5 @@
 import * as React from 'react'
 import NewsArticleApi from '../../apis/NewsArticleApi'
-import NewsArticle from '../../apis/model/NewsArticle'
 import NewsArticleComponent from '../common/NewsArticle'
 import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
