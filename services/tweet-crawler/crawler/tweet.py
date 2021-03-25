@@ -28,7 +28,7 @@ class TweetCrawler:
 
     @retry(stop_max_attempt_number=3, wait_fixed=3000)
     def get(self, politician: Politician, politicians: List[Politician], **kwargs) -> List[Tweet]:
-        tweepy_results = tweepy\
+        tweepy_results = tweepy \
             .Cursor(self._api.search, q=politician.name, lang='en', result_type='mixed',
                     tweet_mode='extended', count=100, api_root='/2',
                     since_id=kwargs.get('min_tweet_id'), max_id=kwargs.get('max_tweet_id')) \
@@ -37,14 +37,17 @@ class TweetCrawler:
         results = []
 
         for tweepy_result in tweepy_results:
-            extracted_politicians = self.extract_politicians(tweepy_result.full_text, politicians)
+            tweet_text = tweepy_result.retweeted_status.full_text \
+                if hasattr(tweepy_result, 'retweeted_status') \
+                else tweepy_result.full_text
 
-            if len(extracted_politicians) == 0:
-                continue
+            extracted_politicians = self.extract_politicians(tweet_text, politicians)
+            if politician.num not in extracted_politicians:
+                extracted_politicians.append(politician.num)
 
             tweet = Tweet(
                 tweetId=tweepy_result.id_str,
-                tweetText=tweepy_result.full_text,
+                tweetText=tweet_text,
                 dateTime=tweepy_result.created_at.isoformat(' ', 'seconds'),
                 politicians=extracted_politicians,
                 location=tweepy_result.user.location

@@ -25,7 +25,7 @@ def test_get(tweet_crawler):
     )
 
     tweets = tweet_crawler.get(test_politician, [])
-    assert len(tweets) == 0
+    assert len(tweets) > 0
 
 
 def test_get_with_politicians(tweet_crawler):

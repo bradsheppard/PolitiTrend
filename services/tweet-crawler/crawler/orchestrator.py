@@ -18,21 +18,18 @@ class Orchestrator:
     def crawl_all(self, politician: Politician, politicians: List[Politician]):
         job = self._job_repository.get_latest_for_politician(politician.num)
 
-        max_tweet_id = job.maxTweetId if job is not None else '1'
+        min_tweet_id = job.maxTweetId if job is not None else '1'
 
         results = self._tweet_crawler.get(
             politician,
             politicians,
-            min_tweet_id=max_tweet_id)
-
-        if len(results) == 0:
-            return
+            min_tweet_id=min_tweet_id)
 
         for result in results:
             self._tweet_repository.insert(result)
 
-        max_id = max(tweet.tweetId for tweet in results)
-        new_job = Job(minTweetId=max_tweet_id, maxTweetId=max_id, politician=politician.num)
+        max_tweet_id = max((tweet.tweetId for tweet in results), default=min_tweet_id)
+        new_job = Job(minTweetId=min_tweet_id, maxTweetId=max_tweet_id, politician=politician.num)
         self._job_repository.insert(new_job)
 
     @staticmethod
