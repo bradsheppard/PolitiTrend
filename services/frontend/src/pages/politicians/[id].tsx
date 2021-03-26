@@ -50,9 +50,7 @@ interface Props {
     sentiments: Sentiment[]
 }
 
-const DynamicPoliticianheader = dynamic(
-    () => import('../../components/politician/PoliticianTop')
-)
+const DynamicPoliticianheader = dynamic(() => import('../../components/politician/PoliticianTop'))
 const DynamicPoliticianFeed = dynamic(() => import('../../components/politician/PoliticianFeed'))
 
 const PoliticianPage: NextPage<Props> = (props: Props) => {

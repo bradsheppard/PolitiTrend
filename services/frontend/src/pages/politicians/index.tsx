@@ -91,7 +91,10 @@ class Index extends React.Component<Props> {
                                 politicians={congressmembers}
                                 title="CONGRESS MEMBERS"
                             />
-                            <MoreLink link="/politicians/congressmembers" className={classes.more} />
+                            <MoreLink
+                                link="/politicians/congressmembers"
+                                className={classes.more}
+                            />
                         </Grid>
                     </Grid>
                 </ContentContainer>

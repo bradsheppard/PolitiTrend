@@ -34,7 +34,7 @@ const CongressMembers: NextPage<Props> = (props: Props) => {
 
     const handleChangePage = (event: ChangeEvent<unknown> | null, newPage: number) => {
         event?.preventDefault()
-        router.push(`/congressmembers?page=${newPage}`)
+        router.push(`/politicians/congressmembers?page=${newPage}`)
     }
 
     return (
