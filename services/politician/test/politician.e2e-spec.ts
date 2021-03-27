@@ -133,6 +133,33 @@ describe('PoliticianController (e2e)', () => {
 		expect(responseDto.data).toContainEqual(insertedCongressman);
 	});
 
+	it('/name=name%201 (GET)', async () => {
+		const politician1: CreatePoliticianDto = {
+			name: 'Test name 1',
+			party: 'Test party',
+			active: true,
+			role: Role.CONGRESSMAN,
+		};
+		const politician2: CreatePoliticianDto = {
+			name: 'Test name 2',
+			party: 'Test party',
+			active: true,
+			role: Role.CONGRESSMAN,
+		};
+
+		const [insertedPolitician1] = await Promise.all([
+			service.insert(politician1),
+			service.insert(politician2),
+		]);
+
+		const res = await request(app.getHttpServer()).get('/?name=name%201');
+		const responseDto = res.body as ResponseDto;
+
+		expect(res.status).toEqual(HttpStatus.OK);
+		expect(responseDto.data.length).toEqual(1);
+		expect(responseDto.data).toContainEqual(insertedPolitician1);
+	});
+
 	it('/role[]=invalid (GET)', async () => {
 		const res = await request(app.getHttpServer()).get('/?role[]=invalid');
 		expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -286,6 +313,48 @@ describe('PoliticianService (e2e)', () => {
 		});
 		expect(responseDto.data).toHaveLength(1);
 		expect(responseDto.data).toContainEqual(insertedSenator);
+	});
+
+	it('Can get by full name', async () => {
+		const politician1 = createPoliticianDto();
+		const politician2 = createPoliticianDto();
+
+		const [insertedPolitician1] = await Promise.all([
+			service.insert(politician1),
+			service.insert(politician2),
+		]);
+
+		const responseDto = await service.get({
+			name: politician1.name,
+		});
+		expect(responseDto.data).toHaveLength(1);
+		expect(responseDto.data).toContainEqual(insertedPolitician1);
+	});
+
+	it('Can get by partial name', async () => {
+		const politician1: CreatePoliticianDto = {
+			name: 'Test name 1',
+			party: 'Test party',
+			active: true,
+			role: Role.CONGRESSMAN,
+		};
+		const politician2: CreatePoliticianDto = {
+			name: 'Test name 2',
+			party: 'Test party',
+			active: true,
+			role: Role.CONGRESSMAN,
+		};
+
+		const [insertedPolitician1] = await Promise.all([
+			service.insert(politician1),
+			service.insert(politician2),
+		]);
+
+		const responseDto = await service.get({
+			name: 'name 1',
+		});
+		expect(responseDto.data).toHaveLength(1);
+		expect(responseDto.data).toContainEqual(insertedPolitician1);
 	});
 
 	it('Can get by multiple roles', async () => {

@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEnum, IsInt } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsInt, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Role } from '../politicians.entity';
 
@@ -19,4 +19,8 @@ export class SearchPoliticianDto {
 	@IsInt()
 	@Type(() => Number)
 	offset?: number;
+
+	@IsString()
+	@Type(() => String)
+	name?: string;
 }

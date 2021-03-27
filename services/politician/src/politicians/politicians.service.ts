@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, In, Repository } from 'typeorm';
+import { FindManyOptions, In, Like, Repository } from 'typeorm';
 import Politician from './politicians.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePoliticianDto } from './dto/create-politician.dto';
 import { SearchPoliticianDto } from './dto/search-politician.dto';
 import { ResponseDto } from './dto/response.dto';
+import { FindConditions } from 'typeorm/find-options/FindConditions';
+import { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 
 @Injectable()
 export class PoliticiansService {
@@ -24,13 +26,24 @@ export class PoliticiansService {
 		delete searchPoliticianDto.limit;
 		delete searchPoliticianDto.offset;
 
+		const whereClause:
+			| Array<FindConditions<Politician>>
+			| FindConditions<Politician>
+			| ObjectLiteral
+			| string = {};
+
 		if (searchPoliticianDto.role) {
 			const role = searchPoliticianDto.role;
 			delete searchPoliticianDto.role;
-			queryParams.where = { role: In(role), ...searchPoliticianDto };
-		} else {
-			queryParams.where = searchPoliticianDto;
+			whereClause.role = In(role);
 		}
+		if (searchPoliticianDto.name) {
+			const name = searchPoliticianDto.name;
+			delete searchPoliticianDto.name;
+			whereClause.name = Like(`%${name}%`);
+		}
+
+		queryParams.where = { ...whereClause, ...searchPoliticianDto };
 
 		if (limit) {
 			queryParams.take = limit;
