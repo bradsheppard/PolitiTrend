@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Box, createStyles, Paper, Theme, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Box, Paper, Theme, Typography } from '@material-ui/core'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { PropsWithChildren } from 'react'
 import clsx from 'clsx'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'

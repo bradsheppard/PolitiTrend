@@ -50,6 +50,19 @@ class PoliticianApi {
         return res.data
     }
 
+    static async getSenatorsByName(name: string, limit: number, offset = 0): Promise<ResponseDto> {
+        const res = await this.submitRequest({
+            params: {
+                limit,
+                offset,
+                name,
+                'role[]': 'Senator',
+            },
+        })
+
+        return res.data
+    }
+
     static async getCongressMembers(limit: number, offset = 0): Promise<ResponseDto> {
         const res = await this.submitRequest({
             params: {

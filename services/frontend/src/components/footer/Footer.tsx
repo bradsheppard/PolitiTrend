@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { createStyles, Grid, Theme, Typography } from '@material-ui/core'
+import { createStyles } from '@material-ui/core/styles'
+import { Grid, Theme, Typography } from '@material-ui/core'
 import ContentContainer from '../common/ContentContainer'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import TwitterIcon from '@material-ui/icons/Twitter'

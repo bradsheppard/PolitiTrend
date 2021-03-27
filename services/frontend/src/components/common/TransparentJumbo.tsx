@@ -1,4 +1,4 @@
-import { createStyles, withStyles, WithStyles } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import * as React from 'react'
 import { PropsWithChildren } from 'react'

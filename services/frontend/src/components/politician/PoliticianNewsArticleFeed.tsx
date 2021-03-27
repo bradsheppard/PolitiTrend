@@ -1,6 +1,7 @@
 import * as React from 'react'
 import NewsArticleApi from '../../apis/NewsArticleApi'
-import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
+import { Grid, Theme } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 import Pagination from '@material-ui/lab/Pagination'
 import PoliticianNewsArticle from './PoliticianNewsArticle'
 

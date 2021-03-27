@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Card, createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Card, Grid, Theme, Typography } from '@material-ui/core'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import PoliticianAvatar from './PoliticianAvatar'
 
 const useStyles = makeStyles((theme: Theme) =>

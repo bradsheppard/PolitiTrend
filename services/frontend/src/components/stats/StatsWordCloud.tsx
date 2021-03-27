@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {
-    createStyles,
     FormControl,
     Grid,
     InputLabel,
@@ -10,7 +9,7 @@ import {
 } from '@material-ui/core'
 import WordCloud from '../common/WordCloud'
 import PieChart from '../common/PieChart'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { useState } from 'react'
 import PoliticianWordCloudApi from '../../apis/PoliticianWordCloudApi'
 

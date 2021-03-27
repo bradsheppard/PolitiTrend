@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Box, createStyles, Theme } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { Box, Theme } from '@material-ui/core'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import WordCloud from '../common/WordCloud'
 import { ResponsiveLine as NivoLine } from '@nivo/line'
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed'

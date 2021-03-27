@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { createStyles, Theme, Typography } from '@material-ui/core'
+import { Theme, Typography } from '@material-ui/core'
 import { PropsWithChildren } from 'react'
 import PoliticianDivider from './PoliticianDivider'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 type Props = PropsWithChildren<unknown>
 

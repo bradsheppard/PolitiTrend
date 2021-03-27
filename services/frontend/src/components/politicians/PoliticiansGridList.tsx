@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { createStyles, Grid, Theme, Link as MuiLink, Box } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Grid, Theme, Link as MuiLink, Box } from '@material-ui/core'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Link from 'next/link'
 import Header from '../common/Header'
 import dynamic from 'next/dynamic'

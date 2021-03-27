@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Box, createStyles, Grid, Slider, Theme, Typography, withStyles } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Box, Grid, Slider, Theme, Typography } from '@material-ui/core'
+import { createStyles, withStyles, makeStyles } from '@material-ui/core/styles'
 import { scaleQuantize } from 'd3-scale'
 import tinygradient from 'tinygradient'
 import Globals from '../../utils/Globals'

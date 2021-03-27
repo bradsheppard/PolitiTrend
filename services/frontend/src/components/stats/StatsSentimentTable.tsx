@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import {
     Box,
     Checkbox,
-    createStyles,
     Grid,
     Table,
     TableBody,
@@ -14,11 +13,10 @@ import {
     TableRow,
     TableSortLabel,
     Theme,
-    withStyles,
 } from '@material-ui/core'
 import { ResponsiveLine as NivoLine } from '@nivo/line'
 import PoliticianSentimentApi from '../../apis/PoliticianSentimentApi'
-import { makeStyles } from '@material-ui/styles'
+import { createStyles, withStyles, makeStyles } from '@material-ui/core/styles'
 
 interface Props {
     politicians: Politician[]

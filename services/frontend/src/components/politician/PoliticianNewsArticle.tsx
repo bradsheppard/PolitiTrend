@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Avatar, createStyles, Link as MuiLink, Theme, Typography } from '@material-ui/core'
+import { Avatar, Link as MuiLink, Theme, Typography } from '@material-ui/core'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { toDate } from '../../utils/StringUtils'
 import { AvatarGroup } from '@material-ui/lab'
 import { politicianNameToImagePath } from '../../utils/ImagePath'
-import { makeStyles } from '@material-ui/styles'
 
 interface NewsArticle {
     summary: string

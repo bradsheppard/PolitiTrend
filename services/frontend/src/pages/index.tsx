@@ -1,4 +1,5 @@
-import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
+import { createStyles, WithStyles, withStyles, Theme } from '@material-ui/core/styles'
 import * as React from 'react'
 import ContentContainer from '../components/common/ContentContainer'
 import NewsArticleComponent from '../components/home/HomeNewsArticle'

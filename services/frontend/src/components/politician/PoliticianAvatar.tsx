@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { politicianNameToImagePath } from '../../utils/ImagePath'
-import { Avatar, createStyles, makeStyles, Theme } from '@material-ui/core'
+import { Avatar, Theme } from '@material-ui/core'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 interface Politician {
     name: string

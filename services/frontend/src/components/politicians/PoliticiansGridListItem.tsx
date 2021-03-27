@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { createStyles, Theme, Typography } from '@material-ui/core'
+import { Theme, Typography } from '@material-ui/core'
 import { politicianNameToImagePath } from '../../utils/ImagePath'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import Image from 'next/image'
 
@@ -10,6 +10,7 @@ interface Props {
 }
 
 interface Politician {
+    id: number
     name: string
     party: string
     role: string
@@ -57,6 +58,7 @@ const PoliticiansGridListItem: React.FC<Props & React.HTMLAttributes<HTMLDivElem
                     alt={props.politician.name}
                     layout="fill"
                     objectFit="cover"
+                    key={props.politician.id}
                 />
             </div>
             <div className={classes.textContainer}>

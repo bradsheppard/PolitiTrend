@@ -1,6 +1,6 @@
-import { createStyles, Grid, Theme } from '@material-ui/core'
+import { Grid, Theme } from '@material-ui/core'
 import * as React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import GlobalWordCloudApi from '../apis/GlobalWordCloudApi'
 import PoliticianSentimentApi from '../apis/PoliticianSentimentApi'
 import PoliticianApi from '../apis/PoliticianApi'

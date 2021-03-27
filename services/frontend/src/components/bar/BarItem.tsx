@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Typography from '@material-ui/core/Typography'
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core'
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles'
 import { PropsWithChildren } from 'react'
 import Link from 'next/link'
 

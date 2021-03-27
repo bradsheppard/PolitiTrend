@@ -1,16 +1,10 @@
 import * as React from 'react'
 import PoliticianApi from '../../apis/PoliticianApi'
-import {
-    createStyles,
-    Grid,
-    Link as MuiLink,
-    Typography,
-    withStyles,
-    WithStyles,
-} from '@material-ui/core'
+import { Grid, Link as MuiLink, Typography } from '@material-ui/core'
 import ContentContainer from '../../components/common/ContentContainer'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 const style = () =>
     createStyles({
