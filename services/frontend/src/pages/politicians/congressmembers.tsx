@@ -2,27 +2,35 @@ import * as React from 'react'
 import { NextPage } from 'next'
 import PoliticianApi from '../../apis/PoliticianApi'
 import ContentContainer from '../../components/common/ContentContainer'
-import { Box, Grid } from '@material-ui/core'
+import { Box, Grid, TextField } from '@material-ui/core'
 import dynamic from 'next/dynamic'
 import { Pagination } from '@material-ui/lab'
-import { makeStyles } from '@material-ui/core/styles'
-import { ChangeEvent } from 'react'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import Politician from '../../apis/model/Politician'
 
 interface Props {
     senators: Politician[]
     numPages: number
+    page: number
 }
 
-const useStyles = makeStyles({
-    paginationContainer: {
-        textAlign: 'center',
-    },
-    pagination: {
-        display: 'inline-block',
-    },
-})
+const useStyles = makeStyles((theme) =>
+    createStyles({
+        paginationContainer: {
+            textAlign: 'center',
+        },
+        pagination: {
+            display: 'inline-block',
+        },
+        search: {
+            width: '100%',
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6),
+        },
+    })
+)
 
 const DynamicPoliticianGridList = dynamic(
     () => import('../../components/politicians/PoliticiansGridList')
@@ -32,9 +40,20 @@ const CongressMembers: NextPage<Props> = (props: Props) => {
     const classes = useStyles()
     const router = useRouter()
 
-    const handleChangePage = (event: ChangeEvent<unknown> | null, newPage: number) => {
-        event?.preventDefault()
+    const [input, setInput] = useState('')
+
+    const handleChangePage = (event: ChangeEvent<unknown>, newPage: number) => {
+        event.preventDefault()
         router.push(`/politicians/congressmembers?page=${newPage}`)
+    }
+
+    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        router.push(`/politicians/congressmembers?name=${input}`)
+    }
+
+    const onChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setInput(event.target.value)
     }
 
     return (
@@ -42,6 +61,18 @@ const CongressMembers: NextPage<Props> = (props: Props) => {
             <ContentContainer>
                 <Grid container>
                     <Grid item sm={12}>
+                        <Grid container alignItems="center" justify="center">
+                            <Grid item sm={12}>
+                                <form onSubmit={onSubmit}>
+                                    <TextField
+                                        className={classes.search}
+                                        label="Name"
+                                        variant="outlined"
+                                        onChange={onChange}
+                                    />
+                                </form>
+                            </Grid>
+                        </Grid>
                         <DynamicPoliticianGridList
                             title="CONGRESS MEMBERS"
                             politicians={props.senators}
@@ -50,6 +81,7 @@ const CongressMembers: NextPage<Props> = (props: Props) => {
                             <Pagination
                                 count={props.numPages}
                                 size="large"
+                                page={props.page}
                                 className={classes.pagination}
                                 onChange={handleChangePage}
                             />
@@ -63,17 +95,34 @@ const CongressMembers: NextPage<Props> = (props: Props) => {
 
 CongressMembers.getInitialProps = async ({ query }): Promise<Props> => {
     const pageQuery = query['page']
+    const nameQuery = query['name']
+
     let page = 1
+    let responseDto
 
-    if (pageQuery && Array.isArray(pageQuery)) page = parseInt(pageQuery[0])
-    else if (pageQuery) page = parseInt(pageQuery)
+    if (pageQuery) page = parseInt(parseQueryParam(pageQuery))
 
-    const responseDto = await PoliticianApi.getCongressMembers(10, (page - 1) * 10)
+    if (nameQuery) {
+        responseDto = await PoliticianApi.getCongressMembersByName(
+            parseQueryParam(nameQuery),
+            10,
+            (page - 1) * 10
+        )
+    } else {
+        responseDto = await PoliticianApi.getCongressMembers(10, (page - 1) * 10)
+    }
+
     const numPages = Math.ceil(responseDto.meta.count / 10.0)
     return {
         senators: responseDto.data,
         numPages,
+        page,
     }
+}
+
+function parseQueryParam(param: string | string[]) {
+    if (Array.isArray(param)) return param[0]
+    return param
 }
 
 export default CongressMembers

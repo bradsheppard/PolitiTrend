@@ -74,6 +74,23 @@ class PoliticianApi {
 
         return res.data
     }
+
+    static async getCongressMembersByName(
+        name: string,
+        limit: number,
+        offset = 0
+    ): Promise<ResponseDto> {
+        const res = await this.submitRequest({
+            params: {
+                limit,
+                offset,
+                name,
+                'role[]': 'Congressman',
+            },
+        })
+
+        return res.data
+    }
 }
 
 export default PoliticianApi

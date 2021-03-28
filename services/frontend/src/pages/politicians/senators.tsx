@@ -13,6 +13,7 @@ import Politician from '../../apis/model/Politician'
 interface Props {
     senators: Politician[]
     numPages: number
+    page: number
 }
 
 const useStyles = makeStyles((theme) =>
@@ -72,12 +73,12 @@ const Senators: NextPage<Props> = (props: Props) => {
                                 </form>
                             </Grid>
                         </Grid>
-
                         <DynamicPoliticianGridList title="SENATORS" politicians={props.senators} />
                         <Box className={classes.paginationContainer} mt={6} mb={6}>
                             <Pagination
                                 count={props.numPages}
                                 size="large"
+                                page={props.page}
                                 className={classes.pagination}
                                 onChange={handleChangePage}
                             />
@@ -112,6 +113,7 @@ Senators.getInitialProps = async ({ query }): Promise<Props> => {
     return {
         senators: responseDto.data,
         numPages,
+        page,
     }
 }
 
