@@ -14,13 +14,14 @@ nlp = spacy.load('en')
 
 
 def get_party_sentiments(statements: List[str],
-                         subjects: List[Politician] = None) -> List[Dict[str, float]]:
+                         subjects: List[List[Politician]] = None) -> List[Dict[str, float]]:
     # pylint: disable=cell-var-from-loop
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-branches
     results_list = []
-    for doc in nlp.pipe(statements):
+    for i, doc in enumerate(nlp.pipe(statements)):
         results = {}
+        current_subjects = subjects[i]
         for sent in doc.sents:
             score = sentiment_analyzer.polarity_scores(sent.text)['compound']
             pos_words = _get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
@@ -60,7 +61,7 @@ def get_party_sentiments(statements: List[str],
                 .map(lambda x: x[0])
 
             for entity in relevant_entities:
-                politicians = _match_politicians(entity, subjects)
+                politicians = _match_politicians(entity, current_subjects)
                 for politician in politicians:
                     if politician.party not in results:
                         results[politician.party] = [score]

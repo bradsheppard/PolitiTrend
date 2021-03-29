@@ -1,15 +1,33 @@
 from typing import List
 
 import dask.dataframe as dd
+import pandas as pd
+from functional import seq
 
 from state_party_affiliation_analytic.politician import Politician
 from state_party_affiliation_analytic.sentiment_analyzer import get_party_sentiments
 from state_party_affiliation_analytic.state_lookup import get_state
 
 
-def get_sentiments_for_partition(dataframe: dd.DataFrame, politicians):
-    tweets = dataframe['tweetText']
-    sentiments = get_party_sentiments(tweets, politicians)
+def get_sentiments_for_partition(dataframe: pd.DataFrame, politicians: List[Politician]):
+    tweets: List[str] = []
+    entities: List[List[Politician]] = []
+
+    for _, row in dataframe.iterrows():
+        tweet = row['tweetText']
+        subjects = row['politicians']
+
+        current_subjects: List[Politician] = []
+
+        for subject in subjects:
+            candidate_politician = seq(politicians)\
+                .find(lambda x, search_id=subject: x.num == search_id)
+            current_subjects.append(candidate_politician)
+
+        tweets.append(tweet)
+        entities.append(current_subjects)
+
+    sentiments = get_party_sentiments(tweets, entities)
     return sentiments
 
 
