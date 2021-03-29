@@ -37,6 +37,12 @@ def test_data():
             'tweetText': 'Bob Young sucks. John Smith is awesome',
             'politicians': [1, 2],
             'dateTime': '2020-11-08 04:57:45'
+        },
+        {
+            'tweetId': '5',
+            'tweetText': 'Bob Young sucks. John Smith is awesome',
+            'politicians': [],
+            'dateTime': '2020-11-09 04:57:45'
         }
     ]
 
@@ -55,6 +61,15 @@ def politicians():
 
 def test_analyze_sentiments(spark_session, politicians, test_data):
     expected_data = [
+        {
+            'tweetId': '5',
+            'tweetText': 'Bob Young sucks. John Smith is awesome',
+            'politicians': [],
+            'politicianSentiments': [],
+            'sentiments': [],
+            'parties': [],
+            'dateTime': '2020-11-09 04:57:45'
+        },
         {
             'tweetId': '2',
             'tweetText': 'Bob Young is awesome',
@@ -105,19 +120,19 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
 def test_get_entity_sentiments_postive_sentence(politicians):
     sentence = 'John Smith is great!'
 
-    predictions = get_entity_sentiments([sentence], politicians)
+    predictions = get_entity_sentiments([sentence], [politicians])
     assert predictions[0][2] > 0.6
 
 
 def test_get_entity_sentiments_negative_sentence(politicians):
     sentence = 'John Smith is terrible'
-    predictions = get_entity_sentiments([sentence], politicians)
+    predictions = get_entity_sentiments([sentence], [politicians])
     assert predictions[0][2] < 0.4
 
 
 def test_get_entity_sentiments_subject_results(politicians):
     sentence = 'Bob Young is awesome. John Smith is terrible though.'
-    predictions = get_entity_sentiments([sentence], politicians)
+    predictions = get_entity_sentiments([sentence], [politicians])
     bob_score = predictions[0][1]
     john_score = predictions[0][2]
     assert bob_score > 0.6

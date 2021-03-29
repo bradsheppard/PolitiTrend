@@ -25,11 +25,25 @@ json_schema = StructType([
 ])
 
 
-def udf_generator(subjects: List[Politician]):
+def udf_generator(politicians: List[Politician]):
     def pandas_udf_sentiment(pdf):
-        tweets = pdf['tweetText'].tolist()
+        tweets: List[str] = []
+        entities: List[List[Politician]] = []
 
-        computed_sentiments = get_entity_sentiments(tweets, subjects)
+        for index, row in pdf.iterrows():
+            tweet = row['tweetText']
+            subjects = row['politicians']
+
+            current_subjects: List[Politician] = []
+
+            for subject in subjects:
+                candidate_politician = seq(politicians).find(lambda x: x.id == subject)
+                current_subjects.append(candidate_politician)
+
+            tweets.append(tweet)
+            entities.append(current_subjects)
+
+        computed_sentiments = get_entity_sentiments(tweets, entities)
         politician_sentiments = []
         sentiments = []
         parties = []
@@ -40,7 +54,7 @@ def udf_generator(subjects: List[Politician]):
             tweet_parties = []
 
             for politician_id in computed_sentiment.keys():
-                politician = seq(subjects)\
+                politician = seq(politicians)\
                     .find(lambda x, search_id=politician_id:  x.id == search_id)
                 tweet_politician_sentiments.append(politician_id)
                 tweet_parties.append(politician.party)
@@ -65,11 +79,12 @@ nlp = spacy.load('en')
 
 
 def get_entity_sentiments(statements: List[str],
-                          subjects: List[Politician] = None) -> List[Dict[int, float]]:
+                          subjects: List[List[Politician]] = None) -> List[Dict[int, float]]:
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-branches
     result_list = []
-    for doc in nlp.pipe(statements):
+    for i, doc in enumerate(nlp.pipe(statements)):
+        current_subjects = subjects[i]
         results = {}
         for sent in doc.sents:
             score = sentiment_analyzer.polarity_scores(sent.text)['compound']
@@ -110,7 +125,7 @@ def get_entity_sentiments(statements: List[str],
                 .map(lambda x: x[0])
 
             for entity in relevant_entities:
-                politicians = _match_politicians(entity, subjects)
+                politicians = _match_politicians(entity, current_subjects)
                 for politician in politicians:
                     if politician.id not in results:
                         results[politician.id] = [score]
