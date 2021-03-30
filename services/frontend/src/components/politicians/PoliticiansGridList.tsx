@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const RoleHeader = (title: string) => {
     return (
         <Box pb="2em">
-            <Header>{title}</Header>
+            <Header textVariant="h4">{title}</Header>
         </Box>
     )
 }

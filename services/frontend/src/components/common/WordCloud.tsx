@@ -15,7 +15,7 @@ const wordCloudOptions = {
     rotationAngles: [-45, 45] as MinMaxPair,
     spiral: Spiral.Archimedean,
     scale: Scale.Sqrt,
-    transitionDuration: 2000,
+    transitionDuration: 0,
 }
 
 interface WordCount {

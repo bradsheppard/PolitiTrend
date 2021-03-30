@@ -62,7 +62,7 @@ const PoliticiansGridListItem: React.FC<Props & React.HTMLAttributes<HTMLDivElem
                 />
             </div>
             <div className={classes.textContainer}>
-                <Typography variant="h4" color="textPrimary">
+                <Typography variant="h5" color="textPrimary">
                     {props.politician.name}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
