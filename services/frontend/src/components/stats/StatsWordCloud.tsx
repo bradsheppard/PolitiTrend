@@ -1,12 +1,5 @@
 import * as React from 'react'
-import {
-    FormControl,
-    Grid,
-    InputLabel,
-    MenuItem,
-    Select,
-    Theme,
-} from '@material-ui/core'
+import { FormControl, Grid, InputLabel, MenuItem, Select, Theme } from '@material-ui/core'
 import WordCloud from '../common/WordCloud'
 import PieChart from '../common/PieChart'
 import { makeStyles, createStyles } from '@material-ui/core/styles'

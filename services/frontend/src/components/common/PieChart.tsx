@@ -25,6 +25,13 @@ const PieChart: React.FC<Props> = (props: Props) => {
                         fontWeight: 'bold',
                     },
                 },
+                chartArea: {
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: '100%',
+                    height: '80%',
+                },
             }}
             width="100%"
             height="400px"

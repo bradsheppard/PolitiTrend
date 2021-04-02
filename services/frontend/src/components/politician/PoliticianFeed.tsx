@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { Box, Theme } from '@material-ui/core'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import WordCloud from '../common/WordCloud'
+import { Box } from '@material-ui/core'
 import { ResponsiveLine as NivoLine } from '@nivo/line'
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed'
 import PoliticianHeader from './PoliticianHeader'
+import PieChart from '../common/PieChart'
 
 interface Props {
     politician: Politician
@@ -38,21 +37,7 @@ interface Point {
     y: number
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        feedContainer: {
-            minHeight: theme.spacing(200),
-        },
-        wordCloud: {
-            margin: theme.spacing(4),
-            minHeight: theme.spacing(50),
-        },
-    })
-)
-
 const PoliticianFeed: React.FC<Props> = (props: Props) => {
-    const classes = useStyles()
-
     const scaleSentiment = (sentiment: number) => {
         return parseFloat((sentiment * 5 + 5).toFixed(1))
     }
@@ -71,7 +56,14 @@ const PoliticianFeed: React.FC<Props> = (props: Props) => {
 
     return (
         <React.Fragment>
-            <WordCloud wordCounts={props.wordCounts} className={classes.wordCloud} />
+            <PoliticianHeader>TRENDING</PoliticianHeader>
+            <Box mt={6} mb={6}>
+                <PieChart
+                    categories={props.wordCounts.map((x) => {
+                        return { name: x.word, value: x.count }
+                    })}
+                />
+            </Box>
             <PoliticianHeader>SENTIMENT</PoliticianHeader>
             <Box height={400}>
                 <NivoLine
@@ -140,7 +132,9 @@ const PoliticianFeed: React.FC<Props> = (props: Props) => {
                 />
             </Box>
             <PoliticianHeader>NEWS ARTICLES</PoliticianHeader>
-            <PoliticianNewsArticleFeed politician={props.politician.id} />
+            <Box mt={6} mb={6}>
+                <PoliticianNewsArticleFeed politician={props.politician.id} />
+            </Box>
         </React.Fragment>
     )
 }

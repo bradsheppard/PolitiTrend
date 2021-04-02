@@ -14,8 +14,6 @@ const styles = (theme: Theme) =>
         pagination: {
             display: 'flex',
             justifyContent: 'center',
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
         },
     })
 
