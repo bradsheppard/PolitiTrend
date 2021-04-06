@@ -1,6 +1,7 @@
 import math
 from statistics import mean
 from typing import Dict, List
+import pandas as pd
 
 import networkx as nx
 import spacy
@@ -26,22 +27,10 @@ json_schema = StructType([
 
 
 def udf_generator(politicians: List[Politician]):
-    def pandas_udf_sentiment(pdf):
-        tweets: List[str] = []
-        entities: List[List[Politician]] = []
-
-        for index, row in pdf.iterrows():
-            tweet = row['tweetText']
-            subjects = row['politicians']
-
-            current_subjects: List[Politician] = []
-
-            for subject in subjects:
-                candidate_politician = seq(politicians).find(lambda x: x.id == subject)
-                current_subjects.append(candidate_politician)
-
-            tweets.append(tweet)
-            entities.append(current_subjects)
+    def pandas_udf_sentiment(pdf: pd.DataFrame):
+        tweets = pdf['tweetText'].tolist()
+        entities = pdf['politicians']\
+            .apply(lambda x: [element for element in politicians if element.id in x])
 
         computed_sentiments = get_entity_sentiments(tweets, entities)
         politician_sentiments = []
