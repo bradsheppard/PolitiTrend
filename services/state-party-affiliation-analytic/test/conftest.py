@@ -7,9 +7,10 @@ import pandas as pd
 
 @pytest.fixture
 def dataframe():
-    tweet_texts = ['Bob Young is great!', 'John Smith is great!']
-    locations = ['Kentucky', 'New York']
-    politicians = [[1], [2]]
+    tweet_texts = ['Bob Young is great!', 'John Smith is great!',
+                   'Bob Young and John Smith are great!', 'Yup']
+    locations = ['Kentucky', 'New York', 'New York', 'New York']
+    politicians = [[1], [2], [1, 2], []]
 
     pandas_dataframe = pd.DataFrame({
         'tweetText': tweet_texts,

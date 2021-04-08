@@ -37,19 +37,21 @@ def politicians():
 def test_can_compute_sentiments(dataframe, politicians):
     computed_df = compute_party_sentiments(dataframe, politicians)
 
-    tweet_texts = ['Bob Young is great!', 'John Smith is great!']
-    locations = ['Kentucky', 'New York']
-    sentiments = [{'republican': 0.6588}, {'democratic': 0.6588}]
-    states = ['KY', 'NY']
+    tweet_texts = ['Bob Young is great!', 'John Smith is great!',
+                   'Bob Young and John Smith are great!', 'Yup']
+    locations = ['Kentucky', 'New York', 'New York', 'New York']
+    sentiments = [{'republican': 0.6588}, {'democratic': 0.6588},
+                  {'republican': 0.6588, 'democratic': 0.6588}, {}]
+    states = ['KY', 'NY', 'NY', 'NY']
 
     pandas_dataframe = pd.DataFrame({
         'tweetText': tweet_texts,
         'location': locations,
         'sentiment': sentiments,
         'state': states,
-        'democratic': [0.0, 0.6588],
-        'republican': [0.6588, 0.0],
-        'politicians': [[1], [2]]
+        'democratic': [0.0, 0.6588, 0.6588, 0],
+        'republican': [0.6588, 0.0, 0.6588, 0],
+        'politicians': [[1], [2], [1, 2], []]
     }, columns=['tweetText', 'location', 'state', 'democratic', 'republican', 'politicians'])
 
     pd.testing.assert_frame_equal(pandas_dataframe, computed_df.compute(),
