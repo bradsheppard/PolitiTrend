@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 import { createStyles, WithStyles, withStyles, Theme } from '@material-ui/core/styles'
 import * as React from 'react'
 import ContentContainer from '../components/common/ContentContainer'
@@ -9,12 +9,13 @@ import GlobalWordCloudApi from '../apis/GlobalWordCloudApi'
 import WordCloud from '../components/common/WordCloud'
 import StatePartyAffiliationApi from '../apis/StatePartyAffiliationApi'
 import StatsMap from '../components/stats/StatsMap'
-import StatsSentimentTable from '../components/stats/StatsSentimentTable'
 import PoliticianApi from '../apis/PoliticianApi'
 import PoliticianSentimentApi from '../apis/PoliticianSentimentApi'
 import HomePartySentiment from '../components/home/HomePartySentiment'
 import PartySentimentApi from '../apis/PartySentimentApi'
 import StatePartyAffiliation from '../apis/model/StatePartyAffiliation'
+import HomePolitician from '../components/home/HomePolitician'
+import PoliticianDivider from '../components/politician/PoliticianDivider'
 
 interface NewsArticle {
     summary: string
@@ -63,7 +64,9 @@ interface Politician {
     id: number
     name: string
     party: string
-    sentiment?: number
+    role: string
+    sentiment: number
+    sampleSize: number
 }
 
 interface Props extends WithStyles<typeof styles> {
@@ -106,7 +109,9 @@ class App extends React.Component<Props> {
                 id: politician.id,
                 name: politician.name,
                 party: politician.party,
-                sentiment: sentiment ? sentiment.sentiment : undefined,
+                role: politician.role,
+                sentiment: sentiment ? sentiment.sentiment : 0,
+                sampleSize: sentiment ? sentiment.sampleSize : 0,
             })
             return result
         }, [])
@@ -145,6 +150,24 @@ class App extends React.Component<Props> {
                             />
                         </Grid>
                         <Grid item xs={12}>
+                            <Header>MOST TALKED ABOUT</Header>
+                        </Grid>
+                        {this.props.politicians
+                            .sort((a, b) => {
+                                return b.sampleSize - a.sampleSize
+                            })
+                            .slice(0, 5)
+                            .map((politician: Politician, index: number) => {
+                                return (
+                                    <Grid item xs={12} key={index}>
+                                        <Box ml={6} mr={6} mb={3} mt={3}>
+                                            <HomePolitician politician={politician} />
+                                        </Box>
+                                        <PoliticianDivider thickness={1} />
+                                    </Grid>
+                                )
+                            })}
+                        <Grid item xs={12}>
                             <Header>NEWS ARTICLES</Header>
                         </Grid>
                         {this.props.mainNewsArticles.map((newsArticle, index) => {
@@ -162,10 +185,6 @@ class App extends React.Component<Props> {
                                 className={classes.map}
                                 statePartyAffiliations={this.props.statePartyAffiliations}
                             />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Header>SENTIMENT BY POLITICIAN</Header>
-                            <StatsSentimentTable politicians={this.props.politicians} />
                         </Grid>
                     </Grid>
                 </ContentContainer>

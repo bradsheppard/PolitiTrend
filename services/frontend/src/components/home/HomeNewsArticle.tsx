@@ -53,7 +53,7 @@ const NewsArticle: React.FC<Props> = (props: Props) => {
         <MuiLink href={props.newsArticle.url} className={classes.paper} underline="none">
             <div className={classes.container}>
                 <div>
-                    <Typography gutterBottom variant="h4" color="primary">
+                    <Typography gutterBottom variant="h5" color="primary">
                         {capitalize(props.newsArticle.summary)}
                     </Typography>
                     <Typography gutterBottom variant="subtitle1" color="textSecondary">
