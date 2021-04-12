@@ -9,6 +9,7 @@ import Link from 'next/link'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import TwitterIcon from '@material-ui/icons/Twitter'
 import ContentContainer from '../common/ContentContainer'
+import { signOut } from 'next-auth/client'
 
 const useStyles = makeStyles((theme: Theme) => ({
     title: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     icons: {
         textAlign: 'right',
-        flexGrow: 0.6,
+        flexGrow: 0.4,
         height: '100%',
     },
     icon: {
@@ -30,6 +31,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: 'white',
         textDecoration: 'none',
         fontWeight: 700,
+    },
+    signOut: {
+        flexGrow: 0.2,
+        marginLeft: theme.spacing(2),
+        cursor: 'pointer',
     },
 }))
 
@@ -57,6 +63,11 @@ const Header: React.FC = () => {
                             <BarItem link="/politicians">Politicians</BarItem>
                             <BarItem link="/stats">Stats</BarItem>
                             <BarItem link="/about">About</BarItem>
+                        </div>
+                        <div className={classes.signOut}>
+                            <Typography variant="h6" onClick={() => signOut()} component="a">
+                                Sign Out
+                            </Typography>
                         </div>
                         <div className={classes.icons}>
                             <FacebookIcon className={classes.icon} />
