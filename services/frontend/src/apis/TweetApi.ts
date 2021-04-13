@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 import Tweet from './model/Tweet'
+import getConfig from 'next/config'
 
 interface SearchTweetDto {
     limit?: number
@@ -7,8 +8,10 @@ interface SearchTweetDto {
     politician?: number
 }
 
+const { publicRuntimeConfig } = getConfig()
+
 class TweetApi {
-    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/tweets`
+    private static url = `http://${publicRuntimeConfig.appUrl}/api/tweets`
 
     static async get(searchTweetDto?: SearchTweetDto): Promise<Tweet[]> {
         const axiosInstance = this.createAxiosInstance()

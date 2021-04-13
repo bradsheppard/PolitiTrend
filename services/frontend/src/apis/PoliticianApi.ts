@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
+import getConfig from 'next/config'
 import Politician from './model/Politician'
 
 interface ResponseDto {
@@ -8,8 +9,10 @@ interface ResponseDto {
     }
 }
 
+const { publicRuntimeConfig } = getConfig()
+
 class PoliticianApi {
-    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/politicians`
+    private static url = `http://${publicRuntimeConfig.appUrl}/api/politicians`
 
     private static async submitRequest(config: AxiosRequestConfig = {}) {
         return await axios.get<ResponseDto>(this.url, config)

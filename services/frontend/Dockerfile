@@ -15,7 +15,7 @@ FROM node:12-alpine AS app
 
 WORKDIR /app
 
-COPY package.json next.config.js ./
+COPY package.json next.config.js .env ./
 
 COPY public public
 

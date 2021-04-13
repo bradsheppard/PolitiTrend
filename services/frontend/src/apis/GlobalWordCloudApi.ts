@@ -1,12 +1,15 @@
 import GlobalWordCloud from './model/GlobalWordCloud'
 import axios, { AxiosInstance } from 'axios'
+import getConfig from 'next/config'
 
 interface SearchGlobalWordCloudDto {
     limit?: number
 }
 
+const { publicRuntimeConfig } = getConfig()
+
 class GlobalWordCloudApi {
-    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/globalwordclouds`
+    private static url = `http://${publicRuntimeConfig.appUrl}/api/globalwordclouds`
 
     static async get(searchWordCloudDto?: SearchGlobalWordCloudDto): Promise<GlobalWordCloud[]> {
         const axiosInstance = this.createAxiosInstance()

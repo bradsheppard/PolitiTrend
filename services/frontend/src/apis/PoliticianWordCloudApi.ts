@@ -1,13 +1,16 @@
 import axios, { AxiosInstance } from 'axios'
 import PoliticianWordCloud from './model/PoliticianWordCloud'
+import getConfig from 'next/config'
 
 interface SearchPoliticianWordCloudDto {
     limit?: number
     politician?: number
 }
 
+const { publicRuntimeConfig } = getConfig()
+
 class PoliticianWordCloudApi {
-    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/politicianwordclouds`
+    private static url = `http://${publicRuntimeConfig.appUrl}/api/politicianwordclouds`
 
     static async get(
         searchWordCloudDto?: SearchPoliticianWordCloudDto

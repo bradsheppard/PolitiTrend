@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 import NewsArticle from './model/NewsArticle'
+import getConfig from 'next/config'
 
 interface SearchNewsArticleDto {
     limit?: number
@@ -8,8 +9,10 @@ interface SearchNewsArticleDto {
     politician?: number
 }
 
+const { publicRuntimeConfig } = getConfig()
+
 class NewsArticleApi {
-    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/newsarticles`
+    private static url = `http://${publicRuntimeConfig.appUrl}/api/newsarticles`
 
     static async get(searchNewsArticleDto?: SearchNewsArticleDto): Promise<NewsArticle[]> {
         const axiosInstance = this.createAxiosInstance()

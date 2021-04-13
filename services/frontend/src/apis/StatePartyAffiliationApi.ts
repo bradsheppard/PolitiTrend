@@ -1,8 +1,11 @@
 import StatePartyAffiliation from './model/StatePartyAffiliation'
 import axios, { AxiosInstance } from 'axios'
+import getConfig from 'next/config'
+
+const { publicRuntimeConfig } = getConfig()
 
 class StatePartyAffiliationApi {
-    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/statepartyaffiliations`
+    private static url = `http://${publicRuntimeConfig.appUrl}/api/statepartyaffiliations`
 
     static async get(): Promise<StatePartyAffiliation[]> {
         const axiosInstance = this.createAxiosInstance()

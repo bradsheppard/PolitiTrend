@@ -1,8 +1,11 @@
 import axios, { AxiosInstance } from 'axios'
 import PoliticianSentiment from './model/PoliticianSentiment'
+import getConfig from 'next/config'
+
+const { publicRuntimeConfig } = getConfig()
 
 class PoliticianSentimentApi {
-    private static url = `http://${process.env.NEXT_PUBLIC_APP_URL}/api/politiciansentiment`
+    private static url = `http://${publicRuntimeConfig.appUrl}/api/politiciansentiment`
     private static LOOKBACK_DAYS = 30
 
     static async get(): Promise<PoliticianSentiment[]> {
