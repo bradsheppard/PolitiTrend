@@ -18,10 +18,24 @@ spec:
     spec:
       imagePullSecrets:
         - name: regcred
+      volumes:
+        - name: nextjs-config-secret-volume
+          secret:
+            secretName: frontend-nextjs-config-secret
+        - name: nextjs-env-secret-volume
+          secret:
+            secretName: frontend-nextjs-env-secret
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.global.registry }}/{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: nextjs-config-secret-volume
+              mountPath: /app/next.config.js
+              subPath: next.config.js
+            - name: nextjs-env-secret-volume
+              mountPath: /app/.env
+              subPath: .env
           ports:
             - name: http
               containerPort: 3000

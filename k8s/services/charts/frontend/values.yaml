@@ -12,8 +12,11 @@ nameOverride: frontend
 fullnameOverride: frontend
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
+
+ingress:
+  enabled: false
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -27,10 +30,10 @@ serviceAccount:
 resources:
   requests:
     cpu: 100m
-    memory: 128Mi
+    memory: 256Mi
   limits:
     cpu: 200m
-    memory: 256Mi
+    memory: 512Mi
 
 nodeSelector: {}
 
