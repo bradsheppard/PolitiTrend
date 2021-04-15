@@ -47,6 +47,25 @@ resource "google_container_cluster" "primary" {
   }
 }
 
+resource "google_service_account" "node_service_account" {
+  account_id = "${var.name}-node-service-account"
+  display_name = "${var.name}-node-service-account"
+}
+
+resource "google_compute_firewall" "webhook_admission_firewall" {
+  name = "webhook-admission"
+  network = var.vpc_id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8443"]
+  }
+
+  source_ranges = ["10.0.1.0/28"]
+
+  target_service_accounts = [google_service_account.node_service_account.email]
+}
+
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name       = "${var.name}-node-pool"
   cluster    = google_container_cluster.primary.name
@@ -64,6 +83,8 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     metadata = {
       disable-legacy-endpoints = "true"
     }
+
+    service_account = google_service_account.node_service_account.email
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
