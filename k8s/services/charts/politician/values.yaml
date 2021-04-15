@@ -11,6 +11,9 @@ image:
 nameOverride: politician
 fullnameOverride: politician
 
+ingress:
+  enabled: false
+
 service:
   type: ClusterIP
   port: 80
