@@ -4,5 +4,6 @@ module.exports = {
     },
     publicRuntimeConfig: {
         appUrl: 'localhost:3000',
+        imageUrl: 'politician/images',
     },
 }
