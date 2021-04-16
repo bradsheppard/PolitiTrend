@@ -8,11 +8,10 @@ import Bar from '../components/bar/Bar'
 import TransparentJumbo from '../components/common/TransparentJumbo'
 import Footer from '../components/footer/Footer'
 import App, { AppContext, AppProps } from 'next/app'
-import { getSession, signIn } from 'next-auth/client'
+import { getSession } from 'next-auth/client'
 
 export default function MyApp(props: AppProps): JSX.Element {
     const { Component, pageProps } = props
-    const session = props.pageProps.session
 
     React.useEffect(() => {
         // Remove the server-side injected CSS.
@@ -21,16 +20,6 @@ export default function MyApp(props: AppProps): JSX.Element {
             jssStyles.parentElement?.removeChild(jssStyles)
         }
     }, [])
-
-    if (!session)
-        return (
-            <React.Fragment>
-                <Head>
-                    <title>{capitalize(Globals.name)}</title>
-                </Head>
-                <button onClick={() => signIn()}>Sign In</button>
-            </React.Fragment>
-        )
 
     return (
         <React.Fragment>
@@ -53,7 +42,15 @@ MyApp.getInitialProps = async (context: AppContext) => {
     const appProps = await App.getInitialProps(context)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    appProps.pageProps.session = await getSession(context)
+    const session = await getSession(context)
+
+    if (!session) {
+        context.ctx.res?.writeHead(302, {
+            Location: '/api/auth/signin',
+        })
+        context.ctx.res?.end()
+    }
+
     return {
         ...appProps,
     }
