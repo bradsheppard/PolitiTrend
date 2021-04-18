@@ -4,6 +4,7 @@ import dask.dataframe as dd
 from dask.dataframe import DataFrame
 from dask.distributed import Client
 from dask_kubernetes import KubeCluster
+from distributed import wait
 
 from state_party_affiliation_analytic.config import config
 from state_party_affiliation_analytic.dataframe import compute_party_sentiments, to_result_dataframe
@@ -73,4 +74,6 @@ if __name__ == "__main__":
 
     tweet_repository.delete_analyzed_tweets('analyzed-tweets')
     analyzed_tweets_df = tweet_repository.read_analyzed_tweets('temp')
+
+    client.rebalance()
     tweet_repository.write_analyzed_tweets(analyzed_tweets_df, 'analyzed-tweets')
