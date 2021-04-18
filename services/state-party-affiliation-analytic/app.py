@@ -1,10 +1,9 @@
 import json
-import dask.dataframe as dd
 
+import dask.dataframe as dd
 from dask.dataframe import DataFrame
 from dask.distributed import Client
 from dask_kubernetes import KubeCluster
-from distributed import wait
 
 from state_party_affiliation_analytic.config import config
 from state_party_affiliation_analytic.dataframe import compute_party_sentiments, to_result_dataframe
