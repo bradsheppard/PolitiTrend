@@ -6,12 +6,13 @@ import pandas as pd
 import pytest
 from pyspark.sql import SparkSession
 
+from sentiment_analytic.config import load_spark_config
 from sentiment_analytic.politician import Politician
-from sentiment_analytic.sentiment_analyzer import analyze
+from sentiment_analytic.dataframe import analyze
 from sentiment_analytic.tweet_repository import TweetRepository
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture()
 def tweet_repository(spark_session: SparkSession):
     reader = TweetRepository(spark_session)
     return reader
@@ -25,6 +26,19 @@ def politicians():
     ]
 
     return politicians
+
+
+@pytest.fixture(scope='module')
+def spark_session():
+    spark_session = SparkSession.builder\
+        .master("local[1]")\
+        .getOrCreate()
+
+    load_spark_config(spark_session.sparkContext)
+
+    yield spark_session
+
+    spark_session.stop()
 
 
 @pytest.fixture()

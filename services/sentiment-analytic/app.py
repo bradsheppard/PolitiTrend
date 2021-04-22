@@ -4,10 +4,10 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col
 
 from sentiment_analytic.config import config, load_spark_config
+from sentiment_analytic.dataframe import analyze, to_politician_sentiment_dataframe, \
+    to_party_sentiment_dataframe
 from sentiment_analytic.politician import Politician, get_all
 from sentiment_analytic.tweet_repository import TweetRepository
-from sentiment_analytic.sentiment_analyzer import analyze, to_politician_sentiment_dataframe, \
-    to_party_sentiment_dataframe
 
 
 def main():

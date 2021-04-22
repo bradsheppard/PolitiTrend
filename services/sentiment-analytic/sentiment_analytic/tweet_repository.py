@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from pyspark.sql import SparkSession, DataFrame
 from sentiment_analytic.config import config
-from sentiment_analytic.sentiment_analyzer import json_schema
+from sentiment_analytic.dataframe import json_schema
 
 
 class TweetRepository:
