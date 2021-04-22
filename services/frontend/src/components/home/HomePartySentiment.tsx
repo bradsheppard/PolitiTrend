@@ -13,7 +13,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         image: {
-            height: theme.spacing(50),
+            height: theme.spacing(40),
             margin: theme.spacing(4),
         },
         item: {

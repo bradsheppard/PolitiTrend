@@ -8,20 +8,30 @@ import BarItem from './BarItem'
 import Link from 'next/link'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import TwitterIcon from '@material-ui/icons/Twitter'
-import ContentContainer from '../common/ContentContainer'
 import { signOut } from 'next-auth/client'
+import { Drawer, IconButton, List } from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu'
+import { useState } from 'react'
+import BarMenuItem from './BarMenuItem'
 
 const useStyles = makeStyles((theme: Theme) => ({
     title: {
         flexGrow: 0.2,
     },
+    hamburger: {
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
+    },
     items: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none',
+        },
         flexGrow: 0.2,
     },
     icons: {
         textAlign: 'right',
         flexGrow: 0.4,
-        height: '100%',
     },
     icon: {
         marginLeft: theme.spacing(2),
@@ -33,48 +43,65 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontWeight: 700,
     },
     signOut: {
-        flexGrow: 0.2,
-        marginLeft: theme.spacing(2),
         cursor: 'pointer',
+        [theme.breakpoints.down('xs')]: {
+            display: 'none',
+        },
+        flexGrow: 0.2,
     },
 }))
 
 const Header: React.FC = () => {
     const classes = useStyles()
+    const [drawerOpen, setDrawerOpen] = useState(false)
+
+    const menuClicked = () => {
+        setDrawerOpen(!drawerOpen)
+    }
+
+    const closeDrawer = () => {
+        setDrawerOpen(false)
+    }
 
     return (
         <React.Fragment>
             <AppBar position="fixed" color="secondary">
-                <ContentContainer>
-                    <Toolbar>
-                        <div className={classes.title}>
-                            <Link href="/" passHref>
-                                <Typography
-                                    variant="h6"
-                                    component="a"
-                                    className={classes.titleText}
-                                >
-                                    {capitalize(Globals.name)}
-                                </Typography>
-                            </Link>
-                        </div>
-                        <div className={classes.items}>
-                            <BarItem link="/">Home</BarItem>
-                            <BarItem link="/politicians">Politicians</BarItem>
-                            <BarItem link="/stats">Stats</BarItem>
-                            <BarItem link="/about">About</BarItem>
-                        </div>
-                        <div className={classes.signOut}>
-                            <Typography variant="h6" onClick={() => signOut()} component="a">
-                                Sign Out
+                <Toolbar>
+                    <div className={classes.title}>
+                        <IconButton className={classes.hamburger} edge="start" color="inherit">
+                            <MenuIcon onClick={menuClicked} />
+                        </IconButton>
+                        <Drawer open={drawerOpen} onClose={closeDrawer}>
+                            <List>
+                                <BarMenuItem text="Home" link="/" />
+                                <BarMenuItem text="Politicians" link="/politicians" />
+                                <BarMenuItem text="Stats" link="/stats" />
+                                <BarMenuItem text="About" link="/about" />
+                                <BarMenuItem text="Sign Out" link="/api/auth/signout" />
+                            </List>
+                        </Drawer>
+                        <Link href="/" passHref>
+                            <Typography variant="h6" component="a" className={classes.titleText}>
+                                {capitalize(Globals.name)}
                             </Typography>
-                        </div>
-                        <div className={classes.icons}>
-                            <FacebookIcon className={classes.icon} />
-                            <TwitterIcon className={classes.icon} />
-                        </div>
-                    </Toolbar>
-                </ContentContainer>
+                        </Link>
+                    </div>
+                    <div className={classes.items}>
+                        <BarItem link="/">Home</BarItem>
+                        <BarItem link="/politicians">Politicians</BarItem>
+                        <BarItem link="/stats">Stats</BarItem>
+                        <BarItem link="/about">About</BarItem>
+                    </div>
+                    <div className={classes.signOut}>
+                        <Typography variant="h6" onClick={() => signOut()} component="a">
+                            Sign Out
+                        </Typography>
+                    </div>
+                    <div className={classes.icons}>
+                        <FacebookIcon className={classes.icon} />
+                        <TwitterIcon className={classes.icon} />
+                    </div>
+                </Toolbar>
             </AppBar>
         </React.Fragment>
     )

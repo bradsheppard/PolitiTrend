@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ContentContainer from '../components/common/ContentContainer'
-import { createStyles, Grid, Theme, WithStyles, withStyles } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
+import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles'
 import CardDisplay from '../components/common/HeadlineCard'
 import TransparentJumbo from '../components/common/TransparentJumbo'
 import Typography from '@material-ui/core/Typography'

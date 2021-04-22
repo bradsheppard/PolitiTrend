@@ -1,13 +1,6 @@
 import * as React from 'react'
-import {
-    Card,
-    CardContent,
-    createStyles,
-    Theme,
-    Typography,
-    WithStyles,
-    withStyles,
-} from '@material-ui/core'
+import { Card, CardContent, Theme, Typography } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 interface Props extends WithStyles<typeof style> {
     header: string
