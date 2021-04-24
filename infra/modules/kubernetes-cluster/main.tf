@@ -111,6 +111,8 @@ resource "google_container_node_pool" "gpu_preemptible_nodes" {
       disable-legacy-endpoints = "true"
     }
 
+    service_account = google_service_account.node_service_account.email
+
     guest_accelerator {
       count = 1
       type  = "nvidia-tesla-p100"
