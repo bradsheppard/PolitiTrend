@@ -1,9 +1,8 @@
-# pylint: disable=redefined-outer-name
-
 from typing import List
 
 import pytest
 
+from numba import cuda
 from sentiment_analytic.politician import Politician
 from sentiment_analytic.sentiment_analyzer import SentimentAnalyzer
 
@@ -20,7 +19,10 @@ def politicians():
 
 @pytest.fixture(scope='module')
 def sentiment_analyzer():
-    return SentimentAnalyzer()
+    yield SentimentAnalyzer()
+
+    device = cuda.get_current_device()
+    device.reset()
 
 
 def test_get_entity_sentiments_postive_sentence(politicians: List[Politician],

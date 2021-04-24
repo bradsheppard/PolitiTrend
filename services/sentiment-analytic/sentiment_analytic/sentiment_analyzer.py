@@ -1,11 +1,15 @@
+import csv
 import math
+import urllib
 from statistics import mean
 from typing import List, Dict
 
 import networkx as nx
+import numpy as np
 import spacy
 from functional import seq
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from scipy.special import softmax
+from transformers import TFAutoModelForSequenceClassification, AutoTokenizer
 
 from sentiment_analytic.politician import Politician
 
@@ -13,11 +17,65 @@ from sentiment_analytic.politician import Politician
 class SentimentAnalyzer:
 
     def __init__(self):
-        self._analyzer = SentimentIntensityAnalyzer()
+        self._tokenizer = AutoTokenizer.from_pretrained("cardiffnlp/twitter-roberta-base")
+        self._model = TFAutoModelForSequenceClassification.from_pretrained("cardiffnlp/twitter-roberta-base-sentiment")
         self._nlp = spacy.load('en')
 
+        mapping_link = f"https://raw.githubusercontent.com/cardiffnlp/tweeteval/main/datasets/sentiment/mapping.txt"
+        with urllib.request.urlopen(mapping_link) as f:
+            html = f.read().decode('utf-8').split("\n")
+            csvreader = csv.reader(html, delimiter='\t')
+        self._labels = [row[1] for row in csvreader if len(row) > 1]
+
     def compute_sentiment(self, text: str) -> float:
-        return self._analyzer.polarity_scores(text)['compound']
+        encoded_input = self._tokenizer(text, return_tensors='tf')
+        output = self._model(encoded_input)
+        scores = output[0][0].numpy()
+        scores = softmax(scores)
+
+        ranking = np.argsort(scores)
+        ranking = ranking[::-1]
+
+        result = 0
+
+        print(scores)
+
+        for i in range(scores.shape[0]):
+            label = self._labels[ranking[i]]
+            score = scores[ranking[i]]
+            if label == 'negative':
+                result -= score
+            elif label == 'positive':
+                result += score
+
+        return result
+
+    def compute_sentiments(self, statements: List[str]):
+        encoded_input = self._tokenizer(statements, padding=True, truncation=True, return_tensors='tf')
+        model_output = self._model(encoded_input)
+        model_output = model_output.logits.numpy()
+
+        results = []
+
+        for output in model_output:
+            scores = softmax(output)
+
+            ranking = np.argsort(scores)
+            ranking = ranking[::-1]
+
+            result = 0
+
+            for i in range(scores.shape[0]):
+                label = self._labels[ranking[i]]
+                score = scores[ranking[i]]
+                if label == 'negative':
+                    result -= score
+                elif label == 'positive':
+                    result += score
+
+            results.append(result)
+
+        return results
 
     @staticmethod
     def _match_politicians(text, politicians) -> List[Politician]:
@@ -47,8 +105,10 @@ class SentimentAnalyzer:
         for i, doc in enumerate(self._nlp.pipe(statements)):
             current_subjects = subjects[i]
             results = {}
-            for sent in doc.sents:
-                score = self._analyzer.polarity_scores(sent.text)['compound']
+            sents = seq(doc.sents).map(lambda x: x.text).to_list()
+            scores = self.compute_sentiments(sents)
+            for j, sent in enumerate(doc.sents):
+                score = scores[j]
                 pos_words = self._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
                 entities = seq(sent.ents) \
                     .filter(lambda x: x.label_ == 'PERSON') \
