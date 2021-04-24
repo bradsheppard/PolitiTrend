@@ -1,8 +1,9 @@
 module.exports = {
     images: {
-        domains: ['politician'],
+        domains: ['34.75.91.130.xip.io'],
     },
     publicRuntimeConfig: {
-        appUrl: 'frontend',
+        appUrl: '34.75.91.130.xip.io',
+        imageUrl: '34.75.91.130.xip.io/images',
     },
 }

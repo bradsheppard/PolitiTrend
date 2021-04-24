@@ -11,6 +11,7 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      activeDeadlineSeconds: {{ .Values.cron.deadlineSeconds }}
       backoffLimit: {{ .Values.cron.backoffLimit }}
       template:
         metadata:

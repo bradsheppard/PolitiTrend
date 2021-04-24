@@ -40,4 +40,5 @@ word-cloud-analytic:
 
 global:
   registry: registry.gitlab.com/brad_1357/voyce
+  host: somehost
 

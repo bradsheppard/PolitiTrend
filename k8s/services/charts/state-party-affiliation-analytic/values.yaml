@@ -16,6 +16,7 @@ fullnameOverride: state-party-affiliation-analytic
 cron:
   backoffLimit: 0
   schedule: "@every 4h"
+  deadlineSeconds: 7200
 
 serviceAccount:
   # Specifies whether a service account should be created
