@@ -12,7 +12,7 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = 1
 
   cluster_autoscaling {
-    enabled = false
+    enabled             = false
     autoscaling_profile = "OPTIMIZE_UTILIZATION"
   }
 
@@ -30,30 +30,51 @@ resource "google_container_cluster" "primary" {
     # Whether nodes have internal IP addresses only. If enabled, all nodes are
     # given only RFC 1918 private addresses and communicate with the master via
     # private networking.
-    enable_private_nodes = true
+    enable_private_nodes   = true
     master_ipv4_cidr_block = "10.0.1.0/28"
   }
 
-  network = var.vpc_id
+  network    = var.vpc_id
   subnetwork = var.subnet_id
-
-  master_auth {
-    username = ""
-    password = ""
-
-    client_certificate_config {
-      issue_client_certificate = false
-    }
-  }
 }
 
 resource "google_service_account" "node_service_account" {
-  account_id = "${var.name}-node-service-account"
+  account_id   = "${var.name}-node-service-account"
   display_name = "${var.name}-node-service-account"
 }
 
+resource "google_project_iam_member" "cluster_service_account-log_writer" {
+  role   = "roles/logging.logWriter"
+  member = "serviceAccount:${google_service_account.node_service_account.email}"
+}
+
+resource "google_project_iam_member" "cluster_service_account-metric_writer" {
+  role   = "roles/monitoring.metricWriter"
+  member = "serviceAccount:${google_service_account.node_service_account.email}"
+}
+
+resource "google_project_iam_member" "cluster_service_account-monitoring_viewer" {
+  role   = "roles/monitoring.viewer"
+  member = "serviceAccount:${google_service_account.node_service_account.email}"
+}
+
+resource "google_project_iam_member" "cluster_service_account-resourceMetadata-writer" {
+  role   = "roles/stackdriver.resourceMetadata.writer"
+  member = "serviceAccount:${google_service_account.node_service_account.email}"
+}
+
+resource "google_project_iam_member" "cluster_service_account-gcr" {
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.node_service_account.email}"
+}
+
+resource "google_project_iam_member" "cluster_service_account-artifact-registry" {
+  role   = "roles/artifactregistry.reader"
+  member = "serviceAccount:${google_service_account.node_service_account.email}"
+}
+
 resource "google_compute_firewall" "webhook_admission_firewall" {
-  name = "webhook-admission"
+  name    = "webhook-admission"
   network = var.vpc_id
 
   allow {
@@ -67,8 +88,8 @@ resource "google_compute_firewall" "webhook_admission_firewall" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "${var.name}-node-pool"
-  cluster    = google_container_cluster.primary.name
+  name    = "${var.name}-node-pool"
+  cluster = google_container_cluster.primary.name
 
   autoscaling {
     max_node_count = 5
@@ -80,21 +101,17 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   node_config {
     preemptible  = true
     machine_type = "n1-standard-2"
-    metadata = {
-      disable-legacy-endpoints = "true"
-    }
 
     service_account = google_service_account.node_service_account.email
 
     oauth_scopes = [
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/cloud-platform"
     ]
   }
 }
 
 resource "google_container_node_pool" "gpu_preemptible_nodes" {
-  name = "${var.name}-gpu-pool"
+  name    = "${var.name}-gpu-pool"
   cluster = google_container_cluster.primary.name
 
   autoscaling {
@@ -105,11 +122,8 @@ resource "google_container_node_pool" "gpu_preemptible_nodes" {
   location = var.zone
 
   node_config {
-    preemptible = true
+    preemptible  = true
     machine_type = "n1-standard-2"
-    metadata = {
-      disable-legacy-endpoints = "true"
-    }
 
     service_account = google_service_account.node_service_account.email
 
@@ -119,8 +133,7 @@ resource "google_container_node_pool" "gpu_preemptible_nodes" {
     }
 
     oauth_scopes = [
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/cloud-platform"
     ]
   }
 }
