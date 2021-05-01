@@ -6,17 +6,16 @@ from dependency_injector.wiring import inject, Provide
 from crawler.container import Container
 from crawler.job import JobRepository, Job
 from crawler.news_article import NewsArticleCrawler, NewsArticleRepository
-from crawler.politician import Politician, PoliticianRepository
+from crawler.politician import get_all, Politician
 
 
 @inject
 def main(
-        politician_repository: PoliticianRepository = Provide[Container.politician_repository],
         news_article_repository: NewsArticleRepository = Provide[Container.news_article_repository],
         news_article_crawler: NewsArticleCrawler = Provide[Container.news_article_crawler],
         job_repository: JobRepository = Provide[Container.job_repository]
 ) -> None:
-    politicians: List[Politician] = politician_repository.get_all()
+    politicians: List[Politician] = get_all()
 
     latest_jobs = job_repository.get_latest_time_for_politicians(politicians)
     sorted_jobs = sorted(latest_jobs.items(), key=lambda x: x[1])
@@ -29,7 +28,7 @@ def main(
             results = news_article_crawler.get(politician, politicians)
             for result in results:
                 news_article_repository.insert(result)
-            job_repository.insert(Job(politician=politician.num))
+            job_repository.insert(Job(politician=politician.id))
         except Exception as ex:
             print('Error occurred while crawling ' + politician.name)
             print(ex)
