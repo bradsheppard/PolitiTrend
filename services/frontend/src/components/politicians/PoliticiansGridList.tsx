@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Grid, Theme, Link as MuiLink, Box } from '@material-ui/core'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles, withStyles } from '@material-ui/core/styles'
 import Link from 'next/link'
 import Header from '../common/Header'
 import dynamic from 'next/dynamic'
@@ -34,6 +34,12 @@ const RoleHeader = (title: string) => {
     )
 }
 
+const ThickLink = withStyles({
+    root: {
+        '&:hover': { textDecorationThickness: '3px' },
+    },
+})(MuiLink)
+
 const DynamicPoliticianGridListItem = dynamic(() => import('./PoliticiansGridListItem'))
 
 const PoliticiansGridList: React.FC<Props> = (props: Props) => {
@@ -53,13 +59,13 @@ const PoliticiansGridList: React.FC<Props> = (props: Props) => {
                                 passHref
                                 as={`/politicians/${politician.id}`}
                             >
-                                <MuiLink>
+                                <ThickLink>
                                     <DynamicPoliticianGridListItem
                                         politician={politician}
                                         key={index}
                                         className={classes.container}
                                     />
-                                </MuiLink>
+                                </ThickLink>
                             </Link>
                         </Grid>
                     )

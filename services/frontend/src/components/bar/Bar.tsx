@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }))
 
-const Header: React.FC = () => {
+const Bar: React.FC = () => {
     const classes = useStyles()
     const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -63,13 +63,22 @@ const Header: React.FC = () => {
         setDrawerOpen(false)
     }
 
+    const capitalize = (word: string) => {
+        return word.charAt(0).toUpperCase() + word.slice(1)
+    }
+
     return (
         <React.Fragment>
             <AppBar position="fixed" color="secondary">
                 <Toolbar>
                     <div className={classes.title}>
-                        <IconButton className={classes.hamburger} edge="start" color="inherit">
-                            <MenuIcon onClick={menuClicked} />
+                        <IconButton
+                            className={classes.hamburger}
+                            edge="start"
+                            color="inherit"
+                            onClick={menuClicked}
+                        >
+                            <MenuIcon />
                         </IconButton>
                         <Drawer open={drawerOpen} onClose={closeDrawer}>
                             <List>
@@ -107,8 +116,4 @@ const Header: React.FC = () => {
     )
 }
 
-function capitalize(word: string) {
-    return word.charAt(0).toUpperCase() + word.slice(1)
-}
-
-export default Header
+export default Bar
