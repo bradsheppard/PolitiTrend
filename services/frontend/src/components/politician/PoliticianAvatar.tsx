@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { politicianNameToImagePath } from '../../utils/ImagePath'
+import { politicianNameToImagePath } from '../../utils/images'
 import { Avatar, Theme } from '@material-ui/core'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 

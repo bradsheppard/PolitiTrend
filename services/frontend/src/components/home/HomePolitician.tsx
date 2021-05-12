@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { politicianNameToImagePath } from '../../utils/ImagePath'
+import { politicianNameToImagePath } from '../../utils/images'
 import { Link as MuiLink, Theme, Typography } from '@material-ui/core'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { ThumbDown, ThumbUp } from '@material-ui/icons'
+import { ThumbDown, ThumbUp, ThumbsUpDown } from '@material-ui/icons'
+import { scaleSentiment } from '../../utils/sentiment'
 
 interface Politician {
     id: number
@@ -60,6 +61,8 @@ const HomePolitician: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
 ) => {
     const classes = useStyles()
 
+    const roundedSentiment = scaleSentiment(props.politician.sentiment)
+
     return (
         <MuiLink href={`/politicians/${props.politician.id}`} underline="none">
             <div className={clsx(props.className, classes.container)}>
@@ -84,17 +87,29 @@ const HomePolitician: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
                     </Typography>
                 </div>
                 <div className={classes.icon}>
-                    {props.politician.sentiment < 0 ? (
-                        <div>
-                            <ThumbDown fontSize="large" />
-                            <Typography variant="subtitle1">Disliked</Typography>
-                        </div>
-                    ) : (
-                        <div>
-                            <ThumbUp fontSize="large" />
-                            <Typography variant="subtitle1">Liked</Typography>
-                        </div>
-                    )}
+                    {(() => {
+                        if (roundedSentiment < 5)
+                            return (
+                                <div>
+                                    <ThumbDown fontSize="large" />
+                                    <Typography variant="subtitle1">Disliked</Typography>
+                                </div>
+                            )
+                        else if (roundedSentiment > 5)
+                            return (
+                                <div>
+                                    <ThumbUp fontSize="large" />
+                                    <Typography variant="subtitle1">Liked</Typography>
+                                </div>
+                            )
+                        else
+                            return (
+                                <div>
+                                    <ThumbsUpDown fontSize="large" />
+                                    <Typography variant="subtitle1">Neutral</Typography>
+                                </div>
+                            )
+                    })()}
                     <div className={classes.numPosts}>
                         <Typography variant="subtitle2">
                             {Math.round(props.politician.sampleSize)} Posts

@@ -3,7 +3,7 @@ import { Box, Grid, Slider, Theme, Typography } from '@material-ui/core'
 import { createStyles, withStyles, makeStyles } from '@material-ui/core/styles'
 import { scaleQuantize } from 'd3-scale'
 import tinygradient from 'tinygradient'
-import Globals from '../../utils/Globals'
+import Globals from '../../utils/globals'
 
 interface Props {
     democraticSentiment: number

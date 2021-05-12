@@ -4,6 +4,7 @@ import { ResponsiveLine as NivoLine } from '@nivo/line'
 import PoliticianNewsArticleFeed from './PoliticianNewsArticleFeed'
 import PoliticianHeader from './PoliticianHeader'
 import PieChart from '../common/PieChart'
+import { scaleSentiment } from '../../utils/sentiment'
 
 interface Props {
     politician: Politician
@@ -38,10 +39,6 @@ interface Point {
 }
 
 const PoliticianFeed: React.FC<Props> = (props: Props) => {
-    const scaleSentiment = (sentiment: number) => {
-        return parseFloat((sentiment * 5 + 5).toFixed(1))
-    }
-
     const data = props.sentiments.map((sentiment) => {
         const date = new Date(sentiment.dateTime)
         return {

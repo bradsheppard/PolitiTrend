@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http'
 
-const absoluteUrl: (
+const urls: (
     req?: IncomingMessage,
     setLocalhost?: string
 ) => { protocol: string; origin: string; host: string | string[] | undefined } = (
@@ -22,4 +22,4 @@ const absoluteUrl: (
     }
 }
 
-export default absoluteUrl
+export default urls

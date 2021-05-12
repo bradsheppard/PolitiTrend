@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ReactWordcloud, { MinMaxPair, Scale, Spiral, Word } from 'react-wordcloud'
-import Globals from '../../utils/Globals'
+import Globals from '../../utils/globals'
 
 const wordCloudOptions = {
     enableTooltip: false,

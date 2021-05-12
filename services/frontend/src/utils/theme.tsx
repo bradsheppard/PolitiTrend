@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import Globals from './Globals'
+import Globals from './globals'
 
 const theme = createMuiTheme({
     palette: {
