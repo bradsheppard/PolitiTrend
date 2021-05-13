@@ -89,7 +89,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'tweetText': 'Bob Young is awesome',
             'politicians': [1],
             'politicianSentiments': [1],
-            'sentiments': [0.6248999834060669],
+            'sentiments': [0.9725284576416016],
             'parties': ['Republican'],
             'dateTime': '2020-11-06 04:57:45'
         },
@@ -98,7 +98,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'tweetText': 'John Smith sucks',
             'politicians': [2],
             'politicianSentiments': [2],
-            'sentiments': [-0.3612000048160553],
+            'sentiments': [-0.9567703008651733],
             'parties': ['Democratic'],
             'dateTime': '2020-11-07 04:57:45'
         },
@@ -107,7 +107,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'tweetText': 'Bob Young and John Smith are awesome',
             'politicians': [1, 2],
             'politicianSentiments': [1, 2],
-            'sentiments': [0.6248999834060669, 0.6248999834060669],
+            'sentiments': [0.9760249853134155, 0.9760249853134155],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-05 04:57:45'
         },
@@ -116,7 +116,7 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
             'tweetText': 'Bob Young sucks. John Smith is awesome',
             'politicians': [1, 2],
             'politicianSentiments': [1, 2],
-            'sentiments': [-0.3612000048160553, 0.6248999834060669],
+            'sentiments': [-0.9512327313423157, 0.9632722735404968],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-08 04:57:45'
         }
@@ -134,12 +134,12 @@ def test_analyze_sentiments(spark_session, politicians, test_data):
 def test_to_politician_sentiment_dataframe(spark_session, politicians, test_data):
     expected_data = [
         {
-            'sentiment': 0.2961999873320262,
+            'sentiment': 0.3324402372042338,
             'politician': 1,
             'sampleSize': 3
         },
         {
-            'sentiment': 0.2961999873320262,
+            'sentiment': 0.32750898599624634,
             'politician': 2,
             'sampleSize': 3
         }
@@ -157,12 +157,12 @@ def test_to_politician_sentiment_dataframe(spark_session, politicians, test_data
 def test_to_party_sentiment_dataframe(spark_session, politicians, test_data):
     expected_data = [
         {
-            'sentiment': 0.2961999873320262,
+            'sentiment': 0.3324402372042338,
             'party': 'Republican',
             'sampleSize': 3
         },
         {
-            'sentiment': 0.2961999873320262,
+            'sentiment': 0.32750898599624634,
             'party': 'Democratic',
             'sampleSize': 3
         }

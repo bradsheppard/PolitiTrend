@@ -102,13 +102,24 @@ class SentimentAnalyzer:
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-branches
         result_list = []
+        pipeline = self._nlp.pipe(statements)
+
+        sentence_lists = []
+        for doc in list(pipeline):
+            document_sentences = seq(doc.sents).map(lambda x: x.text).to_list()
+            sentence_lists.append(document_sentences)
+
+        sentences = [sentence for sublist in sentence_lists for sentence in sublist]
+        sentiments = self.compute_sentiments(sentences)
+
+        sentence_index = 0
         for i, doc in enumerate(self._nlp.pipe(statements)):
             current_subjects = subjects[i]
             results = {}
-            sents = seq(doc.sents).map(lambda x: x.text).to_list()
-            scores = self.compute_sentiments(sents)
+
             for j, sent in enumerate(doc.sents):
-                score = scores[j]
+                score = sentiments[sentence_index]
+                sentence_index += 1
                 pos_words = self._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
                 entities = seq(sent.ents) \
                     .filter(lambda x: x.label_ == 'PERSON') \

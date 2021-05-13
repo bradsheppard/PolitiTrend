@@ -29,7 +29,7 @@ def main():
         .drop_duplicates(['tweetId'])\
         .persist()
 
-    tweets_to_analyze = tweets.join(analyzed_tweets, 'tweetId', 'left_anti').repartition(20)
+    tweets_to_analyze = tweets.join(analyzed_tweets, 'tweetId', 'left_anti').repartition(80)
     tweets_already_analyzed = analyzed_tweets.alias('analyzed')\
         .join(tweets.alias('tweets'), 'tweetId', 'inner')\
         .select([col('analyzed.'+xx) for xx in analyzed_tweets.columns])
