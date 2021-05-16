@@ -4,7 +4,7 @@ import pandas as pd
 from functional import seq
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
-from pyspark.sql.functions import explode, arrays_zip
+from pyspark.sql.functions import explode, arrays_zip, col, when, avg, countDistinct
 from pyspark.sql.types import FloatType, ArrayType, StructType, StructField, StringType, LongType
 
 from sentiment_analytic.politician import Politician
@@ -17,7 +17,8 @@ json_schema = StructType([
     StructField('politicianSentiments', ArrayType(LongType())),
     StructField('parties', ArrayType(StringType())),
     StructField('sentiments', ArrayType(FloatType())),
-    StructField('dateTime', StringType())
+    StructField('dateTime', StringType()),
+    StructField('state', StringType())
 ])
 
 
@@ -55,7 +56,7 @@ def udf_generator(politicians: List[Politician]):
         pdf['sentiments'] = sentiments
         pdf['parties'] = parties
 
-        return pdf[['tweetText', 'tweetId', 'politicians',
+        return pdf[['tweetText', 'tweetId', 'politicians', 'state',
                     'politicianSentiments', 'sentiments', 'parties', 'dateTime']]
 
     return pandas_udf_sentiment
@@ -83,6 +84,26 @@ def to_party_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
         .agg(F.avg('sentiment'), F.count('sentiment')) \
         .withColumnRenamed('avg(sentiment)', 'sentiment') \
         .withColumnRenamed('count(sentiment)', 'sampleSize')
+
+    return sentiment_dataframe
+
+
+def to_state_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
+    sentiment_dataframe = dataframe \
+        .withColumn('vars', explode(arrays_zip('parties', 'sentiments'))) \
+        .selectExpr('tweetText', 'state', 'tweetId',
+                    'vars.sentiments as sentiment',
+                    'vars.parties as party') \
+        .groupBy('state') \
+        .agg(
+            avg(when(col('party') == 'Republican', col('sentiment'))).alias('RepublicanSentiment'),
+            avg(when(col('party') == 'Democratic', col('sentiment'))).alias('DemocraticSentiment'),
+            countDistinct('tweetId').alias('sampleSize')) \
+        .withColumn('affiliations',
+                    F.struct(
+                        F.coalesce(col('DemocraticSentiment'), F.lit(0)).alias('democratic'),
+                        F.coalesce(col('RepublicanSentiment'), F.lit(0)).alias('republican'))) \
+        .drop('RepublicanSentiment', 'DemocraticSentiment')
 
     return sentiment_dataframe
 

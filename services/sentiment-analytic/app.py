@@ -5,7 +5,7 @@ from pyspark.sql.functions import col
 
 from sentiment_analytic.config import config, load_spark_config
 from sentiment_analytic.dataframe import analyze, to_politician_sentiment_dataframe, \
-    to_party_sentiment_dataframe
+    to_party_sentiment_dataframe, to_state_sentiment_dataframe
 from sentiment_analytic.politician import Politician, get_all
 from sentiment_analytic.tweet_repository import TweetRepository
 
@@ -41,6 +41,7 @@ def main():
 
     politician_sentiment_dataframe: DataFrame = to_politician_sentiment_dataframe(tweet_sentiments)
     party_sentiment_dataframe: DataFrame = to_party_sentiment_dataframe(tweet_sentiments)
+    state_sentiment_dataframe: DataFrame = to_state_sentiment_dataframe(tweet_sentiments)
 
     TweetRepository.write_analyzed_tweets(tweet_sentiments, 'temp')
 
@@ -51,6 +52,12 @@ def main():
         .option('topic', config.kafka_politician_sentiment_topic) \
         .save()
     party_sentiment_dataframe.selectExpr('to_json(struct(*)) AS value') \
+        .write \
+        .format('kafka') \
+        .option('kafka.bootstrap.servers', config.kafka_bootstrap_server) \
+        .option('topic', config.kafka_party_sentiment_topic) \
+        .save()
+    state_sentiment_dataframe.selectExpr('to_json(struct(*)) AS value') \
         .write \
         .format('kafka') \
         .option('kafka.bootstrap.servers', config.kafka_bootstrap_server) \
