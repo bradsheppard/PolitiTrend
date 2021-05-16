@@ -1,8 +1,0 @@
-/venv
-/env
-/notebook
-/notebook_env
-/.idea
-/.pytest_cache
-**/__pycache__
-
