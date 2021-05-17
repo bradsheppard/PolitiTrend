@@ -5,10 +5,12 @@ from functional import seq
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 from pyspark.sql.functions import explode, arrays_zip, col, when, avg, countDistinct
+from pyspark.sql.pandas.functions import pandas_udf, PandasUDFType
 from pyspark.sql.types import FloatType, ArrayType, StructType, StructField, StringType, LongType
 
 from sentiment_analytic.politician import Politician
 from sentiment_analytic.sentiment_analyzer import SentimentAnalyzer
+from sentiment_analytic.state_lookup import get_state
 
 json_schema = StructType([
     StructField('tweetText', StringType()),
@@ -18,11 +20,11 @@ json_schema = StructType([
     StructField('parties', ArrayType(StringType())),
     StructField('sentiments', ArrayType(FloatType())),
     StructField('dateTime', StringType()),
-    StructField('state', StringType())
+    StructField('location', StringType())
 ])
 
 
-def udf_generator(politicians: List[Politician]):
+def sentiment_udf_generator(politicians: List[Politician]):
     def pandas_udf_sentiment(pdf: pd.DataFrame):
         sentiment_analyzer = SentimentAnalyzer()
 
@@ -56,7 +58,7 @@ def udf_generator(politicians: List[Politician]):
         pdf['sentiments'] = sentiments
         pdf['parties'] = parties
 
-        return pdf[['tweetText', 'tweetId', 'politicians', 'state',
+        return pdf[['tweetText', 'tweetId', 'politicians', 'location',
                     'politicianSentiments', 'sentiments', 'parties', 'dateTime']]
 
     return pandas_udf_sentiment
@@ -89,7 +91,15 @@ def to_party_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
 
 
 def to_state_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
-    sentiment_dataframe = dataframe \
+    @pandas_udf('string', PandasUDFType.SCALAR)
+    def get_state_udf(series: pd.Series):
+        return series.apply(get_state)
+
+    sentiment_dataframe = dataframe.withColumn('state', get_state_udf(dataframe.location))
+
+    sentiment_dataframe.show(truncate=False)
+
+    sentiment_dataframe = sentiment_dataframe \
         .withColumn('vars', explode(arrays_zip('parties', 'sentiments'))) \
         .selectExpr('tweetText', 'state', 'tweetId',
                     'vars.sentiments as sentiment',
@@ -110,6 +120,6 @@ def to_state_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
 
 def analyze(dataframe: DataFrame, subjects: List[Politician]) -> DataFrame:
     dataframe = dataframe.groupBy('politicians') \
-        .applyInPandas(udf_generator(subjects), json_schema)
+        .applyInPandas(sentiment_udf_generator(subjects), json_schema)
 
     return dataframe
