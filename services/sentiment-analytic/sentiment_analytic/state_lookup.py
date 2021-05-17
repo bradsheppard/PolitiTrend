@@ -11,11 +11,7 @@ def get_state(location: str) -> Union[str, None]:
     if not location:
         return None
 
-    print(script_dir)
-    print(location)
-
     for _, row in state_dataframe.iterrows():
-        print(row['State'])
         location_lower = location.lower()
         state = row['State']
         abbreviation = row['Abbreviation']
@@ -31,5 +27,4 @@ def get_state(location: str) -> Union[str, None]:
                 location_lower.endswith(match3):
             return abbreviation
 
-    print('RETURNING NONE')
     return None

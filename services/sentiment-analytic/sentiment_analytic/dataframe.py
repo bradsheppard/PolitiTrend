@@ -96,9 +96,6 @@ def to_state_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
         return series.apply(get_state)
 
     sentiment_dataframe = dataframe.withColumn('state', get_state_udf(dataframe.location))
-
-    sentiment_dataframe.show(truncate=False)
-
     sentiment_dataframe = sentiment_dataframe \
         .withColumn('vars', explode(arrays_zip('parties', 'sentiments'))) \
         .selectExpr('tweetText', 'state', 'tweetId',
