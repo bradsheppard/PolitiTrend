@@ -90,7 +90,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'sentiments': [],
             'parties': [],
             'dateTime': '2020-11-09 04:57:45',
-            'location': 'Somewhere, NY'
+            'state': 'NY'
         },
         {
             'tweetId': '2',
@@ -100,7 +100,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'sentiments': [0.6248999834060669],
             'parties': ['Republican'],
             'dateTime': '2020-11-06 04:57:45',
-            'location': 'Somewhere, NY'
+            'state': 'NY'
         },
         {
             'tweetId': '3',
@@ -110,7 +110,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'sentiments': [-0.3612000048160553],
             'parties': ['Democratic'],
             'dateTime': '2020-11-07 04:57:45',
-            'location': 'Somewhere, VT'
+            'state': 'VT'
         },
         {
             'tweetId': '1',
@@ -120,7 +120,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'sentiments': [0.6248999834060669, 0.6248999834060669],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-05 04:57:45',
-            'location': 'Somewhere, NY'
+            'state': 'NY'
         },
         {
             'tweetId': '4',
@@ -130,7 +130,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'sentiments': [-0.3612000048160553, 0.6248999834060669],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-08 04:57:45',
-            'location': 'Somewhere, NY'
+            'state': 'NY'
         }
     ]
 

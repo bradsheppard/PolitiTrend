@@ -5,7 +5,6 @@ from functional import seq
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 from pyspark.sql.functions import explode, arrays_zip, col, when, avg, countDistinct
-from pyspark.sql.pandas.functions import pandas_udf, PandasUDFType
 from pyspark.sql.types import FloatType, ArrayType, StructType, StructField, StringType, LongType
 
 from sentiment_analytic.politician import Politician
@@ -20,7 +19,7 @@ json_schema = StructType([
     StructField('parties', ArrayType(StringType())),
     StructField('sentiments', ArrayType(FloatType())),
     StructField('dateTime', StringType()),
-    StructField('location', StringType())
+    StructField('state', StringType())
 ])
 
 
@@ -28,6 +27,7 @@ def sentiment_udf_generator(politicians: List[Politician]):
     def pandas_udf_sentiment(pdf: pd.DataFrame):
         sentiment_analyzer = SentimentAnalyzer()
 
+        pdf['state'] = pdf['location'].apply(get_state)
         tweets = pdf['tweetText'].tolist()
         entities = pdf['politicians']\
             .apply(lambda x: [element for element in politicians if element.id in x])
@@ -58,7 +58,7 @@ def sentiment_udf_generator(politicians: List[Politician]):
         pdf['sentiments'] = sentiments
         pdf['parties'] = parties
 
-        return pdf[['tweetText', 'tweetId', 'politicians', 'location',
+        return pdf[['tweetText', 'tweetId', 'politicians', 'state',
                     'politicianSentiments', 'sentiments', 'parties', 'dateTime']]
 
     return pandas_udf_sentiment
@@ -91,12 +91,7 @@ def to_party_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
 
 
 def to_state_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
-    @pandas_udf('string', PandasUDFType.SCALAR)
-    def get_state_udf(series: pd.Series):
-        return series.apply(get_state)
-
-    sentiment_dataframe = dataframe.withColumn('state', get_state_udf(dataframe.location))
-    sentiment_dataframe = sentiment_dataframe \
+    sentiment_dataframe = dataframe \
         .withColumn('vars', explode(arrays_zip('parties', 'sentiments'))) \
         .selectExpr('tweetText', 'state', 'tweetId',
                     'vars.sentiments as sentiment',
