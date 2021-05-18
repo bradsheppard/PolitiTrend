@@ -28,7 +28,7 @@ def test_data():
             'tweetText': 'Bob Young is awesome',
             'politicians': [1],
             'dateTime': '2020-11-06 04:57:45',
-            'location': 'Somewhere, NY'
+            'location': ''
         },
         {
             'tweetId': '3',
@@ -100,7 +100,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'sentiments': [0.6248999834060669],
             'parties': ['Republican'],
             'dateTime': '2020-11-06 04:57:45',
-            'state': 'NY'
+            'state': None
         },
         {
             'tweetId': '3',
@@ -176,7 +176,7 @@ def test_to_state_sentiment_dataframe(spark_session: SparkSession,
     output_dataframe = to_state_sentiment_dataframe(analyze(dataframe, politicians))
     expected_dataframe = spark_session.createDataFrame([
         ('VT', 1, Row(democratic=-0.3612000048160553, republican=0.0)),
-        ('NY', 3, Row(democratic=0.6248999834060669, republican=0.2961999873320262))
+        ('NY', 2, Row(democratic=0.6248999834060669, republican=0.1318499892950058))
     ], ['state', 'sampleSize', 'affiliations'])
 
     assert expected_dataframe.collect() == output_dataframe.collect()

@@ -96,6 +96,7 @@ def to_state_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
         .selectExpr('tweetText', 'state', 'tweetId',
                     'vars.sentiments as sentiment',
                     'vars.parties as party') \
+        .filter(col('state').isNotNull()) \
         .groupBy('state') \
         .agg(
             avg(when(col('party') == 'Republican', col('sentiment'))).alias('RepublicanSentiment'),
