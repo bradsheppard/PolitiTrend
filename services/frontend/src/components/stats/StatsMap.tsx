@@ -55,6 +55,7 @@ const StatsMap: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
     const lookupStatePartyAffiliation = (state: string) => {
         return props.statePartyAffiliations.find(
             (statePartyAffiliation) =>
+                statePartyAffiliation.state &&
                 state.toLowerCase() === statePartyAffiliation.state.toLowerCase()
         )
     }
