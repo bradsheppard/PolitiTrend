@@ -61,7 +61,7 @@ def main():
         .write \
         .format('kafka') \
         .option('kafka.bootstrap.servers', config.kafka_bootstrap_server) \
-        .option('topic', config.kafka_party_sentiment_topic) \
+        .option('topic', config.kafka_state_sentiment_topic) \
         .save()
 
     spark.stop()
