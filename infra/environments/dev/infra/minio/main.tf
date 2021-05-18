@@ -19,10 +19,6 @@ resource "minio_s3_bucket" "tweets" {
   bucket = "tweets"
 }
 
-resource "minio_s3_bucket" "state_party_affiliation_analytic_analyzed_tweets" {
-  bucket = "state-party-affiliation-analytic-analyzed-tweets"
-}
-
 resource "minio_s3_bucket" "sentiment_analytic_analyzed_tweets" {
   bucket = "sentiment-analytic-analyzed-tweets"
 }
