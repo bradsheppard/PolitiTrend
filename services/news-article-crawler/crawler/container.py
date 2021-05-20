@@ -6,7 +6,6 @@ from crawler.config import config
 from crawler.job import JobRepository
 from crawler.message_bus import MessageBus
 from crawler.news_article import NewsArticleRepository, NewsArticleCrawler
-from crawler.politician import PoliticianRepository
 from crawler.summarizer import Summarizer
 
 
@@ -48,8 +47,4 @@ class Container(containers.DeclarativeContainer):
         NewsArticleCrawler,
         api_key=config.contextual_web_api_key,
         summarizer=summarizer
-    )
-
-    politician_repository = providers.Singleton(
-        PoliticianRepository
     )

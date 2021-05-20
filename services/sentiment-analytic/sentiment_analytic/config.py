@@ -43,6 +43,7 @@ class Config:
     kafka_bootstrap_server: str
     kafka_politician_sentiment_topic: str
     kafka_party_sentiment_topic: str
+    kafka_state_sentiment_topic: str
 
 
 config = Config(
@@ -58,5 +59,6 @@ config = Config(
     int(analytic_config['num_partitions']),
     kafka_config['bootstrap_server'],
     kafka_config['politician_sentiment_topic'],
-    kafka_config['party_sentiment_topic']
+    kafka_config['party_sentiment_topic'],
+    kafka_config['state_sentiment_topic']
 )

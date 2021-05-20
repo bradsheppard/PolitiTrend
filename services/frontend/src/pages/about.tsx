@@ -5,7 +5,7 @@ import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/s
 import CardDisplay from '../components/common/HeadlineCard'
 import TransparentJumbo from '../components/common/TransparentJumbo'
 import Typography from '@material-ui/core/Typography'
-import Globals from '../utils/Globals'
+import Globals from '../utils/globals'
 
 const styles = (theme: Theme) =>
     createStyles({

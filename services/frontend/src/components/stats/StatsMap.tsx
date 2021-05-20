@@ -5,7 +5,7 @@ import allStates from './allstates.json'
 import { scaleQuantize } from 'd3-scale'
 import { useState } from 'react'
 import ReactTooltip from 'react-tooltip'
-import Globals from '../../utils/Globals'
+import Globals from '../../utils/globals'
 import tinygradient from 'tinygradient'
 
 const geoUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json'
@@ -55,6 +55,7 @@ const StatsMap: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
     const lookupStatePartyAffiliation = (state: string) => {
         return props.statePartyAffiliations.find(
             (statePartyAffiliation) =>
+                statePartyAffiliation.state &&
                 state.toLowerCase() === statePartyAffiliation.state.toLowerCase()
         )
     }

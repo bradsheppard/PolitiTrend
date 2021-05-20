@@ -14,3 +14,8 @@ resource "google_project_service" "gke-api" {
   project = google_project.project.project_id
   service = "container.googleapis.com"
 }
+
+resource "google_project_service" "logging-api" {
+  project = google_project.project.project_id
+  service = "logging.googleapis.com"
+}

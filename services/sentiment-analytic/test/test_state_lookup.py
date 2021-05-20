@@ -1,4 +1,4 @@
-from state_party_affiliation_analytic.state_lookup import get_state
+from sentiment_analytic.state_lookup import get_state
 
 
 def test_lookup_state_by_alias():

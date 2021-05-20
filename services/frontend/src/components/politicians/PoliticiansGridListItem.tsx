@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Theme, Typography } from '@material-ui/core'
-import { politicianNameToImagePath } from '../../utils/ImagePath'
+import { politicianNameToImagePath } from '../../utils/images'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import Image from 'next/image'

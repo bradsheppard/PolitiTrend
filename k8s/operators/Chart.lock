@@ -1,9 +1,0 @@
-dependencies:
-- name: sparkoperator
-  repository: http://storage.googleapis.com/kubernetes-charts-incubator
-  version: 0.8.5
-- name: strimzi-kafka-operator
-  repository: https://strimzi.io/charts
-  version: 0.16.2
-digest: sha256:f60cedfb4be843472d382fedc39d895e32f8e9f0c1e9c5542758140da5bb6296
-generated: "2020-11-11T13:08:22.719449696-03:30"

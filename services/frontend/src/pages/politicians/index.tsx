@@ -33,15 +33,21 @@ interface MoreProps {
     className: string
 }
 
+const ThickLink = withStyles({
+    root: {
+        '&:hover': { textDecorationThickness: '3px' },
+    },
+})(MuiLink)
+
 const MoreLink = (props: MoreProps) => {
     return (
         <div className={props.className}>
             <Link href={props.link} passHref>
-                <MuiLink>
+                <ThickLink>
                     <Typography variant="h5" color="primary">
                         MORE...
                     </Typography>
-                </MuiLink>
+                </ThickLink>
             </Link>
         </div>
     )

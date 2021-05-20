@@ -98,7 +98,7 @@ class NewsArticleCrawler:
                 continue
 
             if len(extracted_politicians) == 0:
-                extracted_politicians = [politician.num]
+                extracted_politicians = [politician.id]
 
             news_article = NewsArticle(
                 title=NewsArticleCrawler._stip_html_tags(article['title']),
@@ -119,7 +119,7 @@ class NewsArticleCrawler:
         results = []
         for politician in politicians:
             if politician.name in text:
-                results.append(politician.num)
+                results.append(politician.id)
 
         return results
 

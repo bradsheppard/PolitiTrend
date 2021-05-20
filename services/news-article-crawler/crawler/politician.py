@@ -1,27 +1,72 @@
+from dataclasses import dataclass
+
 import requests
+
+from datetime import datetime, timedelta
 from typing import List
 
 
+@dataclass(frozen=True, eq=True)
 class Politician:
+    # pylint: disable=invalid-name
+    id: int
+    name: str
+    sampleSize: int
 
-    def __init__(self, num, name):
-        self.num = num
-        self.name = name
+
+SENTIMENT_HOST = 'http://analytics/politician-sentiment'
+POLITICIAN_HOST = 'http://politician'
 
 
-class PoliticianRepository:
+def get_all() -> List[Politician]:
+    politician_names = _get_politicians()
+    sentiments = _get_sentiments()
 
-    def __init__(self):
-        self._host = 'http://politician'
+    politicians: List[Politician] = []
 
-    def get_all(self) -> List[Politician]:
-        res = requests.get(self._host)
-        json = res.json()['data']
+    for politician_id in politician_names.keys():
+        if politician_id not in sentiments:
+            continue
 
-        politicians = []
+        sample_size = sentiments[politician_id]
+        name = politician_names[politician_id]
 
-        for entry in json:
-            politician = Politician(entry['id'], entry['name'])
-            politicians.append(politician)
+        politician = Politician(politician_id, name, sample_size)
+        politicians.append(politician)
 
-        return politicians
+    politicians.sort(key=lambda x: x.sampleSize, reverse=True)
+    return politicians
+
+
+def _get_sentiments():
+    now = datetime.now()
+    now = now - timedelta(days=2)
+
+    payload = {'resample': 86400000, 'start': now.isoformat()}
+
+    res = requests.get(SENTIMENT_HOST, params=payload)
+    json = res.json()
+
+    sentiments = {}
+
+    for entry in json:
+        politician_id = entry['politician']
+        sample_size = entry['sampleSize']
+
+        sentiments[politician_id] = sample_size
+
+    return sentiments
+
+
+def _get_politicians():
+    res = requests.get(POLITICIAN_HOST)
+    json = res.json()['data']
+
+    politicians = {}
+
+    for entry in json:
+        politician_id = entry['id']
+        name = entry['name']
+        politicians[politician_id] = name
+
+    return politicians

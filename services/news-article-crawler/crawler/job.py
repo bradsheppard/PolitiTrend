@@ -49,7 +49,7 @@ class JobRepository:
         jobs = self.get_latest_per_politician()
 
         for politician in politicians:
-            matching_job = seq(jobs).find(lambda x, p=politician: x.politician == p.num)
+            matching_job = seq(jobs).find(lambda x, p=politician: x.politician == p.id)
             if matching_job is not None:
                 result[politician] = matching_job.timestamp
             else:
