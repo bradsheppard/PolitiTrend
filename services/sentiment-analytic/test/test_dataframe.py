@@ -1,5 +1,4 @@
 # pylint: disable=redefined-outer-name
-
 from typing import List
 
 import pandas as pd
@@ -8,9 +7,9 @@ from pyspark import Row
 from pyspark.sql import SparkSession
 
 from sentiment_analytic.config import load_spark_config
-from sentiment_analytic.politician import Politician
 from sentiment_analytic.dataframe import analyze, to_politician_sentiment_dataframe, \
     to_party_sentiment_dataframe, to_state_sentiment_dataframe
+from sentiment_analytic.politician import Politician
 
 
 @pytest.fixture()
@@ -83,13 +82,13 @@ def test_analyze_sentiments(spark_session: SparkSession,
                             politicians: List[Politician], test_data):
     expected_data = [
         {
-            'tweetId': '5',
-            'tweetText': 'Bob Young sucks. John Smith is awesome',
-            'politicians': [],
-            'politicianSentiments': [],
-            'sentiments': [],
-            'parties': [],
-            'dateTime': '2020-11-09 04:57:45',
+            'tweetId': '1',
+            'tweetText': 'Bob Young and John Smith are awesome',
+            'politicians': [1, 2],
+            'politicianSentiments': [1, 2],
+            'sentiments': [0.9760249853134155, 0.9760249853134155],
+            'parties': ['Republican', 'Democratic'],
+            'dateTime': '2020-11-05 04:57:45',
             'state': 'NY'
         },
         {
@@ -113,16 +112,6 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'state': 'VT'
         },
         {
-            'tweetId': '1',
-            'tweetText': 'Bob Young and John Smith are awesome',
-            'politicians': [1, 2],
-            'politicianSentiments': [1, 2],
-            'sentiments': [0.9760249853134155, 0.9760249853134155],
-            'parties': ['Republican', 'Democratic'],
-            'dateTime': '2020-11-05 04:57:45',
-            'state': 'NY'
-        },
-        {
             'tweetId': '4',
             'tweetText': 'Bob Young sucks. John Smith is awesome',
             'politicians': [1, 2],
@@ -130,6 +119,16 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'sentiments': [-0.9512327313423157, 0.9632722735404968],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-08 04:57:45',
+            'state': 'NY'
+        },
+        {
+            'tweetId': '5',
+            'tweetText': 'Bob Young sucks. John Smith is awesome',
+            'politicians': [],
+            'politicianSentiments': [],
+            'sentiments': [],
+            'parties': [],
+            'dateTime': '2020-11-09 04:57:45',
             'state': 'NY'
         }
     ]

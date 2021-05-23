@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Iterator, Callable
 
 import pandas as pd
 from functional import seq
@@ -23,43 +23,46 @@ json_schema = StructType([
 ])
 
 
-def sentiment_udf_generator(politicians: List[Politician]):
-    def pandas_udf_sentiment(pdf: pd.DataFrame):
+def sentiment_udf_generator(politicians: List[Politician]) -> \
+        Callable[[Iterator[pd.DataFrame]], Iterator[pd.DataFrame]]:
+    def pandas_udf_sentiment(iterator: Iterator[pd.DataFrame]) -> Iterator[pd.DataFrame]:
         sentiment_analyzer = SentimentAnalyzer()
 
-        pdf['state'] = pdf['location'].apply(get_state)
-        tweets = pdf['tweetText'].tolist()
-        entities = pdf['politicians']\
-            .apply(lambda x: [element for element in politicians if element.id in x])
+        for pdf in iterator:
 
-        computed_sentiments = sentiment_analyzer.get_entity_sentiments(tweets, entities)
-        politician_sentiments = []
-        sentiments = []
-        parties = []
+            pdf['state'] = pdf['location'].apply(get_state)
+            tweets = pdf['tweetText'].tolist()
+            entities = pdf['politicians'] \
+                .apply(lambda x: [element for element in politicians if element.id in x])
 
-        for computed_sentiment in computed_sentiments:
-            tweet_politician_sentiments = []
-            tweet_sentiments = []
-            tweet_parties = []
+            computed_sentiments = sentiment_analyzer.get_entity_sentiments(tweets, entities)
+            politician_sentiments = []
+            sentiments = []
+            parties = []
 
-            for politician_id in computed_sentiment.keys():
-                politician = seq(politicians)\
-                    .find(lambda x, search_id=politician_id:  x.id == search_id)
-                tweet_politician_sentiments.append(politician_id)
-                tweet_parties.append(politician.party)
-            for sentiment in computed_sentiment.values():
-                tweet_sentiments.append(sentiment)
+            for computed_sentiment in computed_sentiments:
+                tweet_politician_sentiments = []
+                tweet_sentiments = []
+                tweet_parties = []
 
-            sentiments.append(tweet_sentiments)
-            politician_sentiments.append(tweet_politician_sentiments)
-            parties.append(tweet_parties)
+                for politician_id in computed_sentiment.keys():
+                    politician = seq(politicians) \
+                        .find(lambda x, search_id=politician_id: x.id == search_id)
+                    tweet_politician_sentiments.append(politician_id)
+                    tweet_parties.append(politician.party)
+                for sentiment in computed_sentiment.values():
+                    tweet_sentiments.append(sentiment)
 
-        pdf['politicianSentiments'] = politician_sentiments
-        pdf['sentiments'] = sentiments
-        pdf['parties'] = parties
+                sentiments.append(tweet_sentiments)
+                politician_sentiments.append(tweet_politician_sentiments)
+                parties.append(tweet_parties)
 
-        return pdf[['tweetText', 'tweetId', 'politicians', 'state',
-                    'politicianSentiments', 'sentiments', 'parties', 'dateTime']]
+            pdf['politicianSentiments'] = politician_sentiments
+            pdf['sentiments'] = sentiments
+            pdf['parties'] = parties
+
+            yield pdf[['tweetText', 'tweetId', 'politicians', 'state',
+                       'politicianSentiments', 'sentiments', 'parties', 'dateTime']]
 
     return pandas_udf_sentiment
 
@@ -112,7 +115,6 @@ def to_state_sentiment_dataframe(dataframe: DataFrame) -> DataFrame:
 
 
 def analyze(dataframe: DataFrame, subjects: List[Politician]) -> DataFrame:
-    dataframe = dataframe.groupBy('politicians') \
-        .applyInPandas(sentiment_udf_generator(subjects), json_schema)
+    dataframe = dataframe.mapInPandas(sentiment_udf_generator(subjects), json_schema)
 
     return dataframe

@@ -38,8 +38,6 @@ class SentimentAnalyzer:
 
         result = 0
 
-        print(scores)
-
         for i in range(scores.shape[0]):
             label = self._labels[ranking[i]]
             score = scores[ranking[i]]
