@@ -17,12 +17,9 @@ def main(
 ) -> None:
     politicians: List[Politician] = get_all()
 
-    latest_jobs = job_repository.get_latest_time_for_politicians(politicians)
-    sorted_jobs = sorted(latest_jobs.items(), key=lambda x: x[1])
-
     start = timeit.default_timer()
 
-    for politician, job in sorted_jobs:
+    for politician in politicians:
         print('Crawling for ' + politician.name)
         try:
             results = news_article_crawler.get(politician, politicians)
