@@ -31,7 +31,7 @@ def main():
 
     tweets_to_analyze = tweets.join(analyzed_tweets, 'tweetId', 'left_anti')
 
-    rows_per_partition = 100
+    rows_per_partition = config.analytic_sentiment_computation_rows_per_partition
     partitions = int(1 + tweets_to_analyze.count() / rows_per_partition)
 
     tweets_to_analyze = tweets_to_analyze.repartition(partitions)
