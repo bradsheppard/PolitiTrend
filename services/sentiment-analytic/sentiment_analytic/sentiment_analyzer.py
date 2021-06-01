@@ -1,79 +1,82 @@
-import csv
 import math
-import urllib
 from statistics import mean
 from typing import List, Dict
 
 import networkx as nx
 import numpy as np
 import spacy
+import tensorflow as tf
+import tensorflow.keras as keras
+import tensorflow.keras.layers as layers
 from functional import seq
-from scipy.special import softmax
-from transformers import TFAutoModelForSequenceClassification, AutoTokenizer
+from tensorflow.python.tpu import tpu_estimator
+from transformers import AutoTokenizer, TFDistilBertModel
 
 from sentiment_analytic.politician import Politician
 
 
 class SentimentAnalyzer:
 
-    def __init__(self):
-        self._tokenizer = AutoTokenizer.from_pretrained("cardiffnlp/twitter-roberta-base")
-        self._model = TFAutoModelForSequenceClassification.from_pretrained("cardiffnlp/twitter-roberta-base-sentiment")
-        self._nlp = spacy.load('en')
+    tokenizer = None
+    model = None
+    nlp = None
+    labels = None
 
-        mapping_link = f"https://raw.githubusercontent.com/cardiffnlp/tweeteval/main/datasets/sentiment/mapping.txt"
-        with urllib.request.urlopen(mapping_link) as f:
-            html = f.read().decode('utf-8').split("\n")
-            csvreader = csv.reader(html, delimiter='\t')
-        self._labels = [row[1] for row in csvreader if len(row) > 1]
+    LABELS = {"NEG": 0, "POS": 1}
+    classes = list(LABELS.keys())
 
-    def compute_sentiment(self, text: str) -> float:
-        encoded_input = self._tokenizer(text, return_tensors='tf')
-        output = self._model(encoded_input)
-        scores = output[0][0].numpy()
-        scores = softmax(scores)
+    @staticmethod
+    def load():
+        if SentimentAnalyzer.model is not None:
+            return
 
-        ranking = np.argsort(scores)
-        ranking = ranking[::-1]
+        resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+        tf.config.experimental_connect_to_cluster(resolver)
+        tf.tpu.experimental.initialize_tpu_system(resolver)
 
-        result = 0
+        strategy = tf.distribute.TPUStrategy(resolver)
 
-        for i in range(scores.shape[0]):
-            label = self._labels[ranking[i]]
-            score = scores[ranking[i]]
-            if label == 'negative':
-                result -= score
-            elif label == 'positive':
-                result += score
+        with strategy.scope():
+            SentimentAnalyzer.tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
 
-        return result
+            input_ids = tf.keras.Input(shape=(128,), dtype='int32', name='input_ids')
+            attention_mask = tf.keras.Input(shape=(128,), dtype='int32', name='attention_mask')
 
-    def compute_sentiments(self, statements: List[str]):
-        encoded_input = self._tokenizer(statements, padding=True, truncation=True, return_tensors='tf')
-        model_output = self._model(encoded_input)
-        model_output = model_output.logits.numpy()
+            inputs = [input_ids, attention_mask]
+
+            transformer = TFDistilBertModel.from_pretrained("distilbert-base-uncased-finetuned-sst-2-english")
+            bert_outputs = transformer(inputs)
+
+            last_hidden_states = bert_outputs.last_hidden_state
+            avg = layers.GlobalAveragePooling1D()(last_hidden_states)
+            output = layers.Dense(1, activation="sigmoid")(avg)
+            model = keras.Model(inputs=inputs, outputs=output)
+
+            SentimentAnalyzer.model = model
+        SentimentAnalyzer.nlp = spacy.load('en')
+
+    @staticmethod
+    def compute_sentiments(statements: List[str]):
+        inputs = np.asarray(statements)
+        inputs = SentimentAnalyzer.prepare_bert_input(inputs, 128)
 
         results = []
 
-        for output in model_output:
-            scores = softmax(output)
+        outputs = SentimentAnalyzer.model.predict(inputs)
 
-            ranking = np.argsort(scores)
-            ranking = ranking[::-1]
-
-            result = 0
-
-            for i in range(scores.shape[0]):
-                label = self._labels[ranking[i]]
-                score = scores[ranking[i]]
-                if label == 'negative':
-                    result -= score
-                elif label == 'positive':
-                    result += score
-
-            results.append(result)
+        for output in outputs:
+            sentiment = output[0]
+            results.append(sentiment)
 
         return results
+
+    @staticmethod
+    def prepare_bert_input(sentences, seq_len):
+        encodings = SentimentAnalyzer.tokenizer(sentences.tolist(), truncation=True, padding='max_length',
+                              max_length=seq_len)
+        input = [np.array(encodings["input_ids"]),
+                 np.array(encodings["attention_mask"])]
+        return input
 
     @staticmethod
     def _match_politicians(text, politicians) -> List[Politician]:
@@ -95,12 +98,13 @@ class SentimentAnalyzer:
 
         return results
 
-    def get_entity_sentiments(self, statements: List[str],
+    @staticmethod
+    def get_entity_sentiments(statements: List[str],
                               subjects: List[List[Politician]] = None) -> List[Dict[int, float]]:
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-branches
         result_list = []
-        pipeline = self._nlp.pipe(statements)
+        pipeline = SentimentAnalyzer.nlp.pipe(statements)
 
         sentence_lists = []
         for doc in list(pipeline):
@@ -108,17 +112,17 @@ class SentimentAnalyzer:
             sentence_lists.append(document_sentences)
 
         sentences = [sentence for sublist in sentence_lists for sentence in sublist]
-        sentiments = self.compute_sentiments(sentences)
+        sentiments = SentimentAnalyzer.compute_sentiments(sentences)
 
         sentence_index = 0
-        for i, doc in enumerate(self._nlp.pipe(statements)):
+        for i, doc in enumerate(SentimentAnalyzer.nlp.pipe(statements)):
             current_subjects = subjects[i]
             results = {}
 
             for j, sent in enumerate(doc.sents):
                 score = sentiments[sentence_index]
                 sentence_index += 1
-                pos_words = self._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
+                pos_words = SentimentAnalyzer._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
                 entities = seq(sent.ents) \
                     .filter(lambda x: x.label_ == 'PERSON') \
                     .map(lambda x: x.text) \
@@ -155,7 +159,7 @@ class SentimentAnalyzer:
                     .map(lambda x: x[0])
 
                 for entity in relevant_entities:
-                    politicians = self._match_politicians(entity, current_subjects)
+                    politicians = SentimentAnalyzer._match_politicians(entity, current_subjects)
                     for politician in politicians:
                         if politician.id not in results:
                             results[politician.id] = [score]

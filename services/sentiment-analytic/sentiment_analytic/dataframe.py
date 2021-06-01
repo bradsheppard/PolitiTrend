@@ -26,7 +26,7 @@ json_schema = StructType([
 def sentiment_udf_generator(politicians: List[Politician]) -> \
         Callable[[Iterator[pd.DataFrame]], Iterator[pd.DataFrame]]:
     def pandas_udf_sentiment(iterator: Iterator[pd.DataFrame]) -> Iterator[pd.DataFrame]:
-        sentiment_analyzer = SentimentAnalyzer()
+        SentimentAnalyzer.load()
 
         for pdf in iterator:
 
@@ -35,7 +35,7 @@ def sentiment_udf_generator(politicians: List[Politician]) -> \
             entities = pdf['politicians'] \
                 .apply(lambda x: [element for element in politicians if element.id in x])
 
-            computed_sentiments = sentiment_analyzer.get_entity_sentiments(tweets, entities)
+            computed_sentiments = SentimentAnalyzer.get_entity_sentiments(tweets, entities)
             politician_sentiments = []
             sentiments = []
             parties = []
