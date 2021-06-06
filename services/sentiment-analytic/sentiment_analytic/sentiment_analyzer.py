@@ -38,7 +38,7 @@ class SentimentAnalyzer:
 
         SentimentAnalyzer.strategy = strategy
         SentimentAnalyzer.tokenizer = AutoTokenizer\
-            .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
+            .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english', use_fast=True)
 
         with strategy.scope():
             SentimentAnalyzer.model = TFAutoModelForSequenceClassification\
