@@ -49,8 +49,6 @@ def main():
     party_sentiment_dataframe: DataFrame = to_party_sentiment_dataframe(tweet_sentiments)
     state_sentiment_dataframe: DataFrame = to_state_sentiment_dataframe(tweet_sentiments)
 
-    TweetRepository.write_analyzed_tweets(tweet_sentiments, 'temp')
-
     politician_sentiment_dataframe.selectExpr('to_json(struct(*)) AS value') \
         .write \
         .format('kafka') \
@@ -70,23 +68,7 @@ def main():
         .option('topic', config.kafka_state_sentiment_topic) \
         .save()
 
-    spark.stop()
-
-
-def transfer_results_to_bucket():
-    spark = SparkSession.builder \
-        .getOrCreate()
-
-    load_spark_config(spark.sparkContext)
-    tweet_repository = TweetRepository(spark)
-
-    tweets = tweet_repository\
-        .read_analyzed_tweets('temp')\
-        .repartition(config.analytic_num_partitions)
-    TweetRepository.write_analyzed_tweets(tweets, 'analyzed-tweets')
-
-    spark.stop()
+    TweetRepository.write_analyzed_tweets(tweet_sentiments, 'analyzed-tweets')
 
 
 main()
-transfer_results_to_bucket()

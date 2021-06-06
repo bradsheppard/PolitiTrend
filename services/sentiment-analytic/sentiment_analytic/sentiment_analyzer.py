@@ -1,17 +1,16 @@
+# pylint: disable=not-callable
 import math
 from statistics import mean
 from typing import List, Dict
 
 import networkx as nx
-import numpy as np
 import spacy
 import tensorflow as tf
-import tensorflow.keras as keras
-import tensorflow.keras.layers as layers
 from functional import seq
-from tensorflow.python.tpu import tpu_estimator
-from transformers import AutoTokenizer, TFDistilBertModel
+from tensorflow.python.distribute.tpu_strategy import TPUStrategyV2
+from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 
+from sentiment_analytic.config import config
 from sentiment_analytic.politician import Politician
 
 
@@ -21,62 +20,75 @@ class SentimentAnalyzer:
     model = None
     nlp = None
     labels = None
-
-    LABELS = {"NEG": 0, "POS": 1}
-    classes = list(LABELS.keys())
+    strategy: TPUStrategyV2 = None
 
     @staticmethod
     def load():
         if SentimentAnalyzer.model is not None:
             return
 
-        resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
-        tf.config.experimental_connect_to_cluster(resolver)
-        tf.tpu.experimental.initialize_tpu_system(resolver)
+        if config.analytic_use_tpus:
+            resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+            tf.config.experimental_connect_to_cluster(resolver)
+            tf.tpu.experimental.initialize_tpu_system(resolver)
 
-        strategy = tf.distribute.TPUStrategy(resolver)
+            strategy = tf.distribute.TPUStrategy(resolver)
+        else:
+            strategy = tf.distribute.MirroredStrategy(devices=['GPU:0', 'GPU:1'])
+
+        SentimentAnalyzer.strategy = strategy
+        SentimentAnalyzer.tokenizer = AutoTokenizer\
+            .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
 
         with strategy.scope():
-            SentimentAnalyzer.tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
-
-            input_ids = tf.keras.Input(shape=(128,), dtype='int32', name='input_ids')
-            attention_mask = tf.keras.Input(shape=(128,), dtype='int32', name='attention_mask')
-
-            inputs = [input_ids, attention_mask]
-
-            transformer = TFDistilBertModel.from_pretrained("distilbert-base-uncased-finetuned-sst-2-english")
-            bert_outputs = transformer(inputs)
-
-            last_hidden_states = bert_outputs.last_hidden_state
-            avg = layers.GlobalAveragePooling1D()(last_hidden_states)
-            output = layers.Dense(1, activation="sigmoid")(avg)
-            model = keras.Model(inputs=inputs, outputs=output)
-
-            SentimentAnalyzer.model = model
+            SentimentAnalyzer.model = TFAutoModelForSequenceClassification\
+                .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
         SentimentAnalyzer.nlp = spacy.load('en')
 
     @staticmethod
     def compute_sentiments(statements: List[str]):
-        inputs = np.asarray(statements)
-        inputs = SentimentAnalyzer.prepare_bert_input(inputs, 128)
+        tokens = SentimentAnalyzer\
+            .tokenizer(statements, padding=True, truncation=True, return_tensors='tf')
+
+        dataset = tf.data.Dataset.from_tensor_slices(
+            (tokens['input_ids'], tokens['attention_mask'])
+        ).batch(config.analytic_sentiment_computation_tensorflow_batch)
+
+        distributed_dataset = SentimentAnalyzer.strategy.experimental_distribute_dataset(dataset)
 
         results = []
 
-        outputs = SentimentAnalyzer.model.predict(inputs)
+        replica_results = []
 
-        for output in outputs:
-            sentiment = output[0]
-            results.append(sentiment)
+        for batch in distributed_dataset:
+            replica_results.append(SentimentAnalyzer.do_compute_sentiments(batch))
+
+        for replica_result in replica_results:
+            batch_result = []
+            for value in replica_result.values:
+                for tensor in value:
+                    np_element = tensor.numpy()
+                    result = np_element[1] - np_element[0]
+                    batch_result.append(result)
+
+            results.append(batch_result)
+
+        results = [item for sublist in results for item in sublist]
 
         return results
 
     @staticmethod
-    def prepare_bert_input(sentences, seq_len):
-        encodings = SentimentAnalyzer.tokenizer(sentences.tolist(), truncation=True, padding='max_length',
-                              max_length=seq_len)
-        input = [np.array(encodings["input_ids"]),
-                 np.array(encodings["attention_mask"])]
-        return input
+    @tf.function
+    def do_compute_sentiments(batch):
+        def execute_model(statements):
+            outputs = SentimentAnalyzer.model(statements)
+            result = tf.nn.softmax(outputs.logits, axis=-1)
+
+            return result
+
+        model_result = SentimentAnalyzer.strategy.run(execute_model, args=(batch,))
+
+        return model_result
 
     @staticmethod
     def _match_politicians(text, politicians) -> List[Politician]:
@@ -119,7 +131,7 @@ class SentimentAnalyzer:
             current_subjects = subjects[i]
             results = {}
 
-            for j, sent in enumerate(doc.sents):
+            for _, sent in enumerate(doc.sents):
                 score = sentiments[sentence_index]
                 sentence_index += 1
                 pos_words = SentimentAnalyzer._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])

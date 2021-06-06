@@ -1,3 +1,4 @@
+import ast
 import configparser
 from dataclasses import dataclass
 
@@ -41,6 +42,8 @@ class Config:
     analytic_lookback_days: int
     analytic_num_partitions: int
     analytic_sentiment_computation_rows_per_partition: int
+    analytic_sentiment_computation_tensorflow_batch: int
+    analytic_use_tpus: bool
     kafka_bootstrap_server: str
     kafka_politician_sentiment_topic: str
     kafka_party_sentiment_topic: str
@@ -59,6 +62,8 @@ config = Config(
     int(analytic_config['lookback_days']),
     int(analytic_config['num_partitions']),
     int(analytic_config['sentiment_computation_rows_per_partition']),
+    int(analytic_config['sentiment_computation_tensorflow_batch']),
+    ast.literal_eval(analytic_config['use_tpus']),
     kafka_config['bootstrap_server'],
     kafka_config['politician_sentiment_topic'],
     kafka_config['party_sentiment_topic'],
