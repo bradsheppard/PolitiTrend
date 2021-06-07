@@ -56,26 +56,19 @@ class SentimentAnalyzer:
 
         distributed_dataset = SentimentAnalyzer.strategy.experimental_distribute_dataset(dataset)
 
-        results = []
-
-        replica_results = []
+        all_results = []
 
         for batch in distributed_dataset:
-            replica_results.append(SentimentAnalyzer.do_compute_sentiments(batch))
+            logits = SentimentAnalyzer.do_compute_sentiments(batch)
+            logits = SentimentAnalyzer.strategy.experimental_local_results(logits)
+            logits = tf.concat(logits, axis=0)
 
-        for replica_result in replica_results:
-            batch_result = []
-            for value in replica_result.values:
-                for tensor in value:
-                    np_element = tensor.numpy()
-                    result = np_element[1] - np_element[0]
-                    batch_result.append(result)
+            for logit in logits:
+                np = logit.numpy()
+                result = np[1] - np[0]
+                all_results.append(result)
 
-            results.append(batch_result)
-
-        results = [item for sublist in results for item in sublist]
-
-        return results
+        return all_results
 
     @staticmethod
     @tf.function
