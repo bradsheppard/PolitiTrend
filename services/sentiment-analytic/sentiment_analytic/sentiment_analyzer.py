@@ -13,6 +13,8 @@ from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 from sentiment_analytic.config import config
 from sentiment_analytic.politician import Politician
 
+spacy.prefer_gpu()
+
 
 class SentimentAnalyzer:
 
@@ -34,7 +36,7 @@ class SentimentAnalyzer:
 
             strategy = tf.distribute.TPUStrategy(resolver)
         else:
-            strategy = tf.distribute.MirroredStrategy(devices=['GPU:0', 'GPU:1'])
+            strategy = tf.distribute.MirroredStrategy(devices=['GPU:0'])
 
         SentimentAnalyzer.strategy = strategy
         SentimentAnalyzer.tokenizer = AutoTokenizer\
@@ -48,11 +50,13 @@ class SentimentAnalyzer:
     @staticmethod
     def compute_sentiments(statements: List[str]):
         tokens = SentimentAnalyzer\
-            .tokenizer(statements, padding=True, truncation=True, return_tensors='tf')
+            .tokenizer(statements, padding='max_length', truncation=True,
+                       return_tensors='tf', max_length=256)
 
         dataset = tf.data.Dataset.from_tensor_slices(
             (tokens['input_ids'], tokens['attention_mask'])
         ).batch(config.analytic_sentiment_computation_tensorflow_batch)
+        dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
 
         distributed_dataset = SentimentAnalyzer.strategy.experimental_distribute_dataset(dataset)
 
@@ -61,26 +65,30 @@ class SentimentAnalyzer:
         for batch in distributed_dataset:
             logits = SentimentAnalyzer.do_compute_sentiments(batch)
             logits = SentimentAnalyzer.strategy.experimental_local_results(logits)
-            logits = tf.concat(logits, axis=0)
+            logits = tf.concat(logits, 0)
 
             for logit in logits:
-                np = logit.numpy()
-                result = np[1] - np[0]
-                all_results.append(result)
+                numpy = logit.numpy()
+
+                if numpy[0] > numpy[1]:
+                    all_results.append(-numpy[0])
+                else:
+                    all_results.append(numpy[1])
 
         return all_results
 
     @staticmethod
     @tf.function
+    def execute_model(statements):
+        outputs = SentimentAnalyzer.model(statements)
+        result = tf.nn.softmax(outputs.logits, axis=-1)
+
+        return result
+
+    @staticmethod
     def do_compute_sentiments(batch):
-        def execute_model(statements):
-            outputs = SentimentAnalyzer.model(statements)
-            result = tf.nn.softmax(outputs.logits, axis=-1)
-
-            return result
-
-        model_result = SentimentAnalyzer.strategy.run(execute_model, args=(batch,))
-
+        model_result = SentimentAnalyzer.strategy.run(
+            SentimentAnalyzer.execute_model, args=(batch,))
         return model_result
 
     @staticmethod
@@ -109,10 +117,10 @@ class SentimentAnalyzer:
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-branches
         result_list = []
-        pipeline = SentimentAnalyzer.nlp.pipe(statements)
+        pipeline = list(SentimentAnalyzer.nlp.pipe(statements))
 
         sentence_lists = []
-        for doc in list(pipeline):
+        for doc in pipeline:
             document_sentences = seq(doc.sents).map(lambda x: x.text).to_list()
             sentence_lists.append(document_sentences)
 
@@ -120,7 +128,7 @@ class SentimentAnalyzer:
         sentiments = SentimentAnalyzer.compute_sentiments(sentences)
 
         sentence_index = 0
-        for i, doc in enumerate(SentimentAnalyzer.nlp.pipe(statements)):
+        for i, doc in enumerate(pipeline):
             current_subjects = subjects[i]
             results = {}
 

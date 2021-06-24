@@ -86,7 +86,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'tweetText': 'Bob Young and John Smith are awesome',
             'politicians': [1, 2],
             'politicianSentiments': [1, 2],
-            'sentiments': [0.999753475189209, 0.999753475189209],
+            'sentiments': [0.9998767375946045, 0.9998767375946045],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-05 04:57:45',
             'state': 'NY'
@@ -96,7 +96,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'tweetText': 'Bob Young is awesome',
             'politicians': [1],
             'politicianSentiments': [1],
-            'sentiments': [0.9997501969337463],
+            'sentiments': [0.9998750686645508],
             'parties': ['Republican'],
             'dateTime': '2020-11-06 04:57:45',
             'state': None
@@ -106,7 +106,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'tweetText': 'John Smith sucks',
             'politicians': [2],
             'politicianSentiments': [2],
-            'sentiments': [-0.9935824275016785],
+            'sentiments': [-0.9967911839485168],
             'parties': ['Democratic'],
             'dateTime': '2020-11-07 04:57:45',
             'state': 'VT'
@@ -116,7 +116,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'tweetText': 'Bob Young sucks. John Smith is awesome',
             'politicians': [1, 2],
             'politicianSentiments': [1, 2],
-            'sentiments': [-0.9985311627388, 0.999748945236206],
+            'sentiments': [-0.9992656111717224, 0.999874472618103],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-08 04:57:45',
             'state': 'NY'
@@ -148,8 +148,8 @@ def test_to_politician_sentiment_dataframe(spark_session: SparkSession,
 
     output_dataframe = to_politician_sentiment_dataframe(analyze(dataframe, politicians))
     expected_dataframe = spark_session.createDataFrame([
-        (1, 0.33365750312805176, 3),
-        (2, 0.3353066643079122, 3)
+        (1, 0.3334953983624776, 3),
+        (2, 0.3343200087547302, 3)
     ], ['politician', 'sentiment', 'sampleSize'])
 
     assert expected_dataframe.collect() == output_dataframe.collect()
@@ -161,8 +161,8 @@ def test_to_party_sentiment_dataframe(spark_session: SparkSession,
 
     output_dataframe = to_party_sentiment_dataframe(analyze(dataframe, politicians))
     expected_dataframe = spark_session.createDataFrame([
-        ('Republican', 0.33365750312805176, 3),
-        ('Democratic', 0.3353066643079122, 3)
+        ('Republican', 0.3334953983624776, 3),
+        ('Democratic', 0.3343200087547302, 3)
     ], ['party', 'sentiment', 'sampleSize'])
 
     assert expected_dataframe.collect() == output_dataframe.collect()
@@ -174,8 +174,8 @@ def test_to_state_sentiment_dataframe(spark_session: SparkSession,
 
     output_dataframe = to_state_sentiment_dataframe(analyze(dataframe, politicians))
     expected_dataframe = spark_session.createDataFrame([
-        ('VT', 1, Row(democratic=-0.9935824275016785, republican=0.0)),
-        ('NY', 2, Row(democratic=0.9997512102127075, republican=0.0006111562252044678))
+        ('VT', 1, Row(democratic=-0.9967911839485168, republican=0.0)),
+        ('NY', 2, Row(democratic=0.9998756051063538, republican=0.00030556321144104004))
     ], ['state', 'sampleSize', 'affiliations'])
 
     assert expected_dataframe.collect() == output_dataframe.collect()
