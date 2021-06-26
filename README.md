@@ -1,8 +1,8 @@
-# Voyce
+# PolitiTrend
 
 Political trend/sentiment monitoring in realtime.
 
-Voyce analyzes political trends using social media content (primarily tweets) and is able to 
+PolitiTrend analyzes political trends using social media content (primarily tweets) and is able to 
 determine sentiment of politicians, political parties, etc.
 
 ## Architecture

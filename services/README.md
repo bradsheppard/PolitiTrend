@@ -1,4 +1,4 @@
-# Voyce Services
+# PolitiTrend Services
 
 Before attempting to run or deploy the application 
 it is necessay to have all services built and pushed to a Docker registry.

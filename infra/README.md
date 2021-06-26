@@ -1,4 +1,4 @@
-# Voyce Infrastructure
+# PolitiTrend Infrastructure
 
 This folder contains Terraform code necessary for deploying the Kubernetes cluster
 in which the application will run.

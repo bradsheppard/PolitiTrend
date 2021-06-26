@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
                 <Grid container>
                     <Grid item xs={12}>
                         <Typography variant="h4" className={classes.title}>
-                            Voyce
+                            PolitiTrend
                         </Typography>
                     </Grid>
                     <Grid item xs={4}>
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="subtitle1" className={classes.copyright}>
-                            Copyright © Voyce, 2020. All rights reserved.
+                            Copyright © PolitiTrend, 2020. All rights reserved.
                         </Typography>
                     </Grid>
                 </Grid>

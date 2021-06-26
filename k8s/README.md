@@ -1,4 +1,4 @@
-# Voyce Helm Charts
+# PolitiTrend Helm Charts
 This directory contains the Helm Charts necessary to deploy the application into a Kubernetes cluster.
 
 Each chart is outlined as follows:
