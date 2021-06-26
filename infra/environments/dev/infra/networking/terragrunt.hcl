@@ -7,6 +7,6 @@ terraform {
 }
 
 inputs = {
-  location = "us-east1"
+  location = "us-central1"
   name = "voyce"
 }

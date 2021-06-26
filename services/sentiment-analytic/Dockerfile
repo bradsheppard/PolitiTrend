@@ -1,10 +1,22 @@
-FROM gcr.io/spark-operator/spark-py:v3.0.0 as runner
+FROM spark-gpu/spark-py:1.0.0 as runner
 
 WORKDIR /app
 
-COPY requirements.txt .
-
 USER root
+
+RUN apt-get update && apt-get install -y python3.7 python3-pip curl build-essential python3.7-dev
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+
+RUN update-alternatives --set python3 /usr/bin/python3.7
+
+RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3 get-pip.py --force-reinstall && \
+    rm get-pip.py
+
+RUN pip3 install setuptools
+
+COPY requirements.txt .
 
 RUN pip3 install -r requirements.txt
 

@@ -1,23 +1,95 @@
+# pylint: disable=not-callable
 import math
 from statistics import mean
 from typing import List, Dict
 
 import networkx as nx
 import spacy
+import tensorflow as tf
 from functional import seq
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from tensorflow.python.distribute.tpu_strategy import TPUStrategyV2
+from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 
+from sentiment_analytic.config import config
 from sentiment_analytic.politician import Politician
+
+spacy.prefer_gpu()
 
 
 class SentimentAnalyzer:
 
-    def __init__(self):
-        self._analyzer = SentimentIntensityAnalyzer()
-        self._nlp = spacy.load('en')
+    tokenizer = None
+    model = None
+    nlp = None
+    labels = None
+    strategy: TPUStrategyV2 = None
 
-    def compute_sentiment(self, text: str) -> float:
-        return self._analyzer.polarity_scores(text)['compound']
+    @staticmethod
+    def load():
+        if SentimentAnalyzer.model is not None:
+            return
+
+        if config.analytic_use_tpus:
+            resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+            tf.config.experimental_connect_to_cluster(resolver)
+            tf.tpu.experimental.initialize_tpu_system(resolver)
+
+            strategy = tf.distribute.TPUStrategy(resolver)
+        else:
+            strategy = tf.distribute.MirroredStrategy(devices=['GPU:0'])
+
+        SentimentAnalyzer.strategy = strategy
+        SentimentAnalyzer.tokenizer = AutoTokenizer\
+            .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english', use_fast=True)
+
+        with strategy.scope():
+            SentimentAnalyzer.model = TFAutoModelForSequenceClassification\
+                .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
+        SentimentAnalyzer.nlp = spacy.load('en')
+
+    @staticmethod
+    def compute_sentiments(statements: List[str]):
+        tokens = SentimentAnalyzer\
+            .tokenizer(statements, padding='max_length', truncation=True,
+                       return_tensors='tf', max_length=256)
+
+        dataset = tf.data.Dataset.from_tensor_slices(
+            (tokens['input_ids'], tokens['attention_mask'])
+        ).batch(config.analytic_sentiment_computation_tensorflow_batch)
+        dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
+
+        distributed_dataset = SentimentAnalyzer.strategy.experimental_distribute_dataset(dataset)
+
+        all_results = []
+
+        for batch in distributed_dataset:
+            logits = SentimentAnalyzer.do_compute_sentiments(batch)
+            logits = SentimentAnalyzer.strategy.experimental_local_results(logits)
+            logits = tf.concat(logits, 0)
+
+            for logit in logits:
+                numpy = logit.numpy()
+
+                if numpy[0] > numpy[1]:
+                    all_results.append(-numpy[0])
+                else:
+                    all_results.append(numpy[1])
+
+        return all_results
+
+    @staticmethod
+    @tf.function
+    def execute_model(statements):
+        outputs = SentimentAnalyzer.model(statements)
+        result = tf.nn.softmax(outputs.logits, axis=-1)
+
+        return result
+
+    @staticmethod
+    def do_compute_sentiments(batch):
+        model_result = SentimentAnalyzer.strategy.run(
+            SentimentAnalyzer.execute_model, args=(batch,))
+        return model_result
 
     @staticmethod
     def _match_politicians(text, politicians) -> List[Politician]:
@@ -39,17 +111,31 @@ class SentimentAnalyzer:
 
         return results
 
-    def get_entity_sentiments(self, statements: List[str],
+    @staticmethod
+    def get_entity_sentiments(statements: List[str],
                               subjects: List[List[Politician]] = None) -> List[Dict[int, float]]:
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-branches
         result_list = []
-        for i, doc in enumerate(self._nlp.pipe(statements)):
+        pipeline = list(SentimentAnalyzer.nlp.pipe(statements))
+
+        sentence_lists = []
+        for doc in pipeline:
+            document_sentences = seq(doc.sents).map(lambda x: x.text).to_list()
+            sentence_lists.append(document_sentences)
+
+        sentences = [sentence for sublist in sentence_lists for sentence in sublist]
+        sentiments = SentimentAnalyzer.compute_sentiments(sentences)
+
+        sentence_index = 0
+        for i, doc in enumerate(pipeline):
             current_subjects = subjects[i]
             results = {}
-            for sent in doc.sents:
-                score = self._analyzer.polarity_scores(sent.text)['compound']
-                pos_words = self._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
+
+            for _, sent in enumerate(doc.sents):
+                score = sentiments[sentence_index]
+                sentence_index += 1
+                pos_words = SentimentAnalyzer._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
                 entities = seq(sent.ents) \
                     .filter(lambda x: x.label_ == 'PERSON') \
                     .map(lambda x: x.text) \
@@ -86,7 +172,7 @@ class SentimentAnalyzer:
                     .map(lambda x: x[0])
 
                 for entity in relevant_entities:
-                    politicians = self._match_politicians(entity, current_subjects)
+                    politicians = SentimentAnalyzer._match_politicians(entity, current_subjects)
                     for politician in politicians:
                         if politician.id not in results:
                             results[politician.id] = [score]

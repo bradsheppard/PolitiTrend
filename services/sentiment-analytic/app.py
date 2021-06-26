@@ -30,6 +30,12 @@ def main():
         .persist()
 
     tweets_to_analyze = tweets.join(analyzed_tweets, 'tweetId', 'left_anti')
+
+    rows_per_partition = config.analytic_sentiment_computation_rows_per_partition
+    partitions = int(1 + tweets_to_analyze.count() / rows_per_partition)
+
+    tweets_to_analyze = tweets_to_analyze.repartition(partitions)
+
     tweets_already_analyzed = analyzed_tweets.alias('analyzed')\
         .join(tweets.alias('tweets'), 'tweetId', 'inner')\
         .select([col('analyzed.'+xx) for xx in analyzed_tweets.columns])
@@ -42,8 +48,6 @@ def main():
     politician_sentiment_dataframe: DataFrame = to_politician_sentiment_dataframe(tweet_sentiments)
     party_sentiment_dataframe: DataFrame = to_party_sentiment_dataframe(tweet_sentiments)
     state_sentiment_dataframe: DataFrame = to_state_sentiment_dataframe(tweet_sentiments)
-
-    TweetRepository.write_analyzed_tweets(tweet_sentiments, 'temp')
 
     politician_sentiment_dataframe.selectExpr('to_json(struct(*)) AS value') \
         .write \
@@ -64,23 +68,7 @@ def main():
         .option('topic', config.kafka_state_sentiment_topic) \
         .save()
 
-    spark.stop()
-
-
-def transfer_results_to_bucket():
-    spark = SparkSession.builder \
-        .getOrCreate()
-
-    load_spark_config(spark.sparkContext)
-    tweet_repository = TweetRepository(spark)
-
-    tweets = tweet_repository\
-        .read_analyzed_tweets('temp')\
-        .repartition(config.analytic_num_partitions)
-    TweetRepository.write_analyzed_tweets(tweets, 'analyzed-tweets')
-
-    spark.stop()
+    TweetRepository.write_analyzed_tweets(tweet_sentiments, 'analyzed-tweets')
 
 
 main()
-transfer_results_to_bucket()

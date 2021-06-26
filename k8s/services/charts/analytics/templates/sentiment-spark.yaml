@@ -1,51 +1,51 @@
-apiVersion: "sparkoperator.k8s.io/v1beta2"
-kind: ScheduledSparkApplication
-metadata:
-  name: sentiment-spark
-  namespace: default
-spec:
-  schedule: "@every 6h"
-  concurrencyPolicy: Forbid
-  successfulRunHistoryLimit: 1
-  failedRunHistoryLimit: 2
-  template:
-    type: Python
-    pythonVersion: '3'
-    mode: cluster
-    imagePullSecrets:
-      - regcred
-    image: "{{ .Values.global.registry }}/{{ .Values.image.sentimentAnalytic.repository }}:{{ .Chart.AppVersion }}"
-    imagePullPolicy: {{ .Values.image.sentimentAnalytic.pullPolicy }}
-    mainApplicationFile: "local:///app/app.py"
-    sparkVersion: "3.0.0"
-    restartPolicy:
-      type: Never
-    volumes:
-      - name: secret-volume
-        secret:
-          secretName: sentiment-analytic-secret
-    driver:
-      cores: 1
-      coreLimit: "1000m"
-      memory: "512m"
-      labels:
-        version: 3.0.0
-      serviceAccount: spark-operator-spark
-      volumeMounts:
-        - name: secret-volume
-          mountPath: /app/config.ini
-          subPath: config.ini
-    executor:
-      coreRequest: "200m"
-      coreLimit: "400m"
-      instances: 2
-      memory: 2G
-      labels:
-        version: 3.0.0
-    deps:
-      jars:
-        - local:///app/lib/hadoop-aws-2.7.3.jar
-        - https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar
-        - https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.0.0/spark-sql-kafka-0-10_2.12-3.0.0.jar
-        - https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.4.1/kafka-clients-2.4.1.jar
-        - https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.0.0/spark-token-provider-kafka-0-10_2.12-3.0.0.jar
+{{/*apiVersion: "sparkoperator.k8s.io/v1beta2"*/}}
+{{/*kind: ScheduledSparkApplication*/}}
+{{/*metadata:*/}}
+{{/*  name: sentiment-spark*/}}
+{{/*  namespace: default*/}}
+{{/*spec:*/}}
+{{/*  schedule: "@every 6h"*/}}
+{{/*  concurrencyPolicy: Forbid*/}}
+{{/*  successfulRunHistoryLimit: 1*/}}
+{{/*  failedRunHistoryLimit: 2*/}}
+{{/*  template:*/}}
+{{/*    type: Python*/}}
+{{/*    pythonVersion: '3'*/}}
+{{/*    mode: cluster*/}}
+{{/*    imagePullSecrets:*/}}
+{{/*      - regcred*/}}
+{{/*    image: "{{ .Values.global.registry }}/{{ .Values.image.sentimentAnalytic.repository }}:{{ .Chart.AppVersion }}"*/}}
+{{/*    imagePullPolicy: {{ .Values.image.sentimentAnalytic.pullPolicy }}*/}}
+{{/*    mainApplicationFile: "local:///app/app.py"*/}}
+{{/*    sparkVersion: "3.0.0"*/}}
+{{/*    restartPolicy:*/}}
+{{/*      type: Never*/}}
+{{/*    volumes:*/}}
+{{/*      - name: secret-volume*/}}
+{{/*        secret:*/}}
+{{/*          secretName: sentiment-analytic-secret*/}}
+{{/*    driver:*/}}
+{{/*      cores: 1*/}}
+{{/*      coreLimit: "1000m"*/}}
+{{/*      memory: "512m"*/}}
+{{/*      labels:*/}}
+{{/*        version: 3.0.0*/}}
+{{/*      serviceAccount: spark-operator-spark*/}}
+{{/*      volumeMounts:*/}}
+{{/*        - name: secret-volume*/}}
+{{/*          mountPath: /app/config.ini*/}}
+{{/*          subPath: config.ini*/}}
+{{/*    executor:*/}}
+{{/*      coreRequest: "200m"*/}}
+{{/*      coreLimit: "400m"*/}}
+{{/*      instances: 2*/}}
+{{/*      memory: 2G*/}}
+{{/*      labels:*/}}
+{{/*        version: 3.0.0*/}}
+{{/*    deps:*/}}
+{{/*      jars:*/}}
+{{/*        - local:///app/lib/hadoop-aws-2.7.3.jar*/}}
+{{/*        - https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar*/}}
+{{/*        - https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.0.0/spark-sql-kafka-0-10_2.12-3.0.0.jar*/}}
+{{/*        - https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.4.1/kafka-clients-2.4.1.jar*/}}
+{{/*        - https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.0.0/spark-token-provider-kafka-0-10_2.12-3.0.0.jar*/}}

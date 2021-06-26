@@ -21,10 +21,10 @@ class Summarizer:
         for i in range(0, len(inputs), Summarizer.batch_size):
             batch = inputs[i:i + Summarizer.batch_size]
             batch_summaries = self._summarizer(
-                batch, min_length=3, max_length=30, top_k=20, top_p=0.95, num_return_sequences=3)
+                batch, min_length=3, max_length=30)
 
-            for j in range(0, len(batch_summaries), 3):
-                summaries = batch_summaries[j:j + 3]
+            for j in range(0, len(batch_summaries), 1):
+                summaries = batch_summaries[j:j + 1]
                 cleaned_summaries = []
                 for summary in summaries:
                     text = summary['summary_text']
