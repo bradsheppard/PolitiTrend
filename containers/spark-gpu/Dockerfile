@@ -15,13 +15,16 @@
 # limitations under the License.
 #
 
-FROM nvidia/cuda:10.2-devel-ubuntu18.04
+FROM nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
 ARG spark_uid=185
 
 # Install java dependencies 
 RUN apt-get update && apt-get install -y --no-install-recommends openjdk-8-jdk openjdk-8-jre
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-amd64
 ENV PATH $PATH:/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/bin:/usr/lib/jvm/java-1.8.0-openjdk-amd64/bin
+
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/cuda/lib64
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/cuda/include
 
 # Before building the docker image, first build and make a Spark distribution following
 # the instructions in http://spark.apache.org/docs/latest/building-spark.html.
@@ -60,8 +63,8 @@ WORKDIR /opt/spark/work-dir
 RUN chmod g+w /opt/spark/work-dir
 
 ENV TINI_VERSION v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
-RUN chmod +rx /sbin/tini
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +rx /usr/bin/tini
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
