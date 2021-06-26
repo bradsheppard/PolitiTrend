@@ -8,5 +8,5 @@ terraform {
 
 inputs = {
   location = "us-central1"
-  name = "voyce"
+  name = "polititrend"
 }

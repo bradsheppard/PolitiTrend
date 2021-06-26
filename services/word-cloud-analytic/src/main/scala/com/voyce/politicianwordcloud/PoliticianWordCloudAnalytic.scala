@@ -1,6 +1,6 @@
-package com.voyce.politicianwordcloud
+package com.polititrend.politicianwordcloud
 
-import com.voyce.common.{ConfigReader, PathTranslator, Tweet}
+import com.polititrend.common.{ConfigReader, PathTranslator, Tweet}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object PoliticianWordCloudAnalytic {

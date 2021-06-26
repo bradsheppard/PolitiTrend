@@ -39,6 +39,6 @@ word-cloud-analytic:
   enabled: true
 
 global:
-  registry: registry.gitlab.com/brad_1357/voyce
+  registry: registry.gitlab.com/brad_1357/polititrend
   host: somehost
 

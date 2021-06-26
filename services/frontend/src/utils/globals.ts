@@ -1,5 +1,5 @@
 export default {
-    name: 'voyce',
+    name: 'polititrend',
     blue: '#2270fd',
     red: '#fd2222',
 }

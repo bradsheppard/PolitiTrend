@@ -1,5 +1,5 @@
-package com.voyce.politicianwordcloud
+package com.polititrend.politicianwordcloud
 
-import com.voyce.common.WordCount
+import com.polititrend.common.WordCount
 
 case class PoliticianWordCloud(politician: Long, words: Set[WordCount])

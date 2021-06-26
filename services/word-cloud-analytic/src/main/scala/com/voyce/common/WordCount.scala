@@ -1,3 +1,3 @@
-package com.voyce.common
+package com.polititrend.common
 
 case class WordCount(word: String, count: Long)

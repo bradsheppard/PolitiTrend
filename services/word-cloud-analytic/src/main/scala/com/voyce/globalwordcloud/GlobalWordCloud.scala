@@ -1,5 +1,5 @@
-package com.voyce.globalwordcloud
+package com.polititrend.globalwordcloud
 
-import com.voyce.common.WordCount
+import com.polititrend.common.WordCount
 
 case class GlobalWordCloud(words: Set[WordCount])

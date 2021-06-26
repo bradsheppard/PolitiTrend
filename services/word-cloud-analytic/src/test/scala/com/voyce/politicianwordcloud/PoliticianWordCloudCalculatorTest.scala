@@ -1,6 +1,6 @@
-package com.voyce.politicianwordcloud
+package com.polititrend.politicianwordcloud
 
-import com.voyce.common.{SparkSessionTestWrapper, Tweet, WordCount}
+import com.polititrend.common.{SparkSessionTestWrapper, Tweet, WordCount}
 import org.scalatest.funsuite.AnyFunSuite
 
 class PoliticianWordCloudCalculatorTest extends AnyFunSuite with SparkSessionTestWrapper {

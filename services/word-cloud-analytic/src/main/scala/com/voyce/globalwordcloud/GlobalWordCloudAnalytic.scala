@@ -1,6 +1,6 @@
-package com.voyce.globalwordcloud
+package com.polititrend.globalwordcloud
 
-import com.voyce.common.{ConfigReader, PathTranslator, Tweet}
+import com.polititrend.common.{ConfigReader, PathTranslator, Tweet}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object GlobalWordCloudAnalytic {

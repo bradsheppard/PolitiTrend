@@ -1,4 +1,4 @@
-package com.voyce.common
+package com.polititrend.common
 
 import java.io.{FileInputStream, InputStream}
 import java.util.Properties

@@ -11,7 +11,7 @@ terraform {
 }
 
 inputs = {
-  name = "voyce"
+  name = "polititrend"
   zone = "us-central1-b"
   vpc_id = dependency.networking.outputs.vpc_id
   subnet_id = dependency.networking.outputs.subnet_id

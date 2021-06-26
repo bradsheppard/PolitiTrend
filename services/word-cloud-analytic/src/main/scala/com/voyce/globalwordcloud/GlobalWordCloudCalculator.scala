@@ -1,6 +1,6 @@
-package com.voyce.globalwordcloud
+package com.polititrend.globalwordcloud
 
-import com.voyce.common.{Tweet, WordCount}
+import com.polititrend.common.{Tweet, WordCount}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{Dataset, SparkSession}
 
