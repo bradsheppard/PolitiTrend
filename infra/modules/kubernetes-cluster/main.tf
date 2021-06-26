@@ -5,6 +5,8 @@ resource "google_container_cluster" "primary" {
 
   provider = google-beta
 
+  enable_tpu = true
+
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
@@ -73,6 +75,11 @@ resource "google_project_iam_member" "cluster_service_account-artifact-registry"
   member = "serviceAccount:${google_service_account.node_service_account.email}"
 }
 
+resource "google_project_iam_member" "cluster_service_account-tpu" {
+  role   = "roles/tpu.admin"
+  member = "serviceAccount:${google_service_account.node_service_account.email}"
+}
+
 resource "google_compute_firewall" "webhook_admission_firewall" {
   name    = "webhook-admission"
   network = var.vpc_id
@@ -100,7 +107,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-2"
+    machine_type = var.machine_type
 
     service_account = google_service_account.node_service_account.email
 
@@ -123,13 +130,13 @@ resource "google_container_node_pool" "gpu_preemptible_nodes" {
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-2"
+    machine_type = var.machine_type
 
     service_account = google_service_account.node_service_account.email
 
     guest_accelerator {
       count = 1
-      type  = "nvidia-tesla-p100"
+      type  = var.accelerator_type
     }
 
     oauth_scopes = [
