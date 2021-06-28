@@ -41,8 +41,8 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_service_account" "node_service_account" {
-  account_id   = "${var.name}-node-service-account"
-  display_name = "${var.name}-node-service-account"
+  account_id   = "gke-node-service-account"
+  display_name = "gke-node-service-account"
 }
 
 resource "google_project_iam_member" "cluster_service_account-log_writer" {

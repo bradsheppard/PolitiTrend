@@ -7,8 +7,8 @@ remote_state {
   config = {
     bucket = "polititrend-remote-state"
     prefix = "${path_relative_to_include()}"
-    project = "polititrend258cb34c"
-    location = "us-east1"
+    project = "polititrend621ec1ba"
+    location = "us-central1"
   }
 }
 
@@ -18,10 +18,10 @@ generate "provider" {
 
   contents = <<EOF
 provider google {
-  project = "polititrend258cb34c"
+  project = "polititrend621ec1ba"
 }
 provider google-beta {
-  project = "polititrend258cb34c"
+  project = "polititrend621ec1ba"
 }
 EOF
 }
