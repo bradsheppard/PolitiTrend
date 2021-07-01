@@ -8,7 +8,7 @@ import spacy
 import tensorflow as tf
 from functional import seq
 from tensorflow.python.distribute.tpu_strategy import TPUStrategyV2
-from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
+from transformers import AutoTokenizer, TFAutoModelForSequenceClassification, DistilBertConfig
 
 from sentiment_analytic.config import config
 from sentiment_analytic.politician import Politician
@@ -43,8 +43,12 @@ class SentimentAnalyzer:
             .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english', use_fast=True)
 
         with strategy.scope():
+            model_config = DistilBertConfig.\
+                from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
+            model_config.use_bfloat16 = True
             SentimentAnalyzer.model = TFAutoModelForSequenceClassification\
-                .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
+                .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english',
+                                 config=model_config)
         SentimentAnalyzer.nlp = spacy.load('en')
 
     @staticmethod
