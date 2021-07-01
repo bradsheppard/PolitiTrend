@@ -42,10 +42,11 @@ class SentimentAnalyzer:
         SentimentAnalyzer.tokenizer = AutoTokenizer\
             .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english', use_fast=True)
 
+        model_config = DistilBertConfig \
+            .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
+        model_config.use_bfloat16 = True
+
         with strategy.scope():
-            model_config = DistilBertConfig.\
-                from_pretrained('distilbert-base-uncased-finetuned-sst-2-english')
-            model_config.use_bfloat16 = True
             SentimentAnalyzer.model = TFAutoModelForSequenceClassification\
                 .from_pretrained('distilbert-base-uncased-finetuned-sst-2-english',
                                  config=model_config)
