@@ -8,7 +8,6 @@ from pyspark.sql import SparkSession
 
 from sentiment_analytic.config import load_spark_config
 from sentiment_analytic.politician import Politician
-from sentiment_analytic.dataframe import analyze
 from sentiment_analytic.tweet_repository import TweetRepository
 
 
@@ -85,15 +84,14 @@ def test_read_tweets(spark_session, tweet_repository: TweetRepository, test_data
 
 
 def test_read_analyzed_tweets(spark_session,
-                              tweet_repository: TweetRepository, test_data, politicians):
+                              tweet_repository: TweetRepository, test_data):
     dataframe = spark_session.createDataFrame(test_data)
-    analyzed_tweets = analyze(dataframe, politicians)
 
-    TweetRepository.write_analyzed_tweets(analyzed_tweets, 'analyzed-tweets')
+    TweetRepository.write_analyzed_tweets(dataframe, 'analyzed-tweets')
 
     resulting_tweets = tweet_repository.read_analyzed_tweets('analyzed-tweets')\
         .orderBy('dateTime').toPandas()
-    expected_dataframe = analyzed_tweets.orderBy('dateTime').toPandas()
+    expected_dataframe = dataframe.orderBy('dateTime').toPandas()
 
     pd.testing.assert_frame_equal(
         expected_dataframe, resulting_tweets, check_like=True, check_dtype=False)

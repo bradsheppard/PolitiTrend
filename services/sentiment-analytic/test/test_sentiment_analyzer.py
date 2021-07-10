@@ -3,7 +3,6 @@ from typing import List
 
 import pytest
 
-from numba import cuda
 from sentiment_analytic.politician import Politician
 from sentiment_analytic.sentiment_analyzer import SentimentAnalyzer
 
@@ -20,10 +19,10 @@ def politicians():
 
 @pytest.fixture(scope='module')
 def sentiment_analyzer():
-    yield SentimentAnalyzer()
+    sentiment_analyzer = SentimentAnalyzer()
+    sentiment_analyzer.load()
 
-    device = cuda.get_current_device()
-    device.reset()
+    return sentiment_analyzer
 
 
 def test_get_entity_sentiments_postive_sentence(politicians: List[Politician],
