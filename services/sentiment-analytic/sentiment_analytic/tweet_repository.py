@@ -24,22 +24,21 @@ class TweetRepository:
                         mode='overwrite')
 
     def read_tweets(self) -> DataFrame:
-        paths = [TweetRepository._get_s3_path(i) for i in range(int(config.analytic_lookback_days))]
+        lookback = int(config.analytic_lookback_days)
 
-        tweets = None
+        now = datetime.now()
+        start = now - timedelta(days=lookback)
 
-        for path in paths:
-            try:
-                current_dataframe = self._spark.read.json(path)
-                if tweets is None:
-                    tweets = current_dataframe
-                else:
-                    tweets = tweets.union(current_dataframe)
-            # pylint: disable=broad-except
-            except Exception as ex:
-                print(ex)
+        start_month = str(start.month).zfill(2)
+        start_day = str(start.day).zfill(2)
+        start_hour = str(start.hour).zfill(2)
+        start_year = str(start.year)
 
-        return tweets
+        df = self._spark.read.json(f's3a://{config.s3_tweet_bucket}/topics/tweet-created/*')
+        df = df.filter((df.year >= start_year) & (df.hour >= start_hour) &
+                       (df.day >= start_day) & (df.month >= start_month))
+
+        return df
 
     def read_analyzed_tweets(self, folder: str) -> DataFrame:
         analyzed_tweets = self._spark.createDataFrame([], json_schema)
