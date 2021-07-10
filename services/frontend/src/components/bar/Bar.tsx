@@ -63,10 +63,6 @@ const Bar: React.FC = () => {
         setDrawerOpen(false)
     }
 
-    const capitalize = (word: string) => {
-        return word.charAt(0).toUpperCase() + word.slice(1)
-    }
-
     return (
         <React.Fragment>
             <AppBar position="fixed" color="secondary">
@@ -91,7 +87,7 @@ const Bar: React.FC = () => {
                         </Drawer>
                         <Link href="/" passHref>
                             <Typography variant="h6" component="a" className={classes.titleText}>
-                                {capitalize(Globals.name)}
+                                {Globals.name}
                             </Typography>
                         </Link>
                     </div>

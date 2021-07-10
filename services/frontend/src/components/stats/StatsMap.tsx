@@ -15,7 +15,7 @@ const blueGradient = tinygradient(Globals.blue, gray)
 const redGradient = tinygradient(Globals.red, gray)
 
 const republicanScale = scaleQuantize<string>()
-    .domain([0, 0.05])
+    .domain([0, 0.5])
     .range([
         redGradient.rgbAt(0.8).toHexString(),
         redGradient.rgbAt(0.6).toHexString(),
@@ -25,7 +25,7 @@ const republicanScale = scaleQuantize<string>()
     ])
 
 const democraticScale = scaleQuantize<string>()
-    .domain([0, 0.05])
+    .domain([0, 0.5])
     .range([
         blueGradient.rgbAt(0.8).toHexString(),
         blueGradient.rgbAt(0.6).toHexString(),

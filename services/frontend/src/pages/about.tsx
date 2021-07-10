@@ -31,7 +31,7 @@ class About extends React.Component<Props> {
             <React.Fragment>
                 <TransparentJumbo>
                     <Typography variant="h1" align="center" style={{ color: 'white' }}>
-                        {Globals.name.toUpperCase()}
+                        {Globals.name}
                     </Typography>
                     <Typography variant="h5" align="center" style={{ color: 'white' }}>
                         Sentiment analysis of politicians
@@ -52,9 +52,9 @@ class About extends React.Component<Props> {
                         className={classes.typography}
                         align="center"
                     >
-                        This web app provides opinion mining of politicians from a variety of
+                        {Globals.name} provides opinion mining of politicians from a variety of
                         different sources (Twitter, News Articles, Blogs, etc.). Through this we are
-                        able to determine trends, likability, and popularity using advanced machine
+                        able to determine trends, likability, and popularity using machine learning
                         learning analytics.
                     </Typography>
                     <Grid container alignItems="center" direction="row" justify="center">
@@ -76,7 +76,7 @@ class About extends React.Component<Props> {
                             <CardDisplay
                                 className={classes.menuItem}
                                 header="Most Talked About"
-                                body="Which politicians are the most mentioned"
+                                body="Which politicians are the most mentioned in social media posts"
                             />
                         </Grid>
                         <Grid item sm={4}>

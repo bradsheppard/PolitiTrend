@@ -88,14 +88,14 @@ const HomePolitician: React.FC<Props & React.HTMLAttributes<HTMLDivElement>> = (
                 </div>
                 <div className={classes.icon}>
                     {(() => {
-                        if (roundedSentiment < 5)
+                        if (roundedSentiment < 4.5)
                             return (
                                 <div>
                                     <ThumbDown fontSize="large" />
                                     <Typography variant="subtitle1">Disliked</Typography>
                                 </div>
                             )
-                        else if (roundedSentiment > 5)
+                        else if (roundedSentiment > 5.5)
                             return (
                                 <div>
                                     <ThumbUp fontSize="large" />

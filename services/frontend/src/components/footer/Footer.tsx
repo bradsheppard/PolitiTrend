@@ -5,6 +5,8 @@ import { Grid, Theme, Typography } from '@material-ui/core'
 import ContentContainer from '../common/ContentContainer'
 import FacebookIcon from '@material-ui/icons/Facebook'
 import TwitterIcon from '@material-ui/icons/Twitter'
+import Globals from '../../utils/globals'
+import Link from 'next/link'
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -17,6 +19,7 @@ const useStyle = makeStyles((theme: Theme) =>
         typography: {
             fontWeight: 'bold',
             margin: theme.spacing(1),
+            cursor: 'pointer',
         },
         title: {
             marginBottom: theme.spacing(4),
@@ -44,7 +47,7 @@ const Footer: React.FC = () => {
                 <Grid container>
                     <Grid item xs={12}>
                         <Typography variant="h4" className={classes.title}>
-                            PolitiTrend
+                            {Globals.name}
                         </Typography>
                     </Grid>
                     <Grid item xs={4}>
@@ -55,27 +58,35 @@ const Footer: React.FC = () => {
                         <TwitterIcon className={classes.icon} />
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography variant="body2" className={classes.typography}>
-                            Home
-                        </Typography>
-                        <Typography variant="body2" className={classes.typography}>
-                            Politicians
-                        </Typography>
-                        <Typography variant="body2" className={classes.typography}>
-                            Stats
-                        </Typography>
+                        <Link href="" passHref>
+                            <Typography variant="body2" className={classes.typography}>
+                                Home
+                            </Typography>
+                        </Link>
+                        <Link href="/politicians" passHref>
+                            <Typography variant="body2" className={classes.typography}>
+                                Politicians
+                            </Typography>
+                        </Link>
+                        <Link href="/stats" passHref>
+                            <Typography variant="body2" className={classes.typography}>
+                                Stats
+                            </Typography>
+                        </Link>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography variant="body2" className={classes.typography}>
-                            About Us
-                        </Typography>
+                        <Link href="/about" passHref>
+                            <Typography variant="body2" className={classes.typography}>
+                                About Us
+                            </Typography>
+                        </Link>
                         <Typography variant="body2" className={classes.typography}>
                             Contact
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="subtitle1" className={classes.copyright}>
-                            Copyright © PolitiTrend, 2020. All rights reserved.
+                        <Typography variant="subtitle2" className={classes.copyright}>
+                            Copyright © PolitiTrend, 2021. All rights reserved.
                         </Typography>
                     </Grid>
                 </Grid>
