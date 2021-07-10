@@ -47,25 +47,41 @@ def test_data():
             'tweetId': '1',
             'tweetText': 'Jim Johnson and Jill Smith are awesome',
             'politicians': [1, 2],
-            'dateTime': '2020-11-01 04:57:45'
+            'dateTime': '2020-11-01 04:57:45',
+            'year': 2020,
+            'month': 11,
+            'day': 1,
+            'hour': 4
         },
         {
             'tweetId': '2',
             'tweetText': 'Jim Johnson is awesome',
             'politicians': [1],
-            'dateTime': '2020-11-02 04:57:45'
+            'dateTime': '2020-11-02 04:57:45',
+            'year': 2020,
+            'month': 11,
+            'day': 2,
+            'hour': 4
         },
         {
             'tweetId': '3',
             'tweetText': 'Jill Smith sucks',
             'politicians': [2],
-            'dateTime': '2020-11-03 04:57:45'
+            'dateTime': '2020-11-03 04:57:45',
+            'year': 2020,
+            'month': 11,
+            'day': 3,
+            'hour': 4
         },
         {
             'tweetId': '4',
             'tweetText': 'Jim Johnson sucks. Jill Smith is awesome',
             'politicians': [1, 2],
-            'dateTime': '2020-11-04 04:57:45'
+            'dateTime': '2020-11-04 04:57:45',
+            'year': 2020,
+            'month': 11,
+            'day': 4,
+            'hour': 4
         }
     ]
 
@@ -76,7 +92,7 @@ def test_read_tweets(spark_session, tweet_repository: TweetRepository, test_data
     dataframe = spark_session.createDataFrame(test_data)
     TweetRepository.write_tweets(dataframe)
 
-    resulting_tweets = tweet_repository.read_tweets().orderBy('dateTime').toPandas()
+    resulting_tweets = tweet_repository.read_tweets(99999).orderBy('dateTime').toPandas()
     expected_dataframe = spark_session.createDataFrame(test_data).orderBy('dateTime').toPandas()
 
     pd.testing.assert_frame_equal(

@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.functions import col
+
 from sentiment_analytic.config import config
 from sentiment_analytic.dataframe import json_schema
 
@@ -11,11 +13,10 @@ class TweetRepository:
 
     @staticmethod
     def write_tweets(tweet_dataframe: DataFrame):
-        now = datetime.now()
-        tweet_dataframe.write.json(f's3a://{config.s3_tweet_bucket}/topics/tweet-created/'
-                                   f'year={now.year}/'
-                                   f'month={str(now.month).zfill(2)}/day={str(now.day).zfill(2)}',
-                                   mode='overwrite')
+        tweet_dataframe \
+            .write \
+            .partitionBy('year', 'month', 'day', 'hour') \
+            .json(f's3a://{config.s3_tweet_bucket}/topics/tweet-created', mode='overwrite')
 
     @staticmethod
     def write_analyzed_tweets(analyzed_tweets_dataframe: DataFrame, folder: str):
@@ -23,9 +24,7 @@ class TweetRepository:
             .write.json(f's3a://{config.s3_analyzed_tweets_bucket}/{folder}',
                         mode='overwrite')
 
-    def read_tweets(self) -> DataFrame:
-        lookback = int(config.analytic_lookback_days)
-
+    def read_tweets(self, lookback: int) -> DataFrame:
         now = datetime.now()
         start = now - timedelta(days=lookback)
 
@@ -34,11 +33,16 @@ class TweetRepository:
         start_hour = str(start.hour).zfill(2)
         start_year = str(start.year)
 
-        df = self._spark.read.json(f's3a://{config.s3_tweet_bucket}/topics/tweet-created/*')
-        df = df.filter((df.year >= start_year) & (df.hour >= start_hour) &
-                       (df.day >= start_day) & (df.month >= start_month))
+        dataframe = self._spark.read.json(f's3a://{config.s3_tweet_bucket}/topics/tweet-created')
+        dataframe = dataframe.filter((col('year') > start_year) |
+                                     ((col('year') == start_year) & (col('month') > start_month)) |
+                                     ((col('year') == start_year) & (col('month') == start_month) &
+                                      (col('day') > start_day)) |
+                                     ((col('year') == start_year) & (col('month') == start_month)
+                                      & (col('day') == start_day) &
+                                      (col('hour') > start_hour)))
 
-        return df
+        return dataframe
 
     def read_analyzed_tweets(self, folder: str) -> DataFrame:
         analyzed_tweets = self._spark.createDataFrame([], json_schema)
@@ -50,13 +54,3 @@ class TweetRepository:
             print(ex)
 
         return analyzed_tweets
-
-    @staticmethod
-    def _get_s3_path(offset: int) -> str:
-        now = datetime.now()
-        now = now - timedelta(days=offset)
-
-        s3_path = f's3a://{config.s3_tweet_bucket}/topics/tweet-created/' \
-                  f'year={now.year}/' \
-                  f'month={str(now.month).zfill(2)}/day={str(now.day).zfill(2)}/*'
-        return s3_path

@@ -21,7 +21,7 @@ def main():
     tweet_repository = TweetRepository(spark)
 
     tweets = tweet_repository\
-        .read_tweets()\
+        .read_tweets(int(config.analytic_lookback_days))\
         .drop_duplicates(['tweetId'])\
         .persist()
     analyzed_tweets = tweet_repository\
