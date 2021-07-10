@@ -55,6 +55,7 @@ def test_data():
     return data
 
 
+@pytest.mark.forked
 @pytest.fixture(scope='module')
 def spark_session():
     spark_session = SparkSession.builder\
@@ -68,6 +69,7 @@ def spark_session():
     spark_session.stop()
 
 
+@pytest.mark.forked
 @pytest.fixture
 def politicians():
     politicians: List[Politician] = [
@@ -78,6 +80,7 @@ def politicians():
     return politicians
 
 
+@pytest.mark.forked
 def test_analyze_sentiments(spark_session: SparkSession,
                             politicians: List[Politician], test_data):
     expected_data = [
@@ -142,6 +145,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
         expected_dataframe, output_dataframe, check_like=True, check_dtype=False)
 
 
+@pytest.mark.forked
 def test_to_politician_sentiment_dataframe(spark_session: SparkSession,
                                            politicians: List[Politician], test_data):
     dataframe = spark_session.createDataFrame(test_data)
@@ -155,6 +159,7 @@ def test_to_politician_sentiment_dataframe(spark_session: SparkSession,
     assert expected_dataframe.collect() == output_dataframe.collect()
 
 
+@pytest.mark.forked
 def test_to_party_sentiment_dataframe(spark_session: SparkSession,
                                       politicians: List[Politician], test_data):
     dataframe = spark_session.createDataFrame(test_data)
@@ -168,6 +173,7 @@ def test_to_party_sentiment_dataframe(spark_session: SparkSession,
     assert expected_dataframe.collect() == output_dataframe.collect()
 
 
+@pytest.mark.forked
 def test_to_state_sentiment_dataframe(spark_session: SparkSession,
                                       politicians: List[Politician], test_data):
     dataframe = spark_session.createDataFrame(test_data)
