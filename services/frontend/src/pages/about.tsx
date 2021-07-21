@@ -33,9 +33,6 @@ class About extends React.Component<Props> {
                     <Typography variant="h1" align="center" style={{ color: 'white' }}>
                         {Globals.name}
                     </Typography>
-                    <Typography variant="h5" align="center" style={{ color: 'white' }}>
-                        Sentiment analysis of politicians
-                    </Typography>
                 </TransparentJumbo>
                 <ContentContainer>
                     <Typography
@@ -52,10 +49,10 @@ class About extends React.Component<Props> {
                         className={classes.typography}
                         align="center"
                     >
-                        {Globals.name} provides opinion mining of politicians from a variety of
-                        different sources (Twitter, News Articles, Blogs, etc.). Through this we are
-                        able to determine trends, likability, and popularity using machine learning
-                        learning analytics.
+                        {Globals.name} provides sentiment analysis of politicians through analyzing
+                        a variety of different sources data sources (Twitter, News Articles, Blogs)
+                        using Machine Learning Analytics. Content is analyzed daily and the
+                        sentiment is tracked historically.
                     </Typography>
                     <Grid container alignItems="center" direction="row" justify="center">
                         <Grid item sm={4}>
@@ -68,8 +65,8 @@ class About extends React.Component<Props> {
                         <Grid item sm={4}>
                             <CardDisplay
                                 className={classes.menuItem}
-                                header="Likliness Ratings"
-                                body="Determine likability/dislikability of particular politicians"
+                                header="Sentiment Analysis"
+                                body="Determine the sentiment of particular politicians"
                             />
                         </Grid>
                         <Grid item sm={4}>

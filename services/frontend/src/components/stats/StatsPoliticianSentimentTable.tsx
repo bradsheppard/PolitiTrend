@@ -179,7 +179,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     )
 }
 
-const StatsSentimentTable: React.FC<Props> = (
+const StatsPoliticianSentimentTable: React.FC<Props> = (
     props: Props & React.HTMLAttributes<HTMLDivElement>
 ) => {
     const classes = useStyles()
@@ -383,4 +383,4 @@ const StatsSentimentTable: React.FC<Props> = (
     )
 }
 
-export default StatsSentimentTable
+export default StatsPoliticianSentimentTable

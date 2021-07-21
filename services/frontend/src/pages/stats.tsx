@@ -7,6 +7,7 @@ import PoliticianApi from '../apis/PoliticianApi'
 import StatePartyAffiliationApi from '../apis/StatePartyAffiliationApi'
 import { NextPage } from 'next'
 import dynamic from 'next/dynamic'
+import PartySentimentApi from '../apis/PartySentimentApi'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,6 +35,14 @@ interface Props {
     wordCounts: WordCount[]
     politicians: Politician[]
     statePartyAffiliations: StatePartyAffiliation[]
+    republicanSentiment: PartySentiment[]
+    democraticSentiment: PartySentiment[]
+}
+
+interface PartySentiment {
+    party: string
+    dateTime: string
+    sentiment: number
 }
 
 interface StatePartyAffiliation {
@@ -65,7 +74,12 @@ const stateAffiliationDescription =
     'Democratic/Republican favorability per-state based on social media posts.'
 
 const DynamicWordCloud = dynamic(() => import('../components/stats/StatsWordCloud'))
-const DynamicSentimentTable = dynamic(() => import('../components/stats/StatsSentimentTable'))
+const DynamicPoliticianSentimentTable = dynamic(
+    () => import('../components/stats/StatsPoliticianSentimentTable')
+)
+const DynamicPartySentimentTable = dynamic(
+    () => import('../components/stats/StatsPartySentimentTable')
+)
 const DynamicStatsMap = dynamic(() => import('../components/stats/StatsMap'))
 const DynamicStatsCard = dynamic(() => import('../components/stats/StatsCard'))
 
@@ -88,11 +102,23 @@ const Stats: NextPage<Props> = (props: Props) => {
             </Grid>
             <Grid item xs={12} md={10}>
                 <DynamicStatsCard
-                    title="SOCIAL MEDIA SENTIMENT"
+                    title="POLITICIAN SOCIAL MEDIA SENTIMENT"
                     description={socialMediaSentimentDescription}
                     className={classes.card}
                 >
-                    <DynamicSentimentTable politicians={props.politicians} />
+                    <DynamicPoliticianSentimentTable politicians={props.politicians} />
+                </DynamicStatsCard>
+            </Grid>
+            <Grid item xs={12} md={10}>
+                <DynamicStatsCard
+                    title="PARTY SOCIAL MEDIA SENTIMENT"
+                    description={socialMediaSentimentDescription}
+                    className={classes.card}
+                >
+                    <DynamicPartySentimentTable
+                        republicanHistoricalSentiment={props.republicanSentiment}
+                        democraticHistoricalSentiment={props.democraticSentiment}
+                    />
                 </DynamicStatsCard>
             </Grid>
             <Grid item xs={12} md={10}>
@@ -112,15 +138,25 @@ const Stats: NextPage<Props> = (props: Props) => {
 }
 
 Stats.getInitialProps = async function (): Promise<Props> {
-    const [politicians, wordClouds, sentiments, statePartyAffiliations] = await Promise.all([
+    const start = new Date()
+    start.setDate(start.getDate() - 15)
+
+    const [
+        politicianDtos,
+        wordCloudDtos,
+        politicianSentimentDtos,
+        partySentimentDtos,
+        statePartyAffiliationsDtos,
+    ] = await Promise.all([
         PoliticianApi.get(),
         GlobalWordCloudApi.get({ limit: 1 }),
         PoliticianSentimentApi.get(),
+        PartySentimentApi.get({ start }),
         StatePartyAffiliationApi.get(),
     ])
 
-    const politicianSentiments = politicians.reduce<Politician[]>((result, politician) => {
-        const sentiment = sentiments.find((x) => x.politician == politician.id)
+    const politicianSentiments = politicianDtos.reduce<Politician[]>((result, politician) => {
+        const sentiment = politicianSentimentDtos.find((x) => x.politician == politician.id)
         result.push({
             id: politician.id,
             name: politician.name,
@@ -130,10 +166,15 @@ Stats.getInitialProps = async function (): Promise<Props> {
         return result
     }, [])
 
+    const republicanSentiment = partySentimentDtos.filter((x) => x.party === 'Republican')
+    const democraticSentiment = partySentimentDtos.filter((x) => x.party === 'Democratic')
+
     return {
-        wordCounts: wordClouds.length > 0 ? wordClouds[0].words : [],
+        wordCounts: wordCloudDtos.length > 0 ? wordCloudDtos[0].words : [],
         politicians: politicianSentiments,
-        statePartyAffiliations,
+        statePartyAffiliations: statePartyAffiliationsDtos,
+        republicanSentiment,
+        democraticSentiment,
     }
 }
 
