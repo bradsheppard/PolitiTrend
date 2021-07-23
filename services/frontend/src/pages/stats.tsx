@@ -67,8 +67,11 @@ interface Politician {
 }
 
 const trendingHashtagsDescription = 'Trending hashtags per-politician based on social media posts.'
-const socialMediaSentimentDescription =
+const politicianSocialMediaSentimentDescription =
     'Popularity/likeability of the politician based on social media posts. ' +
+    'A higher number indicates a higher favorability (on a scale of 1 to 10).'
+const partySocialMediaSentimentDescription =
+    'Popularity/likeability of the party based on social media posts. ' +
     'A higher number indicates a higher favorability (on a scale of 1 to 10).'
 const stateAffiliationDescription =
     'Democratic/Republican favorability per-state based on social media posts.'
@@ -103,7 +106,7 @@ const Stats: NextPage<Props> = (props: Props) => {
             <Grid item xs={12} md={10}>
                 <DynamicStatsCard
                     title="POLITICIAN SOCIAL MEDIA SENTIMENT"
-                    description={socialMediaSentimentDescription}
+                    description={politicianSocialMediaSentimentDescription}
                     className={classes.card}
                 >
                     <DynamicPoliticianSentimentTable politicians={props.politicians} />
@@ -112,7 +115,7 @@ const Stats: NextPage<Props> = (props: Props) => {
             <Grid item xs={12} md={10}>
                 <DynamicStatsCard
                     title="PARTY SOCIAL MEDIA SENTIMENT"
-                    description={socialMediaSentimentDescription}
+                    description={partySocialMediaSentimentDescription}
                     className={classes.card}
                 >
                     <DynamicPartySentimentTable
