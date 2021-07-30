@@ -6,7 +6,7 @@ from sentiment_analytic.config import config
 from sentiment_analytic.dataframe import json_schema
 
 
-class TweetRepository:
+class TweetService:
 
     def __init__(self, spark: SparkSession):
         self._spark = spark
@@ -25,24 +25,37 @@ class TweetRepository:
                         mode='overwrite')
 
     def read_tweets(self, lookback: int) -> DataFrame:
+        paths = [TweetService._get_s3_path(i) for i in range(lookback)]
+
+        dataframe = None
+
+        for path in paths:
+            try:
+                current_dataframe = self._spark.read.json(path)
+                if dataframe is None:
+                    dataframe = current_dataframe
+                else:
+                    dataframe = dataframe.union(current_dataframe)
+            # pylint: disable=broad-except
+            except Exception as ex:
+                print(ex)
+
         now = datetime.now()
         start = now - timedelta(days=lookback)
 
-        start_month = str(start.month).zfill(2)
-        start_day = str(start.day).zfill(2)
-        start_hour = str(start.hour).zfill(2)
-        start_year = str(start.year)
-
-        dataframe = self._spark.read.json(f's3a://{config.s3_tweet_bucket}/topics/tweet-created')
-        dataframe = dataframe.filter((col('year') > start_year) |
-                                     ((col('year') == start_year) & (col('month') > start_month)) |
-                                     ((col('year') == start_year) & (col('month') == start_month) &
-                                      (col('day') > start_day)) |
-                                     ((col('year') == start_year) & (col('month') == start_month)
-                                      & (col('day') == start_day) &
-                                      (col('hour') > start_hour)))
+        dataframe = dataframe.filter(col('dateTime') >= start)
 
         return dataframe
+
+    @staticmethod
+    def _get_s3_path(offset: int) -> str:
+        now = datetime.now()
+        now = now - timedelta(days=offset)
+
+        s3_path = f's3a://{config.s3_tweet_bucket}/topics/tweet-created/' \
+                  f'year={now.year}/' \
+                  f'month={str(now.month).zfill(2)}/day={str(now.day).zfill(2)}/*'
+        return s3_path
 
     def read_analyzed_tweets(self, folder: str) -> DataFrame:
         analyzed_tweets = self._spark.createDataFrame([], json_schema)

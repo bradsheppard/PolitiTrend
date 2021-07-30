@@ -55,7 +55,6 @@ def test_data():
     return data
 
 
-@pytest.mark.forked
 @pytest.fixture(scope='module')
 def spark_session():
     spark_session = SparkSession.builder\
@@ -69,7 +68,6 @@ def spark_session():
     spark_session.stop()
 
 
-@pytest.mark.forked
 @pytest.fixture
 def politicians():
     politicians: List[Politician] = [

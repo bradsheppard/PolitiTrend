@@ -7,7 +7,7 @@ from sentiment_analytic.config import config, load_spark_config
 from sentiment_analytic.dataframe import analyze, to_politician_sentiment_dataframe, \
     to_party_sentiment_dataframe, to_state_sentiment_dataframe
 from sentiment_analytic.politician import Politician, get_all
-from sentiment_analytic.tweet_repository import TweetRepository
+from sentiment_analytic.tweet_service import TweetService
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
 
     load_spark_config(spark.sparkContext)
 
-    tweet_repository = TweetRepository(spark)
+    tweet_repository = TweetService(spark)
 
     tweets = tweet_repository\
         .read_tweets(int(config.analytic_lookback_days))\
@@ -68,7 +68,7 @@ def main():
         .option('topic', config.kafka_state_sentiment_topic) \
         .save()
 
-    TweetRepository.write_analyzed_tweets(tweet_sentiments, 'analyzed-tweets')
+    TweetService.write_analyzed_tweets(tweet_sentiments, 'analyzed-tweets')
 
 
 main()
