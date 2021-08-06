@@ -6,13 +6,6 @@ kafkaConnect:
   image:
     repository: kafka-connect
     pullPolicy: Always
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 400m
-      memory: 512Mi
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
