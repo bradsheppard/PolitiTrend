@@ -29,8 +29,7 @@ spec:
   replicas: 1
   bootstrapServers: queue-kafka-bootstrap:9092
   resources:
-    resources:
-{{ toYaml .Values.kafkaConnect.resources | indent 6 }}
+{{ toYaml .Values.kafkaConnect.resources | indent 4 }}
   config:
     group.id: connect-cluster
     offset.storage.topic: connect-cluster-offsets
