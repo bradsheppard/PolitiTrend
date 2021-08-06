@@ -64,6 +64,7 @@ interface Politician {
     name: string
     party: string
     sentiment?: number
+    sampleSize?: number
 }
 
 const trendingHashtagsDescription = 'Trending hashtags per-politician based on social media posts.'
@@ -165,6 +166,7 @@ Stats.getInitialProps = async function (): Promise<Props> {
             name: politician.name,
             party: politician.party,
             sentiment: sentiment ? sentiment.sentiment : undefined,
+            sampleSize: sentiment ? sentiment.sampleSize : undefined,
         })
         return result
     }, [])

@@ -37,6 +37,7 @@ interface Politician {
     name: string
     party: string
     sentiment?: number
+    sampleSize?: number
 }
 
 interface Row {
@@ -44,6 +45,7 @@ interface Row {
     name: string
     party: string
     sentiment?: number
+    sampleSize?: number
     display: boolean
     line?: Line
 }
@@ -141,6 +143,7 @@ const headCells: HeadCell[] = [
     { id: 'name', disablePadding: false, label: 'Politician' },
     { id: 'party', disablePadding: false, label: 'Party' },
     { id: 'sentiment', disablePadding: false, label: 'Current Sentiment' },
+    { id: 'sampleSize', disablePadding: false, label: 'Sample Size' },
     { id: 'display', disablePadding: false, label: 'Display' },
 ]
 
@@ -199,6 +202,7 @@ const StatsPoliticianSentimentTable: React.FC<Props> = (
             sentiment:
                 politician.sentiment !== undefined ? scaleSentiment(politician.sentiment) : 0,
             party: politician.party,
+            sampleSize: politician.sampleSize,
         }
 
         return row
@@ -354,6 +358,9 @@ const StatsPoliticianSentimentTable: React.FC<Props> = (
                                             <StyledTableCell>{row.party}</StyledTableCell>
                                             <StyledTableCell>
                                                 {row.sentiment ? row.sentiment : 'N/A'}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {row.sampleSize ? row.sampleSize : 'N/A'}
                                             </StyledTableCell>
                                             <StyledTableCell>
                                                 <Checkbox
