@@ -105,7 +105,7 @@ PoliticianPage.getInitialProps = async function (context: NextPageContext): Prom
 
         return {
             politician,
-            wordCount: politicianWordCloudDtos[0].words,
+            wordCount: politicianWordCloudDtos.length > 0 ? politicianWordCloudDtos[0].words : [],
             sentiments: sentimentDtos,
         }
     } else {
