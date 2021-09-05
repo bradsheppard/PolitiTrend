@@ -13,12 +13,12 @@ spec:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
-            name: minio-pass
+            name: kafka-connect-secret
             key: aws_access_key_id
       - name: AWS_SECRET_ACCESS_KEY
         valueFrom:
           secretKeyRef:
-            name: minio-pass
+            name: kafka-connect-secret
             key: aws_secret_access_key
   template:
     pod:

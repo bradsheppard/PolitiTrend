@@ -1,7 +1,6 @@
 minio:
   enabled: true
-  accessKey: brad1234
-  secretKey: brad1234
+  existingSecret: minio-secret
   nameOverride: minio
   fullnameOverride: minio
   persistence:
