@@ -131,7 +131,6 @@ def expected_data(current_time):
     return data
 
 
-@pytest.mark.forked
 def test_read_tweets(spark_session, tweet_service: TweetService, test_data, expected_data):
     dataframe = spark_session.createDataFrame(test_data)
     TweetService.write_tweets(dataframe)
@@ -143,7 +142,6 @@ def test_read_tweets(spark_session, tweet_service: TweetService, test_data, expe
         expected_dataframe, resulting_tweets, check_like=True, check_dtype=False)
 
 
-@pytest.mark.forked
 def test_read_analyzed_tweets(spark_session,
                               tweet_service: TweetService, test_data):
     dataframe = spark_session.createDataFrame(test_data)

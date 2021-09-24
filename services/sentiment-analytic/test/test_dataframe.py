@@ -117,7 +117,7 @@ def test_analyze_sentiments(spark_session: SparkSession,
             'tweetText': 'Bob Young sucks. John Smith is awesome',
             'politicians': [1, 2],
             'politicianSentiments': [1, 2],
-            'sentiments': [-0.9992656111717224, 0.999874472618103],
+            'sentiments': [0.9981990456581116, 0.9981990456581116],
             'parties': ['Republican', 'Democratic'],
             'dateTime': '2020-11-08 04:57:45',
             'state': 'NY'
@@ -150,8 +150,8 @@ def test_to_politician_sentiment_dataframe(spark_session: SparkSession,
 
     output_dataframe = to_politician_sentiment_dataframe(analyze(dataframe, politicians))
     expected_dataframe = spark_session.createDataFrame([
-        (1, 0.3334953983624776, 3),
-        (2, 0.3343200087547302, 3)
+        (1, 0.999316950639089, 3),
+        (2, 0.3337615331013997, 3)
     ], ['politician', 'sentiment', 'sampleSize'])
 
     assert expected_dataframe.collect() == output_dataframe.collect()
@@ -164,8 +164,8 @@ def test_to_party_sentiment_dataframe(spark_session: SparkSession,
 
     output_dataframe = to_party_sentiment_dataframe(analyze(dataframe, politicians))
     expected_dataframe = spark_session.createDataFrame([
-        ('Republican', 0.3334953983624776, 3),
-        ('Democratic', 0.3343200087547302, 3)
+        ('Republican', 0.999316950639089, 3),
+        ('Democratic', 0.3337615331013997, 3)
     ], ['party', 'sentiment', 'sampleSize'])
 
     assert expected_dataframe.collect() == output_dataframe.collect()
@@ -179,7 +179,7 @@ def test_to_state_sentiment_dataframe(spark_session: SparkSession,
     output_dataframe = to_state_sentiment_dataframe(analyze(dataframe, politicians))
     expected_dataframe = spark_session.createDataFrame([
         ('VT', 1, Row(democratic=-0.9967911839485168, republican=0.0)),
-        ('NY', 2, Row(democratic=0.9998756051063538, republican=0.00030556321144104004))
+        ('NY', 2, Row(democratic=0.999037891626358, republican=0.999037891626358))
     ], ['state', 'sampleSize', 'affiliations'])
 
     assert expected_dataframe.collect() == output_dataframe.collect()

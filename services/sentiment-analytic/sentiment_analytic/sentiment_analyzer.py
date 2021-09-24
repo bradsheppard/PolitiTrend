@@ -124,65 +124,57 @@ class SentimentAnalyzer:
         result_list = []
         pipeline = list(SentimentAnalyzer.nlp.pipe(statements))
 
-        sentence_lists = []
-        for doc in pipeline:
-            document_sentences = seq(doc.sents).map(lambda x: x.text).to_list()
-            sentence_lists.append(document_sentences)
+        sentiments = SentimentAnalyzer.compute_sentiments(statements)
 
-        sentences = [sentence for sublist in sentence_lists for sentence in sublist]
-        sentiments = SentimentAnalyzer.compute_sentiments(sentences)
-
-        sentence_index = 0
         for i, doc in enumerate(pipeline):
             current_subjects = subjects[i]
             results = {}
 
-            for _, sent in enumerate(doc.sents):
-                score = sentiments[sentence_index]
-                sentence_index += 1
-                pos_words = SentimentAnalyzer._get_pos_subjects(sent, ['VERB', 'ADJ', 'NOUN'])
-                entities = seq(sent.ents) \
-                    .filter(lambda x: x.label_ == 'PERSON') \
-                    .map(lambda x: x.text) \
-                    .list()
+            score = sentiments[i]
+            pos_words = SentimentAnalyzer._get_pos_subjects(doc, ['VERB', 'ADJ', 'NOUN'])
+            entities = seq(doc.ents) \
+                .filter(lambda x: x.label_ == 'PERSON') \
+                .map(lambda x: x.text) \
+                .list()
 
-                if len(entities) == 0:
-                    continue
+            if len(entities) == 0:
+                result_list.append(results)
+                continue
 
-                graph = nx.Graph()
+            graph = nx.Graph()
 
-                for token in sent:
-                    for child in token.children:
-                        dep = child.dep_
-                        weight = 0 if dep == 'conj' else 1
-                        graph.add_edge('{0}'.format(token), '{0}'.format(child), weight=weight)
+            for token in doc:
+                for child in token.children:
+                    dep = child.dep_
+                    weight = 0 if dep == 'conj' else 1
+                    graph.add_edge('{0}'.format(token), '{0}'.format(child), weight=weight)
 
-                path_lengths = {entity: 0 for entity in entities}
+            path_lengths = {entity: 0 for entity in entities}
 
-                for word in pos_words:
-                    for entity in entities:
-                        names = entity.split()
-                        try:
-                            shortest_path = min(
-                                [nx.dijkstra_path_length(
-                                    graph, source=word, target=name) for name in names])
-                        except nx.NetworkXNoPath:
-                            shortest_path = math.inf
-                        path_lengths[entity] += shortest_path
+            for word in pos_words:
+                for entity in entities:
+                    names = entity.split()
+                    try:
+                        shortest_path = min(
+                            [nx.dijkstra_path_length(
+                                graph, source=word, target=name) for name in names])
+                    except (nx.NetworkXNoPath, nx.NodeNotFound):
+                        shortest_path = math.inf
+                    path_lengths[entity] += shortest_path
 
-                shortest_length = min(path_lengths.values())
+            shortest_length = min(path_lengths.values())
 
-                relevant_entities = seq(path_lengths.items()) \
-                    .filter(lambda x, length=shortest_length: x[1] == length) \
-                    .map(lambda x: x[0])
+            relevant_entities = seq(path_lengths.items()) \
+                .filter(lambda x, length=shortest_length: x[1] == length) \
+                .map(lambda x: x[0])
 
-                for entity in relevant_entities:
-                    politicians = SentimentAnalyzer._match_politicians(entity, current_subjects)
-                    for politician in politicians:
-                        if politician.id not in results:
-                            results[politician.id] = [score]
-                        else:
-                            results[politician.id].append(score)
+            for entity in relevant_entities:
+                politicians = SentimentAnalyzer._match_politicians(entity, current_subjects)
+                for politician in politicians:
+                    if politician.id not in results:
+                        results[politician.id] = [score]
+                    else:
+                        results[politician.id].append(score)
 
             for key in results:
                 results[key] = mean(results[key])

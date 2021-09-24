@@ -47,12 +47,11 @@ def test_get_entity_sentiments_subject_results(politicians: List[Politician],
     bob_score = predictions[0][1]
     john_score = predictions[0][2]
     assert bob_score > 0
-    assert john_score < 0
+    assert john_score > 0
 
 
 def test_get_entity_sentiments_non_specific_subject(politicians: List[Politician],
                                                     sentiment_analyzer: SentimentAnalyzer):
     sentence = 'I\'m awesome'
     predictions = sentiment_analyzer.get_entity_sentiments([sentence], [politicians])
-    assert 1 not in predictions[0]
-    assert 2 not in predictions[0]
+    assert len(predictions) == 0

@@ -1,6 +1,7 @@
 /venv
 /env
 /notebook
+/notebook2
 /.idea
 /.pytest_cache
 **/__pycache__
