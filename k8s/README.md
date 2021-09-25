@@ -7,8 +7,10 @@ Each chart is outlined as follows:
 any services.
 - nvidia: This chart contains the Daemonset which installs the Nvidia drivers into the GPU node pool. 
 This is necessary for running the Neural nets which do the news article summarization (the `news-article-crawler` service).
-- Operators: This chart installs both the Spark Operator and the Strimzi Kafka Operator. Be sure
-to run this before installing the services chart, as many services contain CRDs which depend on this chart.
-- Secrets: This chart contains secrets which are used in the Services chart. These secrets can
+- spark-operator: Operator which simplifies running Spark jobs in Kubernetes.
+- kafka-operator: Operator which simplifies running Kafka clusters in Kubernetes.
+- nginx-ingress-controller: Deploys an NGinx pod along with an external load balancer which allows you to expose
+certain services externally (such as the frontend service).
+- secrets: This chart contains secrets which are used in the Services chart. These secrets can
 either be config files which are used by some of the services, or database credentials.
-- Services: This chart is an umbrella chart which has several subcharts (one for each service).
+- services: This chart is an umbrella chart which has several subcharts (one for each service).
