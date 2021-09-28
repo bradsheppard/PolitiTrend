@@ -80,27 +80,11 @@ class About extends React.Component<Props> {
                             <CardDisplay
                                 className={classes.menuItem}
                                 header="Realtime"
-                                body="News Articles / Tweets are monitored in near realtime. See trends as soon as they happen."
-                            />
-                        </Grid>
-                        <Grid item sm={4}>
-                            <CardDisplay
-                                className={classes.menuItem}
-                                header="No Political Bias"
-                                body="Our algorithms are designed without political bias / preference. Conservative and liberal opinions are equally valued and weighted."
+                                body="News Articles / Tweets are monitored in near realtime."
                             />
                         </Grid>
                     </Grid>
                 </ContentContainer>
-                <TransparentJumbo>
-                    <Typography variant="h4" align="center" style={{ color: 'white' }}>
-                        No Political Bias
-                    </Typography>
-                    <Typography variant="h5" align="center" style={{ color: 'white' }}>
-                        Our algorithms are designed without political bias / preference.
-                        Conservative and liberal opinions are equally valued and weighted.
-                    </Typography>
-                </TransparentJumbo>
             </React.Fragment>
         )
     }
